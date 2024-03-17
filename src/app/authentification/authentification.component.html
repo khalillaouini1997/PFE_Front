@@ -1,0 +1,31 @@
+
+<div class="container" style="margin-top: 12%;">
+    <div id="login" class="signin-card">
+        <div class="logo-image">
+            <img src="../../assets/images/administrator.png" alt="Logo" title="Logo" width="138">
+        </div>
+        <h1 class="display1"></h1>
+        <p class="subhead">Administration Web</p>
+        <form #authentificationFrom="ngForm" (ngSubmit)="onSubmit()">
+            <div id="form-login-username" class="form-group">
+                <input id="username" class="form-control" name="username" placeholder="Login" [(ngModel)]="login" type="text" alt="login" required />
+                <span class="form-highlight"></span>
+                <span class="form-bar"></span>
+            </div>
+            <div id="form-login-password" class="form-group">
+                <input id="passwd" class="form-control" name="password" placeholder="Mot de passe" [(ngModel)]="password" type="password" alt="password" required>
+                <span class="form-highlight"></span>
+                <span class="form-bar"></span>
+            </div>
+            <div class="alert alert-danger alert-dismissible" role="alert" *ngIf="errorVisible">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Danger!</strong> {{errorMessage}}
+            </div>
+            <div>
+                <button type="submit"  [disabled]="!authentificationFrom.form.valid" class="btn btn-block btn-info ripple-effect" alt="sign in">Login</button>
+            </div>
+
+
+        </form>
+    </div>
+</div>

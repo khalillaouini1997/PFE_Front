@@ -1,0 +1,129 @@
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header" data-background-color="red">
+
+            <div class="row">
+                <div class="col-sm-7">
+                    <h4 class="title">Etat des boitiers</h4>
+                </div>
+                <div class="col-sm-4">
+
+                    <form role="search" style="margin-top:3px;">
+                        <div class="is-empty">
+                            <span class="control-label" for="compteserver" style="color:#fff1f3;">Comptes
+                                web</span>
+                            <select [(ngModel)]="compteWeb" class="formulaire" id="compteserver" name="compteserver"
+                                required>
+                                <option *ngFor="let CompteWeb of comptesWeb" [ngValue]="CompteWeb">{{CompteWeb.login}}</option>
+                            </select>
+
+                            <button type="submit" class="btn btn-white btn-sm" title="Rechercher" style="margin: 0px; padding: 3px 5px; margin: 0px 0px 0px 0px;"
+                                (click)="getAllLastTramByCompteWeb()"><i class="fa fa-search" style="font-size: 14px"></i> Rechercher</button>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="col-sm-1">
+                    <button class="btn btn-white btn-sm pull-right" style="padding: 3px 5px; margin: 5px 0px 0px 0px;" title="Exporter"
+                        (click)="onExport()"><i class="fa fa-download" title="Exporter" style="font-size: 14px"></i> Exporter</button>
+                </div>
+            </div>
+
+        </div>
+        <div class="table-responsive tableFixHead">
+            <table class="table table-bordered table-hover table-sm">
+                <thead>
+                    <tr>
+                        <th>Id boitier</th>
+                        <th>Matricule</th>
+                        <th>Etat</th>
+                        <th>latitude</th>
+                        <th>longitude</th>
+                        <th>Validité</th>
+                        <th>Vitesse</th>
+                        <th>Ignition</th>
+                        <th title="Signal GPS">GPS</th>
+                        <th title="Signal GSM">GSM</th>
+                        <th>Date GPS</th>
+                        <th>Date serveur</th>
+                        <th title="Dernière id">Id</th>
+                        <th title="Dernière id trajet">Id trajet</th>
+                        <th title="Dernière date option">Date option</th>
+                        <th title="Ignition(%)">Ignition</th>
+                        <th title="Non valide(%)">Non valide</th>
+                        <th title="Vittese(%)">Vittese</th>
+                        <th>HLR</th>
+                        <th>IMEI</th>
+                        <th>Version</th>
+                    </tr>
+                </thead>
+                <tbody style="font-size: 12px;">
+
+                    <tr *ngIf="loading">
+                        <td style="text-align: center" colspan="23">
+                            <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+                        </td>
+                    </tr>
+
+                    <tr *ngFor="let tram of listTram">
+
+                        <td><span class="label label-info">{{tram.deviceid}}</span></td>
+                        <td>{{tram.matricule}}</td>
+                        <td>
+                            <span *ngIf="tram.status == 'TECHNICAL_ISSUE'" class="label label-danger">{{tram.status}}</span>
+                            <span *ngIf="tram.status == 'NON_VALID'" class="label label-warning">{{tram.status}}</span>
+                            <span *ngIf="tram.status == 'VALID'" class="label label-success">{{tram.status}}</span>
+                        </td>
+                        <td>{{tram.latitude}}</td>
+                        <td>{{tram.longitude}}</td>
+                        <td>
+                            <span *ngIf="tram.validity" class="label label-success">Vrai</span>
+                            <span *ngIf="!tram.validity" class="label label-danger">Faux</span>
+                        </td>
+                        <td>{{tram.speed}}</td>
+                        <td><span *ngIf="tram.ignition==false">Off</span>
+                            <span *ngIf="tram.ignition==true">On</span></td>
+                        <td>{{tram.sat_in_view}}</td>
+                        <td>{{tram.signal}}</td>
+                        <td>
+                            <span *ngIf="diffHours(tram.record_time) >= 1 && diffHours(tram.record_time) < 24" class="label label-warning">{{tram.record_time
+                                | date:'dd-MM-yyyy HH:mm:ss' }}</span>
+                            <span *ngIf="diffHours(tram.record_time) >= 24" class="label label-danger">{{tram.record_time
+                                | date:'dd-MM-yyyy HH:mm:ss' }}</span>
+                            <span *ngIf="diffHours(tram.record_time) < 1">{{tram.record_time |
+                                date:'dd-MM-yyyy HH:mm:ss' }}</span>
+                        </td>
+                        <td>{{tram.last_raw_time | date:'dd-MM-yyyy HH:mm:ss'}}</td>
+                        <td>{{tram.lastId}}</td>
+                        <td>
+                            <span *ngIf="(tram.lastId - tram.lastIdRaw) >= 20" class="label label-danger">{{tram.lastIdRaw}}</span>
+                            <span *ngIf="(tram.lastId - tram.lastIdRaw) < 20">{{tram.lastIdRaw}}</span>
+                        </td>
+                        <td>{{tram.lastTime | date:'dd-MM-yyyy HH:mm:ss'}}</td>
+                        <td>
+                            <span *ngIf="tram.ignitionStatistique == 0" class="label label-danger">{{tram.ignitionStatistique
+                                | number: '.2-2'}} %</span>
+                            <span *ngIf="tram.ignitionStatistique != 0">{{tram.ignitionStatistique |
+                                number: '.2-2'}} %</span>
+                        </td>
+                        <td>
+                            <span *ngIf="tram.invalidityStatistique > 10" class="label label-danger">{{tram.invalidityStatistique
+                                | number: '.2-2'}} %</span>
+                            <span *ngIf="tram.invalidityStatistique <= 10">{{tram.invalidityStatistique |
+                                number: '.2-2'}} %</span>
+                        </td>
+                        <td>
+                            <span *ngIf="tram.speedStatistique == 0" class="label label-danger">{{tram.speedStatistique
+                                | number: '.2-2'}} %</span>
+                            <span *ngIf="tram.speedStatistique != 0">{{tram.speedStatistique | number:
+                                '.2-2'}} %</span>
+                        </td>
+                        <td>{{tram.numPuce}}</td>
+                        <td>{{tram.imei}}</td>
+                        <td>{{tram.version}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
