@@ -111,6 +111,31 @@ export class Option {
     }
 }
 
+export class RecalculatePayload {
+
+  idBoitier: number;
+  idBoitiers: number[];
+  recalculeStartDate: number | null;
+
+  constructor() {
+    this.idBoitier = 0
+    this.idBoitiers = [];
+    this.recalculeStartDate = null;
+
+  }
+}
+
+  export class PathConfigPayload {
+    boitiersId: number[];
+    pathMinSpeed: number
+    pathMinSec: number
+    stopMinSec: number
+    pauseMinSec: number
+    distanceMinMeter: number
+
+    constructor() { }
+
+  }
 export class AdministratorCompte {
     idAdministratorCompte: number;
     username: string;
@@ -251,3 +276,34 @@ export interface Tram {
 	lastId: number;
 	lastTime: Date;
 }
+
+export class Intervention {
+  /**intervention id */
+  id: number;
+  /**intervention type :REQUEST|INPROGRESS|CARRYOUT|REJECTED*/
+  type: 'REQUEST' | 'INPROGRESS' | 'CARRYOUT' | 'REJECTED';
+
+  idBoitiers: number;
+
+  content: string;
+  /**request type */
+  request: string;
+  /**response */
+  response: string;
+  /**intervention was created at */
+  createdAt: Date;
+
+  submitAt: Date;
+  /** we have three possibilities :moyen,faible,urgent */
+  priority: number;
+
+  constructor() { }
+}
+
+export class UpdateIntervention extends Intervention {
+  idTenant: number;
+  constructor() { super(); }
+}
+
+
+

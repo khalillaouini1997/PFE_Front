@@ -12,6 +12,9 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { PagesComponent } from './pages/pages.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
+import {PaginationModule} from "ngx-bootstrap/pagination";
+import { ComptewebconfigComponent } from './pages/compte-web/comptewebconfig/comptewebconfig.component';
+import {BsDatepickerModule} from "ngx-bootstrap/datepicker";
 
 @NgModule({
   declarations: [
@@ -20,6 +23,7 @@ import { ToastrModule } from 'ngx-toastr';
     CompteWebComponent,
     DashboardComponent,
     PagesComponent,
+    ComptewebconfigComponent,
   ],
   imports: [
     BrowserModule,
@@ -28,7 +32,10 @@ import { ToastrModule } from 'ngx-toastr';
     HttpClientModule,
     FormsModule,
     BrowserAnimationsModule, // required animations module
-    ToastrModule.forRoot(), // ToastrModule added
+    ToastrModule.forRoot(),
+    PaginationModule,
+    BsDatepickerModule,
+    // ToastrModule added
   ],
   providers: [],
   bootstrap: [AppComponent]

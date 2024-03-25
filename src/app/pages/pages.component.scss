@@ -1,0 +1,62 @@
+/* created by AHMED HAYEL */
+
+$hovClick-cursor: pointer;
+
+.hovClick {
+  cursor: $hovClick-cursor;
+}
+
+.nav-toggle-btn {
+  display: block;
+  position: absolute;
+  width: 30px;
+  height: 18px;
+  z-index: 999999;
+  top: 0;
+  bottom: 0;
+}
+
+body {
+  font-family: Open Sans, Arial, sans-serif;
+  overflow-x: hidden;
+}
+
+nav {
+  position: fixed;
+  z-index: 1000;
+  transform: translate3d(-250px, 0, 0); // Initial position
+  transition: transform 0.4s ease;
+}
+
+.content {
+  padding: 0px 0px 0px 15px;
+  transition: transform 0.4s ease;
+}
+
+#btnControl {
+  display: none;
+}
+
+#btnControl:checked ~ nav {
+  transform: translate3d(0px, 0, 0);
+}
+
+#btnControl:checked ~ .content {
+  padding: 0px 0px 0px 262px;
+}
+
+.nav-toggle-btn {
+  span {
+    display: block;
+    width: 20px;
+    height: 3px;
+    background: #657180;
+    margin: 2px 6px;
+    cursor: pointer;
+  }
+}
+
+.wrapper {
+  overflow-x: hidden;
+  background-color: #f8fafb;
+}
