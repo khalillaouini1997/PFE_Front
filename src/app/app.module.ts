@@ -7,23 +7,18 @@ import { AuthentificationComponent } from './authentification/authentification.c
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { CompteWebComponent } from './pages/compte-web/compte-web.component';
-import { DashboardComponent } from './pages/dashboard/dashboard.component';
-import { PagesComponent } from './pages/pages.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
-import {PaginationModule} from "ngx-bootstrap/pagination";
-import { ComptewebconfigComponent } from './pages/compte-web/comptewebconfig/comptewebconfig.component';
-import {BsDatepickerModule} from "ngx-bootstrap/datepicker";
+import { PaginationModule } from "ngx-bootstrap/pagination";
+import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
+import { ErrorComponent } from './utils/security/error/error.component';
+import { AdminWebModule } from './admin-web-component/admin-web.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     AuthentificationComponent,
-    CompteWebComponent,
-    DashboardComponent,
-    PagesComponent,
-    ComptewebconfigComponent,
+    ErrorComponent
   ],
   imports: [
     BrowserModule,
@@ -35,6 +30,7 @@ import {BsDatepickerModule} from "ngx-bootstrap/datepicker";
     ToastrModule.forRoot(),
     PaginationModule,
     BsDatepickerModule,
+    AdminWebModule
     // ToastrModule added
   ],
   providers: [],

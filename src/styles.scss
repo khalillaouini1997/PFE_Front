@@ -1,1 +1,73 @@
 /* You can add global styles to this file, and also import other style files */
+
+table td,table th {
+    white-space: nowrap;
+}
+
+.tableFixHead {
+  overflow-y: auto;
+  max-height: 600px;
+}
+
+.tableFixHead table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.tableFixHead th,
+.tableFixHead td {
+  padding: 8px 16px;
+}
+
+.tableFixHead th {
+  position: sticky;
+  top: 0;
+  background: linear-gradient(60deg, #ef5350, #e53935);
+  text-align: center;
+}
+
+.tableFixHead thead {
+  font-size: 12px;
+  font-weight: bold;
+  background-color: #e9423e;
+  color:white;
+}
+
+.tableFixHead tbody{
+  background-color: white;
+}
+
+
+
+.tableFixHead2 {
+  overflow-y: auto;
+  max-height: 600px;
+}
+
+.tableFixHead2 table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.tableFixHead2 th,
+.tableFixHead2 td {
+  padding: 8px 16px;
+}
+
+.tableFixHead2 th {
+  position: sticky;
+  top: 0;
+  background: linear-gradient(60deg, #00D100, #00D100);
+  text-align: center;
+}
+
+.tableFixHead2 thead {
+  font-size: 15px;
+  font-weight: bold;
+  background-color: #00D100;
+  color:black;
+}
+
+.tableFixHead2 tbody{
+  background-color: white;
+}

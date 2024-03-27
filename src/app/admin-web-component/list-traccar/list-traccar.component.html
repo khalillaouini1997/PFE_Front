@@ -1,0 +1,50 @@
+<div class="col-md-12">
+  <div class="card">
+    <div class="card-header" data-background-color="red">
+      <div class="row">
+        <div class="col-sm-8">
+          <h4 class="title">Liste des Trracars</h4>
+        </div>
+        <div class="col-sm-4">
+          <form class="navbar-form navbar-right" role="search" style="margin:0;">
+            <div class="form-group  is-empty">
+              <input type="text" class="form-control" name="search" [(ngModel)]="keyWord" placeholder="Rechercher..."
+                style="margin:0;color:white;" />
+              <span class="material-input"></span>
+            </div>
+            <button type="submit" class="btn btn-white btn-sm" title="Rechercher"
+              style="margin: 0px; padding: 1px 5px; margin: 0px 0px 0px 0px;" (click)="searchWebAccount()"><i
+                class="fa fa-search" style="font-size: 14px"></i>
+              Rechercher</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-responsive tableFixHead">
+      <table class="table table-bordered table-hover table-sm">
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Imei</th>
+          </tr>
+        </thead>
+        <tbody style="font-size: 12px;">
+
+          <tr *ngIf="loading">
+            <td style="text-align: center" colspan="7">
+              <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+            </td>
+          </tr>
+
+          <tr *ngFor="let trac of traccarDtos" class="cl">
+            <td>{{trac.id}}</td>
+            <td>{{trac.name}}</td>
+            <td>{{trac.imei}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

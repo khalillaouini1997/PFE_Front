@@ -1,0 +1,55 @@
+import { AdminWebComponentRoutingModule } from './admin-web-component-routing.module';
+import { AdminWebComponentComponent } from './admin-web-component.component';
+import { ComptesWebComponentComponent } from './comptes-web-component/comptes-web-component.component';
+import { ComptesServerComponentComponent } from './comptes-server-component/comptes-server-component.component';
+import { AddCompteWebComponentComponent } from './add-compte-web-component/add-compte-web-component.component';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { FormsModule } from '@angular/forms';
+import { DashbordComponent } from './dashbord/dashbord.component';
+import { HelpComponent } from './help/help.component';
+import { EditComponent } from './help/edit/edit.component';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { AddCompteServerComponent } from '../admin-web-component/add-compte-server/add-compte-server.component';
+import { CompteServerDetailsComponent } from './compte-server-details/compte-server-details.component';
+import { IpAdresseComponent } from './../admin-web-component/ip-adresse/ip-adresse.component';
+import { AccessLogComponent } from './../admin-web-component/access-log/access-log.component';
+import { ListTraccarComponent } from './../../app/admin-web-component/list-traccar/list-traccar.component';
+import { CompteAdminComponent } from './../../app/admin-web-component/compte-admin/compte-admin.component';
+import { AddAdminCompteComponent } from './../../app/admin-web-component/add-admin-compte/add-admin-compte.component';
+import { ToastrModule } from 'ngx-toastr';
+import { WebSocketService } from '../service/web-socket.service';
+import { DataService } from '../service/data.service';
+
+
+@NgModule({
+  imports: [
+    CommonModule,
+    PaginationModule.forRoot(),
+    AdminWebComponentRoutingModule,
+    FormsModule,
+    BsDatepickerModule.forRoot(),
+    ToastrModule.forRoot(),
+  ],
+  declarations: [
+    AddCompteWebComponentComponent,
+    ComptesServerComponentComponent,
+    ComptesWebComponentComponent,
+    AdminWebComponentComponent,
+    DashbordComponent,
+    HelpComponent,
+    EditComponent,
+    AddCompteServerComponent,
+    CompteServerDetailsComponent,
+    IpAdresseComponent,
+    AccessLogComponent,
+    ListTraccarComponent,
+    CompteAdminComponent,
+    AddAdminCompteComponent,
+  ], providers: [
+    WebSocketService,
+    DataService
+  ]
+})
+export class AdminWebModule { }

@@ -1,0 +1,76 @@
+
+
+.center {
+     float: none;
+     margin-left: auto;
+     margin-right: auto;
+}
+.center {
+    margin: auto;
+    width: 75%;
+}
+.chat-container{
+    height: 80vh;
+    width: 100vw;
+  }
+  .chat{
+    text-align: left;
+    margin: 0 auto;
+    width: 50%;
+    height: 100%;
+    border: 1px solid grey;
+  }
+  
+  .footer{
+    background: #cccccc;
+    margin: 0 auto;
+    position: absolute;
+    bottom: 0;
+    height: 10vh;
+    width: 100vw;
+  }
+  .send-button{
+    margin: 0 auto;
+    height: 70%;
+    width: 50%;
+  }
+  input{
+    float: right;
+    height: 30px;
+    border-radius: 15px;
+    font-size: 1.5em;
+  }
+  .send{
+    float: right;
+
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 30px;
+    width: 30px;
+    margin-left: 5px;
+  
+  }
+
+  .modal-content {
+    position: relative;
+    background-color: #fff;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid #999;
+    border: 0px solid rgba(0,0,0,.2);}
+
+    h1 {
+         font-size: 2em; 
+        margin: -1.33em 15px -80px 0px;}
+
+        .h2 {
+            /* margin-top: -27px; */
+            margin-bottom: -20px;
+            font-size: 25px;
+        }
+
+        .alert-warning {
+            color:#ffffff;
+            background-color: #FF9800;
+            border-color: #faebcc;
+            padding: 40px;}

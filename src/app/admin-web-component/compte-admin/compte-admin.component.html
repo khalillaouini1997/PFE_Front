@@ -1,0 +1,85 @@
+<!--created by AHMED HAYEL-->
+<div class="col-md-12">
+  <div class="card">
+    <div class="card-header" data-background-color="green">
+      <div class="row">
+        <div class="col-sm-8">
+          <h4 class="title">Liste des comptes Web</h4>
+        </div>
+        <div class="col-sm-4">
+          <form class="navbar-form navbar-right" role="search" style="margin:0;">
+            <div class="form-group  is-empty">
+              <input type="text" class="form-control" name="search" [(ngModel)]="keyWord" placeholder="Rechercher..."
+                style="margin:0;color:black;" />
+              <span class="material-input"></span>
+            </div>
+            <button type="submit" class="btn btn-white btn-sm" title="Rechercher"
+              style="margin: 0px; padding: 1px 5px; margin: 0px 0px 0px 0px;" (click)="searchWebAccount()"><i
+                class="fa fa-search" style="font-size: 14px"></i>
+              Rechercher</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-responsive tableFixHead2">
+      <table class="table table-bordered table-hover table-sm">
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Username</th>
+            <th>Password</th>
+            <th>Last Boitier</th>
+            <th>Role</th>
+            <th>Id Traccar</th>
+            <th>Use fcm</th>
+            <th>Use prefix</th>
+            <th>Mail Support</th>
+            <th>DeviceCostByDay</th>
+            <th>AccountFreePerMonth</th>
+            <th>TransctionFee</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody style="font-size: 12px;">
+
+          <tr *ngIf="loading">
+            <td style="text-align: center" colspan="7">
+              <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+            </td>
+          </tr>
+
+          <tr *ngFor="let adminCompte of adminComptes">
+            <td>{{adminCompte.idAdministratorCompte}}</td>
+            <td>{{adminCompte.username}}</td>
+            <td>{{adminCompte.password}}</td>
+            <td>{{adminCompte.numLastBoitierAvailable}}</td>
+            <td>{{adminCompte.role}}</td>
+            <td>{{adminCompte.idTraccar}} </td>
+            <td>{{adminCompte.useFcm}} </td>
+            <td>{{adminCompte.fcmPrefix}} </td>
+            <td>{{adminCompte.mailSupport}} </td>
+            <td>{{adminCompte.deviceCostByDay}} </td>
+            <td>{{adminCompte.accountFreePerMonth}} </td>
+            <td>{{adminCompte.transctionFee}} </td>
+            <td>
+              <!-- <button class="btn btn-info btn-xs" style="padding: 0px 8px;font-size: 8px;margin: 1px 0px 0px 0px;"
+                [routerLink]="['/adminWeb/configurations',compteWeb.idCompteClientWeb]" data-backdrop="false">
+                <i class="material-icons md-24" title="Configurer le compte Web">account_box</i></button>
+
+              <button class="btn btn-danger btn-xs" style="padding: 0px 8px;font-size: 8px;margin: 1px 0px 0px 0px;"
+                (click)="onSelect(compteWeb);deleteWebAccount();">
+                <i class="material-icons md-24" title=" Supprimer le compte Web">delete_forever</i></button>-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div class="col-md-12 text-center">
+  <pagination [hidden]="loading" [totalItems]="bigTotalItems" [(ngModel)]="bigCurrentPage" [maxSize]="maxSize"
+    class="pagination-sm" [boundaryLinks]="true" [rotate]="false" [itemsPerPage]="itemsPerPage"
+    (pageChanged)="pageChanged($event)" previousText="Précédent" nextText="Suivant" firstText="Premier"
+    lastText="Dernier"></pagination>
+</div>

@@ -2,22 +2,36 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { dns } from '../global.config';
 import { createAuthorizationHeader } from '../utils/security/headers';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {
   AdministratorCompte,
+  Boitier,
+  CompteServer,
+  CompteWeb,
   DeviceOpt,
   DeviceSetting,
   Intervention,
+  IpAddress,
+  Option,
   RecalculatePayload,
   Tram,
   VehiculeSetting
 } from '../data/data';
-import {map} from "rxjs/operators";
+import { map } from "rxjs/operators";
+import { jwtDecode } from "jwt-decode";
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
+
+  isAuthenticated: boolean | null;
+  ips: IpAddress[] = [];
+  options: Option[];
+  administratorCompte: AdministratorCompte[];
+
+  //List of Connection Type
+  typeConnection: string;
 
   codesPays = [
     { key: "Maroc", value: "212" },
@@ -229,5 +243,166 @@ export class DataService {
   }
 
 
+
+  getAllIpAddresse(keyword: string, page: number, size: number): Observable<any> {
+    const headers = this.getHeaders();
+    return this._http.get(dns + "ips/all?keyWord=" + keyword + "&page=" + page + "&size=" + size, { headers });
+  }
+  deleteIpAdress(id: number) {
+    const headers = this.getHeaders();
+    return this._http.delete(dns + "ips/" + id, { headers });
+
+  }
+  updateIpAdress(id: number, ipAdress: IpAddress): Observable<any> {
+    const headers = this.getHeaders();
+    return this._http.put(dns + "ips/" + id, ipAdress, { headers });
+  }
+
+  loadTestAuthenticated(): boolean {
+    var res = document.cookie.split(";");
+    let isAuthenticatedstr: string = "";
+    //isAuthenticatedstr = localStorage.getItem("isAuthenticateAdmin");
+    if (isAuthenticatedstr == "true") {
+      return true
+    } else {
+      return false;
+    }
+  }
+
+
+  getCurrentUserName(): any {
+    try {
+      const decode = jwtDecode(localStorage.getItem("token") as never, { header: true });
+      return decode;
+    }
+    catch (Error) {
+      return null;
+    }
+  }
+
+  getAllWebAccountByKeyWord(keyWord: string, page: number, size: number): Observable<any> {
+    const headers = this.getHeaders();
+    return this._http.get(dns + "compteWeb?keyWord=" + keyWord + "&page=" + page + "&size=" + size + "&userName=" + this.getCurrentUserName(), { headers });
+  }
+
+
+  deleteWebAccount(id: number) {
+    const headers = this.getHeaders();
+    return this._http.delete(dns + "compteWeb/" + id, { headers });
+  }
+
+  getDateLog(username: string): Observable<any> {
+    const headers = this.getHeaders();
+    return this._http.get(dns + "compteWeb?datelog=" + username, { headers });
+
+  }
+
+
+  ExportListComptesServer(comptesServer: CompteServer[]): Observable<any> {
+    const headers = this.getHeaders();
+    return this._http.post(dns + 'compteServerWeb/export', comptesServer, { headers });
+  }
+
+  getAllServerAccount(keyWord: string, page: number, size: number): Observable<any> {
+    const headers = this.getHeaders();
+    return this._http.get(dns + "compteServerWeb?keyWord=" + keyWord + "&page=" + page + "&size=" + size + "&userName=" + this.getCurrentUserName(), { headers });
+  }
+
+  deleteCompteServer(id: number) {
+    const headers = this.getHeaders();
+    this._http.delete(dns + "compteServer/" + id, { headers });
+  }
+
+  updateServerCompte(id: number, compteServer: CompteServer): Observable<any> {
+    const headers = this.getHeaders();
+    return this._http.put(dns + "compteServer/" + id, compteServer, { headers });
+  }
+
+  getCompteServerById(id: number): Observable<any> {
+    const headers = this.getHeaders();
+    return this._http.get(dns + "compteServer/" + id, { headers });
+  }
+
+  getBoitierOfAccount(keyWord: string, id: number, page: number, size: number): Observable<any> {
+    const headers = this.getHeaders();
+    return this._http.get(dns + "compteServer/" + id + "/Boitiers?&keyWord=" + keyWord + "&page=" + page + "&size=" + size, { headers });
+  }
+
+  updateBoitier(boitier: Boitier, idServer: number, updateType: string): Observable<any> {
+    const headers = this.getHeaders();
+    return this._http.put(dns + "boities?idServer=" + idServer + "&updateType=" + updateType, boitier, { headers });
+  }
+
+
+  lastArchiveOfBoitier(numBoitier: number): Observable<any> {
+    const headers = this.getHeaders();
+    return this._http.get(dns + "boities/" + numBoitier + "/lastArchive", { headers });
+  }
+
+  extendIntervalOfBoitiers(idCompteServer: number): Observable<any> {
+    const headers = this.getHeaders();
+    return this._http.put(dns + "compteServer/" + idCompteServer + "/newInterval", null, { headers });
+  }
+
+  addBoitiers(idCompteServer: number, nbrBoitiers: number): Observable<any> {
+    const headers = this.getHeaders();
+    return this._http.post(dns + "compteServer/" + idCompteServer + "?nombreBoitier=" + nbrBoitiers, null, { headers });
+  }
+
+  getAllAdminComptesByKeyWord(keyWord: string, page: number, size: number): any {
+    const headers = this.getHeaders();
+    if (this.isAgentAdmin()) {
+      return this._http.get(dns + "adminCompteWeb/all?keyWord=" + keyWord + "&page=" + page + "&size=" + size, { headers });
+    }
+  }
+
+  addAdminCompte(adminCompte: AdministratorCompte): any {
+    const headers = this.getHeaders();
+    if (this.isAgentAdmin()) {
+      return this._http.post(dns + "adminCompteWeb/add", adminCompte, { headers });
+    }
+  }
+
+  createServerComptewithBoitier(compteServer: CompteServer, nbrBoitiers: number): Observable<any> {
+    const headers = this.getHeaders();
+    return this._http.post(dns + "compteServer/addNewComptewithBoitier?nombreBoitier=" + nbrBoitiers + "&username=" + this.getCurrentUserName(), compteServer, { headers });
+  }
+
+  isExistPseudo(pseudo: String): Observable<any> {
+    const headers = this.getHeaders();
+    return this._http.get(dns + "/compteServer/pseudo?pseudo=" + pseudo, { headers });
+
+  }
+  isExistLogin(login: String): Observable<any> {
+    const headers = this.getHeaders();
+    return this._http.get(dns + "/compteServer/login?login=" + login, { headers });
+
+  }
+
+  getAllOptions(): Observable<any> {
+    const headers = this.getHeaders();
+    return this._http.get(dns + "options", { headers });
+  }
+
+  logoutStorage() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("isAuthenticate");
+  }
+
+  getAllServerAccountForForm(): Observable<any> {
+    const headers = this.getHeaders();
+    let keyWord = "";
+    return this._http.get(dns + "compteServerWeb?keyWord=" + keyWord + "&size=" + 1000000 + "&userName=" + this.getCurrentUserName(), { headers });
+  }
+
+  associateCompteWebToCompteServer(idWeb: number, idServer: number): Observable<any> {
+    const headers = this.getHeaders();
+    return this._http.put(dns + "compteWeb/" + idWeb + "/compteServer/" + idServer, null, { headers });
+  }
+
+  addCompteWeb(compteWeb: CompteWeb): Observable<any> {
+    const headers = this.getHeaders();
+    return this._http.post(dns + "compteWeb?userName=" + this.getCurrentUserName(), compteWeb,  { headers });
+  }
 
 }

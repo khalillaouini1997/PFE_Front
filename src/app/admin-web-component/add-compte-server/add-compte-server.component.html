@@ -1,0 +1,144 @@
+<!--created by AHMED HAYEL-->
+
+<div class="container-fluid">
+  <div class="alert alert-danger" role="alert" *ngIf="mode==true">
+    {{messageError}}
+  </div>
+  <div class="row">
+    <div class="center">
+      <div class="card">
+        <div class="card-header" data-background-color="blue">
+          <h4 class="title">Add Server Account</h4>
+          <p class="category">Complete this Form</p>
+        </div>
+        <div class="card-content">
+          <form #serverForm="ngForm">
+            <div class="row">
+
+              <div class="col-md-6">
+                <div class="form-group label-floating">
+                  <label class="control-label">Pseudo</label>
+                  <input type="text" class="form-control" name="pseudo" [(ngModel)]="compteServer.pseudo" required
+                    isExistPseudo="false">
+                </div>
+
+                <div class="invalid-feedback text-danger" *ngIf="isExistPseudo==true">
+                  <i class="fa fa-thumbs-o-down" aria-hidden="true"></i> Existing Pseudo
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group label-floating">
+                  <label class="control-label">Login</label>
+                  <input type="text" class="form-control" name="login" [(ngModel)]="compteServer.login" required>
+                </div>
+
+                <div class="invalid-feedback text-danger" *ngIf="isExistLogin==true">
+                  <i class="fa fa-thumbs-o-down" aria-hidden="true"></i> Existing Loguin
+                </div>
+              </div>
+            </div>
+
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group label-floating" [class.has-error]="password.touched && password.invalid">
+                  <label for="password" class="control-label">Password</label>
+                  <input type="password" data-minlength="6" class="form-control" name="password" id="Password"
+                    [(ngModel)]="compteServer.password" #password="ngModel" required>
+                  <span class="help-block with-errors" *ngIf="compteServer.password.length<6">Minimum of 6
+                    characters</span>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group label-floating"
+                  [class.has-error]="confirmPassword.touched && confirmPassword.invalid">
+                  <label for=confirmPassword class="control-label">Confirmation Password</label>
+                  <input type="password" class="form-control" name="confirmPassword" id="confirmPassword"
+                    appConfirmEqualValidator="password" #confirmPassword="ngModel" [(ngModel)]="confirmationPassword"
+                    required>
+                  <span class="help-block "></span>
+                  <!--<span class="help-block with-errors" *ngIf=" confirmPassword.errors?.notEqual && 
+                                  !confirmPassword.errors?.required"> password and Confirm Password does not match
+
+                  </span>-->
+                </div>
+              </div>
+
+            </div>
+            <div class="row">
+
+              <div class="col-md-6">
+                <div class="form-group label-floating">
+                  <label class="control-label">Date d'expiration</label>
+                  <div class="input-group input-append date">
+                    <!--<my-date-picker name="mydate" [options]="myDatePickerOptions" placeholder="date Expiration"
+                      [(ngModel)]="date" required></my-date-picker>-->
+                    <span class="input-group-addon add-on"></span>
+                  </div>
+
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="col-md-6">
+                  <div class="form-group label-floating">
+                    <label class="control-label">Number of Devices</label>
+                    <input type="number" min=0 class="form-control" name="numberBoitier" [(ngModel)]="numberBoitier"
+                      required>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+
+
+
+            <div class="row">
+              <div class="col-md-6">
+
+              </div>
+              <!--<button type="button" class="btn btn-info pull-right" [disabled]="!serverForm.form.valid "
+                (click)="addCompteServer()" [tooltip]="tooltipup" tooltipPlacement="top" data-toggle="modal"
+                data-target="#Modalupdate" data-backdrop="false">Save Server account</button>
+                <tooltip-content #tooltipup>
+                  Save Server account
+              </tooltip-content>-->
+            </div>
+            <div class="clearfix"></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="Modalupdate" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="alert alert-warning" role="alert">
+
+          <h1>
+
+            Notifications sur la creation du compte server:
+
+          </h1>
+        </div>
+        <div style="text-align:center; margin-top: 100px;">
+
+          <h2>
+
+            <span style="color: red;">{{ notifications }}</span>/{{numberBoitier}} devices are ready
+
+          </h2>
+
+        </div>
+      </div>
+      <div class="modal-footer">
+
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="reinitialisation()">OK</button>
+      </div>
+    </div>
+  </div>
+</div>

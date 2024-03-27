@@ -1,0 +1,51 @@
+.intervention{
+    margin-top: 3%;
+}
+ 
+.bg-orange{
+    background-color: rgb(255,165,0);
+}
+.bg-blue{
+    background-color:rgb(30,144,255)
+}
+.bg-green{
+    background-color: rgb(34,139,34);
+}
+.bg-red{
+    background-color: rgb(255,0,0);
+}
+.modal-content .modal-header{
+    margin-top:0px;
+    width:800px;
+}
+.ng-template{
+    width: 800px !important;
+}
+.modal-dialog {
+    width: 900px !important;
+    margin: 30px !important;
+}
+
+.formulaire{
+    background-color: rgb(255, 241, 243);
+    color: rgb(0, 0, 0);
+    border-radius: 10px;
+    padding-bottom: 0px;
+    padding-top: 0px;
+    padding-left: 0px;
+   }
+
+   .card .card-header{
+    border-radius: 3px;
+    padding: 0px 15px 0px 20px;
+  }
+  
+  .card {
+    margin: 32px 0 0 0;
+  }
+  
+  .tableFixHead table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+    padding: 0px 8px;
+    vertical-align: middle;
+  }
+  

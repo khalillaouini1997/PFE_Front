@@ -1,0 +1,192 @@
+<!--created by AHMED HAYEL-->
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-10 center">
+                <div class="card">
+                    <div class="card-header" data-background-color="red">
+                        <h4 class="title">Ajouter un compte Web</h4>
+                        <p class="category">Remplissez ce formulaire</p>
+                    </div>
+                    <div class="card-content">
+                        <form #webForm="ngForm">
+                            <div class="row">
+
+                                <div class="col-md-6">
+                                    <div class="form-group label-floating">
+                                        <label class="control-label">Login</label>
+                                        <input type="text" class="form-control" [(ngModel)]="compteWeb.login"
+                                            name="login" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group label-floating">
+                                        <label class="control-label">Mot de passe</label>
+                                        <input type="text" class="form-control" [(ngModel)]="compteWeb.password"
+                                            name="password" required>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+
+                                <div class="col-md-6">
+                                    <div class="form-group label-floating">
+                                        <label class="control-label">Code Pays</label>
+                                        <select [(ngModel)]="compteWeb.code_pays" class="form-control" name="code_pays"
+                                            required>
+                                            <option *ngFor="let codePays of codesPays" [value]="codePays.value">
+                                                {{codePays.key}} (+{{codePays.value}}) </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group label-floating">
+                                        <div class="input-group input-append date">
+                                            <!--<my-date-picker name="mydate" [options]="myDatePickerOptions"
+                                                placeholder="date Expiration" [(ngModel)]="date" required>
+                                            </my-date-picker>-->
+                                            <span class="input-group-addon add-on"></span>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group label-floating">
+                                        <div class="input-group input-append date">
+                                            <label class="control-label">Compte serveur</label>
+                                            <select [(ngModel)]="idCompte" class="form-control" name="server" required>
+                                                <option *ngFor="let server of serverAccounts"
+                                                    [value]="server.idCompteClientServer"> {{server.pseudo}} </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group label-floating">
+                                        <label class="control-label">IP Adresse</label>
+                                     
+                                        <!--<select [(ngModel)]="compteWeb.ipAdresse" name="ipAdresse" id="adresseIP"
+                                            class="form-control" #ipAdresse="ngModel" required>
+                                            <option *ngFor="let ip of ipAddresses" [ngValue]="ip.value">{{ip.label}}
+                                            </option>
+                                        </select>-->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+
+                                <div class="col-md-6">
+                                    <div class="form-group label-floating">
+                                        <label class="control-label">Nom</label>
+                                        <input type="text" class="form-control" [(ngModel)]="compteWeb.firstname"
+                                            name="firstname">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group label-floating">
+                                        <label class="control-label">Prénom</label>
+                                        <input type="text" class="form-control" [(ngModel)]="compteWeb.lastname"
+                                            name="lastname">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+
+                                <div class="col-md-6">
+                                    <div class="form-group label-floating">
+                                        <label class="control-label">Email</label>
+                                        <input type="email" class="form-control" [(ngModel)]="compteWeb.email"
+                                            name="email">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group label-floating">
+                                        <label class="control-label">Téléphone</label>
+                                        <input type="tel" class="form-control" [(ngModel)]="compteWeb.telephone"
+                                            name="telephone">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group label-floating">
+                                        <label class="control-label">Région</label>
+                                        <select [(ngModel)]="compteWeb.area" class="form-control" name="code_pays">
+                                            <option *ngFor="let t of regions" [value]="t">{{ t }}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group label-floating">
+                                        <label class="control-label">Type de notification</label>
+                                        <select [(ngModel)]="compteWeb.notificationSubquery" class="form-control"
+                                            name="type_notif">
+                                            <option *ngFor="let notifSub of notifSubs" [value]="notifSub">{{ notifSub }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group label-floating">
+                                        <label class="control-label">Notification Mobile</label>
+                                        <input type="checkbox" [checked]="checked" name="checked"
+                                            [(ngModel)]="compteWeb.mobileNotif">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+
+                                <div class="col-md-6">
+                                    <div class="form-group label-floating">
+                                        <label class="control-label">Redenance equipement par jour</label>
+                                        <input type="number" class="form-control" [(ngModel)]="compteWeb.deviceFeeByDay"
+                                            name="deviceFeeByDay">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group label-floating">
+                                        <label class="control-label">Redenance compte par mois</label>
+                                        <input type="number" class="form-control" [(ngModel)]="compteWeb.accountFeeByMonth"
+                                            name="accountFeeByMonth">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+
+                                <div class="col-md-6">
+                                    <div class="form-group label-floating">
+                                        <label class="control-label">Redenance equipement par mois</label>
+                                        <input type="number" class="form-control" [(ngModel)]="compteWeb.deviceFeePerMonth"
+                                            name="deviceFeePerMonth">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group label-floating">
+                                        <label class="control-label">Redenance carte sim par mois</label>
+                                        <input type="number" class="form-control" [(ngModel)]="compteWeb.simCardFeePerMonth"
+                                            name="simCardFeePerMonth">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="button" class="btn btn-danger pull-right" [disabled]="!webForm.form.valid"
+                                (click)="addCompteWeb()">Enregistrer le compte Web</button>
+                            <div class="clearfix"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

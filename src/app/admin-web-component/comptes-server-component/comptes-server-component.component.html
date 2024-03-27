@@ -1,0 +1,159 @@
+<!--created by AHMED HAYEL-->
+<div class="alert alert-danger" role="alert" *ngIf="mode==true">
+    {{messageError}}
+</div>
+
+<form class="navbar-form navbar-right" role="search" style="margin:0;">
+    <div class="form-group  is-empty">
+        <input type="text" class="form-control" name="search" [(ngModel)]="keyWord" placeholder="Search"
+            style="margin:0;">
+        <span class="material-input"></span>
+    </div>
+    <button type="submit" class="btn btn-white btn-round btn-just-icon" style="margin:0;" (click)="searchAccount()">
+        <i class="material-icons">search</i>
+        <div class="ripple-container"></div>
+    </button>
+</form>
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header" data-background-color="blue">
+            <h4 class="title">List of Server Account</h4>
+        </div>
+        <div class="card-content table-responsive">
+            <table class="table">
+                <thead class="text-primary">
+                    <th>Id</th>
+                    <th>Pseudo</th>
+                    <th>IP Adresse</th>
+                   <!-- <th>Created At</th>
+                    <th>Expired At</th>-->
+                    <th>Configurations</th>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let compteServer of comptesServer">
+                        <td>{{compteServer.idCompteClientServer}}</td>
+                        <td>{{compteServer.pseudo}}</td>
+                        <td>{{compteServer.ipAdresse}} </td>
+                       <!--- <td>{{compteServer.date_creation | date:'dd-MM-yyyy'}}</td>
+                        <td>{{compteServer.date_Expiration | date:'dd-MM-yyyy'}}
+                            <span class="label label-success" *ngIf="compteServer.during==true">During</span>
+                            <span class="label label-danger" *ngIf="compteServer.expired==true">Expired</span>
+                        </td>-->
+                        <td>
+
+                            <!--<button class="btn btn-warning btn-xs" (click)="onSelect(compteServer)"
+                                [tooltip]="tooltipup" tooltipPlacement="left" data-toggle="modal"
+                                data-target="#Modalupdate" data-backdrop="false"><i
+                                    class="material-icons md-24">build</i></button>
+                            <tooltip-content #tooltipup>
+                                update Server Account.
+                            </tooltip-content>
+
+                            <button class="btn btn-info btn-xs" [tooltip]="tooltipinfo" tooltipPlacement="left"
+                                [routerLink]="['/adminWeb/compteDetails',compteServer.idCompteClientServer]"><i
+                                    class="material-icons md-24">list</i></button>
+                            <tooltip-content #tooltipinfo>
+                                Server Account details.
+                            </tooltip-content>-->
+
+                            <!--<button class="btn btn-danger btn-xs" (click)="onSelect(compteServer);deleteCompteServer();">
+                                <i class="material-icons md-24"
+                                    title=" Supprimer le compte Web">delete_forever</i></button>-->
+
+
+                        </td>
+
+
+                    </tr>
+
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-6 text-center">
+    <pagination [hidden]="loading" [totalItems]="bigTotalItems" [(ngModel)]="bigCurrentPage" [maxSize]="maxSize"
+        class="pagination-sm" [boundaryLinks]="true" [rotate]="false" [itemsPerPage]="itemsPerPage"
+        (pageChanged)="pageChanged($event)" previousText="Précédent" nextText="Suivant" firstText="Premier"
+        lastText="Dernier"></pagination>
+
+</div>
+
+<!--start modal update compte server-->
+
+<div id="Modalupdate" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <form #updateServerForm="ngForm">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">update server Account {{selectedCompteServer.pseudo}}</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            <div class="form-group label-floating">
+                                <input type="text" class="form-control" value="" name="pseudo"
+                                    [(ngModel)]="selectedCompteServer.pseudo" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group label-floating">
+                                <input type="text" class="form-control" name="login"
+                                    [(ngModel)]="selectedCompteServer.login" required>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group label-floating">
+                                <input type="text" class="form-control" name="password"
+                                    [(ngModel)]="selectedCompteServer.password" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group label-floating">
+
+                                <select [(ngModel)]="selectedCompteServer.ipAdresse" name="ipAdress" id="adresse"
+                                    class="form-control" required>
+                                    <option *ngFor="let ip of ips" [ngValue]="ip.value">{{ip.label}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            <div class="form-group label-floating">
+                                <div class="input-group input-append date">
+                                    <!--<my-date-picker name="Exdate" [options]="myDatePickerOptions"
+                                        placeholder="date Expiration" [(ngModel)]="dt" required></my-date-picker>-->
+                                    <span class="input-group-addon add-on"></span>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" (click)="updateCompteServer()"
+                        data-dismiss="modal">update</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+<!--end modal update compte server-->

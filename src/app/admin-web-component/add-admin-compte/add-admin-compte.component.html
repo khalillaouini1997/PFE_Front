@@ -1,0 +1,107 @@
+<!--created by AHMED HAYEL-->
+
+<div class="container-fluid">
+  <div class="alert alert-danger" role="alert" *ngIf="mode==true">
+    {{messageError}}
+  </div>
+  <div class="row">
+    <div class="center">
+      <div class="card">
+        <div class="card-header" data-background-color="blue">
+          <h4 class="title">Add Admin Account</h4>
+          <p class="category">Complete this Form</p>
+        </div>
+        <div class="card-content">
+          <form #webForm="ngForm">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group label-floating">
+                  <label class="control-label">username</label>
+                  <input type="text" class="form-control" name="username" [(ngModel)]="adminCompte.username" required>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group label-floating">
+                  <label class="control-label">Password</label>
+                  <input type="text" class="form-control" name="password" [(ngModel)]="adminCompte.password" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group label-floating">
+                  <label class="control-label">Role</label>
+                  <select [(ngModel)]="adminCompte.role" class="form-control" name="code_pays">
+                    <option *ngFor="let r of roles" [value]="r">{{ r }}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group label-floating">
+                  <label class="control-label">Id Traccar</label>
+                  <input type="number" class="form-control" name="idTraccar" [(ngModel)]="adminCompte.idTraccar">
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group label-floating">
+                  <label class="control-label">Use Fcm</label>
+                  <input type="checkbox" [checked]="checked" name="checked" [(ngModel)]="adminCompte.useFcm">
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group label-floating">
+                  <label class="control-label">Fcm Prefix</label>
+                  <input type="text" class="form-control" name="fcmPrefix" [(ngModel)]="adminCompte.fcmPrefix">
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group label-floating">
+                  <label class="control-label">Mail Support</label>
+                  <input type="text" class="form-control" name="mailSupport" [(ngModel)]="adminCompte.mailSupport">
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group label-floating">
+                  <label class="control-label">Device Cost By Day</label>
+                  <input type="text" class="form-control" name="deviceCostByDay"
+                    [(ngModel)]="adminCompte.deviceCostByDay">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group label-floating">
+                  <label class="control-label">AccountFreePerMonth</label>
+                  <input type="number" class="form-control" name="accountFreePerMonth"
+                    [(ngModel)]="adminCompte.accountFreePerMonth">
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group label-floating">
+                  <label class="control-label">Transction Fee</label>
+                  <input type="text" class="form-control" name="transctionFee" [(ngModel)]="adminCompte.transctionFee">
+                </div>
+              </div>
+            </div>
+
+            <button type="button" class="btn btn-danger pull-right" [disabled]="!webForm.form.valid"
+              (click)="addAdminCompte()">Enregistrer le admin compte</button>
+            <div class="clearfix"></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,18 @@
+/* created by AHMED HAYEL */
+#showtime{
+    text-align: center;
+    margin-top:20%;
+}
+.error{
+font-weight: bold;
+color: lightyellow;
+font-size:100px;
+line-height: 100px;
+
+}
+.hyber{
+    color:white;
+    font-size:20px;
+    cursor: pointer;
+    text-decoration: underline;
+}

@@ -113,19 +113,19 @@ export class Option {
 
 export class RecalculatePayload {
 
-  idBoitier: number;
-  idBoitiers: number[];
-  recalculeStartDate: number | null;
+    idBoitier: number;
+    idBoitiers: number[];
+    recalculeStartDate: number | null;
 
-  constructor() {
-    this.idBoitier = 0
-    this.idBoitiers = [];
-    this.recalculeStartDate = null;
+    constructor() {
+        this.idBoitier = 0
+        this.idBoitiers = [];
+        this.recalculeStartDate = null;
 
-  }
+    }
 }
 
-  export class PathConfigPayload {
+export class PathConfigPayload {
     boitiersId: number[];
     pathMinSpeed: number
     pathMinSec: number
@@ -135,7 +135,7 @@ export class RecalculatePayload {
 
     constructor() { }
 
-  }
+}
 export class AdministratorCompte {
     idAdministratorCompte: number;
     username: string;
@@ -150,6 +150,7 @@ export class AdministratorCompte {
     deviceCostByDay: number;
     accountFreePerMonth: number;
     transctionFee: number;
+    numLastBoitierAvailable:number;
     constructor() {
         this.idAdministratorCompte = 0;
         this.username = '';
@@ -158,6 +159,7 @@ export class AdministratorCompte {
 }
 
 export class AccessLog {
+    login: string;
     date: Date;
     userId: number;
     ipAddress: string;
@@ -238,72 +240,92 @@ export class VehiculeSetting {
 }
 
 export interface Tram {
-	login: String;
-	deviceid: number;
-	status: String;
-	latitude: number;
-	longitude: number;
-	fuel: Number;
-	ignition: boolean;
-	mems_x: number;
-	mems_y: number;
-	mems_z: number;
-	power: number;
-	record_time: Date;
-	sat_in_view: number;
-	send_flag: number;
-	speed: number;
-	temperature: String;
-	type: String;
-	validity: boolean;
-	signal: number;
-	rotation_angle: number;
-	rpm: number;
-	fuel_rate: number;
-	tfu: number;
-	temp_engine: number;
-	accum_odo: number;
-	last_raw_time: Date;
-	matricule: String;
-	ignitionStatistique: number;
-	speedStatistique: number;
-	invalidityStatistique: number;
+    login: String;
+    deviceid: number;
+    status: String;
+    latitude: number;
+    longitude: number;
+    fuel: Number;
+    ignition: boolean;
+    mems_x: number;
+    mems_y: number;
+    mems_z: number;
+    power: number;
+    record_time: Date;
+    sat_in_view: number;
+    send_flag: number;
+    speed: number;
+    temperature: String;
+    type: String;
+    validity: boolean;
+    signal: number;
+    rotation_angle: number;
+    rpm: number;
+    fuel_rate: number;
+    tfu: number;
+    temp_engine: number;
+    accum_odo: number;
+    last_raw_time: Date;
+    matricule: String;
+    ignitionStatistique: number;
+    speedStatistique: number;
+    invalidityStatistique: number;
 
-	numPuce: String;
-	imei: String;
-	version: String;
-	lastIdRaw: number;
-	lastId: number;
-	lastTime: Date;
+    numPuce: String;
+    imei: String;
+    version: String;
+    lastIdRaw: number;
+    lastId: number;
+    lastTime: Date;
 }
 
 export class Intervention {
-  /**intervention id */
-  id: number;
-  /**intervention type :REQUEST|INPROGRESS|CARRYOUT|REJECTED*/
-  type: 'REQUEST' | 'INPROGRESS' | 'CARRYOUT' | 'REJECTED';
+    /**intervention id */
+    id: number;
+    /**intervention type :REQUEST|INPROGRESS|CARRYOUT|REJECTED*/
+    type: 'REQUEST' | 'INPROGRESS' | 'CARRYOUT' | 'REJECTED';
 
-  idBoitiers: number;
+    idBoitiers: number;
 
-  content: string;
-  /**request type */
-  request: string;
-  /**response */
-  response: string;
-  /**intervention was created at */
-  createdAt: Date;
+    content: string;
+    /**request type */
+    request: string;
+    /**response */
+    response: string;
+    /**intervention was created at */
+    createdAt: Date;
 
-  submitAt: Date;
-  /** we have three possibilities :moyen,faible,urgent */
-  priority: number;
+    submitAt: Date;
+    /** we have three possibilities :moyen,faible,urgent */
+    priority: number;
 
-  constructor() { }
+    constructor() { }
 }
 
 export class UpdateIntervention extends Intervention {
-  idTenant: number;
-  constructor() { super(); }
+    idTenant: number;
+    constructor() { super(); }
 }
 
 
 
+export class InterventionInfo {
+    deviceId: number;
+    matricule: string;
+    mark: string;
+    driver: string;
+    technician: string;
+    createdAt: Date;
+    verifiedAt: Date;
+    verified: boolean;
+    constructor() { }
+}
+
+
+
+
+export class TraccarDto {
+    id: number;
+    name: string;
+    imei: string;
+}
