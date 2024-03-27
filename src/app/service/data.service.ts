@@ -1,13 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import {Observable, throwError} from 'rxjs';
 import { dns } from '../global.config';
-import { createAuthorizationHeader } from '../utils/security/headers';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {
-  AdministratorCompte,
-  Boitier,
-  CompteServer,
-  CompteWeb,
+  AdministratorCompte, Boitier,
   DeviceOpt,
   DeviceSetting,
   Intervention,
@@ -17,7 +13,7 @@ import {
   Tram,
   VehiculeSetting
 } from '../data/data';
-import { map } from "rxjs/operators";
+import {catchError, map} from "rxjs/operators";
 import { jwtDecode } from "jwt-decode";
 
 @Injectable({
@@ -88,20 +84,7 @@ export class DataService {
   currentUser: AdministratorCompte;
   constructor(private _http: HttpClient) { }
 
-  getAllCompteClientWeb(): Observable<any> {
-    let headers = createAuthorizationHeader();
-    return this._http.get(dns + "compteWeb/All?userName=" + this.currentUser.username, { headers: headers });
-  }
 
-  getAllLastTram(idCompteWeb: number): Observable<any> {
-    let headers = createAuthorizationHeader();
-    return this._http.get(dns + "compteWeb/" + idCompteWeb + "/lastTrame", { headers: headers });
-  }
-
-  exportLastTram(realtimes: Tram[]): Observable<any> {
-    let headers = createAuthorizationHeader();
-    return this._http.post(dns + 'compteWeb/lastTrame/export', realtimes, { headers: headers });
-  }
 
   isAgentAdmin(): boolean {
     const userString = localStorage.getItem('user');
@@ -115,12 +98,17 @@ export class DataService {
   }
 
   private getHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token');
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': token ? `Bearer ${token}` : '' // Use Bearer token format
-    });
+    let headers = new HttpHeaders();
+    headers = headers.append('Accept', 'application/json');
+    headers = headers.append('Access-Control-Allow-Origin', '*');
+    headers = headers.append('Content-Type', 'application/json');
+    headers = headers.append('Authorization', this.loadToken());
     return headers;
+  }
+
+  loadToken(): string {
+    const token = localStorage.getItem("token");
+    return token !== null ? token : '';
   }
 
   getAllIps(): Observable<any> {
@@ -147,10 +135,17 @@ export class DataService {
     );
   }
 
-  getAllLastTramforAllClient(): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.get<any>(dns + 'compteWeb/AllLastTram', { headers });
+  updateBoitier(boitier: Boitier, idServer: number, updateType: string): Observable<any> {
+    let options = { headers: this.getHeaders() };
+    return this._http.put<any>(dns + "boities?idServer=" + idServer + "&updateType=" + updateType, boitier, options);
   }
+
+  lastArchiveOfBoitier(numBoitier: number): Observable<any> {
+    let options = { headers: this.getHeaders() };
+    return this._http.get(dns + "boities/" + numBoitier + "/lastArchive", options);
+  }
+
+
 
   recalculeHistorique(idCompteWeb: number, recalculatePayload: RecalculatePayload): Observable<any> {
     const headers = this.getHeaders();
@@ -280,74 +275,6 @@ export class DataService {
     }
   }
 
-  getAllWebAccountByKeyWord(keyWord: string, page: number, size: number): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.get(dns + "compteWeb?keyWord=" + keyWord + "&page=" + page + "&size=" + size + "&userName=" + this.getCurrentUserName(), { headers });
-  }
-
-
-  deleteWebAccount(id: number) {
-    const headers = this.getHeaders();
-    return this._http.delete(dns + "compteWeb/" + id, { headers });
-  }
-
-  getDateLog(username: string): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.get(dns + "compteWeb?datelog=" + username, { headers });
-
-  }
-
-
-  ExportListComptesServer(comptesServer: CompteServer[]): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.post(dns + 'compteServerWeb/export', comptesServer, { headers });
-  }
-
-  getAllServerAccount(keyWord: string, page: number, size: number): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.get(dns + "compteServerWeb?keyWord=" + keyWord + "&page=" + page + "&size=" + size + "&userName=" + this.getCurrentUserName(), { headers });
-  }
-
-  deleteCompteServer(id: number) {
-    const headers = this.getHeaders();
-    this._http.delete(dns + "compteServer/" + id, { headers });
-  }
-
-  updateServerCompte(id: number, compteServer: CompteServer): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.put(dns + "compteServer/" + id, compteServer, { headers });
-  }
-
-  getCompteServerById(id: number): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.get(dns + "compteServer/" + id, { headers });
-  }
-
-  getBoitierOfAccount(keyWord: string, id: number, page: number, size: number): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.get(dns + "compteServer/" + id + "/Boitiers?&keyWord=" + keyWord + "&page=" + page + "&size=" + size, { headers });
-  }
-
-  updateBoitier(boitier: Boitier, idServer: number, updateType: string): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.put(dns + "boities?idServer=" + idServer + "&updateType=" + updateType, boitier, { headers });
-  }
-
-
-  lastArchiveOfBoitier(numBoitier: number): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.get(dns + "boities/" + numBoitier + "/lastArchive", { headers });
-  }
-
-  extendIntervalOfBoitiers(idCompteServer: number): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.put(dns + "compteServer/" + idCompteServer + "/newInterval", null, { headers });
-  }
-
-  addBoitiers(idCompteServer: number, nbrBoitiers: number): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.post(dns + "compteServer/" + idCompteServer + "?nombreBoitier=" + nbrBoitiers, null, { headers });
-  }
 
   getAllAdminComptesByKeyWord(keyWord: string, page: number, size: number): any {
     const headers = this.getHeaders();
@@ -363,21 +290,7 @@ export class DataService {
     }
   }
 
-  createServerComptewithBoitier(compteServer: CompteServer, nbrBoitiers: number): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.post(dns + "compteServer/addNewComptewithBoitier?nombreBoitier=" + nbrBoitiers + "&username=" + this.getCurrentUserName(), compteServer, { headers });
-  }
 
-  isExistPseudo(pseudo: String): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.get(dns + "/compteServer/pseudo?pseudo=" + pseudo, { headers });
-
-  }
-  isExistLogin(login: String): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.get(dns + "/compteServer/login?login=" + login, { headers });
-
-  }
 
   getAllOptions(): Observable<any> {
     const headers = this.getHeaders();
@@ -400,9 +313,36 @@ export class DataService {
     return this._http.put(dns + "compteWeb/" + idWeb + "/compteServer/" + idServer, null, { headers });
   }
 
-  addCompteWeb(compteWeb: CompteWeb): Observable<any> {
+
+
+  /**
+   *
+   * all Administrator compte
+   *
+   */
+  getAllAdministratorCompteService(keyWord: string, page: number, size: number): Observable<any> {
     const headers = this.getHeaders();
-    return this._http.post(dns + "compteWeb?userName=" + this.getCurrentUserName(), compteWeb,  { headers });
+    if (this.isAgentAdmin()) {
+      return this._http.get<any>(`${dns}adminCompteWeb?keyWord=${keyWord}&page=${page}&size=${size}`, { headers }).pipe(
+        catchError(this.handleError)
+      );
+    } else {
+      return throwError("Not authorized to access administrator accounts.");
+    }
+  }
+
+
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'An error occurred';
+    if (error.error instanceof ErrorEvent) {
+      // Client-side error
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      // Server-side error
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+    }
+    console.error(errorMessage);
+    return throwError(errorMessage);
   }
 
 }

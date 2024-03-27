@@ -3,6 +3,9 @@ import { BsModalRef, ModalDirective } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { CompteWeb, Intervention } from 'src/app/data/data';
 import { DataService } from 'src/app/service/data.service';
+import {CompteServerService} from "../../service/compte-server.service";
+import {CompteWebService} from "../../service/compte-web.service";
+import {DashboardService} from "../../service/dashboard.service";
 
 @Component({
   selector: 'app-help',
@@ -38,7 +41,11 @@ export class HelpComponent implements OnInit {
   loading: boolean = false;
 
 
-  constructor( private providers: DataService, public toastr: ToastrService, vcr: ViewContainerRef) {
+  constructor( private compteServerService: CompteServerService,
+               private compteWebService: CompteWebService,
+               private dashboardService: DashboardService,
+               private dataService: DataService,
+               public toastr: ToastrService, vcr: ViewContainerRef) {
     //this.toastr.setRootViewContainerRef(vcr);
   }
 
@@ -48,7 +55,7 @@ export class HelpComponent implements OnInit {
   }
   /**load client */
   public loadClient() {
-    this.providers.getAllCompteClientWeb().subscribe((res:any) => {
+    this.compteWebService.getAllCompteClientWeb().subscribe((res:any) => {
       this.comptesWeb = res;
     })
   }
@@ -58,7 +65,7 @@ export class HelpComponent implements OnInit {
     this.interventionsFilter = [];
     this.interventions = [];
     this.selectedType = null;
-    this.providers.getIntervention(this.selectedCompteWebId as never).subscribe((res: any) => {
+    this.dataService.getIntervention(this.selectedCompteWebId as never).subscribe((res: any) => {
         this.interventions = res;
         this.interventionsFilter = res;
       });
@@ -70,7 +77,7 @@ export class HelpComponent implements OnInit {
   /**update intervention */
   public updateIntervention() {
     //  this.currentIntervention.submitAt = new Date(this.date['jsdate']);
-    this.providers.updateIntervention(this.currentIntervention, this.selectedCompteWebId as never).subscribe((res: any) => {
+    this.dataService.updateIntervention(this.currentIntervention, this.selectedCompteWebId as never).subscribe((res: any) => {
       if (res) {
         this.toastr.success('Success');
       } else {

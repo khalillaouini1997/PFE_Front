@@ -3,11 +3,14 @@ import { Router } from '@angular/router';
 import { saveAs as importedSaveAs } from 'file-saver';
 import { Boitier, CompteWeb, Tram } from 'src/app/data/data';
 import { DataService } from 'src/app/service/data.service';
+import {CompteServerService} from "../../service/compte-server.service";
+import {CompteWebService} from "../../service/compte-web.service";
+import {DashboardService} from "../../service/dashboard.service";
 
 /**
- * 
+ *
  * created by AHMED HAYEL
- * 
+ *
  */
 
 @Component({
@@ -24,7 +27,11 @@ export class DashbordComponent implements OnInit {
 
   loading: boolean = false;
 
-  constructor(private service: DataService, private router: Router) { }
+  constructor(private compteServerService: CompteServerService,
+              private compteWebService: CompteWebService,
+              private dashboardService: DashboardService,
+              private dataService: DataService,
+              private router: Router) { }
 
   ngOnInit() {
 
@@ -33,13 +40,13 @@ export class DashbordComponent implements OnInit {
       window.location.reload();
     }
 
-    this.service.isAuthenticated = this.service.loadTestAuthenticated();
+    this.dashboardService.isAuthenticated = this.dashboardService.loadTestAuthenticated();
 
-    if (this.service.isAuthenticated == false) {
+    if (this.dashboardService.isAuthenticated == false) {
 
       this.router.navigate(['/error']);
     } else {
-      this.service.getAllCompteClientWeb().subscribe(res => {
+      this.compteWebService.getAllCompteClientWeb().subscribe(res => {
         this.comptesWeb = res;
       });
 
@@ -58,7 +65,7 @@ export class DashbordComponent implements OnInit {
 
     this.loading = true;
     this.listTram = [];
-    this.service.getAllLastTram(this.compteWeb.idCompteClientWeb).subscribe(res => {
+    this.compteWebService.getAllLastTram(this.compteWeb.idCompteClientWeb).subscribe(res => {
       this.listTram = res;
     })
   }
@@ -69,7 +76,7 @@ export class DashbordComponent implements OnInit {
   onExport() {
     if (this.listTram.length <= 0) return;
 
-    this.service.exportLastTram(this.listTram)
+    this.compteWebService.exportLastTram(this.listTram)
       .subscribe(blob => {
         importedSaveAs(blob, 'Repport d\'état des boitiers.xlsx');
       });

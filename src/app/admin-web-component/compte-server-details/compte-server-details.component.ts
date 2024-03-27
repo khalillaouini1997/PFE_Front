@@ -2,6 +2,9 @@ import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Boitier, CompteServer } from 'src/app/data/data';
 import { DataService } from 'src/app/service/data.service';
+import {CompteWebService} from "../../service/compte-web.service";
+import {DashboardService} from "../../service/dashboard.service";
+import {CompteServerService} from "../../service/compte-server.service";
 
 @Component({
   selector: 'app-compte-server-details',
@@ -29,19 +32,19 @@ export class CompteServerDetailsComponent implements OnInit {
   public bigCurrentPage: number = 1;
   public pagesFrom: number = 0;
   itemsPerPage = 15;
-  constructor( vcr: ViewContainerRef, private route: ActivatedRoute, private service: DataService,
+  constructor( vcr: ViewContainerRef, private route: ActivatedRoute, private compteServerService: CompteServerService, private compteWebService: CompteWebService, private dashboardService: DashboardService, private dataService: DataService,
     private router: Router
   ) {
     //this.toastr.setRootViewContainerRef(vcr);
   }
 
   ngOnInit() {
-    this.service.isAuthenticated = this.service.loadTestAuthenticated();
+    this.dashboardService.isAuthenticated = this.dashboardService.loadTestAuthenticated();
     this.route.params.subscribe((params: Params) => {
 
       this.ID_COMPTE = (+params['idCompteClientServer']);
 
-      this.service.getCompteServerById(this.ID_COMPTE).subscribe(_compteServer => {
+      this.compteServerService.getCompteServerById(this.ID_COMPTE).subscribe(_compteServer => {
         this.compteServer = _compteServer;
         this.intervalFrom = _compteServer.intervaleStart;
 
@@ -71,7 +74,7 @@ export class CompteServerDetailsComponent implements OnInit {
 
   getBoitiersOfAccount(keyWord: string, idCompteServer: number, page: number, size: number) {
 
-    this.service.getBoitierOfAccount(keyWord, idCompteServer, page, size).subscribe(_boitiers => {
+    this.compteServerService.getBoitierOfAccount(keyWord, idCompteServer, page, size).subscribe(_boitiers => {
       this.boitiers = _boitiers.content;
       for (let i = 0; i < this.boitiers.length; i++) {
         if (this.boitiers[i].etatBoitier == "INSTALLED") {
@@ -96,7 +99,7 @@ export class CompteServerDetailsComponent implements OnInit {
   getBoitiersOfAccountByKeyWord(keyWord: string, idCompteServer: number, page: number, size: number) {
 
 
-    this.service.getBoitierOfAccount(keyWord, idCompteServer, page, size).subscribe(_boitiers => {
+    this.compteServerService.getBoitierOfAccount(keyWord, idCompteServer, page, size).subscribe(_boitiers => {
       this.boitiers = _boitiers.content;
       for (let i = 0; i < this.boitiers.length; i++) {
         this.boitiers[i].stat = true;
@@ -133,7 +136,7 @@ export class CompteServerDetailsComponent implements OnInit {
   }
 
   //=====================================
-  //     selected boitier 
+  //     selected boitier
   //=====================================
 
   onSelect(boitier: Boitier) {
@@ -141,13 +144,13 @@ export class CompteServerDetailsComponent implements OnInit {
   }
 
   //=====================================
-  //     Update boitier 
+  //     Update boitier
   //=====================================
 
   updateBoitier() {
     let headers = new Headers({ 'Content-Type': 'application/json' });
 
-    this.service.updateBoitier(this.selectedBoitier, this.ID_COMPTE, "label").subscribe(_boitier => {
+    this.compteServerService.updateBoitier(this.selectedBoitier, this.ID_COMPTE, "label").subscribe(_boitier => {
       let indexboitier: number = 0;
       indexboitier = this.boitiers.findIndex(x => x.idBoitier == this.selectedBoitier.idBoitier);
 
@@ -181,7 +184,7 @@ export class CompteServerDetailsComponent implements OnInit {
   addBoitierAfterConfirmation() {
 
     //this.spinnerService.show();
-    this.service.addBoitiers(this.ID_COMPTE, this.nbrBoitiers).subscribe(_compteBoitiers => {
+    this.compteServerService.addBoitiers(this.ID_COMPTE, this.nbrBoitiers).subscribe(_compteBoitiers => {
       //this.spinnerService.hide();
       this.mode = false;
       this.BOITIER_NOT_INSTALLED = _compteBoitiers.compteserver.intervaleEnd - _compteBoitiers.compteserver.intervaleStart + 1;
@@ -218,7 +221,7 @@ export class CompteServerDetailsComponent implements OnInit {
       let res = confirm("are you sure that you want extend this Account ?");
       if (res) {
 
-        this.service.extendIntervalOfBoitiers(this.ID_COMPTE).subscribe(_compteServer => {
+        this.compteServerService.extendIntervalOfBoitiers(this.ID_COMPTE).subscribe(_compteServer => {
 
           this.BOITIER_NOT_INSTALLED = _compteServer.intervaleEnd - _compteServer.intervaleStart + 1;
           this.BOITIER_INSTALLED = _compteServer.boitiers.length;
@@ -239,7 +242,7 @@ export class CompteServerDetailsComponent implements OnInit {
     for (let i = 0; i < this.boitiers.length; i++) {
 
 
-      this.service.lastArchiveOfBoitier(this.boitiers[i].numBoitier).subscribe(_arch => {
+      this.dataService.lastArchiveOfBoitier(this.boitiers[i].numBoitier).subscribe(_arch => {
         this.boitiers[i].dateLastTrame = _arch.dateLastTrame;
 
         if (_arch.latitude != 0 && _arch.longitude != 0) {
@@ -256,7 +259,7 @@ export class CompteServerDetailsComponent implements OnInit {
 
     for (let i = 0; i < boitiers.length; i++) {
 
-      this.service.lastArchiveOfBoitier(boitiers[i].numBoitier).subscribe(_arch => {
+      this.compteServerService.lastArchiveOfBoitier(boitiers[i].numBoitier).subscribe(_arch => {
 
         if (_arch.numBoitier != null) {
           if (_arch.latitude == 0 || _arch.longitude == 0 || _arch.latitude == 0 || _arch.longitude == 0) {
@@ -287,7 +290,7 @@ export class CompteServerDetailsComponent implements OnInit {
 
     let headers = new Headers({ 'Content-Type': 'application/json' });
 
-    this.service.updateBoitier(boitier, this.ID_COMPTE, "etat").subscribe(_boitier => {
+    this.dataService.updateBoitier(boitier, this.ID_COMPTE, "etat").subscribe(_boitier => {
       let indexboitier: number = 0;
       indexboitier = this.boitiers.findIndex(x => x.idBoitier == boitier.idBoitier);
 

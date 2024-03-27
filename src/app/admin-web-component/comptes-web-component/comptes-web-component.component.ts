@@ -4,11 +4,14 @@ import { ToastrService } from 'ngx-toastr';
 import { CompteWeb } from 'src/app/data/data';
 import { owner } from 'src/app/global.config';
 import { DataService } from 'src/app/service/data.service';
+import {CompteServerService} from "../../service/compte-server.service";
+import {CompteWebService} from "../../service/compte-web.service";
+import {DashboardService} from "../../service/dashboard.service";
 
 /**
- * 
+ *
  * created by AHMED HAYEL
- * 
+ *
  */
 
 @Component({
@@ -30,14 +33,18 @@ export class ComptesWebComponentComponent implements OnInit {
   loading: boolean = false;
   owner: string;
 
-  constructor(private router: Router, public toastr: ToastrService, vcr: ViewContainerRef, private service: DataService) {
+  constructor(private router: Router, public toastr: ToastrService, vcr: ViewContainerRef,
+              private compteServerService: CompteServerService,
+              private compteWebService: CompteWebService,
+              private dashboardService: DashboardService,
+              private dataService: DataService,) {
     //this.toastr.setRootViewContainerRef(vcr);
     this.owner = owner;
   }
 
   ngOnInit() {
-    this.service.isAuthenticated = this.service.loadTestAuthenticated();
-    if (this.service.isAuthenticated == false) {
+    this.dashboardService.isAuthenticated = this.dashboardService.loadTestAuthenticated();
+    if (this.dashboardService.isAuthenticated == false) {
       this.router.navigate(['/error']);
     } else {
       this.getAllWebAccount(this.keyWord, this.bigCurrentPage - 1, this.itemsPerPage);
@@ -47,7 +54,7 @@ export class ComptesWebComponentComponent implements OnInit {
   }
 
   //=====================================
-  //    Change page 
+  //    Change page
   //=====================================
 
   public pageChanged(event: any): void {
@@ -55,14 +62,14 @@ export class ComptesWebComponentComponent implements OnInit {
     this.getAllWebAccount(this.keyWord, this.bigCurrentPage - 1, this.itemsPerPage);
   }
   //=====================================
-  //     Get All Web account 
-  //     by keyword or not  
+  //     Get All Web account
+  //     by keyword or not
   //=====================================
 
   getAllWebAccount(keyWord: string, page: number, size: number) {
     this.loading = true;
     this.comptesWeb = [];
-    this.service.getAllWebAccountByKeyWord(keyWord, page, size).subscribe(_comptesWeb => {
+    this.compteWebService.getAllWebAccountByKeyWord(keyWord, page, size).subscribe(_comptesWeb => {
       this.comptesWeb = _comptesWeb.content;
 
       for (let i = 0; i < this.comptesWeb.length; i++) {
@@ -82,11 +89,11 @@ export class ComptesWebComponentComponent implements OnInit {
 
 
   getDateLogF(username: string) {
-    this.service.getDateLog(username).subscribe(res => {
+    this.compteWebService.getDateLog(username).subscribe(res => {
     })
   }
   //=====================================
-  //    Search server account 
+  //    Search server account
   //=====================================
 
   searchWebAccount() {
@@ -95,7 +102,7 @@ export class ComptesWebComponentComponent implements OnInit {
   }
 
   //=====================================
-  //    Selected Web account 
+  //    Selected Web account
   //=====================================
 
   onSelect(compteWeb: CompteWeb) {
@@ -111,7 +118,7 @@ export class ComptesWebComponentComponent implements OnInit {
   }
 
   //=====================================
-  //    delete Web account 
+  //    delete Web account
   //=====================================
 
   deleteWebAccount() {
@@ -119,7 +126,7 @@ export class ComptesWebComponentComponent implements OnInit {
     if (res) {
       let indexCompte: number = 0;
       indexCompte = this.comptesWeb.findIndex(x => x.idCompteClientWeb == this.selectedWebAccount.idCompteClientWeb);
-      this.service.deleteWebAccount(this.selectedWebAccount.idCompteClientWeb).subscribe(res => {
+      this.compteWebService.deleteWebAccount(this.selectedWebAccount.idCompteClientWeb).subscribe(res => {
         this.toastr.success(' Account was deleted ', 'Success!')
       });
       this.comptesWeb.splice(indexCompte, 1);

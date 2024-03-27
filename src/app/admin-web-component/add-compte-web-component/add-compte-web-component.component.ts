@@ -2,11 +2,13 @@ import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { CompteServer, CompteWeb } from 'src/app/data/data';
 import { DataService } from 'src/app/service/data.service';
+import {CompteWebService} from "../../service/compte-web.service";
+import {DashboardService} from "../../service/dashboard.service";
 
 /**
- * 
+ *
  * created by AHMED HAYEL
- * 
+ *
  */
 
 @Component({
@@ -32,23 +34,23 @@ export class AddCompteWebComponentComponent implements OnInit {
   notifSub = 'date_sub(NOW(), INTERVAL 1 DAY)';
   notifSubs = ['date_sub(NOW(), INTERVAL 6 hour)', 'date_sub(NOW(), INTERVAL 1 DAY)', 'date_sub(NOW(), INTERVAL 2 DAY)'];
   checked: boolean;
-  constructor(private router: Router, private service: DataService) {
+  constructor(private router: Router, private compteWebService: CompteWebService, private dashboardService: DashboardService, private dataService: DataService) {
     //this.toastr.setRootViewContainerRef(vcr);
   }
 
   ngOnInit() {
-    this.service.isAuthenticated = this.service.loadTestAuthenticated();
+    this.dashboardService.isAuthenticated = this.dashboardService.loadTestAuthenticated();
 
-    if (this.service.isAuthenticated == false) {
+    if (this.dashboardService.isAuthenticated == false) {
       this.router.navigate(['/error']);
     } else {
-      this.service.getAllServerAccountForForm().subscribe(res => {
+      this.dataService.getAllServerAccountForForm().subscribe(res => {
 
         this.serverAccounts = res.content;
       });
 
-      this.codesPays = this.service.codesPays;
-      this.service.getAllIps().subscribe(res => {
+      this.codesPays = this.dataService.codesPays;
+      this.dataService.getAllIps().subscribe(res => {
         this.ipAddresses = res;
       });
     }
@@ -67,9 +69,9 @@ export class AddCompteWebComponentComponent implements OnInit {
     }
     this.compteWeb.compteClientServer.idCompteClientServer = this.idCompte;
 
-    this.service.addCompteWeb(this.compteWeb).subscribe(_compteWeb => {
+    this.compteWebService.addCompteWeb(this.compteWeb).subscribe(_compteWeb => {
       this.compteWeb = _compteWeb;
-      this.service.associateCompteWebToCompteServer(this.compteWeb.idCompteClientWeb, this.idCompte).subscribe(res => {
+      this.compteWebService.associateCompteWebToCompteServer(this.compteWeb.idCompteClientWeb, this.idCompte).subscribe(res => {
       })
       //this.toastr.success('Web Account is added successfully', 'Success!');
       this.compteWeb = new CompteWeb();

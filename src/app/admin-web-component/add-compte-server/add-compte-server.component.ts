@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CompteServer, CompteServerWithBoitier, IpAddress } from 'src/app/data/data';
 import { DataService } from 'src/app/service/data.service';
+import {CompteServerService} from "../../service/compte-server.service";
 
 @Component({
   selector: 'app-add-compte-server',
@@ -28,7 +29,7 @@ export class AddCompteServerComponent implements OnInit {
   isExistLogin: boolean;
   confirmationPassword: String;
   public date: Object;
-  constructor(private service: DataService,
+  constructor(private compteServerService: CompteServerService,
   ) {
 
     // Open connection with server socket
@@ -71,7 +72,7 @@ export class AddCompteServerComponent implements OnInit {
       this.compteServer.date_Expiration = new Date(this.date['jsdate']).getTime();
       this.onKeyLogin();
       this.onKeyPseudo();
-      this.service.createServerComptewithBoitier(this.compteServer, this.numberBoitier)
+      this.compteServerService.createServerComptewithBoitier(this.compteServer, this.numberBoitier)
         .subscribe(_compteServer => {
           //  this.spinnerService.hide();
           this.mode = false;
@@ -100,7 +101,7 @@ export class AddCompteServerComponent implements OnInit {
   }
   onKeyPseudo() {
 
-    this.service.isExistPseudo(this.compteServer.pseudo).subscribe(res => {
+    this.compteServerService.isExistPseudo(this.compteServer.pseudo).subscribe(res => {
       this.isExistPseudo = res;
 
     })
@@ -108,7 +109,7 @@ export class AddCompteServerComponent implements OnInit {
   }
   onKeyLogin() {
 
-    this.service.isExistPseudo(this.compteServer.login).subscribe(res => {
+    this.compteServerService.isExistPseudo(this.compteServer.login).subscribe(res => {
       this.isExistLogin = res;
 
     })

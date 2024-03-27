@@ -1,14 +1,17 @@
-import { Router } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { saveAs as importedSaveAs } from 'file-saver';
 import { ToastrService } from 'ngx-toastr';
 import { CompteServer, IpAddress } from 'src/app/data/data';
 import { DataService } from 'src/app/service/data.service';
+import {CompteServerService} from "../../service/compte-server.service";
+import {CompteWebService} from "../../service/compte-web.service";
+import {DashboardService} from "../../service/dashboard.service";
 
 /**
- * 
+ *
  * created by AHMED HAYEL
- * 
+ *
  */
 
 @Component({
@@ -36,24 +39,28 @@ export class ComptesServerComponentComponent implements OnInit {
     dateFormat: 'dd-mm-yyyy',
   };*/
 
-  constructor(private router: Router, public toastr: ToastrService, vcr: ViewContainerRef,private service: DataService) {
+  constructor(private router: Router, public toastr: ToastrService, vcr: ViewContainerRef,private route: ActivatedRoute,
+              private compteServerService: CompteServerService,
+              private compteWebService: CompteWebService,
+              private dashboardService: DashboardService,
+              private dataService: DataService,) {
   //  this.toastr.setRootViewContainerRef(vcr);
   }
 
   ngOnInit() {
-    this.service.isAuthenticated = this.service.loadTestAuthenticated();
-    if (this.service.isAuthenticated == false) {
+    this.dashboardService.isAuthenticated = this.dashboardService.loadTestAuthenticated();
+    if (this.dashboardService.isAuthenticated == false) {
 
       this.router.navigate(['/error']);
 
     } else {
       this.getAllcompteServer(this.keyWord, this.bigCurrentPage - 1, this.itemsPerPage);
-      this.ips = this.service.ips;
+      this.ips = this.dataService.ips;
     }
   }
 
   //=====================================
-  //    Change page 
+  //    Change page
   //=====================================
 
   public pageChanged(event: any): void {
@@ -61,14 +68,14 @@ export class ComptesServerComponentComponent implements OnInit {
     this.getAllcompteServer(this.keyWord, this.bigCurrentPage - 1, this.itemsPerPage);
   }
   //=====================================
-  //     Get All server account 
-  //     by keyword or not  
+  //     Get All server account
+  //     by keyword or not
   //=====================================
 
   getAllcompteServer(keyWord: string, page: number, size: number) {
     this.loading = true;
     this.comptesServer = [];
-    this.service.getAllServerAccount(keyWord, page, size).subscribe(_comptesServer => {
+    this.compteServerService.getAllServerAccount(keyWord, page, size).subscribe(_comptesServer => {
         this.comptesServer = _comptesServer.content;
         for (let i = 0; i < this.comptesServer.length; i++) {
 
@@ -85,7 +92,7 @@ export class ComptesServerComponentComponent implements OnInit {
       });
   }
   //=====================================
-  //    Search server account 
+  //    Search server account
   //=====================================
 
   searchServerAccount() {
@@ -93,20 +100,21 @@ export class ComptesServerComponentComponent implements OnInit {
     this.getAllcompteServer(this.keyWord, this.bigCurrentPage - 1, this.itemsPerPage);
   }
 
+
   /**
    * Action exporter rapport
    */
   onExport() {
     if (this.comptesServer.length <= 0) return;
 
-    this.service.ExportListComptesServer(this.comptesServer)
+    this.compteServerService.ExportListComptesServer(this.comptesServer)
       .subscribe(blob => {
         importedSaveAs(blob, 'Rapport des comptes serveur.xlsx');
       });
   }
 
   //=====================================
-  //    Search server account 
+  //    Search server account
   //=====================================
 
   searchAccount() {
@@ -124,7 +132,7 @@ export class ComptesServerComponentComponent implements OnInit {
       let indexCompte: number = 0;
       indexCompte = this.comptesServer.findIndex(x => x.idCompteClientServer == this.selectedCompteServer.idCompteClientServer);
 
-      this.service.deleteCompteServer(this.selectedCompteServer.idCompteClientServer);
+      this.compteServerService.deleteCompteServer(this.selectedCompteServer.idCompteClientServer);
       this.comptesServer.splice(indexCompte, 1);
       this.toastr.success(' Account was deleted ', 'Success!')
     } else {
@@ -143,7 +151,7 @@ export class ComptesServerComponentComponent implements OnInit {
       myDate.setHours(myDate.getHours() + 1);
     }
     this.selectedCompteServer.date_Expiration = myDate.getTime();
-    this.service.updateServerCompte(this.selectedCompteServer.idCompteClientServer, this.selectedCompteServer).subscribe(_compteUp => {
+    this.compteServerService.updateServerCompte(this.selectedCompteServer.idCompteClientServer, this.selectedCompteServer).subscribe(_compteUp => {
       this.mode = false;
       if (new Date().getTime() < _compteUp.date_Expiration) {
         _compteUp.expired = false;
@@ -169,7 +177,7 @@ export class ComptesServerComponentComponent implements OnInit {
   }
 
   //=====================================
-  //     selected server account 
+  //     selected server account
   //=====================================
 
   onSelect(compteServer: CompteServer) {
