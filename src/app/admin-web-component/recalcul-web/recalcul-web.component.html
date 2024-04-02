@@ -1,0 +1,64 @@
+<div class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-8 center">
+
+        <div class="card">
+          <div class="card-header" data-background-color="red">
+            <h4 class="title">recalcule of {{compteWeb.login}}  for boitier number {{recalculeP.idBoitier}} </h4>
+          </div>
+          <div class="card-content">
+            <form #recalculeForm="ngForm">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group label-floating">
+                    <div class="input-group input-append date">
+                      <!-- Replace my-date-picker with input element and bsDatepicker directive -->
+                      <input type="text" class="form-control" placeholder="date of the start" [(ngModel)]="datestart" bsDatepicker [bsConfig]="{ containerClass: 'theme-red' }" required>
+                      <span class="input-group-addon add-on"></span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group label-floating">
+                    <label class="control-label">Type Recalcule</label>
+                    <select [(ngModel)]="typeRecalcule" class="form-control" name="typeRecalcule" required>
+                      <option>recalcule historique</option>
+                      <option>recalcule carburant</option>
+                      <option>recalcule alert</option>
+                      <option>recalcule boitier</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <button type="button" class="btn btn-danger pull-right" [disabled]="!recalculeForm.form.valid" (click)="recalcule()"
+                      [tooltip]="tooltipup" tooltipPlacement="top"
+                      data-toggle="modal" data-target="#Modalupdate" data-backdrop="false" >recalcule</button>
+              <div class="clearfix"></div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="Modalupdate" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="alert alert-warning" role="alert">
+              <h1>Notifications: {{typeRecalcule}}</h1>
+            </div>
+            <div style="text-align:center; margin-top: 100px;">
+              <h6 style="color: rgb(0, 0, 0); width: 600px; height: 150px; text-align: justify; border: 1px solid black; overflow: auto;">
+                <span *ngFor="let notificatio of notifications; let i = index">{{i + 1}}__{{notificatio | lowercase}} <br/></span>
+              </h6>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal" (click)="reinitialisation()">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
