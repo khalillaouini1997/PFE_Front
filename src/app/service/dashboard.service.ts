@@ -38,8 +38,9 @@ export class DashboardService {
 
   getAllOptions(): Observable<any> {
     const headers = this.getHeaders();
-    return this.http.get<any>(dns + "options", { headers });
+    return this.http.get<any>(`${dns}options`, { headers });
   }
+
 
   private getHeaders(): HttpHeaders {
     let headers = new HttpHeaders();

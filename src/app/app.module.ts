@@ -32,7 +32,6 @@ import { AdminWebModule } from './admin-web-component/admin-web.module';
     BsDatepickerModule,
     AdminWebModule,
     NgOptimizedImage,
-    // ToastrModule added
   ],
   providers: [],
   bootstrap: [AppComponent]

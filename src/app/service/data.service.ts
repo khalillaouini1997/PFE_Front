@@ -112,38 +112,41 @@ export class DataService {
   }
 
   getAllIps(): Observable<any> {
-    return this._http.get(dns + "ips", { headers: this.getHeaders() }).pipe(
+    const headers = this.getHeaders();
+    return this._http.get<any>(`${dns}ips`, { headers }).pipe(
       map(res => res) // No need for res.json() with HttpClient
     );
   }
 
+
   prepareDBForAllDevises(idServer: number): Observable<any> {
-    return this._http.get(dns + "boities/" + idServer, { headers: this.getHeaders() }).pipe(
+    return this._http.get<any>(`${dns}boities/${idServer}`, { headers: this.getHeaders() }).pipe(
       map(res => res)
     );
   }
 
   prepareDBForSingleDevise(idServer: number, idBoitier: number): Observable<any> {
-    return this._http.get(dns + "boities/" + idServer + "/device/" + idBoitier, { headers: this.getHeaders() }).pipe(
+    return this._http.get<any>(`${dns}boities/${idServer}/device/${idBoitier}`, { headers: this.getHeaders() }).pipe(
       map(res => res)
     );
   }
 
   getAllCompteDevises(idServer: number): Observable<any> {
-    return this._http.get(dns + "boities/all/" + idServer, { headers: this.getHeaders() }).pipe(
+    return this._http.get<any>(`${dns}boities/all/${idServer}`, { headers: this.getHeaders() }).pipe(
       map(res => res)
     );
   }
 
   updateBoitier(boitier: Boitier, idServer: number, updateType: string): Observable<any> {
-    let options = { headers: this.getHeaders() };
-    return this._http.put<any>(dns + "boities?idServer=" + idServer + "&updateType=" + updateType, boitier, options);
+    const options = { headers: this.getHeaders() };
+    return this._http.put<any>(`${dns}boities?idServer=${idServer}&updateType=${updateType}`, boitier, options);
   }
 
   lastArchiveOfBoitier(numBoitier: number): Observable<any> {
-    let options = { headers: this.getHeaders() };
-    return this._http.get(dns + "boities/" + numBoitier + "/lastArchive", options);
+    const options = { headers: this.getHeaders() };
+    return this._http.get<any>(`${dns}boities/${numBoitier}/lastArchive`, options);
   }
+
 
 
 
@@ -241,17 +244,19 @@ export class DataService {
 
   getAllIpAddresse(keyword: string, page: number, size: number): Observable<any> {
     const headers = this.getHeaders();
-    return this._http.get(dns + "ips/all?keyWord=" + keyword + "&page=" + page + "&size=" + size, { headers });
+    return this._http.get<any>(`${dns}ips/all?keyWord=${keyword}&page=${page}&size=${size}`, { headers });
   }
+
   deleteIpAdress(id: number) {
     const headers = this.getHeaders();
-    return this._http.delete(dns + "ips/" + id, { headers });
-
+    return this._http.delete(`${dns}ips/${id}`, { headers });
   }
+
   updateIpAdress(id: number, ipAdress: IpAddress): Observable<any> {
     const headers = this.getHeaders();
-    return this._http.put(dns + "ips/" + id, ipAdress, { headers });
+    return this._http.put<any>(`${dns}ips/${id}`, ipAdress, { headers });
   }
+
 
   loadTestAuthenticated(): boolean {
     var res = document.cookie.split(";");
@@ -276,26 +281,29 @@ export class DataService {
   }
 
 
-  getAllAdminComptesByKeyWord(keyWord: string, page: number, size: number): any {
+  getAllAdminComptesByKeyWord(keyWord: string, page: number, size: number): Observable<any> {
     const headers = this.getHeaders();
     if (this.isAgentAdmin()) {
-      return this._http.get(dns + "adminCompteWeb/all?keyWord=" + keyWord + "&page=" + page + "&size=" + size, { headers });
+      return this._http.get<any>(`${dns}adminCompteWeb/all?keyWord=${keyWord}&page=${page}&size=${size}`, { headers });
+    } else {
+      return throwError("Not authorized to access administrator accounts.");
     }
   }
 
-  addAdminCompte(adminCompte: AdministratorCompte): any {
+  addAdminCompte(adminCompte: AdministratorCompte): Observable<any> {
     const headers = this.getHeaders();
     if (this.isAgentAdmin()) {
-      return this._http.post(dns + "adminCompteWeb/add", adminCompte, { headers });
+      return this._http.post<any>(`${dns}adminCompteWeb/add`, adminCompte, { headers });
+    } else {
+      return throwError("Not authorized to add administrator accounts.");
     }
   }
-
-
 
   getAllOptions(): Observable<any> {
     const headers = this.getHeaders();
-    return this._http.get(dns + "options", { headers });
+    return this._http.get<any>(`${dns}options`, { headers });
   }
+
 
   logoutStorage() {
     localStorage.removeItem("token");
@@ -305,13 +313,14 @@ export class DataService {
   getAllServerAccountForForm(): Observable<any> {
     const headers = this.getHeaders();
     let keyWord = "";
-    return this._http.get(dns + "compteServerWeb?keyWord=" + keyWord + "&size=" + 1000000 + "&userName=" + this.getCurrentUserName(), { headers });
+    return this._http.get<any>(`${dns}compteServerWeb?keyWord=${keyWord}&size=${1000000}&userName=${this.getCurrentUserName()}`, { headers });
   }
 
   associateCompteWebToCompteServer(idWeb: number, idServer: number): Observable<any> {
     const headers = this.getHeaders();
-    return this._http.put(dns + "compteWeb/" + idWeb + "/compteServer/" + idServer, null, { headers });
+    return this._http.put<any>(`${dns}compteWeb/${idWeb}/compteServer/${idServer}`, null, { headers });
   }
+
 
 
 

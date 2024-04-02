@@ -24,10 +24,12 @@
     "file-saver": "^2.0.5",
     "jwt-decode": "^2.2.0",
     "mydatepicker": "^1.10.2",
+    "net": "^1.0.2",
     "ngx-bootstrap": "^9.0.0",
     "ngx-toastr": "^14.3.0",
+    "ngx-tooltip": "^0.0.9",
     "rxjs": "~7.5.0",
-    "sockjs-client": "^1.6.1",
+    "sockjs-client": "^1.1.5",
     "stompjs": "^2.3.3",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"

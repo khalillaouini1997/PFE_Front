@@ -21,17 +21,26 @@ import { AddAdminCompteComponent } from './add-admin-compte/add-admin-compte.com
 import { ToastrModule } from 'ngx-toastr';
 import { WebSocketService } from '../service/web-socket.service';
 import { DataService } from '../service/data.service';
+import { RecalculWebComponent } from './recalcul-web/recalcul-web.component';
+import {TooltipModule} from "ngx-bootstrap/tooltip";
+import {TraccarService} from "../service/traccar.service";
+import {DashboardService} from "../service/dashboard.service";
+import {CoreService} from "../service/core.service";
+import {CompteWebService} from "../service/compte-web.service";
+import {CompteServerService} from "../service/compte-server.service";
 
 
 @NgModule({
   imports: [
     CommonModule,
+    TooltipModule,
     PaginationModule.forRoot(),
     AdminWebComponentRoutingModule,
     FormsModule,
     BsDatepickerModule.forRoot(),
     ToastrModule.forRoot(),
     NgOptimizedImage,
+
   ],
   declarations: [
     AddCompteWebComponentComponent,
@@ -48,9 +57,17 @@ import { DataService } from '../service/data.service';
     ListTraccarComponent,
     CompteAdminComponent,
     AddAdminCompteComponent,
+    RecalculWebComponent,
+
+
   ], providers: [
     WebSocketService,
-    DataService
+    DataService,
+    TraccarService,
+    DashboardService,
+    CoreService,
+    CompteWebService,
+    CompteServerService
   ]
 })
 export class AdminWebModule { }

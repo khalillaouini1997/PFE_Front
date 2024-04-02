@@ -107,10 +107,8 @@ export class AdminWebComponentComponent implements OnInit {
     }
   }
 
-  isAgentAdmin() : any {
-    let currentUser = JSON.parse(localStorage.getItem('user') || '{}');
-    if (currentUser.user.role == 'GLOBALADMIN') {
-      return true;
-    }
+  isAgentAdmin(): boolean {
+    const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+    return currentUser && currentUser.user && currentUser.user.role === 'GLOBALADMIN';
   }
 }

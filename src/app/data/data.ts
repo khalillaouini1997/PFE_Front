@@ -102,6 +102,46 @@ export class CompteWeb {
 
 }
 
+export class Archive {
+  date: string = "";
+  trame_id: number = 0;
+  idDevice: number = 0;
+  latitude: number = 0;
+  longitude: number = 0;
+  speed: number = 0;
+  fuel: number = 0;
+  temp: number = 0;
+  x: number = 0;
+  y: number = 0;
+  z: number = 0;
+  ignition: boolean = false;
+  rpm: number = 0;
+  fuel_rate: number = 0;
+  tfu: number = 0;
+  odo: number = 0;
+  satInView: number = 0;
+  signal: number = 0;
+  heading: number = 0;
+  charger: number = 0;
+}
+
+
+export class raw {
+  idTram: number = 0;
+  gprmc: string = "";
+}
+
+export class raws {
+  raws: raw[];
+  count: number;
+  constructor() {
+    this.count = 0;
+    this.raws = [];
+  }
+}
+
+
+
 export class Option {
     idOption: number;
     description: string;

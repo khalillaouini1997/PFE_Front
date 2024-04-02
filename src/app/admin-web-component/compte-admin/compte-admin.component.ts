@@ -2,6 +2,7 @@ import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { AdministratorCompte } from 'src/app/data/data';
 import { DataService } from 'src/app/service/data.service';
+import {finalize} from "rxjs";
 
 @Component({
   selector: 'app-compte-admin',
@@ -30,24 +31,35 @@ export class CompteAdminComponent implements OnInit {
   }
 
   //=====================================
-  //     Get All Web account 
-  //     by keyword or not  
+  //     Get All Web account
+  //     by keyword or not
   //=====================================
 
   getAllAdminComptes(keyWord: string, page: number, size: number) {
-    this.loading = true;
-    this.adminComptes = [];
+    this.loading = true; // Set loading flag to true
+    this.adminComptes = []; // Clear the existing adminComptes array
+
+    // Call the service method to fetch adminComptes
     this.service.getAllAdminComptesByKeyWord(keyWord, page, size)
-      .finally(() => {
-        this.loading = false;
-      }).subscribe(_comptesWeb => {
-        this.adminComptes = _comptesWeb.content;
-        this.bigTotalItems = _comptesWeb.totalElements;
-      });
+      .pipe(
+        finalize(() => {
+          this.loading = false; // Set loading flag to false when the request completes
+        })
+      )
+      .subscribe(
+        _comptesWeb => {
+          this.adminComptes = _comptesWeb.content; // Update adminComptes with the received data
+          this.bigTotalItems = _comptesWeb.totalElements; // Update bigTotalItems with the total count of elements
+        },
+        error => {
+          console.error('Error occurred while fetching adminComptes:', error); // Handle any errors
+        }
+      );
   }
 
+
   //=====================================
-  //    Search server account 
+  //    Search server account
   //=====================================
 
   searchWebAccount() {
@@ -56,7 +68,7 @@ export class CompteAdminComponent implements OnInit {
   }
 
       //=====================================
-  //    Change page 
+  //    Change page
   //=====================================
 
   public pageChanged(event: any): void {

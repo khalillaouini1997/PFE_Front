@@ -20,7 +20,8 @@ export class TraccarService {
   getLisTraccar(): Observable<any> {
     this.currentUser = JSON.parse(localStorage.getItem('user') || '{}');
     let headers = createAuthorizationHeader();
-    return this._http.get(dns + "traccar/" + this.currentUser.idTraccar, { headers: headers });
+    const url = `${dns}traccar/${this.currentUser.idTraccar}`;
+    return this._http.get(url, { headers });
   }
 
 }

@@ -39,8 +39,9 @@ export class CompteWebService {
 
   addCompteWeb(compteWeb: CompteWeb): Observable<any> {
     const headers = this.getHeaders();
-    return this._http.post(dns + "compteWeb?userName=" + this.getCurrentUserName(), compteWeb,  { headers });
+    return this._http.post<any>(`${dns}compteWeb?userName=${this.getCurrentUserName()}`, compteWeb, { headers });
   }
+
 
   getDateLog(username: string): Observable<any> {
     return this._http.get(`${dns}compteWeb?datelog=${username}`, { headers: this.getHeaders() }).pipe(
@@ -63,13 +64,10 @@ export class CompteWebService {
     );
   }
 
-
-
   editPathConfig(idServer: number, pathConfigPayload: PathConfigPayload): Observable<any> {
-    return this._http.post<any>(dns + "boities/editPathConfig/" + idServer, pathConfigPayload, { headers: this.getHeaders() });
+    const headers = this.getHeaders();
+    return this._http.post<any>(`${dns}boities/editPathConfig/${idServer}`, pathConfigPayload, { headers });
   }
-
-
 
   associateCompteWebToCompteServer(idWeb: number, idServer: number): Observable<any> {
     return this._http.put(`${dns}compteWeb/${idWeb}/compteServer/${idServer}`, null, { headers: this.getHeaders() }).pipe(
@@ -86,24 +84,26 @@ export class CompteWebService {
   }
 
   getAllCompteClientWeb(): Observable<any> {
-    let headers = createAuthorizationHeader();
-    return this._http.get(dns + "compteWeb/All?userName=" + this.currentUser.username, { headers: headers });
+    const headers = createAuthorizationHeader();
+    return this._http.get(`${dns}compteWeb/All?userName=${this.currentUser.username}`, { headers });
   }
 
+
   getAllLastTram(idCompteWeb: number): Observable<any> {
-    let headers = createAuthorizationHeader();
-    return this._http.get(dns + "compteWeb/" + idCompteWeb + "/lastTrame", { headers: headers });
+    const headers = createAuthorizationHeader();
+    return this._http.get(`${dns}compteWeb/${idCompteWeb}/lastTrame`, { headers });
   }
 
   exportLastTram(realtimes: Tram[]): Observable<any> {
-    let headers = createAuthorizationHeader();
-    return this._http.post(dns + 'compteWeb/lastTrame/export', realtimes, { headers: headers });
+    const headers = createAuthorizationHeader();
+    return this._http.post(`${dns}compteWeb/lastTrame/export`, realtimes, { headers });
   }
 
   getAllLastTramforAllClient(): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.get<any>(dns + 'compteWeb/AllLastTram', { headers });
+    const headers = createAuthorizationHeader();
+    return this._http.get(`${dns}compteWeb/AllLastTram`, { headers });
   }
+
 
   deleteWebAccount(id: number): Observable<any> {
     return this._http.delete(`${dns}compteWeb/${id}`, { headers: this.getHeaders() }).pipe(
