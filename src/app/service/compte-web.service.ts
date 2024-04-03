@@ -5,7 +5,6 @@ import { catchError, map } from 'rxjs/operators';
 import {AdministratorCompte, CompteWeb, Option, PathConfigPayload, Tram} from '../data/data';
 import { dns } from '../global.config';
 import {DataService} from "./data.service";
-import * as jwt_decode from "jwt-decode";
 import {createAuthorizationHeader} from "../utils/security/headers";
 
 
@@ -27,19 +26,10 @@ export class CompteWebService {
     return headers;
   }
 
-  getCurrentUserName(): any {
-    try {
-      var decode = jwt_decode(localStorage.getItem("token"));
-      return decode.sub;
-    } catch (Error) {
-      return null;
-    }
-  }
-
 
   addCompteWeb(compteWeb: CompteWeb): Observable<any> {
     const headers = this.getHeaders();
-    return this._http.post<any>(`${dns}compteWeb?userName=${this.getCurrentUserName()}`, compteWeb, { headers });
+    return this._http.post<any>(`${dns}compteWeb?userName=${this.dataService.getCurrentUserName()}`, compteWeb, { headers });
   }
 
 
@@ -51,14 +41,14 @@ export class CompteWebService {
   }
 
   getAllWebAccountByKeyWord(keyWord: string, page: number, size: number): Observable<any> {
-    return this._http.get(`${dns}compteWeb?keyWord=${keyWord}&page=${page}&size=${size}&userName=${this.getCurrentUserName()}`, { headers: this.getHeaders() }).pipe(
+    return this._http.get(`${dns}compteWeb?keyWord=${keyWord}&page=${page}&size=${size}&userName=${this.dataService.getCurrentUserName()}`, { headers: this.getHeaders() }).pipe(
       map((res: any) => res),
       catchError((error: any) => throwError(error))
     );
   }
 
   getWebAccountById(id: number): Observable<any> {
-    return this._http.get(`${dns}compteWeb/${id}?userName=${this.getCurrentUserName()}`, { headers: this.getHeaders() }).pipe(
+    return this._http.get(`${dns}compteWeb/${id}?userName=${this.dataService.getCurrentUserName()}`, { headers: this.getHeaders() }).pipe(
       map((res: any) => res),
       catchError((error: any) => throwError(error))
     );

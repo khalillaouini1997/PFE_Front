@@ -18,9 +18,11 @@ export class DashboardService {
   constructor(private http: HttpClient) { }
 
   loadTestAuthenticated(): boolean {
-    let isAuthenticated: string | null = "";
-    isAuthenticated = localStorage.getItem("isAuthenticate");
-    if (isAuthenticated == "true") {
+    let isAuthenticated: boolean | null = false;
+    const token = localStorage.getItem("id_token")
+    isAuthenticated = /*localStorage.getItem("isAuthenticate")*/token !== null ;
+
+    if (isAuthenticated) {
       return true
     } else {
       return false;
@@ -52,12 +54,12 @@ export class DashboardService {
   }
 
   logoutStorage() {
-    localStorage.removeItem("token");
+    localStorage.removeItem("id_token");
     localStorage.removeItem("isAuthenticate");
   }
 
   loadToken(): string {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("id_token");
     return token !== null ? token : '';
   }
 

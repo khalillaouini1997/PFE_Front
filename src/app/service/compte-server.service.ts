@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {Boitier, CompteServer, IpAddress} from "../data/data";
+import {AdministratorCompte, Boitier, CompteServer, IpAddress} from "../data/data";
 import {Observable} from "rxjs";
 import {dns} from "../global.config";
 import {map} from "rxjs/operators";
 import * as jwt_decode from "jwt-decode";
+import { JsonPipe } from '@angular/common';
+import { DataService } from './data.service';
 
 
 @Injectable({
@@ -19,7 +21,7 @@ export class CompteServerService {
 
   ips: IpAddress[] = [];
 
-  constructor(private _http: HttpClient) { }
+  constructor(private _http: HttpClient, private dataService:DataService) { }
 
   authentificate(login: string, password: string): Observable<any> {
     const body = { username: login, password: password };
@@ -84,7 +86,7 @@ export class CompteServerService {
 
   createServerComptewithBoitier(compteServer: CompteServer, nbrBoitiers: number): Observable<any> {
     const options = { headers: this.getHeaders() };
-    return this._http.post<any>(`${dns}compteServer/addNewComptewithBoitier?nombreBoitier=${nbrBoitiers}&username=${this.getCurrentUserName()}`, compteServer, options);
+    return this._http.post<any>(`${dns}compteServer/addNewComptewithBoitier?nombreBoitier=${nbrBoitiers}&username=${this.dataService.getCurrentUserName()}`, compteServer, options);
   }
 
   getAllServerCompte(keyword: string, page: number, size: number): Observable<any> {
@@ -156,7 +158,7 @@ export class CompteServerService {
 
   getAllServerAccount(keyWord: string, page: number, size: number): Observable<any> {
     const headers = this.getHeaders();
-    return this._http.get<any>(`${dns}/compteServerWeb?keyWord=${keyWord}&page=${page}&size=${size}&userName=${this.getCurrentUserName()}`, { headers });
+    return this._http.get<any>(`${dns}/compteServerWeb?keyWord=${keyWord}&page=${page}&size=${size}&userName=${this.dataService.getCurrentUserName()}`, { headers });
   }
 
   getAllCompteClientServer(): Observable<any> {
@@ -172,7 +174,7 @@ export class CompteServerService {
   getAllServerAccountForForm(): Observable<any> {
     const headers = this.getHeaders();
     const keyWord = "";
-    return this._http.get<any>(`${dns}/compteServerWeb?keyWord=${keyWord}&size=1000000&userName=${this.getCurrentUserName()}`, { headers });
+    return this._http.get<any>(`${dns}/compteServerWeb?keyWord=${keyWord}&size=1000000&userName=${this.dataService.getCurrentUserName()}`, { headers });
   }
 
   extendIntervalOfBoitiers(idCompteServer: number): Observable<any> {
@@ -195,13 +197,4 @@ export class CompteServerService {
     return this._http.get<any>(`${dns}/compteServerWeb/${id}`, { headers });
   }
 
-
-  getCurrentUserName(): any {
-    try {
-      var decode = jwt_decode(localStorage.getItem("token"));
-      return decode.sub;
-    } catch (Error) {
-      return null;
-    }
-  }
 }

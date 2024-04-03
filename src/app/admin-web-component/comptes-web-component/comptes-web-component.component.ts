@@ -67,9 +67,10 @@ export class ComptesWebComponentComponent implements OnInit {
   //=====================================
 
   getAllWebAccount(keyWord: string, page: number, size: number) {
-    this.loading = true;
+ 
     this.comptesWeb = [];
     this.compteWebService.getAllWebAccountByKeyWord(keyWord, page, size).subscribe(_comptesWeb => {
+      this.loading = false;
       this.comptesWeb = _comptesWeb.content;
 
       for (let i = 0; i < this.comptesWeb.length; i++) {

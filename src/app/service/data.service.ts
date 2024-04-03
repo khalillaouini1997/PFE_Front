@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import {Observable, throwError} from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { dns } from '../global.config';
-import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import {
   AdministratorCompte, Boitier,
   DeviceOpt,
@@ -13,7 +13,7 @@ import {
   Tram,
   VehiculeSetting
 } from '../data/data';
-import {catchError, map} from "rxjs/operators";
+import { catchError, map } from "rxjs/operators";
 import { jwtDecode } from "jwt-decode";
 
 @Injectable({
@@ -270,17 +270,6 @@ export class DataService {
   }
 
 
-  getCurrentUserName(): any {
-    try {
-      const decode = jwtDecode(localStorage.getItem("token") as never, { header: true });
-      return decode;
-    }
-    catch (Error) {
-      return null;
-    }
-  }
-
-
   getAllAdminComptesByKeyWord(keyWord: string, page: number, size: number): Observable<any> {
     const headers = this.getHeaders();
     if (this.isAgentAdmin()) {
@@ -352,6 +341,17 @@ export class DataService {
     }
     console.error(errorMessage);
     return throwError(errorMessage);
+  }
+
+  getCurrentUserName(): any {
+    try {
+      if (localStorage.getItem("currentUser") != null) {
+        let decode: AdministratorCompte = JSON.parse(localStorage.getItem("currentUser") || "{}").user;
+        return decode.username;
+      }
+    } catch (Error) {
+      return null;
+    }
   }
 
 }
