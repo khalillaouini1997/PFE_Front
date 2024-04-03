@@ -75,7 +75,7 @@ export class CompteWebService {
 
   getAllCompteClientWeb(): Observable<any> {
     const headers = createAuthorizationHeader();
-    return this._http.get(`${dns}compteWeb/All?userName=${this.currentUser.username}`, { headers });
+    return this._http.get(`${dns}compteWeb/All?userName=${this.dataService.getCurrentUserName()}`, { headers });
   }
 
 
