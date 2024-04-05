@@ -22,11 +22,7 @@ export class DashboardService {
     const token = localStorage.getItem("id_token")
     isAuthenticated = /*localStorage.getItem("isAuthenticate")*/token !== null ;
 
-    if (isAuthenticated) {
-      return true
-    } else {
-      return false;
-    }
+    return isAuthenticated;
   }
 
   //=================================================

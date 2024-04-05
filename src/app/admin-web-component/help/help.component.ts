@@ -28,7 +28,7 @@ export class HelpComponent implements OnInit {
   { name: 'CARRYOUT', label: 'Intervention effectuée' },
   { name: 'REJECTED', label: 'Intervention annulée' }
   ]
-  comptesWeb: CompteWeb[] = new Array();
+  comptesWeb: CompteWeb[] = [];
   /**by default selected client is  */
   selectedCompteWebId: number  | null = null;
   /** all intervention */

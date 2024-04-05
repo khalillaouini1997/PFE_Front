@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { saveAs as importedSaveAs } from 'file-saver';
-import { Boitier, CompteWeb, Tram } from 'src/app/data/data';
-import { DataService } from 'src/app/service/data.service';
+import {Component, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
+import {saveAs as importedSaveAs} from 'file-saver';
+import {Boitier, CompteWeb, Tram} from 'src/app/data/data';
+import {DataService} from 'src/app/service/data.service';
 import {CompteServerService} from "../../service/compte-server.service";
 import {CompteWebService} from "../../service/compte-web.service";
 import {DashboardService} from "../../service/dashboard.service";
@@ -20,10 +20,10 @@ import {DashboardService} from "../../service/dashboard.service";
 })
 export class DashbordComponent implements OnInit {
 
-  comptesWeb: CompteWeb[] = new Array();
+  comptesWeb: CompteWeb[] = [];
   compteWeb: CompteWeb = new CompteWeb();
-  boitiers: Boitier[] = new Array();
-  listTram: Tram[] = new Array();
+  boitiers: Boitier[] = [];
+  listTram: Tram[] = [];
 
   loading: boolean = false;
 
@@ -42,7 +42,7 @@ export class DashbordComponent implements OnInit {
 
     this.dashboardService.isAuthenticated = this.dashboardService.loadTestAuthenticated();
 
-    if (this.dashboardService.isAuthenticated == false) {
+    if (!this.dashboardService.isAuthenticated) {
 
       this.router.navigate(['/error']);
     } else {
@@ -56,8 +56,7 @@ export class DashbordComponent implements OnInit {
 
   diffHours(date: Date): number {
     date = new Date(date);
-    var diff = ((new Date().getTime()) - date.getTime()) / (60 * 60 * 1000);
-    return diff;
+    return ((new Date().getTime()) - date.getTime()) / (60 * 60 * 1000);
   }
 
   getAllLastTramByCompteWeb() {

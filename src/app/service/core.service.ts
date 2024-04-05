@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 
 /**
- * 
+ *
  * created by AHMED HAYEL
- * 
+ *
  */
 
 @Injectable()
@@ -13,7 +13,7 @@ export class CoreService {
     totalImages: number = 58;
 
     constructor() {
-        for (var i = 1; i < this.totalImages; i++) {
+        for (let i = 1; i < this.totalImages; i++) {
             this.images.push(i);
         }
     }
@@ -24,8 +24,8 @@ export class CoreService {
     }
 
     changeBackgroundImageToRandomImages() {
-        var r = this.images[Math.floor(Math.random() * this.images.length)];
-        document.body.style.background = "url('../../assets/img/background/" + r + ".jpg') no-repeat center fixed";
+      const r = this.images[Math.floor(Math.random() * this.images.length)];
+      document.body.style.background = "url('../../assets/img/background/" + r + ".jpg') no-repeat center fixed";
         document.body.style.backgroundSize = "cover";
     }
 }

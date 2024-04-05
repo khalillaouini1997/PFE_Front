@@ -26,8 +26,10 @@ export class DataService {
   options: Option[];
   administratorCompte: AdministratorCompte[];
 
-  //List of Connection Type
-  typeConnection: string;
+  typeConnection: { type: string; }[] = [
+    { type: "jdbc" },
+    { type: "http " }
+  ];
 
   codesPays = [
     { key: "Maroc", value: "212" },
@@ -241,6 +243,11 @@ export class DataService {
   }
 
 
+  saveIpAddres(ipAddress: IpAddress): Observable<any> {
+    const headers = this.getHeaders();
+    return this._http.post(`${dns}ips`, ipAddress, { headers });
+  }
+
 
   getAllIpAddresse(keyword: string, page: number, size: number): Observable<any> {
     const headers = this.getHeaders();
@@ -262,11 +269,7 @@ export class DataService {
     var res = document.cookie.split(";");
     let isAuthenticatedstr: string = "";
     //isAuthenticatedstr = localStorage.getItem("isAuthenticateAdmin");
-    if (isAuthenticatedstr == "true") {
-      return true
-    } else {
-      return false;
-    }
+    return isAuthenticatedstr == "true";
   }
 
 

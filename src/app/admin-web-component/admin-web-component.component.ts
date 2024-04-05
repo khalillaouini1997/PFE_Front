@@ -37,7 +37,7 @@ export class AdminWebComponentComponent implements OnInit {
   ngOnInit() {
     this.service.isAuthenticated = this.service.loadTestAuthenticated();
 
-    if (this.service.isAuthenticated == false) {
+    if (!this.service.isAuthenticated) {
       this.router.navigate(['/error']);
     } else {
       this.service.getAllOptions().subscribe(res => {

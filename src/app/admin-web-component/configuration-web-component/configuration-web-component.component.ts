@@ -381,7 +381,6 @@ export class ConfigurationWebComponentComponent implements OnInit {
       .subscribe();
   }
 
-
   getPathConfig() {
     this.dataService.getPathConfig(this.ID_COMPTE, this.selectedBoitierId)
       .pipe(
@@ -405,6 +404,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
       )
       .subscribe();
   }
+
 
   editDeviceOptionConfig() {
     this.loadingEditDeviceOption = true;

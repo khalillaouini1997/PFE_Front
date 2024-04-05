@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {Observable, throwError} from 'rxjs';
+import {catchError, map} from 'rxjs/operators';
 import {AdministratorCompte, CompteWeb, Option, PathConfigPayload, Tram} from '../data/data';
-import { dns } from '../global.config';
+import {dns} from '../global.config';
 import {DataService} from "./data.service";
 import {createAuthorizationHeader} from "../utils/security/headers";
 
@@ -19,11 +19,10 @@ export class CompteWebService {
 
   private getHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders({
+    return new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': token ? token : ''
     });
-    return headers;
   }
 
 

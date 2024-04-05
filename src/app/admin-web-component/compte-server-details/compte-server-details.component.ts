@@ -77,11 +77,7 @@ export class CompteServerDetailsComponent implements OnInit {
     this.compteServerService.getBoitierOfAccount(keyWord, idCompteServer, page, size).subscribe(_boitiers => {
       this.boitiers = _boitiers.content;
       for (let i = 0; i < this.boitiers.length; i++) {
-        if (this.boitiers[i].etatBoitier == "INSTALLED") {
-          this.boitiers[i].stat = true;
-        } else {
-          this.boitiers[i].stat = false;
-        }
+        this.boitiers[i].stat = this.boitiers[i].etatBoitier == "INSTALLED";
 
       }
       //this.intervalFrom = this.intervalFrom + _boitiers.totalElements;
@@ -155,11 +151,7 @@ export class CompteServerDetailsComponent implements OnInit {
       indexboitier = this.boitiers.findIndex(x => x.idBoitier == this.selectedBoitier.idBoitier);
 
       this.boitiers[indexboitier].label = _boitier.label;
-      if (this.boitiers[indexboitier].etatBoitier == "INSTALLED") {
-        this.boitiers[indexboitier].stat = true;
-      } else {
-        this.boitiers[indexboitier].stat = false;
-      }
+      this.boitiers[indexboitier].stat = this.boitiers[indexboitier].etatBoitier == "INSTALLED";
      // this.toastr.success(' Device updated ', 'Success!')
     }, error => { /*this.toastr.error('There is a mistake', 'Error!') */});
   }

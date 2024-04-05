@@ -29,6 +29,7 @@ import {CoreService} from "../service/core.service";
 import {CompteWebService} from "../service/compte-web.service";
 import {CompteServerService} from "../service/compte-server.service";
 import { ConfigurationWebComponentComponent } from './configuration-web-component/configuration-web-component.component';
+import { AddAdresseIpComponent } from './add-adresse-ip/add-adresse-ip.component';
 
 
 @NgModule({
@@ -60,6 +61,7 @@ import { ConfigurationWebComponentComponent } from './configuration-web-componen
     AddAdminCompteComponent,
     RecalculWebComponent,
     ConfigurationWebComponentComponent,
+    AddAdresseIpComponent,
 
 
   ], providers: [

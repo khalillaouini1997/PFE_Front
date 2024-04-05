@@ -23,7 +23,7 @@ export class CompteAdminComponent implements OnInit {
 
   ngOnInit() {
     this.service.isAuthenticated = this.service.loadTestAuthenticated();
-    if (this.service.isAuthenticated == false) {
+    if (!this.service.isAuthenticated) {
       this.router.navigate(['/error']);
     } else {
       this.getAllAdminComptes(this.keyWord, this.bigCurrentPage - 1, this.itemsPerPage);
@@ -39,23 +39,24 @@ export class CompteAdminComponent implements OnInit {
     this.loading = true; // Set loading flag to true
     this.adminComptes = []; // Clear the existing adminComptes array
 
-    // Call the service method to fetch adminComptes
     this.service.getAllAdminComptesByKeyWord(keyWord, page, size)
       .pipe(
         finalize(() => {
           this.loading = false; // Set loading flag to false when the request completes
         })
       )
-      .subscribe(
-        _comptesWeb => {
+      .subscribe({
+        next: (_comptesWeb) => {
           this.adminComptes = _comptesWeb.content; // Update adminComptes with the received data
           this.bigTotalItems = _comptesWeb.totalElements; // Update bigTotalItems with the total count of elements
         },
-        error => {
+        error: (error) => {
           console.error('Error occurred while fetching adminComptes:', error); // Handle any errors
+          // Handle error as needed, e.g., displaying an error message to the user
         }
-      );
+      });
   }
+
 
 
   //=====================================

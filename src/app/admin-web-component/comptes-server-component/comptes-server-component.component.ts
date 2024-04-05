@@ -49,7 +49,7 @@ export class ComptesServerComponentComponent implements OnInit {
 
   ngOnInit() {
     this.dashboardService.isAuthenticated = this.dashboardService.loadTestAuthenticated();
-    if (this.dashboardService.isAuthenticated == false) {
+    if (!this.dashboardService.isAuthenticated) {
 
       this.router.navigate(['/error']);
 
