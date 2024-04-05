@@ -13,6 +13,7 @@ import { AccessLogComponent } from './access-log/access-log.component';
 import { ListTraccarComponent } from './list-traccar/list-traccar.component';
 import { CompteAdminComponent } from './compte-admin/compte-admin.component';
 import { AddAdminCompteComponent } from './add-admin-compte/add-admin-compte.component';
+import {ConfigurationWebComponentComponent} from "./configuration-web-component/configuration-web-component.component";
 
 
 const routes: Routes = [{
@@ -58,6 +59,10 @@ const routes: Routes = [{
     }, {
       path: 'listWebs',
       component: ComptesWebComponentComponent
+    },
+    {
+      path: 'configurations/:idCompteClientWeb',
+      component: ConfigurationWebComponentComponent
     },
     {
       path: 'intervention',

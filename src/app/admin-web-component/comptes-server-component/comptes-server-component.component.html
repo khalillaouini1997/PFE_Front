@@ -59,27 +59,19 @@
                             <button class="btn btn-danger btn-xs" (click)="onSelect(compteServer);deleteCompteServer();">
                                 <i class="material-icons md-24"
                                     title=" Supprimer le compte Web">delete_forever</i></button>
-
-
                         </td>
-
-
                     </tr>
-
-
-
                 </tbody>
             </table>
         </div>
     </div>
 </div>
 
-<div class="col-md-6 text-center">
-    <pagination [hidden]="loading" [totalItems]="bigTotalItems" [(ngModel)]="bigCurrentPage" [maxSize]="maxSize"
-        class="pagination-sm" [boundaryLinks]="true" [rotate]="false" [itemsPerPage]="itemsPerPage"
-        (pageChanged)="pageChanged($event)" previousText="Précédent" nextText="Suivant" firstText="Premier"
-        lastText="Dernier"></pagination>
-
+<div class="col-md-12 text-center">
+  <pagination [hidden]="loading" [totalItems]="bigTotalItems" [(ngModel)]="bigCurrentPage" [maxSize]="maxSize"
+              class="pagination-sm" [boundaryLinks]="true" [rotate]="false" [itemsPerPage]="itemsPerPage"
+              (pageChanged)="pageChanged($event)" previousText="Précédent" nextText="Suivant" firstText="Premier"
+              lastText="Dernier"></pagination>
 </div>
 
 <!--start modal update compte server-->

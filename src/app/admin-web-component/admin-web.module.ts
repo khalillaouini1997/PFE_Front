@@ -28,6 +28,7 @@ import {DashboardService} from "../service/dashboard.service";
 import {CoreService} from "../service/core.service";
 import {CompteWebService} from "../service/compte-web.service";
 import {CompteServerService} from "../service/compte-server.service";
+import { ConfigurationWebComponentComponent } from './configuration-web-component/configuration-web-component.component';
 
 
 @NgModule({
@@ -58,6 +59,7 @@ import {CompteServerService} from "../service/compte-server.service";
     CompteAdminComponent,
     AddAdminCompteComponent,
     RecalculWebComponent,
+    ConfigurationWebComponentComponent,
 
 
   ], providers: [
