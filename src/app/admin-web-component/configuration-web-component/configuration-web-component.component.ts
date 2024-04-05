@@ -34,7 +34,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
   public query = '';
   idCompteServer: number = 0;
   codesPays: { key: string; value: string; }[] = [];
-  date: Date | null = null;
+  date: Date | null = new Date();
   options: Option[];
   boitiers: any[];
   boitiersClicked = false;
@@ -59,7 +59,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
   deviceSetting: DeviceSetting = new DeviceSetting();
   vehiculeSetting: VehiculeSetting = new VehiculeSetting();
 
-  datestart: Date | null = null;
+  datestart: Date | null = new Date();
   typeRecalcule: String;
   recalculeP: RecalculatePayload = new RecalculatePayload();
 
