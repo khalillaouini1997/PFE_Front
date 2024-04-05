@@ -1,0 +1,78 @@
+<div class="container-fluid">
+
+  <div class="row">
+    <div class="col-md-6 center">
+      <div class="card">
+        <div class="card-header" data-background-color="blue">
+          <h4 class="title">Add New Ip Address</h4>
+          <p class="category">Complete this Form</p>
+        </div>
+        <div class="card-content">
+          <form #IpForm="ngForm">
+            <div class="row">
+
+              <div class="col-md-6">
+                <div class="form-group label-floating">
+                  <label class="control-label">Label</label>
+                  <input type="text" [(ngModel)]="ipAddress.label" class="form-control" name="label" required>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group label-floating">
+                  <label class="control-label">Value</label>
+                  <input type="text" [(ngModel)]="ipAddress.value" class="form-control" name="value" required>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group label-floating">
+                  <label class="control-label">Pseudo</label>
+                  <input type="text" [(ngModel)]="ipAddress.jdbcUser" class="form-control" name="jdbcUser">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group label-floating">
+                  <label class="control-label">Password</label>
+                  <input type="password" [(ngModel)]="ipAddress.jdbcPass" class="form-control" name="jdbcPass">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-9">
+                <div class="form-group label-floating">
+                  <label class="control-label">URL</label>
+                  <input type="text" [(ngModel)]="ipAddress.url" class="form-control" name="url">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">Type de Connection</label>
+                  <select [(ngModel)]="ipAddress.typeConnection" class="form-control" name="typeConnection">
+                    <option *ngFor="let type of typeConnection" [value]="type.type"> {{type.type}} </option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">Data Base Name</label>
+                  <input type="text" [(ngModel)]="ipAddress.dbName" class="form-control" name="dbName">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+
+              </div>
+              <button type="button" class="btn btn-info pull-right" [disabled]="!IpForm.form.valid "
+                      (click)="saveIpAddres()">Save Ip Address</button>
+
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
