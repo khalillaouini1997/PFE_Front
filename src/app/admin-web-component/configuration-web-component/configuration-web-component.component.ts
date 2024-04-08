@@ -11,13 +11,18 @@ import {
 } from "../../data/data";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {WebSocketService} from "../../service/web-socket.service";
-import {BsLocaleService} from "ngx-bootstrap/datepicker";
 import {ToastrService} from "ngx-toastr";
 import {CompteWebService} from "../../service/compte-web.service";
 import {DashboardService} from "../../service/dashboard.service";
 import {DataService} from "../../service/data.service";
 import {tap} from "rxjs";
 import {catchError} from "rxjs/operators";
+
+
+import {BsLocaleService} from "ngx-bootstrap/datepicker";
+import { defineLocale } from 'ngx-bootstrap/chronos';
+import { frLocale } from 'ngx-bootstrap/locale';
+defineLocale('fr', frLocale);
 
 @Component({
   selector: 'app-configuration-web-component',

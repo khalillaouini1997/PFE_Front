@@ -45,7 +45,7 @@ export class ComptesWebComponentComponent implements OnInit {
   ngOnInit() {
     this.dashboardService.isAuthenticated = this.dashboardService.loadTestAuthenticated();
     if (!this.dashboardService.isAuthenticated) {
-      this.router.navigate(['/error']);
+     // this.router.navigate(['/error']);
     } else {
       this.getAllWebAccount(this.keyWord, this.bigCurrentPage - 1, this.itemsPerPage);
     }
