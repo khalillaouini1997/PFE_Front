@@ -1,0 +1,106 @@
+<!--created by AHMED HAYEL-->
+
+<h3 style="margin:0;">Archive and Raw of Device
+  <button class="btn btn-default" (click)="back()">back</button>
+  <span class="label label-success">{{numBoitier}}</span>
+  <label class="control-label">Nbr: </label>
+  <input type="number" class="form-control" name="Nbr" [(ngModel)]="limit">
+  <button class="btn btn-success" (click)="getArchives()">Afficher</button>
+</h3>
+
+
+<tabset #staticTabs>
+  <tab heading="Archive of Device">
+    <div class="card-content table-responsive">
+
+      <table class="table table-hover table-striped">
+        <thead style="font-size: 12px;">
+        <th>Date</th>
+        <th>Trame</th>
+        <th>Latitude</th>
+        <th>Longitude</th>
+        <th>Speed</th>
+        <th>temp</th>
+        <th>X</th>
+        <th>Y</th>
+        <th>Z</th>
+        <th>Ignition</th>
+        <th>RPM</th>
+        <th>Fuel Rate</th>
+        <th>Tfu</th>
+        <th>Odometre</th>
+        <th>satInView</th>
+        <th>Signal</th>
+        <th>Heading</th>
+        <th>Charger</th>
+        </thead>
+        <tbody>
+        <tr *ngFor="let archive of archives">
+          <td style="font-size: 12px;">{{archive.date}}</td>
+
+          <td><span class="label label-warning">{{archive.trame_id}}</span></td>
+
+          <td>{{archive.latitude}}</td>
+
+          <td>{{archive.longitude}}</td>
+          <td><span class="label label-danger" *ngIf="archive.ignition==false">Off</span>
+            <span class="label label-success" *ngIf="archive.ignition==true">On</span></td>
+          <td>{{archive.speed}}</td>
+
+          <td>{{archive.temp}}</td>
+          s
+          <td>{{archive.x}}</td>
+
+          <td>{{archive.y}}</td>
+
+          <td>{{archive.z}}</td>
+
+
+
+          <td>{{archive.rpm}}</td>
+
+          <td>{{archive.fuel_rate}}</td>
+
+          <td>{{archive.tfu}}</td>
+
+          <td>{{archive.odo}}</td>
+
+          <td>{{archive.satInView}}</td>
+
+          <td>{{archive.signal}}</td>
+
+          <td>{{archive.heading}}</td>
+
+          <td>{{archive.charger}}</td>
+
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </tab>
+  <tab (select)="getAllRaws()" heading="Raw of Device">
+    <div class="card-content table-responsive">
+
+      <table class="table table-bordered">
+        <thead>
+        <th>ID</th>
+        <th>GPRMC</th>
+
+        </thead>
+        <tbody>
+        <tr>
+          <th colspan="26">$count: {{raws.count}}</th>
+        </tr>
+        <tr *ngFor="let raw of raws.raws">
+          <td>{{raw.idTram}}</td>
+          <td class="table table-bordered table-condensed ecriture">
+
+        <tr class="success">
+          <td>{{raw.gprmc}}</td>
+        </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </tab>
+</tabset>

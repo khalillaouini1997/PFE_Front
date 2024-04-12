@@ -1,0 +1,23 @@
+/*created by AHMED HAYEL*/
+
+table tbody {
+  background-color: white;
+}
+table thead {
+  background-color: #e9423e;
+  color: white;
+}
+
+th {
+  text-align: center;
+}
+
+.sidebar {
+  display: none !important;
+}
+.main-panel {
+  width: 100% !important;
+}
+.ecriture {
+  font-size: 12px;
+}
