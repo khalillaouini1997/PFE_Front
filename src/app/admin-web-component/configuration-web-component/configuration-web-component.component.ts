@@ -154,7 +154,9 @@ export class ConfigurationWebComponentComponent implements OnInit {
     } else {
       this.route.params.subscribe((params: Params) => {
         this.ID_COMPTE = (+params['idCompteClientWeb']);
-        this.compteWebService.getWebAccountById(this.ID_COMPTE).subscribe(_compteWeb => {
+        this.compteWebService.getWebAccountById(this.ID_COMPTE).subscribe(async _compteWeb => {
+          this.options = await this.dataService.getAllOptions().toPromise();
+          this.charge();
           //web account
           this.compteWeb = _compteWeb;
           //server account from web account
@@ -173,11 +175,9 @@ export class ConfigurationWebComponentComponent implements OnInit {
           this.date = new Date(this.compteWeb.date_expiration);
         })
       });
-
       this.codesPays = this.dataService.codesPays;
-      this.options = this.dataService.options;
+      //this.options = this.dataService.options;
       this.serverAccounts = this.dashboardService.compteServer;
-
     }
 
     this.getAllIps();
@@ -219,8 +219,11 @@ export class ConfigurationWebComponentComponent implements OnInit {
   }
 
   charge() {
+    console.log("Options:", this.options); // Log the options array
+    console.log("FilteredList:", this.filteredList); // Log the filteredList array
     this.filteredList = this.options;
   }
+
 
   //=====================================================
   //   save changes (update web account + save options )
@@ -257,7 +260,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
   //    Change serve account of Web account
   //=========================================
 
-  ChangeServerAccount() {
+  /*ChangeServerAccount() {
     if (this.serverAccount.idCompteClientServer != this.idCompteServer) {
       this.compteWebService.associateCompteWebToCompteServer(this.ID_COMPTE, this.idCompteServer)
         .pipe(
@@ -274,7 +277,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
     } else {
       this.toastr.success('Server of this web account is not modified', 'Success!');
     }
-  }
+  }*/
 
 // Helper function for clarity
   updateServerAccountStatus(_newServer: any) {

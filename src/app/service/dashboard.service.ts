@@ -11,7 +11,7 @@ export class DashboardService {
 
   compteServer: CompteServer[];
   administratorCompte: AdministratorCompte[];
-  options: Option[];
+
   isAuthenticated: boolean = false;
 
 
@@ -33,12 +33,6 @@ export class DashboardService {
    * Get all Options
    *
    */
-
-  getAllOptions(): Observable<any> {
-    const headers = this.getHeaders();
-    return this.http.get<any>(`${dns}options`, { headers });
-  }
-
 
   private getHeaders(): HttpHeaders {
     let headers = new HttpHeaders();

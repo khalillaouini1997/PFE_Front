@@ -1,45 +1,74 @@
 
 export class CompteServer {
+  idCompteClientServer: number;
+  pseudo: string;
+  intervaleStart: number;
+  intervaleEnd: number;
+  ipAdresse: string;
+  login: string;
+  date_creation: number;
+  date_Expiration: number;
+  password: string;
+  expired: boolean;
+  during: boolean;
+  str_expiration: string;
+  nbrBoitiers: number;  // Merged property
 
-    idCompteClientServer: number;
-    pseudo: string;
-    intervaleStart: number;
-    intervaleEnd: number;
-    ipAdresse: string;
-    login: string;
-    date_creation: number;
-    date_Expiration: number;
-    password: string;
-    expired: boolean;
-    during: boolean;
-
-    str_expiration: string;
-    constructor() {
-        this.idCompteClientServer = 0;
-
-        this.pseudo = "";
-        this.ipAdresse = "";
-
-        this.login = "";
-
-        this.password = "";
-        this.expired = false;
-
-        this.during = false;
-        this.intervaleStart = 0;
-        this.intervaleEnd = 0;
-        this.str_expiration = "";
-    }
+  constructor() {
+    this.idCompteClientServer = 0;
+    this.pseudo = "";
+    this.ipAdresse = "";
+    this.login = "";
+    this.password = "";
+    this.expired = false;
+    this.during = false;
+    this.intervaleStart = 0;
+    this.intervaleEnd = 0;
+    this.str_expiration = "";
+    this.nbrBoitiers = 0;  // Initialize merged property
+  }
 }
 
-export class CompteServerWithBoitier {
-    compteServer: CompteServer;
-    nbrBoitiers: number;
 
-    constructor() {
-        this.compteServer = new CompteServer();
-        this.nbrBoitiers = 0;
-    }
+export class CompteWeb {
+  idCompteClientWeb: number;
+  login: string;
+  password: string;
+  rawPassword: string;
+  date_creation: number;
+  date_expiration: number;
+  code_pays: string;
+  option: Option[];
+  compteClientServer: CompteServer = new CompteServer();
+  expired: boolean;
+  during: boolean;
+  ipAdresse: string;
+  pool: number;
+  firstname: string;
+  lastname: string;
+  email: string;
+  telephone: number;
+  area: string;
+  administratorCompte: AdministratorCompte;
+  notificationSubquery: string;
+  mobileNotif: boolean;
+  deviceFeeByDay: number;
+  accountFeeByMonth: number;
+  deviceFeePerMonth: number;
+  simCardFeePerMonth: number;
+
+
+
+  constructor() {
+    this.idCompteClientWeb = 0;
+    this.login = "";
+    this.password = "";
+    this.rawPassword = "";
+    this.code_pays = "+212";
+    this.expired = false;
+    this.ipAdresse = 'localhost';
+    this.during = false;
+  }
 }
 
 export class IpAddress {
@@ -60,46 +89,6 @@ export class IpAddress {
         this.url = "";
         this.dbName = "";
     }
-}
-
-export class CompteWeb {
-    idCompteClientWeb: number;
-    login: string;
-    password: string;
-    rawPassword: string;
-    date_creation: number;
-    date_expiration: number;
-    code_pays: string;
-    option: Option[];
-    compteClientServer: CompteServer = new CompteServer();
-    expired: boolean;
-    during: boolean;
-    ipAdresse: string;
-    pool: number;
-    firstname: string;
-    lastname: string;
-    email: string;
-    telephone: number;
-    area: string;
-    administratorCompte: AdministratorCompte;
-    notificationSubquery: string;
-    mobileNotif: boolean;
-    deviceFeeByDay: number;
-    accountFeeByMonth: number;
-    deviceFeePerMonth: number;
-    simCardFeePerMonth: number;
-
-    constructor() {
-        this.idCompteClientWeb = 0;
-        this.login = "";
-        this.password = "";
-        this.rawPassword = "";
-        this.code_pays = "+212";
-        this.expired = false;
-        this.ipAdresse = 'localhost';
-        this.during = false;
-    }
-
 }
 
 export class Archive {

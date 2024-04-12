@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { CompteServer, CompteServerWithBoitier, IpAddress } from 'src/app/data/data';
+import { CompteServer, IpAddress } from 'src/app/data/data';
 import { DataService } from 'src/app/service/data.service';
 import {CompteServerService} from "../../service/compte-server.service";
+import {BsLocaleService} from "ngx-bootstrap/datepicker";
+import { defineLocale } from 'ngx-bootstrap/chronos';
+import { frLocale } from 'ngx-bootstrap/locale';
+defineLocale('fr', frLocale);
 
 @Component({
   selector: 'app-add-compte-server',
@@ -10,26 +14,22 @@ import {CompteServerService} from "../../service/compte-server.service";
 })
 export class AddCompteServerComponent implements OnInit {
 
-
   public notifications = 0;
-
-
   compteServer: CompteServer = new CompteServer();
-  compteServerWithBoitier: CompteServerWithBoitier = new CompteServerWithBoitier();
+  //compteServerWithBoitier: CompteServerWithBoitier = new CompteServerWithBoitier();
   numberBoitier: number = 0;
   ipAddresses: IpAddress[];
   public loading = false;
  /*public myDatePickerOptions: IMyOptions = {
     dateFormat: 'dd-mm-yyyy',
   };*/
-
   mode: boolean = false;
   messageError: string;
   isExistPseudo: boolean;
   isExistLogin: boolean;
   confirmationPassword: String;
   public date: Object;
-  constructor(private compteServerService: CompteServerService,
+  constructor(private compteServerService: CompteServerService,private localeService: BsLocaleService,
   ) {
 
     // Open connection with server socket
@@ -41,6 +41,7 @@ export class AddCompteServerComponent implements OnInit {
         this.notifications = JSON.parse(notifications.body).count;
       })
     });*/
+    this.localeService.use('fr');
   }
 
 
@@ -60,47 +61,54 @@ export class AddCompteServerComponent implements OnInit {
 
 
   addCompteServer() {
-
+    // Validate the number of devices (numberBoitier)
     if (this.numberBoitier < 0) {
-      //this.toastr.error('number of Devices not valid', 'Error!');
+      // Display an error message if the number of devices is invalid
+      console.error('Number of devices not valid');
+      return;
+    }
+    // Validate the pseudo and login
+    this.onKeyPseudo(); // Call to validate the pseudo
+    this.onKeyLogin();  // Call to validate the login
 
-    } else {
-      // this.spinnerService.show();
+    // If the pseudo or login are not valid (already exist), you should handle it appropriately.
+    // For example, you can display an error message or stop the process.
+    if (this.isExistPseudo || this.isExistLogin) {
+      console.error('Pseudo or login already exists');
+      return;
+    }
+    // Set up loading and notification states
+    this.loading = true;
+    // Convert the date expiration to a timestamp
+    this.compteServer.date_Expiration = new Date(this.date['jsdate']).getTime();
+    // Create the CompteServer
+    this.compteServerService.createServerComptewithBoitier(this.compteServer, this.numberBoitier)
+      .subscribe(
+        (newCompteServer) => {
+          // Successful creation of CompteServer
 
-      this.notifications = 0;
-      this.loading = true;
-      this.compteServer.date_Expiration = new Date(this.date['jsdate']).getTime();
-      this.onKeyLogin();
-      this.onKeyPseudo();
-      this.compteServerService.createServerComptewithBoitier(this.compteServer, this.numberBoitier)
-        .subscribe(_compteServer => {
-          //  this.spinnerService.hide();
+          // Reset the form or state as needed
           this.mode = false;
           this.loading = false;
-          this.compteServerWithBoitier = _compteServer;
-          this.confirmationPassword = "";
           this.compteServer = new CompteServer();
           this.date = "";
 
-
-         // this.toastr.success('Server Account added with ' + this.compteServerWithBoitier.nbrBoitiers + ' device(s)', 'Success!');
-
+          // Display a success message (you can use toastr or other UI components)
+          console.log(`Server Account added with ${newCompteServer.nbrBoitiers} device(s)`);
         },
-          error => {
-            this.mode = true;
-
-            const jsonError = error.json();
-            this.messageError = jsonError.message;
-
-            //this.spinnerService.hide();
-            this.loading = false;
-           // this.toastr.error('can not add account', 'Error!');
-          }
-        );
-    }
+        (error) => {
+          // Handle errors gracefully
+          this.mode = true;
+          this.loading = false;
+          // Extract error message if possible
+          const errorMessage = error?.json()?.message || 'An error occurred';
+          // Display an error message (you can use toastr or other UI components)
+          console.error(`Cannot add account: ${errorMessage}`);
+        }
+      );
   }
-  onKeyPseudo() {
 
+  onKeyPseudo() {
     this.compteServerService.isExistPseudo(this.compteServer.pseudo).subscribe(res => {
       this.isExistPseudo = res;
 
@@ -111,9 +119,7 @@ export class AddCompteServerComponent implements OnInit {
 
     this.compteServerService.isExistPseudo(this.compteServer.login).subscribe(res => {
       this.isExistLogin = res;
-
     })
-
   }
 
   reinitialisation() {

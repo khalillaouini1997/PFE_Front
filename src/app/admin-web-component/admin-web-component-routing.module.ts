@@ -14,6 +14,10 @@ import { ListTraccarComponent } from './list-traccar/list-traccar.component';
 import { CompteAdminComponent } from './compte-admin/compte-admin.component';
 import { AddAdminCompteComponent } from './add-admin-compte/add-admin-compte.component';
 import {ConfigurationWebComponentComponent} from "./configuration-web-component/configuration-web-component.component";
+import {RecalculWebComponent} from "./recalcul-web/recalcul-web.component";
+import {ArchiveComponent} from "./archive/archive.component";
+import {VehiculeInfoComponent} from "./vehicule-info/vehicule-info.component";
+import {AddAdresseIpComponent} from "./add-adresse-ip/add-adresse-ip.component";
 
 
 const routes: Routes = [{
@@ -42,8 +46,20 @@ const routes: Routes = [{
       component: AddCompteServerComponent
     },
     {
+      path: 'configurations/:idCompteClientWeb',
+      component: ConfigurationWebComponentComponent
+    }
+    /*{
+            path: 'configurations',
+            component: ConfigurationWebComponentComponent
+    }*/,
+    {
       path: 'compteDetails/:idCompteClientServer',
       component: CompteServerDetailsComponent
+    },
+    {
+      path: 'addAdressIp',
+      component: AddAdresseIpComponent
     },
     {
       path: 'listAdressIp',
@@ -56,17 +72,26 @@ const routes: Routes = [{
     {
       path: 'listServers',
       component: ComptesServerComponentComponent
-    }, {
+    },
+    {
       path: 'listWebs',
       component: ComptesWebComponentComponent
     },
     {
-      path: 'configurations/:idCompteClientWeb',
-      component: ConfigurationWebComponentComponent
+      path: 'archiveBoitier/:numBoitier',
+      component: ArchiveComponent
+    },
+    {
+      path: 'recalcule/:idCompteClientWeb/:numBoitier',
+      component: RecalculWebComponent
     },
     {
       path: 'intervention',
       component: HelpComponent
+    },
+    {
+      path: 'technicianIntervention',
+      component: VehiculeInfoComponent
     },
     {
       path: 'accessLog',
@@ -76,6 +101,7 @@ const routes: Routes = [{
       path: 'traccar',
       component: ListTraccarComponent
     }
+
 
   ],
 }];

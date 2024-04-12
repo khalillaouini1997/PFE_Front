@@ -30,6 +30,9 @@ import {CompteWebService} from "../service/compte-web.service";
 import {CompteServerService} from "../service/compte-server.service";
 import { ConfigurationWebComponentComponent } from './configuration-web-component/configuration-web-component.component';
 import { AddAdresseIpComponent } from './add-adresse-ip/add-adresse-ip.component';
+import { ArchiveComponent } from './archive/archive.component';
+import { VehiculeInfoComponent } from './vehicule-info/vehicule-info.component';
+import {TabsModule} from "ngx-bootstrap/tabs";
 
 
 @NgModule({
@@ -42,6 +45,7 @@ import { AddAdresseIpComponent } from './add-adresse-ip/add-adresse-ip.component
     BsDatepickerModule.forRoot(),
     ToastrModule.forRoot(),
     NgOptimizedImage,
+    TabsModule,
 
   ],
   declarations: [
@@ -62,6 +66,8 @@ import { AddAdresseIpComponent } from './add-adresse-ip/add-adresse-ip.component
     RecalculWebComponent,
     ConfigurationWebComponentComponent,
     AddAdresseIpComponent,
+    ArchiveComponent,
+    VehiculeInfoComponent,
 
 
   ], providers: [

@@ -42,19 +42,37 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
+                                  <div class="col-md-6">
                                     <div class="form-group label-floating">
-                                        <div class="input-group input-append date">
-                                            <!--<my-date-picker name="mydate" [options]="myDatePickerOptions"
-                                                placeholder="date Expiration" [(ngModel)]="date" required>
-                                            </my-date-picker>-->
+                                      <label class="control-label">Number of Devices</label>
+                                      <input type="number" min=0 class="form-control" name="numberBoitier" [(ngModel)]="numberBoitier"
+                                             required>
+                                    </div>
+                                  </div>
+                                </div>
+                              <!--<div class="col-md-6">
+                                  <div class="form-group label-floating">
+                                      <div class="input-group input-append date">
+                                          <my-date-picker name="mydate" [options]="myDatePickerOptions"
+                                              placeholder="date Expiration" [(ngModel)]="date" required>
+                                          </my-date-picker>
                                             <span class="input-group-addon add-on"></span>
-                                        </div>
+                                        </div
 
                                     </div>
-                                </div>
+                                </div>-->
                             </div>
                             <div class="row">
-                                <div class="col-md-6">
+                              <div class="col-md-6">
+                                <div class="form-group label-floating">
+                                  <div class="input-group input-append date">
+                                    <input type="text" class="form-control" bsDatepicker [(ngModel)]="date"
+                                           [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }"
+                                           placeholder="Date d'expiration" required>
+                                    <span class="input-group-addon add-on"></span>  </div>
+                                </div>
+                              </div>
+                                <!--<div class="col-md-6">
                                     <div class="form-group label-floating">
                                         <div class="input-group input-append date">
                                             <label class="control-label">Compte serveur</label>
@@ -64,16 +82,16 @@
                                             </select>
                                         </div>
                                     </div>
-                                </div>
+                                </div>-->
                                 <div class="col-md-6">
                                     <div class="form-group label-floating">
                                         <label class="control-label">IP Adresse</label>
-                                     
-                                        <!--<select [(ngModel)]="compteWeb.ipAdresse" name="ipAdresse" id="adresseIP"
+
+                                        <select [(ngModel)]="compteWeb.ipAdresse" name="ipAdresse" id="adresseIP"
                                             class="form-control" #ipAdresse="ngModel" required>
                                             <option *ngFor="let ip of ipAddresses" [ngValue]="ip.value">{{ip.label}}
                                             </option>
-                                        </select>-->
+                                        </select>
                                     </div>
                                 </div>
                             </div>

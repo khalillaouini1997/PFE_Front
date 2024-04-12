@@ -1,7 +1,7 @@
 <!--created by CHAIMA TABOUBI-->
 
 <div class="container-fluid">
-  <div class="alert alert-danger" role="alert" *ngIf="mode==true">
+  <div class="alert alert-danger" role="alert" *ngIf="mode">
     {{messageError}}
   </div>
   <div class="row">
@@ -19,21 +19,22 @@
                 <div class="form-group label-floating">
                   <label class="control-label">Pseudo</label>
                   <input type="text" class="form-control" name="pseudo" [(ngModel)]="compteServer.pseudo" required
-                    isExistPseudo="false">
+                         isExistPseudo="false" #pseudo="ngModel">
                 </div>
 
-                <div class="invalid-feedback text-danger" *ngIf="isExistPseudo==true">
-                  <i class="fa fa-thumbs-o-down" aria-hidden="true"></i> Existing Pseudo
+                <div class="invalid-feedback text-danger" *ngIf="pseudo.invalid && pseudo.touched">
+                  <i class="fa fa-thumbs-o-down" aria-hidden="true"></i> Please provide a valid Pseudo
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="form-group label-floating">
                   <label class="control-label">Login</label>
-                  <input type="text" class="form-control" name="login" [(ngModel)]="compteServer.login" required>
+                  <input type="text" class="form-control" name="login" [(ngModel)]="compteServer.login" required
+                         #login="ngModel">
                 </div>
 
-                <div class="invalid-feedback text-danger" *ngIf="isExistLogin==true">
-                  <i class="fa fa-thumbs-o-down" aria-hidden="true"></i> Existing Loguin
+                <div class="invalid-feedback text-danger" *ngIf="login.invalid && login.touched">
+                  <i class="fa fa-thumbs-o-down" aria-hidden="true"></i> Please provide a valid Login
                 </div>
               </div>
             </div>
@@ -44,20 +45,20 @@
                 <div class="form-group label-floating" [class.has-error]="password.touched && password.invalid">
                   <label for="password" class="control-label">Password</label>
                   <input type="password" data-minlength="6" class="form-control" name="password" id="Password"
-                    [(ngModel)]="compteServer.password" #password="ngModel" required>
+                         [(ngModel)]="compteServer.password" #password="ngModel" required>
                   <span class="help-block with-errors" *ngIf="compteServer.password.length<6">Minimum of 6
                     characters</span>
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="form-group label-floating"
-                  [class.has-error]="confirmPassword.touched && confirmPassword.invalid">
+                     [class.has-error]="confirmPassword.touched && confirmPassword.invalid">
                   <label for=confirmPassword class="control-label">Confirmation Password</label>
                   <input type="password" class="form-control" name="confirmPassword" id="confirmPassword"
-                    appConfirmEqualValidator="password" #confirmPassword="ngModel" [(ngModel)]="confirmationPassword"
-                    required>
+                         appConfirmEqualValidator="password" #confirmPassword="ngModel" [(ngModel)]="confirmationPassword"
+                         required>
                   <span class="help-block "></span>
-                  <!--<span class="help-block with-errors" *ngIf=" confirmPassword.errors?.notEqual && 
+                  <!--<span class="help-block with-errors" *ngIf=" confirmPassword.errors?.notEqual &&
                                   !confirmPassword.errors?.required"> password and Confirm Password does not match
 
                   </span>-->
@@ -69,33 +70,28 @@
 
               <div class="col-md-6">
                 <div class="form-group label-floating">
-                  <label class="control-label">Date d'expiration</label>
                   <div class="input-group input-append date">
-                    <!--<my-date-picker name="mydate" [options]="myDatePickerOptions" placeholder="date Expiration"
-                      [(ngModel)]="date" required></my-date-picker>-->
-                    <span class="input-group-addon add-on"></span>
-                  </div>
-
+                    <input type="text" class="form-control" bsDatepicker [(ngModel)]="date"
+                           [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }"
+                           placeholder="Date d'expiration" required>
+                    <span class="input-group-addon add-on"></span>  </div>
                 </div>
               </div>
+
               <div class="col-md-6">
                 <div class="col-md-6">
                   <div class="form-group label-floating">
                     <label class="control-label">Number of Devices</label>
                     <input type="number" min=0 class="form-control" name="numberBoitier" [(ngModel)]="numberBoitier"
-                      required>
+                           required>
                   </div>
                 </div>
               </div>
             </div>
 
-
-
-
-
             <div class="row">
               <div class="col-md-6">
-
+                <!-- Add button here if needed -->
               </div>
               <!--<button type="button" class="btn btn-info pull-right" [disabled]="!serverForm.form.valid "
                 (click)="addCompteServer()" [tooltip]="tooltipup" tooltipPlacement="top" data-toggle="modal"

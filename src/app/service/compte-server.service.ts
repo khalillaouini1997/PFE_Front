@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {AdministratorCompte, Boitier, CompteServer, IpAddress} from "../data/data";
+import {AdministratorCompte, Boitier, CompteServer, CompteWeb, IpAddress} from "../data/data";
 import {Observable} from "rxjs";
 import {dns} from "../global.config";
 import {map} from "rxjs/operators";
@@ -84,10 +84,21 @@ export class CompteServerService {
     return this._http.put<any>(`${dns}compteServer/${id}`, compteServer, options);
   }
 
-  createServerComptewithBoitier(compteServer: CompteServer, nbrBoitiers: number): Observable<any> {
+  createServerComptewithBoitier(compteServer: CompteServer, nbrBoitiers: number): Observable<CompteServer> {
+    // Set the options for the HTTP request (headers)
     const options = { headers: this.getHeaders() };
-    return this._http.post<any>(`${dns}compteServer/addNewComptewithBoitier?nombreBoitier=${nbrBoitiers}&username=${this.dataService.getCurrentUserName()}`, compteServer, options);
+
+    // Make an HTTP POST request to create a new CompteServer with boitiers
+    // The URL is constructed using the provided dns, nbrBoitiers, and username
+    return this._http.post<CompteServer>(
+      `${dns}compteServer/addNewComptewithBoitier?keyword=nombreBoitier&value=${nbrBoitiers}&username=${this.dataService.getCurrentUserName()}`,
+      compteServer,
+      options
+    );
   }
+
+
+
 
   getAllServerCompte(keyword: string, page: number, size: number): Observable<any> {
     const options = { headers: this.getHeaders() };
