@@ -1,12 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { CompteServer, IpAddress } from 'src/app/data/data';
+import {CompteServer, CompteServerWithBoitier, IpAddress} from 'src/app/data/data';
 import { DataService } from 'src/app/service/data.service';
 import {CompteServerService} from "../../service/compte-server.service";
 import {BsLocaleService} from "ngx-bootstrap/datepicker";
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { frLocale } from 'ngx-bootstrap/locale';
+
+import { ToastrService } from 'ngx-toastr';
 import {of, tap} from "rxjs";
 import {catchError} from "rxjs/operators";
+import {Router} from "@angular/router";
+
+
 defineLocale('fr', frLocale);
 
 @Component({
@@ -18,20 +23,23 @@ export class AddCompteServerComponent implements OnInit {
 
   public notifications = 0;
   compteServer: CompteServer = new CompteServer();
-  //compteServerWithBoitier: CompteServerWithBoitier = new CompteServerWithBoitier();
+  compteServerWithBoitier: CompteServerWithBoitier = new CompteServerWithBoitier();
   numberBoitier: number = 0;
   ipAddresses: IpAddress[];
   public loading = false;
- /*public myDatePickerOptions: IMyOptions = {
+  /*public myDatePickerOptions: IMyOptions = {
     dateFormat: 'dd-mm-yyyy',
   };*/
+
   mode: boolean = false;
   messageError: string;
   isExistPseudo: boolean;
   isExistLogin: boolean;
   confirmationPassword: String;
   public date: Object;
-  constructor(private compteServerService: CompteServerService,private localeService: BsLocaleService,
+
+  constructor(private dataService: DataService, public toastr: ToastrService, private router: Router,
+              private compteServerService: CompteServerService, private localeService: BsLocaleService,
   ) {
 
     // Open connection with server socket
@@ -63,44 +71,40 @@ export class AddCompteServerComponent implements OnInit {
 
 
   addCompteServer() {
-    // Validate the number of devices (numberBoitier)
     if (this.numberBoitier < 0) {
-      // Display an error message if the number of devices is invalid
-      console.error('Number of devices not valid');
+      this.toastr.error('number of Devices not valid', 'Error!');
       return;
     }
-    // Validate the pseudo and login
-    this.onKeyPseudo(); // Call to validate the pseudo
-    this.onKeyLogin();  // Call to validate the login
 
-    // If the pseudo or login are not valid (already exist), you should handle it appropriately.
-    // For example, you can display an error message or stop the process.
-    if (this.isExistPseudo || this.isExistLogin) {
-      console.error('Pseudo or login already exists');
-      return;
-    }
-    // Set up loading and notification states
+    this.notifications = 0;
     this.loading = true;
-    // Convert the date expiration to a timestamp
     this.compteServer.date_Expiration = new Date(this.date['jsdate']).getTime();
+    this.onKeyLogin();
+    this.onKeyPseudo();
 
-    // Create the CompteServer using pipe for error handling
-    this.compteServerService.createServerComptewithBoitier(this.compteServer, this.numberBoitier)
+    this.dataService.createServerComptewithBoitier(this.compteServer, this.numberBoitier)
       .pipe(
-        tap(newCompteServer => { // Handle successful creation
-          // Reset the form or state as needed
+        tap(_compteServer => {
+          // Success handling
           this.mode = false;
           this.loading = false;
+          this.compteServerWithBoitier = _compteServer;
+          this.confirmationPassword = "";
           this.compteServer = new CompteServer();
           this.date = "";
-          console.log(`Server Account added with ${newCompteServer.nbrBoitiers} device(s)`);
+
+          this.toastr.success('Server Account added with ' + this.compteServerWithBoitier.nbrBoitiers + ' device(s)', 'Success!');
+
+          this.router.navigate(['/adminWeb/listWebs']);
         }),
-        catchError(error => { // Handle errors
+        catchError(error => {
+          // Error handling
           this.mode = true;
+          const jsonError = error.json();
+          this.messageError = jsonError.message;
           this.loading = false;
-          const errorMessage = error?.json()?.message || 'An error occurred';
-          console.error(`Cannot add account: ${errorMessage}`);
-          return of(null); // Handle error appropriately, emit null or another value
+          this.toastr.error('can not add account', 'Error!');
+          return of(null); // Return an empty observable to prevent chain propagation
         })
       )
       .subscribe(); // Subscribe without arguments to trigger execution
@@ -110,12 +114,10 @@ export class AddCompteServerComponent implements OnInit {
   onKeyPseudo() {
     this.compteServerService.isExistPseudo(this.compteServer.pseudo).subscribe(res => {
       this.isExistPseudo = res;
-
     })
 
   }
   onKeyLogin() {
-
     this.compteServerService.isExistPseudo(this.compteServer.login).subscribe(res => {
       this.isExistLogin = res;
     })
@@ -123,7 +125,10 @@ export class AddCompteServerComponent implements OnInit {
 
   reinitialisation() {
     this.numberBoitier = 0;
-
   }
+
+
 }
+
+
 

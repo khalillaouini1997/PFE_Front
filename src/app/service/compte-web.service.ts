@@ -58,12 +58,12 @@ export class CompteWebService {
     return this._http.post<any>(`${dns}boities/editPathConfig/${idServer}`, pathConfigPayload, { headers });
   }
 
-  /*associateCompteWebToCompteServer(idWeb: number, idServer: number): Observable<any> {
+  associateCompteWebToCompteServer(idWeb: number, idServer: number): Observable<any> {
     return this._http.put(`${dns}compteWeb/${idWeb}/compteServer/${idServer}`, null, { headers: this.getHeaders() }).pipe(
       map((res: any) => res),
       catchError((error: any) => throwError(error))
     );
-  }*/
+  }
 
   updateWebAccount(idCompteWeb: number, newCompteWeb: CompteWeb): Observable<any> {
     return this._http.put(`${dns}compteWeb/${idCompteWeb}`, newCompteWeb, { headers: this.getHeaders() }).pipe(

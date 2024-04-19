@@ -5,6 +5,7 @@ import { DataService } from 'src/app/service/data.service';
 import {CompteWebService} from "../../service/compte-web.service";
 import {DashboardService} from "../../service/dashboard.service";
 import {CompteServerService} from "../../service/compte-server.service";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-compte-server-details',
@@ -32,10 +33,12 @@ export class CompteServerDetailsComponent implements OnInit {
   public bigCurrentPage: number = 1;
   public pagesFrom: number = 0;
   itemsPerPage = 15;
-  constructor( vcr: ViewContainerRef, private route: ActivatedRoute, private compteServerService: CompteServerService, private compteWebService: CompteWebService, private dashboardService: DashboardService, private dataService: DataService,
+  constructor( vcr: ViewContainerRef,
+               public toastr: ToastrService,
+               private route: ActivatedRoute, private compteServerService: CompteServerService, private compteWebService: CompteWebService, private dashboardService: DashboardService, private dataService: DataService,
     private router: Router
   ) {
-    //this.toastr.setRootViewContainerRef(vcr);
+
   }
 
   ngOnInit() {
@@ -152,8 +155,8 @@ export class CompteServerDetailsComponent implements OnInit {
 
       this.boitiers[indexboitier].label = _boitier.label;
       this.boitiers[indexboitier].stat = this.boitiers[indexboitier].etatBoitier == "INSTALLED";
-     // this.toastr.success(' Device updated ', 'Success!')
-    }, error => { /*this.toastr.error('There is a mistake', 'Error!') */});
+      this.toastr.success(' Device updated ', 'Success!')
+    }, error => { this.toastr.error('There is a mistake', 'Error!') });
   }
 
   //=====================================
@@ -188,15 +191,15 @@ export class CompteServerDetailsComponent implements OnInit {
           this.bigCurrentPage = 1;
 
           this.getBoitiersOfAccount(this.searchBoitier, this.ID_COMPTE, this.bigCurrentPage - 1, this.itemsPerPage);
-          // this.toastr.success(this.nbrBoitiers + ' devices are added to account ', 'Success!');
+          this.toastr.success(this.nbrBoitiers + ' devices are added to account ', 'Success!');
           this.nbrBoitiers = 0;
         },
         error: error => {
           this.mode = true;
           const jsonError = error.json();
           this.messageError = jsonError.message;
-          // this.spinnerService.hide();
-          // this.toastr.error('There is a mistake', 'Error!')
+           //this.spinnerService.hide();
+          this.toastr.error('There is a mistake', 'Error!')
         }
       });
   }
@@ -216,12 +219,12 @@ export class CompteServerDetailsComponent implements OnInit {
 
           this.BOITIER_NOT_INSTALLED = _compteServer.intervaleEnd - _compteServer.intervaleStart + 1;
           this.BOITIER_INSTALLED = _compteServer.boitiers.length;
-          //this.toastr.success('interval extended', 'Success!')
+          this.toastr.success('interval extended', 'Success!')
         });
       }
 
     } else {
-      //this.toastr.error('you can extend this interval because there is more devices available', 'Error!')
+      this.toastr.error('you can extend this interval because there is more devices available', 'Error!')
     }
   }
 
@@ -288,7 +291,7 @@ export class CompteServerDetailsComponent implements OnInit {
       if (this.boitiers[indexboitier].etatBoitier == "INSTALLED") {
         this.boitiers[indexboitier].stat = true;
       }
-      /*this.toastr.success(' Device is Installed now  ', 'Success!')*/
-    }, error => {/* this.toastr.error('Table of this server is not Exists ', 'Error!')*/ });
+      this.toastr.success(' Device is Installed now  ', 'Success!')
+    }, error => { this.toastr.error('Table of this server is not Exists ', 'Error!') });
   }
 }

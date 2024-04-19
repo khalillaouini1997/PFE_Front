@@ -3,7 +3,7 @@ import { Observable, throwError } from 'rxjs';
 import { dns } from '../global.config';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import {
-  AdministratorCompte, Boitier,
+  AdministratorCompte, Boitier, CompteServer,
   DeviceOpt,
   DeviceSetting,
   Intervention,
@@ -306,6 +306,11 @@ export class DataService {
     const headers = this.getHeaders();
     let keyWord = "";
     return this._http.get<any>(`${dns}compteServerWeb?keyWord=${keyWord}&size=${1000000}&userName=${this.getCurrentUserName()}`, { headers });
+  }
+
+  createServerComptewithBoitier(compteServer: CompteServer, nbrBoitiers: number): Observable<any> {
+    let options = { headers: this.getHeaders() };
+    return this._http.post<any>(dns + "compteServer/addNewComptewithBoitier?nombreBoitier=" + nbrBoitiers + "&username=" + this.getCurrentUserName(), compteServer, options);
   }
 
   associateCompteWebToCompteServer(idWeb: number, idServer: number): Observable<any> {

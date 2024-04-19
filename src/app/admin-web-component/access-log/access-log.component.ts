@@ -25,7 +25,7 @@ export class AccessLogComponent implements OnInit {
   }
 
     //=====================================
-  //    Change page 
+  //    Change page
   //=====================================
 
   public pageChanged(event: any): void {
@@ -33,8 +33,8 @@ export class AccessLogComponent implements OnInit {
     this.getAllAccessLog(this.keyWord, this.bigCurrentPage - 1, this.itemsPerPage);
   }
   //=====================================
-  //     Get All accessLog 
-  //     by keyword or not  
+  //     Get All accessLog
+  //     by keyword or not
   //=====================================
 
   getAllAccessLog(keyWord: string, page: number, size: number) {
@@ -42,13 +42,14 @@ export class AccessLogComponent implements OnInit {
     this.accessLog = [];
     this.service.getAllAccessLog(keyWord, page, size).subscribe(_accessLog => {
         this.accessLog = _accessLog.content;
-
         this.bigTotalItems = _accessLog.totalElements;
+        this.loading = false;
       });
+
   }
 
     //=====================================
-  //    Search access log 
+  //    Search access log
   //=====================================
 
   searchAccess() {

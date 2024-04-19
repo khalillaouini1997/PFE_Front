@@ -28,7 +28,7 @@ import {ToastrModule} from "ngx-toastr";
     FormsModule,
     BrowserAnimationsModule,
     PaginationModule,
-    BsDatepickerModule,
+    BsDatepickerModule.forRoot(),
     AdminWebModule,
     NgOptimizedImage,
     ToastrModule.forRoot({

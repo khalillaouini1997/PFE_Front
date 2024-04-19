@@ -27,10 +27,11 @@ export class ComptesWebComponentComponent implements OnInit {
   public numPages: number = 0;
   itemsPerPage = 30;
   comptesWeb: CompteWeb[];
+  loading: boolean = false;
   selectedWebAccount: CompteWeb = new CompteWeb();
   dt: Object;
   code_pays = [];
-  loading: boolean = false;
+
   owner: string;
 
   constructor(private router: Router, public toastr: ToastrService, vcr: ViewContainerRef,
@@ -67,7 +68,7 @@ export class ComptesWebComponentComponent implements OnInit {
   //=====================================
 
   getAllWebAccount(keyWord: string, page: number, size: number) {
-
+    this.loading = true;
     this.comptesWeb = [];
     this.compteWebService.getAllWebAccountByKeyWord(keyWord, page, size).subscribe(_comptesWeb => {
       this.loading = false;
@@ -98,8 +99,10 @@ export class ComptesWebComponentComponent implements OnInit {
   //=====================================
 
   searchWebAccount() {
+    this.loading = true;
     this.bigCurrentPage = 1;
     this.getAllWebAccount(this.keyWord, this.bigCurrentPage - 1, this.itemsPerPage);
+    this.loading = false;
   }
 
   //=====================================

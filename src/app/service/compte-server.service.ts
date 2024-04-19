@@ -84,20 +84,6 @@ export class CompteServerService {
     return this._http.put<any>(`${dns}compteServer/${id}`, compteServer, options);
   }
 
-  createServerComptewithBoitier(compteServer: CompteServer, nbrBoitiers: number): Observable<CompteServer> {
-    // Set the options for the HTTP request (headers)
-    const options = { headers: this.getHeaders() };
-
-    // Make an HTTP POST request to create a new CompteServer with boitiers
-    // The URL is constructed using the provided dns, nbrBoitiers, and username
-    return this._http.post<CompteServer>(
-      `${dns}compteServer/addNewComptewithBoitier?keyword=nombreBoitier&value=${nbrBoitiers}&username=${this.dataService.getCurrentUserName()}`,
-      compteServer,
-      options
-    );
-  }
-
-
 
 
   getAllServerCompte(keyword: string, page: number, size: number): Observable<any> {

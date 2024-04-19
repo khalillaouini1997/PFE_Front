@@ -70,11 +70,13 @@
 
               <div class="col-md-6">
                 <div class="form-group label-floating">
+                  <label class="control-label">Date d'expiration</label>
                   <div class="input-group input-append date">
-                    <input type="text" class="form-control" bsDatepicker [(ngModel)]="date"
+                    <input type="text" class="form-control" bsDatepicker name="date" [(ngModel)]="date"
                            [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }"
                            placeholder="Date d'expiration" required>
-                    <span class="input-group-addon add-on"></span>  </div>
+                    <span class="input-group-addon add-on"></span>
+                  </div>
                 </div>
               </div>
 
@@ -93,12 +95,10 @@
               <div class="col-md-6">
                 <!-- Add button here if needed -->
               </div>
-              <!--<button type="button" class="btn btn-info pull-right" [disabled]="!serverForm.form.valid "
-                (click)="addCompteServer()" [tooltip]="tooltipup" tooltipPlacement="top" data-toggle="modal"
-                data-target="#Modalupdate" data-backdrop="false">Save Server account</button>
-                <tooltip-content #tooltipup>
-                  Save Server account
-              </tooltip-content>-->
+              <button type="button" class="btn btn-info pull-right" [disabled]="!serverForm.form.valid "
+                      (click)="addCompteServer()" data-toggle="modal"
+                      data-target="#Modalupdate" data-backdrop="false">Save Server account
+              </button>
             </div>
             <div class="clearfix"></div>
           </form>

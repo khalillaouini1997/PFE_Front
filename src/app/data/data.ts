@@ -1,5 +1,6 @@
 
 export class CompteServer {
+
   idCompteClientServer: number;
   pseudo: string;
   intervaleStart: number;
@@ -11,21 +12,33 @@ export class CompteServer {
   password: string;
   expired: boolean;
   during: boolean;
-  str_expiration: string;
-  nbrBoitiers: number;  // Merged property
 
+  str_expiration: string;
   constructor() {
     this.idCompteClientServer = 0;
+
     this.pseudo = "";
     this.ipAdresse = "";
+
     this.login = "";
+
     this.password = "";
     this.expired = false;
+
     this.during = false;
     this.intervaleStart = 0;
     this.intervaleEnd = 0;
     this.str_expiration = "";
-    this.nbrBoitiers = 0;  // Initialize merged property
+  }
+}
+
+export class CompteServerWithBoitier {
+  compteServer: CompteServer;
+  nbrBoitiers: number;
+
+  constructor() {
+    this.compteServer = new CompteServer();
+    this.nbrBoitiers = 0;
   }
 }
 
@@ -57,8 +70,6 @@ export class CompteWeb {
   deviceFeePerMonth: number;
   simCardFeePerMonth: number;
 
-
-
   constructor() {
     this.idCompteClientWeb = 0;
     this.login = "";
@@ -69,7 +80,9 @@ export class CompteWeb {
     this.ipAdresse = 'localhost';
     this.during = false;
   }
+
 }
+
 
 export class IpAddress {
     idIpAdresse: number;

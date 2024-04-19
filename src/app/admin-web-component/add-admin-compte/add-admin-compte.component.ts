@@ -43,11 +43,11 @@ export class AddAdminCompteComponent implements OnInit {
       .pipe(
         tap(adminCompte => { // Handle successful response
           this.adminCompte = adminCompte;
-          //this.toastr.success('Admin Account is added successfully', 'Success!');
+          this.toastr.success('Admin Account is added successfully', 'Success!');
         }),
         catchError(error => { // Handle errors
           console.error('Error adding admin compte:', error);
-          //this.toastr.error('There is a mistake', 'Error!');
+          this.toastr.error('There is a mistake', 'Error!');
           return of(null); // Handle error appropriately, emit null or another value
         })
       )
