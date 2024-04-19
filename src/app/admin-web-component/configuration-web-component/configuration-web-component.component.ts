@@ -176,10 +176,9 @@ export class ConfigurationWebComponentComponent implements OnInit {
         })
       });
       this.codesPays = this.dataService.codesPays;
-      //this.options = this.dataService.options;
+      this.options = this.dataService.options;
       this.serverAccounts = this.dashboardService.compteServer;
     }
-
     this.getAllIps();
   }
 

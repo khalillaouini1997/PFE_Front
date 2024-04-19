@@ -5,6 +5,8 @@ import {CompteServerService} from "../../service/compte-server.service";
 import {BsLocaleService} from "ngx-bootstrap/datepicker";
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { frLocale } from 'ngx-bootstrap/locale';
+import {of, tap} from "rxjs";
+import {catchError} from "rxjs/operators";
 defineLocale('fr', frLocale);
 
 @Component({
@@ -81,32 +83,29 @@ export class AddCompteServerComponent implements OnInit {
     this.loading = true;
     // Convert the date expiration to a timestamp
     this.compteServer.date_Expiration = new Date(this.date['jsdate']).getTime();
-    // Create the CompteServer
-    this.compteServerService.createServerComptewithBoitier(this.compteServer, this.numberBoitier)
-      .subscribe(
-        (newCompteServer) => {
-          // Successful creation of CompteServer
 
+    // Create the CompteServer using pipe for error handling
+    this.compteServerService.createServerComptewithBoitier(this.compteServer, this.numberBoitier)
+      .pipe(
+        tap(newCompteServer => { // Handle successful creation
           // Reset the form or state as needed
           this.mode = false;
           this.loading = false;
           this.compteServer = new CompteServer();
           this.date = "";
-
-          // Display a success message (you can use toastr or other UI components)
           console.log(`Server Account added with ${newCompteServer.nbrBoitiers} device(s)`);
-        },
-        (error) => {
-          // Handle errors gracefully
+        }),
+        catchError(error => { // Handle errors
           this.mode = true;
           this.loading = false;
-          // Extract error message if possible
           const errorMessage = error?.json()?.message || 'An error occurred';
-          // Display an error message (you can use toastr or other UI components)
           console.error(`Cannot add account: ${errorMessage}`);
-        }
-      );
+          return of(null); // Handle error appropriately, emit null or another value
+        })
+      )
+      .subscribe(); // Subscribe without arguments to trigger execution
   }
+
 
   onKeyPseudo() {
     this.compteServerService.isExistPseudo(this.compteServer.pseudo).subscribe(res => {

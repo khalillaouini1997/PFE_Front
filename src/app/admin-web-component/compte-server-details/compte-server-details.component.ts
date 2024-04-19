@@ -174,34 +174,33 @@ export class CompteServerDetailsComponent implements OnInit {
   }
 
   addBoitierAfterConfirmation() {
+    // this.spinnerService.show();
+    this.compteServerService.addBoitiers(this.ID_COMPTE, this.nbrBoitiers)
+      .subscribe({
+        next: _compteBoitiers => {
+          // this.spinnerService.hide();
+          this.mode = false;
+          this.BOITIER_NOT_INSTALLED = _compteBoitiers.compteserver.intervaleEnd - _compteBoitiers.compteserver.intervaleStart + 1;
+          this.BOITIER_INSTALLED = _compteBoitiers.boitiers;
+          this.intervalFrom = _compteBoitiers.compteserver.intervaleStart;
+          this.intervalTo = _compteBoitiers.compteserver.intervaleEnd;
+          this.bigTotalItems = _compteBoitiers.boitiers;
+          this.bigCurrentPage = 1;
 
-    //this.spinnerService.show();
-    this.compteServerService.addBoitiers(this.ID_COMPTE, this.nbrBoitiers).subscribe(_compteBoitiers => {
-      //this.spinnerService.hide();
-      this.mode = false;
-      this.BOITIER_NOT_INSTALLED = _compteBoitiers.compteserver.intervaleEnd - _compteBoitiers.compteserver.intervaleStart + 1;
-      this.BOITIER_INSTALLED = _compteBoitiers.boitiers;
-      this.intervalFrom = _compteBoitiers.compteserver.intervaleStart;
-      this.intervalTo = _compteBoitiers.compteserver.intervaleEnd;
-      this.bigTotalItems = _compteBoitiers.boitiers;
-      this.bigCurrentPage = 1;
-
-      this.getBoitiersOfAccount(this.searchBoitier, this.ID_COMPTE, this.bigCurrentPage - 1, this.itemsPerPage);
-      //this.toastr.success(this.nbrBoitiers + ' devices are added to account ', 'Success!');
-      this.nbrBoitiers = 0;
-
-    }, error => {
-      this.mode = true;
-
-      const jsonError = error.json();
-      this.messageError = jsonError.message;
-
-
-
-     // this.spinnerService.hide();
-     //this.toastr.error('There is a mistake', 'Error!')
-    });
+          this.getBoitiersOfAccount(this.searchBoitier, this.ID_COMPTE, this.bigCurrentPage - 1, this.itemsPerPage);
+          // this.toastr.success(this.nbrBoitiers + ' devices are added to account ', 'Success!');
+          this.nbrBoitiers = 0;
+        },
+        error: error => {
+          this.mode = true;
+          const jsonError = error.json();
+          this.messageError = jsonError.message;
+          // this.spinnerService.hide();
+          // this.toastr.error('There is a mistake', 'Error!')
+        }
+      });
   }
+
 
 
   //=====================================

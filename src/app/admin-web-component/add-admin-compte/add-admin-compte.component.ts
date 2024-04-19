@@ -2,6 +2,9 @@ import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { AdministratorCompte } from 'src/app/data/data';
 import { DataService } from 'src/app/service/data.service';
+import {catchError} from "rxjs/operators";
+import {of, tap} from "rxjs";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-add-admin-compte',
@@ -23,8 +26,8 @@ export class AddAdminCompteComponent implements OnInit {
   notifSubs = ['date_sub(NOW(), INTERVAL 6 hour)', 'date_sub(NOW(), INTERVAL 1 DAY)', 'date_sub(NOW(), INTERVAL 2 DAY)'];
   checked: boolean;
   messageError: string;
-  constructor(private router: Router, private service: DataService) {
-    //this.toastr.setRootViewContainerRef(vcr);
+  constructor(private router: Router, private service: DataService, private toastr: ToastrService, ) {
+
   }
 
   ngOnInit() {
@@ -36,14 +39,19 @@ export class AddAdminCompteComponent implements OnInit {
   //==================================
 
   addAdminCompte() {
-    this.service.addAdminCompte(this.adminCompte).subscribe(_adminCompte => {
-      this.adminCompte = _adminCompte;
-
-      //this.toastr.success('Admin Account is added successfully', 'Success!');
-      this.adminCompte = new AdministratorCompte();
-      this.date = "";
-    }, error => { /*this.toastr.error('There is a mistake', 'Error!')*/ });
-
+    this.service.addAdminCompte(this.adminCompte)
+      .pipe(
+        tap(adminCompte => { // Handle successful response
+          this.adminCompte = adminCompte;
+          //this.toastr.success('Admin Account is added successfully', 'Success!');
+        }),
+        catchError(error => { // Handle errors
+          console.error('Error adding admin compte:', error);
+          //this.toastr.error('There is a mistake', 'Error!');
+          return of(null); // Handle error appropriately, emit null or another value
+        })
+      )
+      .subscribe(); // Subscribe without arguments to trigger execution
   }
 
 }

@@ -5,6 +5,8 @@ import { DataService } from 'src/app/service/data.service';
 import {CompteWebService} from "../../service/compte-web.service";
 import {DashboardService} from "../../service/dashboard.service";
 import {CompteServerService} from "../../service/compte-server.service";
+import {of, switchMap, tap, throwError} from "rxjs";
+import {catchError} from "rxjs/operators";
 
 /**
  *
@@ -74,32 +76,30 @@ export class AddCompteWebComponentComponent implements OnInit {
     compteServerData.date_Expiration = this.compteWeb.date_expiration;
     compteServerData.nbrBoitiers = this.numberBoitier;
 
-    // Call the service to create the CompteServer with the specified number of devices
-    this.compteServerService.createServerComptewithBoitier(compteServerData, this.numberBoitier).subscribe(
-      (newCompteServer) => {
-        // Successfully created CompteServer, associate it with CompteWeb
-        this.compteWeb.compteClientServer = newCompteServer;
-        // Now add the CompteWeb with the newly associated CompteServer
-        this.compteWebService.addCompteWeb(this.compteWeb).subscribe(
-          (newCompteWeb) => {
-            // Successfully added CompteWeb
-            console.log('Web Account and associated Server Account added successfully');
-            // Reset the CompteWeb instance and other state variables as needed
-            this.compteWeb = new CompteWeb();
-            this.date = '';
-          },
-          (error) => {
-            // Handle errors gracefully
-            console.error('Error adding CompteWeb:', error);
-          }
-        );
-      },
-      (error) => {
-        // Handle errors gracefully
-        console.error('Error creating CompteServer:', error);
-      }
-    );
+    // Call the service to create the CompteServer with error handling
+    this.compteServerService.createServerComptewithBoitier(compteServerData, this.numberBoitier)
+      .pipe(
+        tap(newCompteServer => { // Handle successful CompteServer creation
+          // Associate CompteServer with CompteWeb
+          this.compteWeb.compteClientServer = newCompteServer;
+        }),
+        catchError(error => { // Handle CompteServer creation errors
+          console.error('Error creating CompteServer:', error);
+          return throwError(error); // Re-throw the error for outer handling
+        })
+      )
+      .pipe(
+        // Chain another operator to handle CompteWeb creation with error handling
+        switchMap(newCompteServer => this.compteWebService.addCompteWeb(this.compteWeb)), // Use switchMap to handle successful CompteServer
+        tap(() => console.log('Web Account and associated Server Account added successfully')), // Handle successful CompteWeb creation
+        catchError(error => { // Handle CompteWeb creation errors
+          console.error('Error adding CompteWeb:', error);
+          return of(null); // Handle error appropriately, emit null or another value
+        })
+      )
+      .subscribe(); // Subscribe without arguments to trigger execution
   }
+
 
 
 

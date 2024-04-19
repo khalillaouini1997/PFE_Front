@@ -66,6 +66,7 @@ export class DashbordComponent implements OnInit {
     this.listTram = [];
     this.compteWebService.getAllLastTram(this.compteWeb.idCompteClientWeb).subscribe(res => {
       this.listTram = res;
+      this.loading = false;
     })
   }
 

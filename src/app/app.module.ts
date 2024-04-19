@@ -8,11 +8,11 @@ import {CommonModule, NgOptimizedImage} from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ToastrModule } from 'ngx-toastr';
 import { PaginationModule } from "ngx-bootstrap/pagination";
 import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 import { ErrorComponent } from './utils/security/error/error.component';
 import { AdminWebModule } from './admin-web-component/admin-web.module';
+import {ToastrModule} from "ngx-toastr";
 
 @NgModule({
   declarations: [
@@ -26,12 +26,14 @@ import { AdminWebModule } from './admin-web-component/admin-web.module';
     CommonModule,
     HttpClientModule,
     FormsModule,
-    BrowserAnimationsModule, // required animations module
-    ToastrModule.forRoot(),
+    BrowserAnimationsModule,
     PaginationModule,
     BsDatepickerModule,
     AdminWebModule,
     NgOptimizedImage,
+    ToastrModule.forRoot({
+      positionClass: 'toast-bottom-right',
+    }),
   ],
   providers: [],
   bootstrap: [AppComponent]

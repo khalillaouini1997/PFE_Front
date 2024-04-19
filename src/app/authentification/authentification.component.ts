@@ -20,6 +20,7 @@ export class AuthentificationComponent implements OnInit {
   errorVisible: boolean = false;
   loading: boolean = false;
 
+
   constructor(private authentificationService: AuthentificationService, private router: Router,
     private dataService: DataService, private toastr: ToastrService) { }
 
@@ -72,16 +73,9 @@ export class AuthentificationComponent implements OnInit {
       }
 
     }), (error: any) => {
-      if (error.status == 403) {
-        this.toastr.error('login ou mot de passe non valid ! ', 'Alert!', {
-          closeButton: true,
-          positionClass: 'toast-bottom-right',
-          timeOut: 10000
-        });
-        this.loading = false;
-
+      {
+        this.toastr.error('Username Or Password are incorrect', 'Login Error', );
       }
     }
-
   }
 }
