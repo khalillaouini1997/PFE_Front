@@ -51,7 +51,7 @@ export class CompteWeb {
   date_creation: number;
   date_expiration: number;
   code_pays: string;
-  option: Option[];
+  options: Option[];
   compteClientServer: CompteServer = new CompteServer();
   expired: boolean;
   during: boolean;
@@ -79,8 +79,17 @@ export class CompteWeb {
     this.expired = false;
     this.ipAdresse = 'localhost';
     this.during = false;
+    this.options = [];
   }
+}
 
+export class Option {
+  idOption: number;
+  description: string;
+  constructor() {
+    this.idOption = 0;
+    this.description = ""
+  }
 }
 
 
@@ -144,14 +153,7 @@ export class raws {
 
 
 
-export class Option {
-    idOption: number;
-    description: string;
-    constructor() {
-        this.idOption = 0;
-        this.description = ""
-    }
-}
+
 
 export class RecalculatePayload {
 

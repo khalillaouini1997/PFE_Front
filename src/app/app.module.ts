@@ -13,6 +13,8 @@ import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 import { ErrorComponent } from './utils/security/error/error.component';
 import { AdminWebModule } from './admin-web-component/admin-web.module';
 import {ToastrModule} from "ngx-toastr";
+import {NgMultiSelectDropDownModule} from "ng-multiselect-dropdown";
+import {TooltipModule} from "ngx-bootstrap/tooltip";
 
 @NgModule({
   declarations: [
@@ -30,7 +32,9 @@ import {ToastrModule} from "ngx-toastr";
     PaginationModule,
     BsDatepickerModule.forRoot(),
     AdminWebModule,
+    TooltipModule.forRoot(),
     NgOptimizedImage,
+    NgMultiSelectDropDownModule.forRoot(),
     ToastrModule.forRoot({
       positionClass: 'toast-bottom-right',
     }),

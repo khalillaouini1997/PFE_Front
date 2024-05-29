@@ -15,7 +15,7 @@ import {ToastrService} from "ngx-toastr";
 import {CompteWebService} from "../../service/compte-web.service";
 import {DashboardService} from "../../service/dashboard.service";
 import {DataService} from "../../service/data.service";
-import {tap} from "rxjs";
+import {of, tap} from "rxjs";
 import {catchError} from "rxjs/operators";
 
 
@@ -44,11 +44,9 @@ export class ConfigurationWebComponentComponent implements OnInit {
   boitiers: any[];
   boitiersClicked = false;
   public filteredList: any[] = [];
-  public elementRef;
+  public elementRef: ElementRef;
   selectedBoitierId: number;
   selectedServerId: number;
-  //Init database variable
-
   deviceOpt: DeviceOpt = new DeviceOpt();
   imei: number;
   checked: boolean;
@@ -59,93 +57,47 @@ export class ConfigurationWebComponentComponent implements OnInit {
     "pauseMinSec": 60,
     "stopMinSec": 120
   };
-
   loadingDeviceSetting: boolean = false;
   deviceSetting: DeviceSetting = new DeviceSetting();
   vehiculeSetting: VehiculeSetting = new VehiculeSetting();
-
   datestart: Date | null = new Date();
   typeRecalcule: String;
   recalculeP: RecalculatePayload = new RecalculatePayload();
-
   selectedIemi: number;
-  /**
-   * Array notification
-   */
   notifications: { value: string, status: boolean }[] = [];
-
-
-  /**
-   * Loading
-   */
   loadingRecalculate: boolean = false;
   loadingEditDeviceOption: boolean = false;
   loadingEditPathConfig: boolean = false;
   loadingResetOdometre: boolean = false;
-
   maxDate: Date = new Date();
-
-  /**
-   * addresse ip
-   */
   ipAddresses: IpAdresse[] = [];
-
-
-  //select periode
-    regions = ['Tunis', 'Sfax', 'Sousse'];
-
-  //select periode
-    notifSubs = ['date_sub(NOW(), INTERVAL 6 hour)', 'date_sub(NOW(), INTERVAL 1 DAY)', 'date_sub(NOW(), INTERVAL 2 DAY)'];
-
+  regions = ['Tunis', 'Sfax', 'Sousse'];
+  notifSubs = ['date_sub(NOW(), INTERVAL 6 hour)', 'date_sub(NOW(), INTERVAL 1 DAY)', 'date_sub(NOW(), INTERVAL 2 DAY)'];
   dateBoolean: boolean = true;
-  constructor(myElement: ElementRef, private route: ActivatedRoute,
-              private router: Router,
-              public toastr: ToastrService,
-              private compteWebService: CompteWebService,
-              private dashboardService: DashboardService,
-              private dataService: DataService,
-              private webSocketService: WebSocketService,
-              private localeService: BsLocaleService,) {
+
+  dropdownSettings = {};
+
+  constructor(
+    private myElement: ElementRef,
+    private route: ActivatedRoute,
+    private router: Router,
+    private toastr: ToastrService,
+    private compteWebService: CompteWebService,
+    private dashboardService: DashboardService,
+    private dataService: DataService,
+    private webSocketService: WebSocketService,
+    private localeService: BsLocaleService
+  ) {
     this.elementRef = myElement;
     this.notifications.splice(0, this.notifications.length);
-    // Open connection with server socket
-    let stompClient = this.webSocketService.connect();
+    const stompClient = this.webSocketService.connect();
     stompClient.connect({}, () => {
-
-      // Subscribe to notification topic
       stompClient.subscribe('/topic/notification', notifications => {
-        // Update notifications attribute with the recent messsage sent from the server
-          JSON.parse(notifications.body).info;
-
-          /*        var status: boolean = null;
-
-                  if (notificationsInfo.split("----").pop().toLowerCase() == 'successfully') {
-                    status = true;
-                  } else {
-                    status = false;
-                  }
-
-                  this.notifications.push({ value: notificationsInfo.split("----").shift(), status: status });*/
-
-        }
-      )
+        JSON.parse(notifications.body).info;
+      });
     });
-
     this.localeService.use('fr');
   }
-
-  getNumberOfNotificationErrors(): number {
-    return this.notifications.filter(n => !n.status).length;
-  }
-
-  getNumberOfBoitiersNotInstall(): number {
-    return this.boitiers.filter(b => b.etatBoitier === 'NOT_INSTALLED').length;
-  }
-
-
-  //=====================================
-  //    charge information for form
-  //=====================================
 
   ngOnInit() {
     this.dashboardService.isAuthenticated = this.dashboardService.loadTestAuthenticated();
@@ -157,15 +109,10 @@ export class ConfigurationWebComponentComponent implements OnInit {
         this.compteWebService.getWebAccountById(this.ID_COMPTE).subscribe(async _compteWeb => {
           this.options = await this.dataService.getAllOptions().toPromise();
           this.charge();
-          //web account
           this.compteWeb = _compteWeb;
-          //server account from web account
           this.serverAccount = _compteWeb.compteClientServer;
-          //options
-          this.selected = _compteWeb.options;
-
+          this.selected = _compteWeb.options; // Ensure this is set correctly
           if (new Date().getTime() < this.serverAccount.date_Expiration) {
-
             this.serverAccount.expired = false;
             this.serverAccount.during = true;
           } else {
@@ -173,13 +120,23 @@ export class ConfigurationWebComponentComponent implements OnInit {
             this.serverAccount.during = false;
           }
           this.date = new Date(this.compteWeb.date_expiration);
-        })
+        });
       });
       this.codesPays = this.dataService.codesPays;
       this.options = this.dataService.options;
       this.serverAccounts = this.dashboardService.compteServer;
     }
     this.getAllIps();
+
+    this.dropdownSettings = {
+      singleSelection: false,
+      idField: 'idOption',
+      textField: 'description',
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      itemsShowLimit: 5,
+      allowSearchFilter: true
+    };
   }
 
   getAllIps() {
@@ -188,54 +145,36 @@ export class ConfigurationWebComponentComponent implements OnInit {
     });
   }
 
-
-  //=====================================
-  //    for multiple select Options
-  //=====================================
-
   remove(item: any) {
     const index = this.selected.indexOf(item);
     if (index !== -1) {
       this.selected.splice(index, 1);
     }
   }
-  select(item) {
-    if (this.selected.findIndex(x => x.idOption == item.idOption) == -1) {
-      this.selected.push(item);
-    }
 
-    this.query = '';
-    this.filteredList = [];
+  onItemSelect(item: any) {
+    console.log(item);
   }
-  filter() {
-    if (this.query !== "") {
-      this.filteredList = this.options.filter((el: Option) => {
-        return el.description.toLowerCase().indexOf(this.query.toLowerCase()) > -1;
-      });
-    } else {
-      this.filteredList = [];
-    }
+
+  onSelectAll(items: any) {
+    console.log(items);
+  }
+
+  onItemDeselect(item: any) {
+    console.log(item);
+  }
+
+  onDeselectAll(items: any) {
+    console.log(items);
   }
 
   charge() {
-    console.log("Options:", this.options); // Log the options array
-    console.log("FilteredList:", this.filteredList); // Log the filteredList array
     this.filteredList = this.options;
   }
 
-
-  //=====================================================
-  //   save changes (update web account + save options )
-  //=====================================================
-
   saveChange() {
     this.updateWebAccount();
-    this.compteWebService.addOptionsToWebAccount(this.compteWeb.idCompteClientWeb, this.selected);
   }
-
-  //=====================================
-  //    update Web account
-  //=====================================
 
   updateWebAccount() {
     if (this.date !== null) {
@@ -244,16 +183,32 @@ export class ConfigurationWebComponentComponent implements OnInit {
       throw new Error('this.date is null');
     }
 
+    this.compteWeb.options = this.selected;  // Ensure the selected options are being set
+
     this.compteWebService.updateWebAccount(this.compteWeb.idCompteClientWeb, this.compteWeb)
       .pipe(
         tap(_compteWeb => this.toastr.success('Web account updated', 'Success!')),
         catchError(error => {
           this.toastr.error('There are mistakes here', 'Error!');
-          throw error; // Re-throw the error for further handling
+          return of(null); // Return observable to prevent further errors
         })
       )
-      .subscribe();
+      .subscribe(updatedCompteWeb => {
+        if (updatedCompteWeb) {
+          this.compteWeb = updatedCompteWeb; // Ensure local state is updated
+        }
+      });
   }
+
+
+  getNumberOfNotificationErrors(): number {
+    return this.notifications.filter(n => !n.status).length;
+  }
+
+  getNumberOfBoitiersNotInstall(): number {
+    return this.boitiers.filter(b => b.etatBoitier === 'NOT_INSTALLED').length;
+  }
+
 
   //=========================================
   //    Change serve account of Web account

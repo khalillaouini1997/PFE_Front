@@ -44,26 +44,45 @@
 
       </div>
       <div class="row" style="margin-top: 0;">
-        <div class="col-md-6 ">
+<!--        <div class="col-md-6 ">-->
+<!--          <div class="form-group label-floating">-->
+<!--            <label class="control-label">Options</label>-->
+<!--            <input id="country" type="text" class="form-control" (click)="charge()" [(ngModel)]=query-->
+<!--                   (keyup)=filter()>-->
+<!--          </div>-->
+<!--          <div class="suggestions" *ngIf="filteredList.length > 0">-->
+<!--            <ul *ngFor="let item of filteredList" class="itemsSelect">-->
+<!--              <li>-->
+<!--                <a class="selectedItem" (click)="select(item)">{{item.description}}</a>-->
+<!--              </li>-->
+<!--            </ul>-->
+<!--          </div>-->
+<!--          <div *ngFor="let item of selected">-->
+<!--            <div class="btn btn-warning">-->
+<!--              <span>{{item.description}} &nbsp;</span>-->
+<!--              <a class="selected" (click)="remove(item)">&times;</a>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+
+        <div class="col-md-6">
           <div class="form-group label-floating">
             <label class="control-label">Options</label>
-            <input id="country" type="text" class="form-control" (click)="charge()" [(ngModel)]=query
-                   (keyup)=filter()>
-          </div>
-          <div class="suggestions" *ngIf="filteredList.length > 0">
-            <ul *ngFor="let item of filteredList" class="itemsSelect">
-              <li>
-                <a class="selectedItem" (click)="select(item)">{{item.description}}</a>
-              </li>
-            </ul>
-          </div>
-          <div *ngFor="let item of selected">
-            <div class="btn btn-warning">
-              <span>{{item.description}} &nbsp;</span>
-              <a class="selected" (click)="remove(item)">&times;</a>
-            </div>
+            <ng-multiselect-dropdown
+              [(ngModel)]="selected"
+              [settings]="dropdownSettings"
+              [data]="options"
+              (onSelect)="onItemSelect($event)"
+              (onSelectAll)="onSelectAll($event)"
+              (onDeSelect)="onItemDeselect($event)"
+              (onDeSelectAll)="onDeselectAll($event)">
+            </ng-multiselect-dropdown>
           </div>
         </div>
+
+
+
+
         <div class="col-md-6 ">
           <div class="form-group label-floating">
             <label class="control-label">Pool</label>

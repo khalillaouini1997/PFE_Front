@@ -33,21 +33,23 @@ import { AddAdresseIpComponent } from './add-adresse-ip/add-adresse-ip.component
 import { ArchiveComponent } from './archive/archive.component';
 import { VehiculeInfoComponent } from './vehicule-info/vehicule-info.component';
 import {TabsModule} from "ngx-bootstrap/tabs";
+import {NgMultiSelectDropDownModule} from "ng-multiselect-dropdown";
 
 
 @NgModule({
-  imports: [
-    CommonModule,
-    TooltipModule,
-    PaginationModule.forRoot(),
-    AdminWebComponentRoutingModule,
-    FormsModule,
-    BsDatepickerModule.forRoot(),
-    ToastrModule.forRoot(),
-    NgOptimizedImage,
-    TabsModule,
+    imports: [
+        CommonModule,
+        TooltipModule,
+        PaginationModule.forRoot(),
+        AdminWebComponentRoutingModule,
+        FormsModule,
+        BsDatepickerModule.forRoot(),
+        ToastrModule.forRoot(),
+        NgOptimizedImage,
+        TabsModule,
+        NgMultiSelectDropDownModule,
 
-  ],
+    ],
   declarations: [
     AddCompteWebComponentComponent,
     ComptesServerComponentComponent,

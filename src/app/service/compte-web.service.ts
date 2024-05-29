@@ -112,9 +112,14 @@ export class CompteWebService {
   }
 
   addOptionsToWebAccount(id: number, options: Option[]): Observable<any> {
-    return this._http.post(`${dns}compteWeb/${id}/Options`, options, { headers: this.getHeaders() }).pipe(
-      map((res: any) => res),
-      catchError((error: any) => throwError(error))
-    );
+    return this._http.post(`${dns}compteWeb/${id}/Options`, options, { headers: this.getHeaders() })
+      .pipe(
+        map((res: any) => {
+          console.log('Options saved successfully:', res);
+          return res; // Return the response for potential further processing
+        }),
+        catchError((error: any) => throwError(error))
+      );
   }
+
 }
