@@ -79,7 +79,7 @@ export class CompteWeb {
     this.expired = false;
     this.ipAdresse = 'localhost';
     this.during = false;
-    this.options = [];
+    //this.options = [];
   }
 }
 
