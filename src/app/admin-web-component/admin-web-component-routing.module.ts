@@ -48,11 +48,7 @@ const routes: Routes = [{
     {
       path: 'configurations/:idCompteClientWeb',
       component: ConfigurationWebComponentComponent
-    }
-    /*{
-            path: 'configurations',
-            component: ConfigurationWebComponentComponent
-    }*/,
+    },
     {
       path: 'compteDetails/:idCompteClientServer',
       component: CompteServerDetailsComponent

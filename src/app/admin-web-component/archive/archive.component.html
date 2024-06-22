@@ -80,25 +80,21 @@
   </tab>
   <tab (select)="getAllRaws()" heading="Raw of Device">
     <div class="card-content table-responsive">
-
       <table class="table table-bordered">
         <thead>
-        <th>ID</th>
-        <th>GPRMC</th>
-
+        <tr>
+          <th>ID</th>
+          <th>GPRMC</th>
+        </tr>
         </thead>
         <tbody>
         <tr>
-          <th colspan="26">$count: {{raws.count}}</th>
+          <td colspan="2">$count: {{raws.count}}</td>
         </tr>
         <tr *ngFor="let raw of raws.raws">
           <td>{{raw.idTram}}</td>
-          <td class="table table-bordered table-condensed ecriture">
-
-        <tr class="success">
-          <td>{{raw.gprmc}}</td>
+          <td class="table table-bordered table-condensed ecriture">{{raw.gprmc}}</td>
         </tr>
-
         </tbody>
       </table>
     </div>

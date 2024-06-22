@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { TabsetComponent } from "ngx-bootstrap/tabs";
-import { Archive,raws } from "../../data/data";
+import { Archive,raws, raw } from "../../data/data";
 import { CompteServerService } from "../../service/compte-server.service";
 
 

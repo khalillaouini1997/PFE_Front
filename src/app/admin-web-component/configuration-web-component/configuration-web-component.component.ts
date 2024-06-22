@@ -174,6 +174,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
 
   saveChange() {
     this.updateWebAccount();
+    this.compteWebService.addOptionsToWebAccount(this.compteWeb.idCompteClientWeb, this.selected);
   }
 
   updateWebAccount() {

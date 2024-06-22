@@ -81,9 +81,15 @@ export class IpAdresseComponent implements OnInit {
   }
 
   updateIpAdress() {
-    this.service.updateIpAdress(this.ipAddressSelected.idIpAdresse, this.ipAddressSelected).subscribe(() => {
-      this.getAllIpAddresse(this.keyWord, this.bigCurrentPage - 1, this.itemsPerPage);
-    })
+    if (this.ipAddressSelected.idIpAdresse !== null) { // Check if not null
+      this.service.updateIpAdress(this.ipAddressSelected.idIpAdresse, this.ipAddressSelected)
+        .subscribe(() => {
+          this.getAllIpAddresse(this.keyWord, this.bigCurrentPage - 1, this.itemsPerPage);
+        });
+    } else {
+      // Handle the case where idIpAdresse is null (e.g., show an error message)
+      console.error("Cannot update IP address: idIpAdresse is null");
+    }
   }
 
   public pageChanged(event: any): void {

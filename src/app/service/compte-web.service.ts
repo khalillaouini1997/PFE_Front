@@ -111,15 +111,19 @@ export class CompteWebService {
     return throwError('Unauthorized'); // Handle unauthorized access
   }
 
-  addOptionsToWebAccount(id: number, options: Option[]): Observable<any> {
-    return this._http.post(`${dns}compteWeb/${id}/Options`, options, { headers: this.getHeaders() })
-      .pipe(
-        map((res: any) => {
-          console.log('Options saved successfully:', res);
-          return res; // Return the response for potential further processing
-        }),
-        catchError((error: any) => throwError(error))
-      );
+  addOptionsToWebAccount(id: number, options: Option[]) {
+    const headers = this.getHeaders(); // Use the existing getHeaders() method
+
+    this._http.post(dns + "compteWeb/" + id + "/Options", options, { headers })
+      .subscribe({
+        next: (response: any) => {
+          console.log(response);
+        },
+        error: (error: any) => {
+          console.error("Error adding options:", error);
+          // Handle errors appropriately
+        }
+      });
   }
 
 }
