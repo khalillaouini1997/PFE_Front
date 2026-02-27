@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {AdministratorCompte, Boitier, CompteServer, CompteWeb, IpAddress} from "../data/data";
-import {Observable} from "rxjs";
-import {dns} from "../global.config";
-import {map} from "rxjs/operators";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { AdministratorCompte, Boitier, CompteServer, CompteWeb, IpAddress } from "../data/data";
+import { Observable } from "rxjs";
+import { dns } from "../global.config";
+import { map } from "rxjs/operators";
 import * as jwt_decode from "jwt-decode";
 import { JsonPipe } from '@angular/common';
 import { DataService } from './data.service';
@@ -16,12 +16,12 @@ export class CompteServerService {
 
   isAuthenticated: boolean = false;
   USER_TOKEN: string = "";
-  TOKEN_PREFIX: string = "rimtel ";
+  TOKEN_PREFIX: string = "Bearer ";
   private headers: HttpHeaders;
 
   ips: IpAddress[] = [];
 
-  constructor(private _http: HttpClient, private dataService:DataService) { }
+  constructor(private _http: HttpClient, private dataService: DataService) { }
 
   authentificate(login: string, password: string): Observable<any> {
     const body = { username: login, password: password };
@@ -119,23 +119,25 @@ export class CompteServerService {
   // Token and authentication methods...
   saveTokenInStorage(token: string, isAuthenticated: boolean) {
     this.USER_TOKEN = this.TOKEN_PREFIX + token;
-    localStorage.setItem("tokenAdmin", this.USER_TOKEN);
-    localStorage.setItem("isAuthenticateAdmin", "" + isAuthenticated);
+    localStorage.setItem("token", this.USER_TOKEN);
+    localStorage.setItem("id_token", token);
+    localStorage.setItem("isAuthenticate", "" + isAuthenticated);
   }
 
   loadToken(): string | null {
-    return localStorage.getItem("tokenAdmin");
+    return localStorage.getItem("token");
   }
 
   loadTestAuthenticated(): boolean {
-    let isAuthenticated: string | null = localStorage.getItem("isAuthenticateAdmin");
+    let isAuthenticated: string | null = localStorage.getItem("isAuthenticate");
     return isAuthenticated === "true";
   }
 
 
   logoutStorage() {
-    localStorage.removeItem("tokenAdmin");
-    localStorage.removeItem("isAuthenticateAdmin");
+    localStorage.removeItem("token");
+    localStorage.removeItem("id_token");
+    localStorage.removeItem("isAuthenticate");
   }
 
   isExistPseudo(pseudo: string): Observable<any> {

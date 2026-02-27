@@ -61,7 +61,7 @@ export class AuthentificationComponent implements OnInit {
     localStorage.removeItem('id_token');
 
     this.authentificationService.authentificate(this.login, this.password).subscribe(_admin => {
-      localStorage.setItem('id_token', _admin.token);
+      this.authentificationService.saveTokenInStorage(_admin.token, true);
       localStorage.setItem('currentUser', JSON.stringify(_admin));
       this.dataService.currentUser = _admin;
       this.authentificationService.currentUser = _admin;
@@ -71,10 +71,9 @@ export class AuthentificationComponent implements OnInit {
       } else {
         this.router.navigate(['/adminWeb/dashboard']);
       }
-
     }), (error: any) => {
       {
-        this.toastr.error('Username Or Password are incorrect', 'Login Error', );
+        this.toastr.error('Username Or Password are incorrect', 'Login Error',);
       }
     }
   }
