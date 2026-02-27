@@ -1,15 +1,16 @@
-import { Router } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { AdministratorCompte } from '../data/data';
 import { DataService } from '../service/data.service';
 import { owner } from '../global.config';
+import { NgIf, NgClass } from '@angular/common';
 
 @Component({
-  selector: 'app-admin-web-component',
-  templateUrl: './admin-web-component.component.html',
-  styleUrls: ['./admin-web-component.component.css']
-
-
+    selector: 'app-admin-web-component',
+    templateUrl: './admin-web-component.component.html',
+    styleUrls: ['./admin-web-component.component.css'],
+    standalone: true,
+    imports: [NgIf, NgClass, RouterLink, RouterLinkActive, RouterOutlet]
 })
 export class AdminWebComponentComponent implements OnInit {
 

@@ -1,11 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { TraccarDto } from 'src/app/data/data';
 import { TraccarService } from 'src/app/service/traccar.service';
+import { FormsModule } from '@angular/forms';
+import { NgIf, NgFor } from '@angular/common';
 
 @Component({
-  selector: 'app-list-traccar',
-  templateUrl: './list-traccar.component.html',
-  styleUrls: ['./list-traccar.component.css']
+    selector: 'app-list-traccar',
+    templateUrl: './list-traccar.component.html',
+    styleUrls: ['./list-traccar.component.css'],
+    standalone: true,
+    imports: [FormsModule, NgIf, NgFor]
 })
 export class ListTraccarComponent implements OnInit {
 

@@ -5,11 +5,17 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {DataService} from "../../service/data.service";
 import {CompteWebService} from "../../service/compte-web.service";
 import {ToastrService} from "ngx-toastr";
+import { FormsModule } from '@angular/forms';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { NgFor, LowerCasePipe } from '@angular/common';
 
 @Component({
-  selector: 'app-recalcul-web',
-  templateUrl: './recalcul-web.component.html',
-  styleUrls: ['./recalcul-web.component.css']
+    selector: 'app-recalcul-web',
+    templateUrl: './recalcul-web.component.html',
+    styleUrls: ['./recalcul-web.component.css'],
+    standalone: true,
+    imports: [FormsModule, BsDatepickerModule, TooltipModule, NgFor, LowerCasePipe]
 })
 export class RecalculWebComponent implements OnInit {
 

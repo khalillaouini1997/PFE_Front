@@ -6,6 +6,8 @@ import {DataService} from 'src/app/service/data.service';
 import {CompteServerService} from "../../service/compte-server.service";
 import {CompteWebService} from "../../service/compte-web.service";
 import {DashboardService} from "../../service/dashboard.service";
+import { FormsModule } from '@angular/forms';
+import { NgFor, NgIf, DecimalPipe, DatePipe } from '@angular/common';
 
 /**
  *
@@ -14,9 +16,11 @@ import {DashboardService} from "../../service/dashboard.service";
  */
 
 @Component({
-  selector: 'app-dashbord',
-  templateUrl: './dashbord.component.html',
-  styleUrls: ['./dashbord.component.css']
+    selector: 'app-dashbord',
+    templateUrl: './dashbord.component.html',
+    styleUrls: ['./dashbord.component.css'],
+    standalone: true,
+    imports: [FormsModule, NgFor, NgIf, DecimalPipe, DatePipe]
 })
 export class DashbordComponent implements OnInit {
 

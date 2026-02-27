@@ -3,11 +3,15 @@ import { Router } from '@angular/router';
 import { AuthentificationService } from './authentification.service';
 import { ToastrService } from 'ngx-toastr';
 import { DataService } from '../service/data.service';
+import { FormsModule } from '@angular/forms';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'app-authentification',
-  templateUrl: './authentification.component.html',
-  styleUrls: ['./authentification.component.scss']
+    selector: 'app-authentification',
+    templateUrl: './authentification.component.html',
+    styleUrls: ['./authentification.component.scss'],
+    standalone: true,
+    imports: [FormsModule, NgIf]
 })
 export class AuthentificationComponent implements OnInit {
 

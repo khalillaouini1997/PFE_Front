@@ -8,8 +8,8 @@ describe('AddAdresseIpComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AddAdresseIpComponent ]
-    })
+    imports: [AddAdresseIpComponent]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(AddAdresseIpComponent);

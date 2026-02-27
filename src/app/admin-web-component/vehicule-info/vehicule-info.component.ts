@@ -3,11 +3,17 @@ import {InterventionInfo} from "../../data/data";
 import {ToastrService} from "ngx-toastr";
 import {DataService} from "../../service/data.service";
 import {finalize} from "rxjs";
+import { FormsModule } from '@angular/forms';
+import { NgFor, NgIf, DatePipe } from '@angular/common';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 @Component({
-  selector: 'app-vehicule-info',
-  templateUrl: './vehicule-info.component.html',
-  styleUrls: ['./vehicule-info.component.css']
+    selector: 'app-vehicule-info',
+    templateUrl: './vehicule-info.component.html',
+    styleUrls: ['./vehicule-info.component.css'],
+    standalone: true,
+    imports: [FormsModule, NgFor, NgIf, TooltipModule, PaginationModule, DatePipe]
 })
 export class VehiculeInfoComponent implements OnInit {
 

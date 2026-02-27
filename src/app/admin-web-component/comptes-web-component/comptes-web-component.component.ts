@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewContainerRef } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CompteWeb } from 'src/app/data/data';
 import { owner } from 'src/app/global.config';
@@ -7,6 +7,9 @@ import { DataService } from 'src/app/service/data.service';
 import {CompteServerService} from "../../service/compte-server.service";
 import {CompteWebService} from "../../service/compte-web.service";
 import {DashboardService} from "../../service/dashboard.service";
+import { FormsModule } from '@angular/forms';
+import { NgIf, NgFor, DatePipe } from '@angular/common';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 /**
  *
@@ -15,9 +18,11 @@ import {DashboardService} from "../../service/dashboard.service";
  */
 
 @Component({
-  selector: 'app-comptes-web-component',
-  templateUrl: './comptes-web-component.component.html',
-  styleUrls: ['./comptes-web-component.component.css']
+    selector: 'app-comptes-web-component',
+    templateUrl: './comptes-web-component.component.html',
+    styleUrls: ['./comptes-web-component.component.css'],
+    standalone: true,
+    imports: [FormsModule, NgIf, NgFor, RouterLink, PaginationModule, DatePipe]
 })
 export class ComptesWebComponentComponent implements OnInit {
   keyWord: string = "";

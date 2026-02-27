@@ -8,8 +8,8 @@ describe('IpAdresseComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ IpAdresseComponent ]
-    })
+    imports: [IpAdresseComponent]
+})
     .compileComponents();
   }));
 

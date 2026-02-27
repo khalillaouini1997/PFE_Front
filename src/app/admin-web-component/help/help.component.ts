@@ -6,11 +6,15 @@ import { DataService } from 'src/app/service/data.service';
 import {CompteServerService} from "../../service/compte-server.service";
 import {CompteWebService} from "../../service/compte-web.service";
 import {DashboardService} from "../../service/dashboard.service";
+import { FormsModule } from '@angular/forms';
+import { NgFor, NgIf, DatePipe } from '@angular/common';
 
 @Component({
-  selector: 'app-help',
-  templateUrl: './help.component.html',
-  styleUrls: ['./help.component.css']
+    selector: 'app-help',
+    templateUrl: './help.component.html',
+    styleUrls: ['./help.component.css'],
+    standalone: true,
+    imports: [FormsModule, NgFor, NgIf, DatePipe]
 })
 export class HelpComponent implements OnInit {
   /**date */

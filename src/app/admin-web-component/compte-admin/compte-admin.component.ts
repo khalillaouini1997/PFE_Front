@@ -3,11 +3,16 @@ import { Router } from '@angular/router';
 import { AdministratorCompte } from 'src/app/data/data';
 import { DataService } from 'src/app/service/data.service';
 import {finalize} from "rxjs";
+import { FormsModule } from '@angular/forms';
+import { NgIf, NgFor } from '@angular/common';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 @Component({
-  selector: 'app-compte-admin',
-  templateUrl: './compte-admin.component.html',
-  styleUrls: ['./compte-admin.component.css']
+    selector: 'app-compte-admin',
+    templateUrl: './compte-admin.component.html',
+    styleUrls: ['./compte-admin.component.css'],
+    standalone: true,
+    imports: [FormsModule, NgIf, NgFor, PaginationModule]
 })
 export class CompteAdminComponent implements OnInit {
   keyWord: string = "";

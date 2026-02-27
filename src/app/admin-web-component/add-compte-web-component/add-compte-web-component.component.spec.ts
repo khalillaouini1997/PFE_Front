@@ -8,8 +8,8 @@ describe('AddCompteWebComponentComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AddCompteWebComponentComponent ]
-    })
+    imports: [AddCompteWebComponentComponent]
+})
     .compileComponents();
   }));
 

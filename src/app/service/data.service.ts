@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { dns } from '../global.config';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import {
   AdministratorCompte, Boitier, CompteServer,
   DeviceOpt,
@@ -99,169 +99,155 @@ export class DataService {
     return false;
   }
 
-  private getHeaders(): HttpHeaders {
-    let headers = new HttpHeaders();
-    headers = headers.append('Accept', 'application/json');
-    headers = headers.append('Access-Control-Allow-Origin', '*');
-    headers = headers.append('Content-Type', 'application/json');
-    headers = headers.append('Authorization', this.loadToken());
-    return headers;
-  }
-
-  loadToken(): string {
-    const token = localStorage.getItem("token");
-    return token !== null ? token : '';
-  }
 
   getAllIps(): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.get<any>(`${dns}ips`, { headers }).pipe(
-      map(res => res) // No need for res.json() with HttpClient
+    return this._http.get<any>(`${dns}ips`).pipe(
+      map(res => res)
     );
   }
 
 
   prepareDBForAllDevises(idServer: number): Observable<any> {
-    return this._http.get<any>(`${dns}boities/${idServer}`, { headers: this.getHeaders() }).pipe(
+    return this._http.get<any>(`${dns}boities/${idServer}`).pipe(
       map(res => res)
     );
   }
 
   prepareDBForSingleDevise(idServer: number, idBoitier: number): Observable<any> {
-    return this._http.get<any>(`${dns}boities/${idServer}/device/${idBoitier}`, { headers: this.getHeaders() }).pipe(
+    return this._http.get<any>(`${dns}boities/${idServer}/device/${idBoitier}`).pipe(
       map(res => res)
     );
   }
 
   getAllCompteDevises(idServer: number): Observable<any> {
-    return this._http.get<any>(`${dns}boities/all/${idServer}`, { headers: this.getHeaders() }).pipe(
+    return this._http.get<any>(`${dns}boities/all/${idServer}`).pipe(
       map(res => res)
     );
   }
 
   updateBoitier(boitier: Boitier, idServer: number, updateType: string): Observable<any> {
-    const options = { headers: this.getHeaders() };
-    return this._http.put<any>(`${dns}boities?idServer=${idServer}&updateType=${updateType}`, boitier, options);
+
+    return this._http.put<any>(`${dns}boities?idServer=${idServer}&updateType=${updateType}`, boitier);
   }
 
   lastArchiveOfBoitier(numBoitier: number): Observable<any> {
-    const options = { headers: this.getHeaders() };
-    return this._http.get<any>(`${dns}boities/${numBoitier}/lastArchive`, options);
+
+    return this._http.get<any>(`${dns}boities/${numBoitier}/lastArchive`);
   }
 
 
 
 
   recalculeHistorique(idCompteWeb: number, recalculatePayload: RecalculatePayload): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.put<any>(`${dns}boities/${idCompteWeb}/recalculate/historique`, recalculatePayload, { headers });
+
+    return this._http.put<any>(`${dns}boities/${idCompteWeb}/recalculate/historique`, recalculatePayload);
   }
 
   recalculeAlert(idCompteWeb: number, recalculatePayload: RecalculatePayload): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.put<any>(`${dns}boities/${idCompteWeb}/recalculate/alert`, recalculatePayload, { headers });
+
+    return this._http.put<any>(`${dns}boities/${idCompteWeb}/recalculate/alert`, recalculatePayload);
   }
 
   recalculeFuel(idCompteWeb: number, recalculatePayload: RecalculatePayload): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.put<any>(`${dns}boities/${idCompteWeb}/recalculate/fuel`, recalculatePayload, { headers });
+
+    return this._http.put<any>(`${dns}boities/${idCompteWeb}/recalculate/fuel`, recalculatePayload);
   }
 
   recalculePaths(idCompteWeb: number, recalculePaths: RecalculatePayload): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.put<any>(`${dns}boities/${idCompteWeb}/recalculate/paths`, recalculePaths, { headers });
+
+    return this._http.put<any>(`${dns}boities/${idCompteWeb}/recalculate/paths`, recalculePaths);
   }
 
   recalculeBoitier(idCompteWeb: number, recalculePaths: RecalculatePayload): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.put<any>(`${dns}boities/${idCompteWeb}/recalculate/resetboitier`, recalculePaths, { headers });
+
+    return this._http.put<any>(`${dns}boities/${idCompteWeb}/recalculate/resetboitier`, recalculePaths);
   }
 
   resetRT(idCompteWeb: number, recalculePaths: RecalculatePayload): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.put<any>(`${dns}boities/${idCompteWeb}/recalculate/resetRT`, recalculePaths, { headers });
+
+    return this._http.put<any>(`${dns}boities/${idCompteWeb}/recalculate/resetRT`, recalculePaths);
   }
 
   getDeviceOptionConfig(idCompteWeb: number, idBoitier: number): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.get<any>(`${dns}boities/${idCompteWeb}/options/${idBoitier}`, { headers });
+
+    return this._http.get<any>(`${dns}boities/${idCompteWeb}/options/${idBoitier}`);
   }
 
   getPathConfig(idCompteWeb: number, idBoitier: number): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.get<any>(`${dns}boities/${idCompteWeb}/pathconfig/${idBoitier}`, { headers });
+
+    return this._http.get<any>(`${dns}boities/${idCompteWeb}/pathconfig/${idBoitier}`);
   }
 
   getDeviceSettings(idCompteWeb: number, idBoitier: number): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.get<any>(`${dns}boities/${idCompteWeb}/devicesettings/${idBoitier}`, { headers });
+
+    return this._http.get<any>(`${dns}boities/${idCompteWeb}/devicesettings/${idBoitier}`);
   }
 
   editDeviceOptionConfig(idCompteWeb: number, deviceOpt: DeviceOpt): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.put<any>(`${dns}boities/${idCompteWeb}/options`, deviceOpt, { headers });
+
+    return this._http.put<any>(`${dns}boities/${idCompteWeb}/options`, deviceOpt);
   }
 
   editDeviceSetting(idCompteWeb: number, deviceSetting: DeviceSetting): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.put<any>(`${dns}boities/${idCompteWeb}/settings`, deviceSetting, { headers });
+
+    return this._http.put<any>(`${dns}boities/${idCompteWeb}/settings`, deviceSetting);
   }
 
   resetOdometre(idCompteWeb: number, vehiculeSetting: VehiculeSetting): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.put<any>(`${dns}boities/${idCompteWeb}/resetOdo`, vehiculeSetting, { headers });
+
+    return this._http.put<any>(`${dns}boities/${idCompteWeb}/resetOdo`, vehiculeSetting);
   }
 
   getIntervention(idTenant: number): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.get<any>(`${dns}help/list/${idTenant}`, { headers });
+
+    return this._http.get<any>(`${dns}help/list/${idTenant}`);
   }
 
   updateIntervention(interventionUpdate: Intervention, idTenant: number): Observable<boolean> {
-    const headers = this.getHeaders();
-    return this._http.post<any>(`${dns}help/update/?tenantId=${idTenant}`, interventionUpdate, { headers });
+
+    return this._http.post<any>(`${dns}help/update/?tenantId=${idTenant}`, interventionUpdate);
   }
 
   getVehiculeInfo(page: number, size: number): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.get<any>(`${dns}vehicule/list?page=${page}&size=${size}`, { headers });
+
+    return this._http.get<any>(`${dns}vehicule/list?page=${page}&size=${size}`);
   }
 
   updateTechnicianIntervention(deviceId: number, date: Date): Observable<boolean> {
-    const headers = this.getHeaders();
-    return this._http.post<boolean>(`${dns}vehicule/update/${deviceId}`, date, { headers });
+
+    return this._http.post<boolean>(`${dns}vehicule/update/${deviceId}`, date);
   }
 
   getDeviceIdImei(url: string, imei: number): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.get<any>(url + imei, { headers });
+
+    return this._http.get<any>(url + imei);
   }
 
   getAllAccessLog(keyWord: string, page: number, size: number): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.get<any>(`${dns}accessLog?keyWord=${keyWord}&page=${page}&size=${size}`, { headers });
+
+    return this._http.get<any>(`${dns}accessLog?keyWord=${keyWord}&page=${page}&size=${size}`);
   }
 
 
   saveIpAddres(ipAddress: IpAddress): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.post(`${dns}ips`, ipAddress, { headers });
+
+    return this._http.post(`${dns}ips`, ipAddress);
   }
 
 
   getAllIpAddresse(keyword: string, page: number, size: number): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.get<any>(`${dns}ips/all?keyWord=${keyword}&page=${page}&size=${size}`, { headers });
+
+    return this._http.get<any>(`${dns}ips/all?keyWord=${keyword}&page=${page}&size=${size}`);
   }
 
   deleteIpAdress(id: number) {
-    const headers = this.getHeaders();
-    return this._http.delete(`${dns}ips/${id}`, { headers });
+
+    return this._http.delete(`${dns}ips/${id}`);
   }
 
   updateIpAdress(id: number, ipAdress: IpAddress): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.put<any>(`${dns}ips/${id}`, ipAdress, { headers });
+
+    return this._http.put<any>(`${dns}ips/${id}`, ipAdress);
   }
 
 
@@ -274,26 +260,26 @@ export class DataService {
 
 
   getAllAdminComptesByKeyWord(keyWord: string, page: number, size: number): Observable<any> {
-    const headers = this.getHeaders();
+
     if (this.isAgentAdmin()) {
-      return this._http.get<any>(`${dns}adminCompteWeb/all?keyWord=${keyWord}&page=${page}&size=${size}`, { headers });
+      return this._http.get<any>(`${dns}adminCompteWeb/all?keyWord=${keyWord}&page=${page}&size=${size}`);
     } else {
       return throwError("Not authorized to access administrator accounts.");
     }
   }
 
   addAdminCompte(adminCompte: AdministratorCompte): Observable<any> {
-    const headers = this.getHeaders();
+
     if (this.isAgentAdmin()) {
-      return this._http.post<any>(`${dns}adminCompteWeb/add`, adminCompte, { headers });
+      return this._http.post<any>(`${dns}adminCompteWeb/add`, adminCompte);
     } else {
       return throwError("Not authorized to add administrator accounts.");
     }
   }
 
   getAllOptions(): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.get<any>(`${dns}options`, { headers });
+
+    return this._http.get<any>(`${dns}options`);
   }
 
 
@@ -303,19 +289,18 @@ export class DataService {
   }
 
   getAllServerAccountForForm(): Observable<any> {
-    const headers = this.getHeaders();
+
     let keyWord = "";
-    return this._http.get<any>(`${dns}compteServerWeb?keyWord=${keyWord}&size=${1000000}&userName=${this.getCurrentUserName()}`, { headers });
+    return this._http.get<any>(`${dns}compteServerWeb?keyWord=${keyWord}&size=${1000000}&userName=${this.getCurrentUserName()}`);
   }
 
   createServerComptewithBoitier(compteServer: CompteServer, nbrBoitiers: number): Observable<any> {
-    let options = { headers: this.getHeaders() };
-    return this._http.post<any>(dns + "compteServer/addNewComptewithBoitier?nombreBoitier=" + nbrBoitiers + "&username=" + this.getCurrentUserName(), compteServer, options);
+    return this._http.post<any>(dns + "compteServer/addNewComptewithBoitier?nombreBoitier=" + nbrBoitiers + "&username=" + this.getCurrentUserName(), compteServer);
   }
 
   associateCompteWebToCompteServer(idWeb: number, idServer: number): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.put<any>(`${dns}compteWeb/${idWeb}/compteServer/${idServer}`, null, { headers });
+
+    return this._http.put<any>(`${dns}compteWeb/${idWeb}/compteServer/${idServer}`, null);
   }
 
 
@@ -327,9 +312,9 @@ export class DataService {
    *
    */
   getAllAdministratorCompteService(keyWord: string, page: number, size: number): Observable<any> {
-    const headers = this.getHeaders();
+
     if (this.isAgentAdmin()) {
-      return this._http.get<any>(`${dns}adminCompteWeb?keyWord=${keyWord}&page=${page}&size=${size}`, { headers }).pipe(
+      return this._http.get<any>(`${dns}adminCompteWeb?keyWord=${keyWord}&page=${page}&size=${size}`).pipe(
         catchError(this.handleError)
       );
     } else {

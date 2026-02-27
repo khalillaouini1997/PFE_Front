@@ -8,8 +8,8 @@ describe('ListTraccarComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ListTraccarComponent ]
-    })
+    imports: [ListTraccarComponent]
+})
     .compileComponents();
   }));
 

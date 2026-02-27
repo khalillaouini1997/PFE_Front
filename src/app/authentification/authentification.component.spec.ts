@@ -8,8 +8,8 @@ describe('AuthentificationComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AuthentificationComponent ]
-    })
+    imports: [AuthentificationComponent]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(AuthentificationComponent);

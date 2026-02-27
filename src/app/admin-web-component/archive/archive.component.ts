@@ -1,15 +1,18 @@
-import { Location } from '@angular/common';
+import { Location, NgFor, NgIf } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { TabsetComponent } from "ngx-bootstrap/tabs";
+import { TabsetComponent, TabsModule } from "ngx-bootstrap/tabs";
 import { Archive,raws, raw } from "../../data/data";
 import { CompteServerService } from "../../service/compte-server.service";
+import { FormsModule } from '@angular/forms';
 
 
 @Component({
-  selector: 'app-archive',
-  templateUrl: './archive.component.html',
-  styleUrls: ['./archive.component.css']
+    selector: 'app-archive',
+    templateUrl: './archive.component.html',
+    styleUrls: ['./archive.component.css'],
+    standalone: true,
+    imports: [FormsModule, TabsModule, NgFor, NgIf]
 })
 export class ArchiveComponent implements OnInit {
   @ViewChild('staticTabs') staticTabs: TabsetComponent;

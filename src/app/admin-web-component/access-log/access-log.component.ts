@@ -2,11 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AccessLog } from 'src/app/data/data';
 import { DataService } from 'src/app/service/data.service';
+import { FormsModule } from '@angular/forms';
+import { NgIf, NgFor, DatePipe } from '@angular/common';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 @Component({
-  selector: 'app-access-log',
-  templateUrl: './access-log.component.html',
-  styleUrls: ['./access-log.component.css']
+    selector: 'app-access-log',
+    templateUrl: './access-log.component.html',
+    styleUrls: ['./access-log.component.css'],
+    standalone: true,
+    imports: [FormsModule, NgIf, NgFor, PaginationModule, DatePipe]
 })
 export class AccessLogComponent implements OnInit {
 

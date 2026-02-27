@@ -6,11 +6,16 @@ import {CompteWebService} from "../../service/compte-web.service";
 import {DashboardService} from "../../service/dashboard.service";
 import {CompteServerService} from "../../service/compte-server.service";
 import {ToastrService} from "ngx-toastr";
+import { FormsModule } from '@angular/forms';
+import { NgIf, NgFor, DatePipe } from '@angular/common';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 @Component({
-  selector: 'app-compte-server-details',
-  templateUrl: './compte-server-details.component.html',
-  styleUrls: ['./compte-server-details.component.css']
+    selector: 'app-compte-server-details',
+    templateUrl: './compte-server-details.component.html',
+    styleUrls: ['./compte-server-details.component.css'],
+    standalone: true,
+    imports: [FormsModule, NgIf, NgFor, PaginationModule, DatePipe]
 })
 export class CompteServerDetailsComponent implements OnInit {
   val: any = 0;

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import {Observable} from "rxjs";
-import {dns} from "../global.config";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {AdministratorCompte, CompteServer, Option} from "../data/data";
+import { Observable } from "rxjs";
+import { dns } from "../global.config";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { AdministratorCompte, CompteServer, Option } from "../data/data";
 
 @Injectable({
   providedIn: 'root'
@@ -18,40 +18,14 @@ export class DashboardService {
   constructor(private http: HttpClient) { }
 
   loadTestAuthenticated(): boolean {
-    let isAuthenticated: boolean | null = false;
-    const token = localStorage.getItem("id_token")
-    isAuthenticated = /*localStorage.getItem("isAuthenticate")*/token !== null ;
-
-    return isAuthenticated;
-  }
-
-  //=================================================
-  // Options crud
-  //=================================================
-
-  /**
-   * Get all Options
-   *
-   */
-
-  private getHeaders(): HttpHeaders {
-    let headers = new HttpHeaders();
-    headers = headers.append('Accept', 'application/json');
-    headers = headers.append('Access-Control-Allow-Origin', '*');
-    headers = headers.append('Content-Type', 'application/json');
-    headers = headers.append('Authorization', this.loadToken());
-    return headers;
+    const token = localStorage.getItem("token");
+    return token !== null;
   }
 
   logoutStorage() {
+    localStorage.removeItem("token");
     localStorage.removeItem("id_token");
     localStorage.removeItem("isAuthenticate");
   }
-
-  loadToken(): string {
-    const token = localStorage.getItem("id_token");
-    return token !== null ? token : '';
-  }
-
 
 }

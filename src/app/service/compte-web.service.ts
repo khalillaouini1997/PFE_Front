@@ -1,11 +1,10 @@
-import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Observable, throwError} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
-import {AdministratorCompte, CompteWeb, Option, PathConfigPayload, Tram} from '../data/data';
-import {dns} from '../global.config';
-import {DataService} from "./data.service";
-import {createAuthorizationHeader} from "../utils/security/headers";
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { AdministratorCompte, CompteWeb, Option, PathConfigPayload, Tram } from '../data/data';
+import { dns } from '../global.config';
+import { DataService } from "./data.service";
 
 
 @Injectable({
@@ -15,87 +14,80 @@ export class CompteWebService {
 
   currentUser: AdministratorCompte;
 
-  constructor(private _http: HttpClient, private dataService: DataService) {}
+  constructor(private _http: HttpClient, private dataService: DataService) { }
 
-  private getHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token');
-    return new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': token ? token : ''
-    });
-  }
 
 
   addCompteWeb(compteWeb: CompteWeb): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.post<any>(`${dns}compteWeb?userName=${this.dataService.getCurrentUserName()}`, compteWeb, { headers });
+
+    return this._http.post<any>(`${dns}compteWeb?userName=${this.dataService.getCurrentUserName()}`, compteWeb);
   }
 
 
   getDateLog(username: string): Observable<any> {
-    return this._http.get(`${dns}compteWeb?datelog=${username}`, { headers: this.getHeaders() }).pipe(
+    return this._http.get(`${dns}compteWeb?datelog=${username}`).pipe(
       map((res: any) => res),
       catchError((error: any) => throwError(error))
     );
   }
 
   getAllWebAccountByKeyWord(keyWord: string, page: number, size: number): Observable<any> {
-    return this._http.get(`${dns}compteWeb?keyWord=${keyWord}&page=${page}&size=${size}&userName=${this.dataService.getCurrentUserName()}`, { headers: this.getHeaders() }).pipe(
+    return this._http.get(`${dns}compteWeb?keyWord=${keyWord}&page=${page}&size=${size}&userName=${this.dataService.getCurrentUserName()}`).pipe(
       map((res: any) => res),
       catchError((error: any) => throwError(error))
     );
   }
 
   getWebAccountById(id: number): Observable<any> {
-    return this._http.get(`${dns}compteWeb/${id}?userName=${this.dataService.getCurrentUserName()}`, { headers: this.getHeaders() }).pipe(
+    return this._http.get(`${dns}compteWeb/${id}?userName=${this.dataService.getCurrentUserName()}`).pipe(
       map((res: any) => res),
       catchError((error: any) => throwError(error))
     );
   }
 
   editPathConfig(idServer: number, pathConfigPayload: PathConfigPayload): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.post<any>(`${dns}boities/editPathConfig/${idServer}`, pathConfigPayload, { headers });
+
+    return this._http.post<any>(`${dns}boities/editPathConfig/${idServer}`, pathConfigPayload);
   }
 
   associateCompteWebToCompteServer(idWeb: number, idServer: number): Observable<any> {
-    return this._http.put(`${dns}compteWeb/${idWeb}/compteServer/${idServer}`, null, { headers: this.getHeaders() }).pipe(
+    return this._http.put(`${dns}compteWeb/${idWeb}/compteServer/${idServer}`, null).pipe(
       map((res: any) => res),
       catchError((error: any) => throwError(error))
     );
   }
 
   updateWebAccount(idCompteWeb: number, newCompteWeb: CompteWeb): Observable<any> {
-    return this._http.put(`${dns}compteWeb/${idCompteWeb}`, newCompteWeb, { headers: this.getHeaders() }).pipe(
+    return this._http.put(`${dns}compteWeb/${idCompteWeb}`, newCompteWeb).pipe(
       map((res: any) => res),
       catchError((error: any) => throwError(error))
     );
   }
 
   getAllCompteClientWeb(): Observable<any> {
-    const headers = createAuthorizationHeader();
-    return this._http.get(`${dns}compteWeb/All?userName=${this.dataService.getCurrentUserName()}`, { headers });
+
+    return this._http.get(`${dns}compteWeb/All?userName=${this.dataService.getCurrentUserName()}`);
   }
 
 
   getAllLastTram(idCompteWeb: number): Observable<any> {
-    const headers = createAuthorizationHeader();
-    return this._http.get(`${dns}compteWeb/${idCompteWeb}/lastTrame`, { headers });
+
+    return this._http.get(`${dns}compteWeb/${idCompteWeb}/lastTrame`);
   }
 
   exportLastTram(realtimes: Tram[]): Observable<any> {
-    const headers = createAuthorizationHeader();
-    return this._http.post(`${dns}compteWeb/lastTrame/export`, realtimes, { headers });
+
+    return this._http.post(`${dns}compteWeb/lastTrame/export`, realtimes);
   }
 
   getAllLastTramforAllClient(): Observable<any> {
-    const headers = createAuthorizationHeader();
-    return this._http.get(`${dns}compteWeb/AllLastTram`, { headers });
+
+    return this._http.get(`${dns}compteWeb/AllLastTram`);
   }
 
 
   deleteWebAccount(id: number): Observable<any> {
-    return this._http.delete(`${dns}compteWeb/${id}`, { headers: this.getHeaders() }).pipe(
+    return this._http.delete(`${dns}compteWeb/${id}`).pipe(
       map((res: any) => res),
       catchError((error: any) => throwError(error))
     );
@@ -103,7 +95,7 @@ export class CompteWebService {
 
   getAllAdminComptesByKeyWord(keyWord: string, page: number, size: number): Observable<any> {
     if (this.dataService.isAgentAdmin()) {
-      return this._http.get(`${dns}adminCompteWeb/all?keyWord=${keyWord}&page=${page}&size=${size}`, { headers: this.getHeaders() }).pipe(
+      return this._http.get(`${dns}adminCompteWeb/all?keyWord=${keyWord}&page=${page}&size=${size}`).pipe(
         map((res: any) => res),
         catchError((error: any) => throwError(error))
       );
@@ -112,9 +104,7 @@ export class CompteWebService {
   }
 
   addOptionsToWebAccount(id: number, options: Option[]) {
-    const headers = this.getHeaders(); // Use the existing getHeaders() method
-
-    this._http.post(dns + "compteWeb/" + id + "/Options", options, { headers })
+    this._http.post(dns + "compteWeb/" + id + "/Options", options)
       .subscribe({
         next: (response: any) => {
           console.log(response);

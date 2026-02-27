@@ -8,8 +8,8 @@ describe('AddCompteServerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AddCompteServerComponent ]
-    })
+    imports: [AddCompteServerComponent]
+})
     .compileComponents();
   }));
 

@@ -5,11 +5,16 @@ import { IpAddress } from 'src/app/data/data';
 import { DataService } from 'src/app/service/data.service';
 import {catchError} from "rxjs/operators";
 import {of, throwError} from "rxjs";
+import { FormsModule } from '@angular/forms';
+import { NgFor } from '@angular/common';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 @Component({
-  selector: 'app-ip-adresse',
-  templateUrl: './ip-adresse.component.html',
-  styleUrls: ['./ip-adresse.component.css']
+    selector: 'app-ip-adresse',
+    templateUrl: './ip-adresse.component.html',
+    styleUrls: ['./ip-adresse.component.css'],
+    standalone: true,
+    imports: [FormsModule, NgFor, PaginationModule]
 })
 export class IpAdresseComponent implements OnInit {
 

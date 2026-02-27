@@ -17,7 +17,6 @@ export class CompteServerService {
   isAuthenticated: boolean = false;
   USER_TOKEN: string = "";
   TOKEN_PREFIX: string = "Bearer ";
-  private headers: HttpHeaders;
 
   ips: IpAddress[] = [];
 
@@ -29,88 +28,76 @@ export class CompteServerService {
   }
 
 
-  private getHeaders() {
-    this.headers = new HttpHeaders()
-      .set('Accept', 'application/json')
-      .set('Content-Type', 'application/json');
-
-    const token = this.loadToken();
-    if (token) {
-      this.headers = this.headers.set('Authorization', token);
-    }
-
-    return this.headers;
-  }
 
 
   // Boitier CRUD methods...
   addBoitiers(idCompteServer: number, nbrBoitiers: number): Observable<any> {
-    const options = { headers: this.getHeaders() };
-    return this._http.post<any>(`${dns}compteServer/${idCompteServer}?nombreBoitier=${nbrBoitiers}`, null, options);
+
+    return this._http.post<any>(`${dns}compteServer/${idCompteServer}?nombreBoitier=${nbrBoitiers}`, null);
   }
 
   updateBoitier(boitier: Boitier, idServer: number, updateType: string): Observable<any> {
-    const options = { headers: this.getHeaders() };
-    return this._http.put<any>(`${dns}boities?idServer=${idServer}&updateType=${updateType}`, boitier, options);
+
+    return this._http.put<any>(`${dns}boities?idServer=${idServer}&updateType=${updateType}`, boitier);
   }
 
   deleteCompteServer(id: number): Observable<any> {
-    const options = { headers: this.getHeaders() };
-    return this._http.delete<any>(`${dns}compteServer/${id}`, options);
+
+    return this._http.delete<any>(`${dns}compteServer/${id}`);
   }
 
   getRaws(numBoitier: number, limit: number): Observable<any> {
-    const options = { headers: this.getHeaders() };
-    return this._http.get<any>(`${dns}boities/${numBoitier}/Raw/${limit}`, options);
+
+    return this._http.get<any>(`${dns}boities/${numBoitier}/Raw/${limit}`);
   }
 
   lastArchiveOfBoitier(numBoitier: number): Observable<any> {
-    const options = { headers: this.getHeaders() };
-    return this._http.get<any>(`${dns}boities/${numBoitier}/lastArchive`, options);
+
+    return this._http.get<any>(`${dns}boities/${numBoitier}/lastArchive`);
   }
 
   getArchiveOfBoitier(numboitier: number, limit: number): Observable<any> {
-    const options = { headers: this.getHeaders() };
-    return this._http.get<any>(`${dns}boities/${numboitier}/Archives/${limit}`, options);
+
+    return this._http.get<any>(`${dns}boities/${numboitier}/Archives/${limit}`);
   }
 
   createServerCompte(compteServer: CompteServer): Observable<any> {
-    const options = { headers: this.getHeaders() };
-    return this._http.post<any>(`${dns}compteServer`, compteServer, options);
+
+    return this._http.post<any>(`${dns}compteServer`, compteServer);
   }
 
   updateServerCompte(id: number, compteServer: CompteServer): Observable<any> {
-    const options = { headers: this.getHeaders() };
-    return this._http.put<any>(`${dns}compteServer/${id}`, compteServer, options);
+
+    return this._http.put<any>(`${dns}compteServer/${id}`, compteServer);
   }
 
 
 
   getAllServerCompte(keyword: string, page: number, size: number): Observable<any> {
-    const options = { headers: this.getHeaders() };
-    return this._http.get<any>(`${dns}compteServer?keyWord=${keyword}&page=${page}&size=${size}`, options);
+
+    return this._http.get<any>(`${dns}compteServer?keyWord=${keyword}&page=${page}&size=${size}`);
   }
 
 
   // IP Address CRUD methods...
   saveIpAddress<T>(ipAddress: T): Observable<T> {
-    const options = { headers: this.getHeaders() };
-    return this._http.post<T>(`${dns}ips`, ipAddress, options);
+
+    return this._http.post<T>(`${dns}ips`, ipAddress);
   }
 
   getAllIpAddresses(keyword: string, page: number, size: number): Observable<any> {
-    const options = { headers: this.getHeaders() };
-    return this._http.get<any>(`${dns}ips/all?keyWord=${keyword}&page=${page}&size=${size}`, options);
+
+    return this._http.get<any>(`${dns}ips/all?keyWord=${keyword}&page=${page}&size=${size}`);
   }
 
   deleteIpAddress(id: number): Observable<any> {
-    const options = { headers: this.getHeaders() };
-    return this._http.delete<any>(`${dns}ips/${id}`, options);
+
+    return this._http.delete<any>(`${dns}ips/${id}`);
   }
 
   updateIpAddress(id: number, ipAddress: IpAddress): Observable<any> {
-    const options = { headers: this.getHeaders() };
-    return this._http.put<any>(`${dns}ips/${id}`, ipAddress, options);
+
+    return this._http.put<any>(`${dns}ips/${id}`, ipAddress);
   }
 
 
@@ -141,59 +128,59 @@ export class CompteServerService {
   }
 
   isExistPseudo(pseudo: string): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.get<any>(`${dns}/compteServer/pseudo?pseudo=${pseudo}`, { headers });
+
+    return this._http.get<any>(`${dns}/compteServer/pseudo?pseudo=${pseudo}`);
   }
 
   isExistLogin(login: string): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.get<any>(`${dns}/compteServer/login?login=${login}`, { headers });
+
+    return this._http.get<any>(`${dns}/compteServer/login?login=${login}`);
   }
 
   ExportListComptesServer(comptesServer: CompteServer[]): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.post<any>(`${dns}/compteServerWeb/export`, comptesServer, { headers });
+
+    return this._http.post<any>(`${dns}/compteServerWeb/export`, comptesServer);
   }
 
   getAllServerAccount(keyWord: string, page: number, size: number): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.get<any>(`${dns}/compteServerWeb?keyWord=${keyWord}&page=${page}&size=${size}&userName=${this.dataService.getCurrentUserName()}`, { headers });
+
+    return this._http.get<any>(`${dns}/compteServerWeb?keyWord=${keyWord}&page=${page}&size=${size}&userName=${this.dataService.getCurrentUserName()}`);
   }
 
   getAllCompteClientServer(): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.get<any>(`${dns}/compteServer/All`, { headers });
+
+    return this._http.get<any>(`${dns}/compteServer/All`);
   }
 
   getAllBoitierofIdcompte(idCompteServer: number): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.get<any>(`${dns}/compteServer/${idCompteServer}/listBoitiers`, { headers });
+
+    return this._http.get<any>(`${dns}/compteServer/${idCompteServer}/listBoitiers`);
   }
 
   getAllServerAccountForForm(): Observable<any> {
-    const headers = this.getHeaders();
+
     const keyWord = "";
-    return this._http.get<any>(`${dns}/compteServerWeb?keyWord=${keyWord}&size=1000000&userName=${this.dataService.getCurrentUserName()}`, { headers });
+    return this._http.get<any>(`${dns}/compteServerWeb?keyWord=${keyWord}&size=1000000&userName=${this.dataService.getCurrentUserName()}`);
   }
 
   extendIntervalOfBoitiers(idCompteServer: number): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.put<any>(`${dns}/compteServer/${idCompteServer}/newInterval`, null, { headers });
+
+    return this._http.put<any>(`${dns}/compteServer/${idCompteServer}/newInterval`, null);
   }
 
   getBoitierOfAccount(keyWord: string, id: number, page: number, size: number): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.get<any>(`${dns}/compteServer/${id}/Boitiers?keyWord=${keyWord}&page=${page}&size=${size}`, { headers });
+
+    return this._http.get<any>(`${dns}/compteServer/${id}/Boitiers?keyWord=${keyWord}&page=${page}&size=${size}`);
   }
 
   getCompteServerById(id: number): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.get<any>(`${dns}/compteServer/${id}`, { headers });
+
+    return this._http.get<any>(`${dns}/compteServer/${id}`);
   }
 
   getServerAccountById(id: number): Observable<any> {
-    const headers = this.getHeaders();
-    return this._http.get<any>(`${dns}/compteServerWeb/${id}`, { headers });
+
+    return this._http.get<any>(`${dns}/compteServerWeb/${id}`);
   }
 
 }

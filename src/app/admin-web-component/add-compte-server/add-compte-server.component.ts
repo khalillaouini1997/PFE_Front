@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {CompteServer, CompteServerWithBoitier, IpAddress} from 'src/app/data/data';
 import { DataService } from 'src/app/service/data.service';
 import {CompteServerService} from "../../service/compte-server.service";
-import {BsLocaleService} from "ngx-bootstrap/datepicker";
+import { BsLocaleService, BsDatepickerModule } from "ngx-bootstrap/datepicker";
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { frLocale } from 'ngx-bootstrap/locale';
 
@@ -10,14 +10,18 @@ import { ToastrService } from 'ngx-toastr';
 import {of, tap} from "rxjs";
 import {catchError} from "rxjs/operators";
 import {Router} from "@angular/router";
+import { NgIf } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 
 defineLocale('fr', frLocale);
 
 @Component({
-  selector: 'app-add-compte-server',
-  templateUrl: './add-compte-server.component.html',
-  styleUrls: ['./add-compte-server.component.css']
+    selector: 'app-add-compte-server',
+    templateUrl: './add-compte-server.component.html',
+    styleUrls: ['./add-compte-server.component.css'],
+    standalone: true,
+    imports: [NgIf, FormsModule, BsDatepickerModule]
 })
 export class AddCompteServerComponent implements OnInit {
 

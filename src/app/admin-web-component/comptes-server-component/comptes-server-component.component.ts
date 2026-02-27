@@ -1,4 +1,4 @@
-import {ActivatedRoute, Router} from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { saveAs as importedSaveAs } from 'file-saver';
 import { ToastrService } from 'ngx-toastr';
@@ -7,6 +7,10 @@ import { DataService } from 'src/app/service/data.service';
 import {CompteServerService} from "../../service/compte-server.service";
 import {CompteWebService} from "../../service/compte-web.service";
 import {DashboardService} from "../../service/dashboard.service";
+import { NgIf, NgFor } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 
 /**
@@ -16,9 +20,11 @@ import {DashboardService} from "../../service/dashboard.service";
  */
 
 @Component({
-  selector: 'app-comptes-server-component',
-  templateUrl: './comptes-server-component.component.html',
-  styleUrls: ['./comptes-server-component.component.css']
+    selector: 'app-comptes-server-component',
+    templateUrl: './comptes-server-component.component.html',
+    styleUrls: ['./comptes-server-component.component.css'],
+    standalone: true,
+    imports: [NgIf, FormsModule, NgFor, RouterLink, PaginationModule, BsDatepickerModule]
 })
 export class ComptesServerComponentComponent implements OnInit {
 

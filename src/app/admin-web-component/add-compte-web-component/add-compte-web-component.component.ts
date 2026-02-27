@@ -8,11 +8,16 @@ import { CompteServerService } from "../../service/compte-server.service";
 import { of } from "rxjs";
 import { catchError, tap } from "rxjs/operators";
 import { ToastrService } from "ngx-toastr";
+import { FormsModule } from '@angular/forms';
+import { NgFor } from '@angular/common';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 @Component({
-  selector: 'app-add-compte-web-component',
-  templateUrl: './add-compte-web-component.component.html',
-  styleUrls: ['./add-compte-web-component.component.css']
+    selector: 'app-add-compte-web-component',
+    templateUrl: './add-compte-web-component.component.html',
+    styleUrls: ['./add-compte-web-component.component.css'],
+    standalone: true,
+    imports: [FormsModule, NgFor, BsDatepickerModule]
 })
 export class AddCompteWebComponentComponent implements OnInit {
 

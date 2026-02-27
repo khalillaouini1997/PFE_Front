@@ -19,15 +19,20 @@ import {of, tap} from "rxjs";
 import {catchError} from "rxjs/operators";
 
 
-import {BsLocaleService} from "ngx-bootstrap/datepicker";
+import { BsLocaleService, BsDatepickerModule } from "ngx-bootstrap/datepicker";
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { frLocale } from 'ngx-bootstrap/locale';
+import { FormsModule } from '@angular/forms';
+import { NgFor, NgIf, NgClass, DatePipe } from '@angular/common';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 defineLocale('fr', frLocale);
 
 @Component({
-  selector: 'app-configuration-web-component',
-  templateUrl: './configuration-web-component.component.html',
-  styleUrls: ['./configuration-web-component.component.css']
+    selector: 'app-configuration-web-component',
+    templateUrl: './configuration-web-component.component.html',
+    styleUrls: ['./configuration-web-component.component.css'],
+    standalone: true,
+    imports: [FormsModule, NgFor, BsDatepickerModule, NgMultiSelectDropDownModule, NgIf, NgClass, DatePipe]
 })
 export class ConfigurationWebComponentComponent implements OnInit {
 

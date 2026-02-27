@@ -5,11 +5,15 @@ import { DataService } from 'src/app/service/data.service';
 import {catchError} from "rxjs/operators";
 import {of, tap} from "rxjs";
 import {ToastrService} from "ngx-toastr";
+import { NgIf, NgFor } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-add-admin-compte',
-  templateUrl: './add-admin-compte.component.html',
-  styleUrls: ['./add-admin-compte.component.css']
+    selector: 'app-add-admin-compte',
+    templateUrl: './add-admin-compte.component.html',
+    styleUrls: ['./add-admin-compte.component.css'],
+    standalone: true,
+    imports: [NgIf, FormsModule, NgFor]
 })
 export class AddAdminCompteComponent implements OnInit {
 

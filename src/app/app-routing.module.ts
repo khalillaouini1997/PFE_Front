@@ -5,8 +5,8 @@ import { AuthentificationComponent } from './authentification/authentification.c
 export const routes: Routes = [
   {
     path: 'adminWeb',
-    loadChildren: () => import('./admin-web-component/admin-web.module')
-      .then(m => m.AdminWebModule),
+    loadChildren: () => import('./admin-web-component/admin-web-component-routing.module')
+      .then(m => m.ADMIN_WEB_ROUTES),
   },
   {
     path: 'authentification',

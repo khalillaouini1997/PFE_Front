@@ -2,11 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import {IpAddress} from "../../data/data";
 import {DataService} from "../../service/data.service";
 import {CompteServerService} from "../../service/compte-server.service";
+import { FormsModule } from '@angular/forms';
+import { NgFor } from '@angular/common';
 
 @Component({
-  selector: 'app-add-adresse-ip',
-  templateUrl: './add-adresse-ip.component.html',
-  styleUrls: ['./add-adresse-ip.component.css']
+    selector: 'app-add-adresse-ip',
+    templateUrl: './add-adresse-ip.component.html',
+    styleUrls: ['./add-adresse-ip.component.css'],
+    standalone: true,
+    imports: [FormsModule, NgFor]
 })
 export class AddAdresseIpComponent implements OnInit {
 
