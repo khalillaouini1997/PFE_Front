@@ -2,27 +2,23 @@ import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CompteWeb } from 'src/app/data/data';
-import { owner } from 'src/app/global.config';
+import { environment } from '../../../environments/environment';
 import { DataService } from 'src/app/service/data.service';
-import {CompteServerService} from "../../service/compte-server.service";
-import {CompteWebService} from "../../service/compte-web.service";
-import {DashboardService} from "../../service/dashboard.service";
+import { CompteServerService } from "../../service/compte-server.service";
+import { CompteWebService } from "../../service/compte-web.service";
+import { DashboardService } from "../../service/dashboard.service";
 import { FormsModule } from '@angular/forms';
 import { NgIf, NgFor, DatePipe } from '@angular/common';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 
-/**
- *
- * created by AHMED HAYEL
- *
- */
+
 
 @Component({
-    selector: 'app-comptes-web-component',
-    templateUrl: './comptes-web-component.component.html',
-    styleUrls: ['./comptes-web-component.component.css'],
-    standalone: true,
-    imports: [FormsModule, NgIf, NgFor, RouterLink, PaginationModule, DatePipe]
+  selector: 'app-comptes-web-component',
+  templateUrl: './comptes-web-component.component.html',
+  styleUrls: ['./comptes-web-component.component.css'],
+  standalone: true,
+  imports: [FormsModule, NgIf, NgFor, RouterLink, PaginationModule, DatePipe]
 })
 export class ComptesWebComponentComponent implements OnInit {
   keyWord: string = "";
@@ -37,21 +33,19 @@ export class ComptesWebComponentComponent implements OnInit {
   dt: Object;
   code_pays = [];
 
-  owner: string;
+  owner: string = environment.owner;
 
   constructor(private router: Router, public toastr: ToastrService, vcr: ViewContainerRef,
-              private compteServerService: CompteServerService,
-              private compteWebService: CompteWebService,
-              private dashboardService: DashboardService,
-              private dataService: DataService,) {
-    //this.toastr.setRootViewContainerRef(vcr);
-    this.owner = owner;
+    private compteServerService: CompteServerService,
+    private compteWebService: CompteWebService,
+    private dashboardService: DashboardService,
+    private dataService: DataService,) {
   }
 
   ngOnInit() {
     this.dashboardService.isAuthenticated = this.dashboardService.loadTestAuthenticated();
     if (!this.dashboardService.isAuthenticated) {
-     // this.router.navigate(['/error']);
+      // this.router.navigate(['/error']);
     } else {
       this.getAllWebAccount(this.keyWord, this.bigCurrentPage - 1, this.itemsPerPage);
     }

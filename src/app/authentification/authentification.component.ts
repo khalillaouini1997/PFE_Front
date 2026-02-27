@@ -7,11 +7,11 @@ import { FormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
 
 @Component({
-    selector: 'app-authentification',
-    templateUrl: './authentification.component.html',
-    styleUrls: ['./authentification.component.scss'],
-    standalone: true,
-    imports: [FormsModule, NgIf]
+  selector: 'app-authentification',
+  templateUrl: './authentification.component.html',
+  styleUrls: ['./authentification.component.scss'],
+  standalone: true,
+  imports: [FormsModule, NgIf]
 })
 export class AuthentificationComponent implements OnInit {
 
@@ -54,15 +54,10 @@ export class AuthentificationComponent implements OnInit {
   onSubmit() {
     this.loading = true;
 
-    if (localStorage.getItem('id_token')) {
-      localStorage.removeItem('id_token');
-    }
-
     this.authentificationService.currentUser = null;
 
     localStorage.removeItem('currentUser');
     localStorage.removeItem('token');
-    localStorage.removeItem('id_token');
 
     this.authentificationService.authentificate(this.login, this.password).subscribe(_admin => {
       this.authentificationService.saveTokenInStorage(_admin.token, true);

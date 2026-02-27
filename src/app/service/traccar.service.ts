@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { dns } from '../global.config';
+import { environment } from '../../environments/environment';
 import { AdministratorCompte } from '../data/data';
 import { HttpClient } from '@angular/common/http';
 
@@ -14,7 +14,7 @@ export class TraccarService {
 
   getLisTraccar(): Observable<any> {
     this.currentUser = JSON.parse(localStorage.getItem('user') || '{}');
-    const url = `${dns}traccar/${this.currentUser.idTraccar}`;
+    const url = `${environment.apiBaseUrl}traccar/${this.currentUser.idTraccar}`;
     return this._http.get(url);
   }
 

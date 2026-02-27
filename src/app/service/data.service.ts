@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { dns } from '../global.config';
+import { environment } from '../../environments/environment';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import {
   AdministratorCompte, Boitier, CompteServer,
@@ -101,38 +101,38 @@ export class DataService {
 
 
   getAllIps(): Observable<any> {
-    return this._http.get<any>(`${dns}ips`).pipe(
+    return this._http.get<any>(`${environment.apiBaseUrl}ips`).pipe(
       map(res => res)
     );
   }
 
 
   prepareDBForAllDevises(idServer: number): Observable<any> {
-    return this._http.get<any>(`${dns}boities/${idServer}`).pipe(
+    return this._http.get<any>(`${environment.apiBaseUrl}boities/${idServer}`).pipe(
       map(res => res)
     );
   }
 
   prepareDBForSingleDevise(idServer: number, idBoitier: number): Observable<any> {
-    return this._http.get<any>(`${dns}boities/${idServer}/device/${idBoitier}`).pipe(
+    return this._http.get<any>(`${environment.apiBaseUrl}boities/${idServer}/device/${idBoitier}`).pipe(
       map(res => res)
     );
   }
 
   getAllCompteDevises(idServer: number): Observable<any> {
-    return this._http.get<any>(`${dns}boities/all/${idServer}`).pipe(
+    return this._http.get<any>(`${environment.apiBaseUrl}boities/all/${idServer}`).pipe(
       map(res => res)
     );
   }
 
   updateBoitier(boitier: Boitier, idServer: number, updateType: string): Observable<any> {
 
-    return this._http.put<any>(`${dns}boities?idServer=${idServer}&updateType=${updateType}`, boitier);
+    return this._http.put<any>(`${environment.apiBaseUrl}boities?idServer=${idServer}&updateType=${updateType}`, boitier);
   }
 
   lastArchiveOfBoitier(numBoitier: number): Observable<any> {
 
-    return this._http.get<any>(`${dns}boities/${numBoitier}/lastArchive`);
+    return this._http.get<any>(`${environment.apiBaseUrl}boities/${numBoitier}/lastArchive`);
   }
 
 
@@ -140,82 +140,82 @@ export class DataService {
 
   recalculeHistorique(idCompteWeb: number, recalculatePayload: RecalculatePayload): Observable<any> {
 
-    return this._http.put<any>(`${dns}boities/${idCompteWeb}/recalculate/historique`, recalculatePayload);
+    return this._http.put<any>(`${environment.apiBaseUrl}boities/${idCompteWeb}/recalculate/historique`, recalculatePayload);
   }
 
   recalculeAlert(idCompteWeb: number, recalculatePayload: RecalculatePayload): Observable<any> {
 
-    return this._http.put<any>(`${dns}boities/${idCompteWeb}/recalculate/alert`, recalculatePayload);
+    return this._http.put<any>(`${environment.apiBaseUrl}boities/${idCompteWeb}/recalculate/alert`, recalculatePayload);
   }
 
   recalculeFuel(idCompteWeb: number, recalculatePayload: RecalculatePayload): Observable<any> {
 
-    return this._http.put<any>(`${dns}boities/${idCompteWeb}/recalculate/fuel`, recalculatePayload);
+    return this._http.put<any>(`${environment.apiBaseUrl}boities/${idCompteWeb}/recalculate/fuel`, recalculatePayload);
   }
 
   recalculePaths(idCompteWeb: number, recalculePaths: RecalculatePayload): Observable<any> {
 
-    return this._http.put<any>(`${dns}boities/${idCompteWeb}/recalculate/paths`, recalculePaths);
+    return this._http.put<any>(`${environment.apiBaseUrl}boities/${idCompteWeb}/recalculate/paths`, recalculePaths);
   }
 
   recalculeBoitier(idCompteWeb: number, recalculePaths: RecalculatePayload): Observable<any> {
 
-    return this._http.put<any>(`${dns}boities/${idCompteWeb}/recalculate/resetboitier`, recalculePaths);
+    return this._http.put<any>(`${environment.apiBaseUrl}boities/${idCompteWeb}/recalculate/resetboitier`, recalculePaths);
   }
 
   resetRT(idCompteWeb: number, recalculePaths: RecalculatePayload): Observable<any> {
 
-    return this._http.put<any>(`${dns}boities/${idCompteWeb}/recalculate/resetRT`, recalculePaths);
+    return this._http.put<any>(`${environment.apiBaseUrl}boities/${idCompteWeb}/recalculate/resetRT`, recalculePaths);
   }
 
   getDeviceOptionConfig(idCompteWeb: number, idBoitier: number): Observable<any> {
 
-    return this._http.get<any>(`${dns}boities/${idCompteWeb}/options/${idBoitier}`);
+    return this._http.get<any>(`${environment.apiBaseUrl}boities/${idCompteWeb}/options/${idBoitier}`);
   }
 
   getPathConfig(idCompteWeb: number, idBoitier: number): Observable<any> {
 
-    return this._http.get<any>(`${dns}boities/${idCompteWeb}/pathconfig/${idBoitier}`);
+    return this._http.get<any>(`${environment.apiBaseUrl}boities/${idCompteWeb}/pathconfig/${idBoitier}`);
   }
 
   getDeviceSettings(idCompteWeb: number, idBoitier: number): Observable<any> {
 
-    return this._http.get<any>(`${dns}boities/${idCompteWeb}/devicesettings/${idBoitier}`);
+    return this._http.get<any>(`${environment.apiBaseUrl}boities/${idCompteWeb}/devicesettings/${idBoitier}`);
   }
 
   editDeviceOptionConfig(idCompteWeb: number, deviceOpt: DeviceOpt): Observable<any> {
 
-    return this._http.put<any>(`${dns}boities/${idCompteWeb}/options`, deviceOpt);
+    return this._http.put<any>(`${environment.apiBaseUrl}boities/${idCompteWeb}/options`, deviceOpt);
   }
 
   editDeviceSetting(idCompteWeb: number, deviceSetting: DeviceSetting): Observable<any> {
 
-    return this._http.put<any>(`${dns}boities/${idCompteWeb}/settings`, deviceSetting);
+    return this._http.put<any>(`${environment.apiBaseUrl}boities/${idCompteWeb}/settings`, deviceSetting);
   }
 
   resetOdometre(idCompteWeb: number, vehiculeSetting: VehiculeSetting): Observable<any> {
 
-    return this._http.put<any>(`${dns}boities/${idCompteWeb}/resetOdo`, vehiculeSetting);
+    return this._http.put<any>(`${environment.apiBaseUrl}boities/${idCompteWeb}/resetOdo`, vehiculeSetting);
   }
 
   getIntervention(idTenant: number): Observable<any> {
 
-    return this._http.get<any>(`${dns}help/list/${idTenant}`);
+    return this._http.get<any>(`${environment.apiBaseUrl}help/list/${idTenant}`);
   }
 
   updateIntervention(interventionUpdate: Intervention, idTenant: number): Observable<boolean> {
 
-    return this._http.post<any>(`${dns}help/update/?tenantId=${idTenant}`, interventionUpdate);
+    return this._http.post<any>(`${environment.apiBaseUrl}help/update/?tenantId=${idTenant}`, interventionUpdate);
   }
 
   getVehiculeInfo(page: number, size: number): Observable<any> {
 
-    return this._http.get<any>(`${dns}vehicule/list?page=${page}&size=${size}`);
+    return this._http.get<any>(`${environment.apiBaseUrl}vehicule/list?page=${page}&size=${size}`);
   }
 
   updateTechnicianIntervention(deviceId: number, date: Date): Observable<boolean> {
 
-    return this._http.post<boolean>(`${dns}vehicule/update/${deviceId}`, date);
+    return this._http.post<boolean>(`${environment.apiBaseUrl}vehicule/update/${deviceId}`, date);
   }
 
   getDeviceIdImei(url: string, imei: number): Observable<any> {
@@ -225,29 +225,29 @@ export class DataService {
 
   getAllAccessLog(keyWord: string, page: number, size: number): Observable<any> {
 
-    return this._http.get<any>(`${dns}accessLog?keyWord=${keyWord}&page=${page}&size=${size}`);
+    return this._http.get<any>(`${environment.apiBaseUrl}accessLog?keyWord=${keyWord}&page=${page}&size=${size}`);
   }
 
 
   saveIpAddres(ipAddress: IpAddress): Observable<any> {
 
-    return this._http.post(`${dns}ips`, ipAddress);
+    return this._http.post(`${environment.apiBaseUrl}ips`, ipAddress);
   }
 
 
   getAllIpAddresse(keyword: string, page: number, size: number): Observable<any> {
 
-    return this._http.get<any>(`${dns}ips/all?keyWord=${keyword}&page=${page}&size=${size}`);
+    return this._http.get<any>(`${environment.apiBaseUrl}ips/all?keyWord=${keyword}&page=${page}&size=${size}`);
   }
 
   deleteIpAdress(id: number) {
 
-    return this._http.delete(`${dns}ips/${id}`);
+    return this._http.delete(`${environment.apiBaseUrl}ips/${id}`);
   }
 
   updateIpAdress(id: number, ipAdress: IpAddress): Observable<any> {
 
-    return this._http.put<any>(`${dns}ips/${id}`, ipAdress);
+    return this._http.put<any>(`${environment.apiBaseUrl}ips/${id}`, ipAdress);
   }
 
 
@@ -262,7 +262,7 @@ export class DataService {
   getAllAdminComptesByKeyWord(keyWord: string, page: number, size: number): Observable<any> {
 
     if (this.isAgentAdmin()) {
-      return this._http.get<any>(`${dns}adminCompteWeb/all?keyWord=${keyWord}&page=${page}&size=${size}`);
+      return this._http.get<any>(`${environment.apiBaseUrl}adminCompteWeb/all?keyWord=${keyWord}&page=${page}&size=${size}`);
     } else {
       return throwError("Not authorized to access administrator accounts.");
     }
@@ -271,7 +271,7 @@ export class DataService {
   addAdminCompte(adminCompte: AdministratorCompte): Observable<any> {
 
     if (this.isAgentAdmin()) {
-      return this._http.post<any>(`${dns}adminCompteWeb/add`, adminCompte);
+      return this._http.post<any>(`${environment.apiBaseUrl}adminCompteWeb/add`, adminCompte);
     } else {
       return throwError("Not authorized to add administrator accounts.");
     }
@@ -279,7 +279,7 @@ export class DataService {
 
   getAllOptions(): Observable<any> {
 
-    return this._http.get<any>(`${dns}options`);
+    return this._http.get<any>(`${environment.apiBaseUrl}options`);
   }
 
 
@@ -291,16 +291,16 @@ export class DataService {
   getAllServerAccountForForm(): Observable<any> {
 
     let keyWord = "";
-    return this._http.get<any>(`${dns}compteServerWeb?keyWord=${keyWord}&size=${1000000}&userName=${this.getCurrentUserName()}`);
+    return this._http.get<any>(`${environment.apiBaseUrl}compteServerWeb?keyWord=${keyWord}&size=${1000000}&userName=${this.getCurrentUserName()}`);
   }
 
   createServerComptewithBoitier(compteServer: CompteServer, nbrBoitiers: number): Observable<any> {
-    return this._http.post<any>(dns + "compteServer/addNewComptewithBoitier?nombreBoitier=" + nbrBoitiers + "&username=" + this.getCurrentUserName(), compteServer);
+    return this._http.post<any>(environment.apiBaseUrl + "compteServer/addNewComptewithBoitier?nombreBoitier=" + nbrBoitiers + "&username=" + this.getCurrentUserName(), compteServer);
   }
 
   associateCompteWebToCompteServer(idWeb: number, idServer: number): Observable<any> {
 
-    return this._http.put<any>(`${dns}compteWeb/${idWeb}/compteServer/${idServer}`, null);
+    return this._http.put<any>(`${environment.apiBaseUrl}compteWeb/${idWeb}/compteServer/${idServer}`, null);
   }
 
 
@@ -314,7 +314,7 @@ export class DataService {
   getAllAdministratorCompteService(keyWord: string, page: number, size: number): Observable<any> {
 
     if (this.isAgentAdmin()) {
-      return this._http.get<any>(`${dns}adminCompteWeb?keyWord=${keyWord}&page=${page}&size=${size}`).pipe(
+      return this._http.get<any>(`${environment.apiBaseUrl}adminCompteWeb?keyWord=${keyWord}&page=${page}&size=${size}`).pipe(
         catchError(this.handleError)
       );
     } else {

@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { AdministratorCompte, CompteWeb, Option, PathConfigPayload, Tram } from '../data/data';
-import { dns } from '../global.config';
+import { environment } from '../../environments/environment';
 import { DataService } from "./data.service";
 
 
@@ -20,26 +20,26 @@ export class CompteWebService {
 
   addCompteWeb(compteWeb: CompteWeb): Observable<any> {
 
-    return this._http.post<any>(`${dns}compteWeb?userName=${this.dataService.getCurrentUserName()}`, compteWeb);
+    return this._http.post<any>(`${environment.apiBaseUrl}compteWeb?userName=${this.dataService.getCurrentUserName()}`, compteWeb);
   }
 
 
   getDateLog(username: string): Observable<any> {
-    return this._http.get(`${dns}compteWeb?datelog=${username}`).pipe(
+    return this._http.get(`${environment.apiBaseUrl}compteWeb?datelog=${username}`).pipe(
       map((res: any) => res),
       catchError((error: any) => throwError(error))
     );
   }
 
   getAllWebAccountByKeyWord(keyWord: string, page: number, size: number): Observable<any> {
-    return this._http.get(`${dns}compteWeb?keyWord=${keyWord}&page=${page}&size=${size}&userName=${this.dataService.getCurrentUserName()}`).pipe(
+    return this._http.get(`${environment.apiBaseUrl}compteWeb?keyWord=${keyWord}&page=${page}&size=${size}&userName=${this.dataService.getCurrentUserName()}`).pipe(
       map((res: any) => res),
       catchError((error: any) => throwError(error))
     );
   }
 
   getWebAccountById(id: number): Observable<any> {
-    return this._http.get(`${dns}compteWeb/${id}?userName=${this.dataService.getCurrentUserName()}`).pipe(
+    return this._http.get(`${environment.apiBaseUrl}compteWeb/${id}?userName=${this.dataService.getCurrentUserName()}`).pipe(
       map((res: any) => res),
       catchError((error: any) => throwError(error))
     );
@@ -47,18 +47,18 @@ export class CompteWebService {
 
   editPathConfig(idServer: number, pathConfigPayload: PathConfigPayload): Observable<any> {
 
-    return this._http.post<any>(`${dns}boities/editPathConfig/${idServer}`, pathConfigPayload);
+    return this._http.post<any>(`${environment.apiBaseUrl}boities/editPathConfig/${idServer}`, pathConfigPayload);
   }
 
   associateCompteWebToCompteServer(idWeb: number, idServer: number): Observable<any> {
-    return this._http.put(`${dns}compteWeb/${idWeb}/compteServer/${idServer}`, null).pipe(
+    return this._http.put(`${environment.apiBaseUrl}compteWeb/${idWeb}/compteServer/${idServer}`, null).pipe(
       map((res: any) => res),
       catchError((error: any) => throwError(error))
     );
   }
 
   updateWebAccount(idCompteWeb: number, newCompteWeb: CompteWeb): Observable<any> {
-    return this._http.put(`${dns}compteWeb/${idCompteWeb}`, newCompteWeb).pipe(
+    return this._http.put(`${environment.apiBaseUrl}compteWeb/${idCompteWeb}`, newCompteWeb).pipe(
       map((res: any) => res),
       catchError((error: any) => throwError(error))
     );
@@ -66,28 +66,28 @@ export class CompteWebService {
 
   getAllCompteClientWeb(): Observable<any> {
 
-    return this._http.get(`${dns}compteWeb/All?userName=${this.dataService.getCurrentUserName()}`);
+    return this._http.get(`${environment.apiBaseUrl}compteWeb/All?userName=${this.dataService.getCurrentUserName()}`);
   }
 
 
   getAllLastTram(idCompteWeb: number): Observable<any> {
 
-    return this._http.get(`${dns}compteWeb/${idCompteWeb}/lastTrame`);
+    return this._http.get(`${environment.apiBaseUrl}compteWeb/${idCompteWeb}/lastTrame`);
   }
 
   exportLastTram(realtimes: Tram[]): Observable<any> {
 
-    return this._http.post(`${dns}compteWeb/lastTrame/export`, realtimes);
+    return this._http.post(`${environment.apiBaseUrl}compteWeb/lastTrame/export`, realtimes);
   }
 
   getAllLastTramforAllClient(): Observable<any> {
 
-    return this._http.get(`${dns}compteWeb/AllLastTram`);
+    return this._http.get(`${environment.apiBaseUrl}compteWeb/AllLastTram`);
   }
 
 
   deleteWebAccount(id: number): Observable<any> {
-    return this._http.delete(`${dns}compteWeb/${id}`).pipe(
+    return this._http.delete(`${environment.apiBaseUrl}compteWeb/${id}`).pipe(
       map((res: any) => res),
       catchError((error: any) => throwError(error))
     );
@@ -95,7 +95,7 @@ export class CompteWebService {
 
   getAllAdminComptesByKeyWord(keyWord: string, page: number, size: number): Observable<any> {
     if (this.dataService.isAgentAdmin()) {
-      return this._http.get(`${dns}adminCompteWeb/all?keyWord=${keyWord}&page=${page}&size=${size}`).pipe(
+      return this._http.get(`${environment.apiBaseUrl}adminCompteWeb/all?keyWord=${keyWord}&page=${page}&size=${size}`).pipe(
         map((res: any) => res),
         catchError((error: any) => throwError(error))
       );
@@ -104,7 +104,7 @@ export class CompteWebService {
   }
 
   addOptionsToWebAccount(id: number, options: Option[]) {
-    this._http.post(dns + "compteWeb/" + id + "/Options", options)
+    this._http.post(environment.apiBaseUrl + "compteWeb/" + id + "/Options", options)
       .subscribe({
         next: (response: any) => {
           console.log(response);

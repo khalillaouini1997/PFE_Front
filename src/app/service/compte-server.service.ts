@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { AdministratorCompte, Boitier, CompteServer, CompteWeb, IpAddress } from "../data/data";
 import { Observable } from "rxjs";
-import { dns } from "../global.config";
+import { environment } from '../../environments/environment';
 import { map } from "rxjs/operators";
-import * as jwt_decode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import { JsonPipe } from '@angular/common';
 import { DataService } from './data.service';
 
@@ -24,7 +24,7 @@ export class CompteServerService {
 
   authentificate(login: string, password: string): Observable<any> {
     const body = { username: login, password: password };
-    return this._http.post<any>(`${dns}authenticate`, body).pipe(map(res => res));
+    return this._http.post<any>(`${environment.apiBaseUrl}authenticate`, body).pipe(map(res => res));
   }
 
 
@@ -33,71 +33,71 @@ export class CompteServerService {
   // Boitier CRUD methods...
   addBoitiers(idCompteServer: number, nbrBoitiers: number): Observable<any> {
 
-    return this._http.post<any>(`${dns}compteServer/${idCompteServer}?nombreBoitier=${nbrBoitiers}`, null);
+    return this._http.post<any>(`${environment.apiBaseUrl}compteServer/${idCompteServer}?nombreBoitier=${nbrBoitiers}`, null);
   }
 
   updateBoitier(boitier: Boitier, idServer: number, updateType: string): Observable<any> {
 
-    return this._http.put<any>(`${dns}boities?idServer=${idServer}&updateType=${updateType}`, boitier);
+    return this._http.put<any>(`${environment.apiBaseUrl}boities?idServer=${idServer}&updateType=${updateType}`, boitier);
   }
 
   deleteCompteServer(id: number): Observable<any> {
 
-    return this._http.delete<any>(`${dns}compteServer/${id}`);
+    return this._http.delete<any>(`${environment.apiBaseUrl}compteServer/${id}`);
   }
 
   getRaws(numBoitier: number, limit: number): Observable<any> {
 
-    return this._http.get<any>(`${dns}boities/${numBoitier}/Raw/${limit}`);
+    return this._http.get<any>(`${environment.apiBaseUrl}boities/${numBoitier}/Raw/${limit}`);
   }
 
   lastArchiveOfBoitier(numBoitier: number): Observable<any> {
 
-    return this._http.get<any>(`${dns}boities/${numBoitier}/lastArchive`);
+    return this._http.get<any>(`${environment.apiBaseUrl}boities/${numBoitier}/lastArchive`);
   }
 
   getArchiveOfBoitier(numboitier: number, limit: number): Observable<any> {
 
-    return this._http.get<any>(`${dns}boities/${numboitier}/Archives/${limit}`);
+    return this._http.get<any>(`${environment.apiBaseUrl}boities/${numboitier}/Archives/${limit}`);
   }
 
   createServerCompte(compteServer: CompteServer): Observable<any> {
 
-    return this._http.post<any>(`${dns}compteServer`, compteServer);
+    return this._http.post<any>(`${environment.apiBaseUrl}compteServer`, compteServer);
   }
 
   updateServerCompte(id: number, compteServer: CompteServer): Observable<any> {
 
-    return this._http.put<any>(`${dns}compteServer/${id}`, compteServer);
+    return this._http.put<any>(`${environment.apiBaseUrl}compteServer/${id}`, compteServer);
   }
 
 
 
   getAllServerCompte(keyword: string, page: number, size: number): Observable<any> {
 
-    return this._http.get<any>(`${dns}compteServer?keyWord=${keyword}&page=${page}&size=${size}`);
+    return this._http.get<any>(`${environment.apiBaseUrl}compteServer?keyWord=${keyword}&page=${page}&size=${size}`);
   }
 
 
   // IP Address CRUD methods...
   saveIpAddress<T>(ipAddress: T): Observable<T> {
 
-    return this._http.post<T>(`${dns}ips`, ipAddress);
+    return this._http.post<T>(`${environment.apiBaseUrl}ips`, ipAddress);
   }
 
   getAllIpAddresses(keyword: string, page: number, size: number): Observable<any> {
 
-    return this._http.get<any>(`${dns}ips/all?keyWord=${keyword}&page=${page}&size=${size}`);
+    return this._http.get<any>(`${environment.apiBaseUrl}ips/all?keyWord=${keyword}&page=${page}&size=${size}`);
   }
 
   deleteIpAddress(id: number): Observable<any> {
 
-    return this._http.delete<any>(`${dns}ips/${id}`);
+    return this._http.delete<any>(`${environment.apiBaseUrl}ips/${id}`);
   }
 
   updateIpAddress(id: number, ipAddress: IpAddress): Observable<any> {
 
-    return this._http.put<any>(`${dns}ips/${id}`, ipAddress);
+    return this._http.put<any>(`${environment.apiBaseUrl}ips/${id}`, ipAddress);
   }
 
 
@@ -129,58 +129,58 @@ export class CompteServerService {
 
   isExistPseudo(pseudo: string): Observable<any> {
 
-    return this._http.get<any>(`${dns}/compteServer/pseudo?pseudo=${pseudo}`);
+    return this._http.get<any>(`${environment.apiBaseUrl}/compteServer/pseudo?pseudo=${pseudo}`);
   }
 
   isExistLogin(login: string): Observable<any> {
 
-    return this._http.get<any>(`${dns}/compteServer/login?login=${login}`);
+    return this._http.get<any>(`${environment.apiBaseUrl}/compteServer/login?login=${login}`);
   }
 
   ExportListComptesServer(comptesServer: CompteServer[]): Observable<any> {
 
-    return this._http.post<any>(`${dns}/compteServerWeb/export`, comptesServer);
+    return this._http.post<any>(`${environment.apiBaseUrl}/compteServerWeb/export`, comptesServer);
   }
 
   getAllServerAccount(keyWord: string, page: number, size: number): Observable<any> {
 
-    return this._http.get<any>(`${dns}/compteServerWeb?keyWord=${keyWord}&page=${page}&size=${size}&userName=${this.dataService.getCurrentUserName()}`);
+    return this._http.get<any>(`${environment.apiBaseUrl}/compteServerWeb?keyWord=${keyWord}&page=${page}&size=${size}&userName=${this.dataService.getCurrentUserName()}`);
   }
 
   getAllCompteClientServer(): Observable<any> {
 
-    return this._http.get<any>(`${dns}/compteServer/All`);
+    return this._http.get<any>(`${environment.apiBaseUrl}/compteServer/All`);
   }
 
   getAllBoitierofIdcompte(idCompteServer: number): Observable<any> {
 
-    return this._http.get<any>(`${dns}/compteServer/${idCompteServer}/listBoitiers`);
+    return this._http.get<any>(`${environment.apiBaseUrl}/compteServer/${idCompteServer}/listBoitiers`);
   }
 
   getAllServerAccountForForm(): Observable<any> {
 
     const keyWord = "";
-    return this._http.get<any>(`${dns}/compteServerWeb?keyWord=${keyWord}&size=1000000&userName=${this.dataService.getCurrentUserName()}`);
+    return this._http.get<any>(`${environment.apiBaseUrl}/compteServerWeb?keyWord=${keyWord}&size=1000000&userName=${this.dataService.getCurrentUserName()}`);
   }
 
   extendIntervalOfBoitiers(idCompteServer: number): Observable<any> {
 
-    return this._http.put<any>(`${dns}/compteServer/${idCompteServer}/newInterval`, null);
+    return this._http.put<any>(`${environment.apiBaseUrl}/compteServer/${idCompteServer}/newInterval`, null);
   }
 
   getBoitierOfAccount(keyWord: string, id: number, page: number, size: number): Observable<any> {
 
-    return this._http.get<any>(`${dns}/compteServer/${id}/Boitiers?keyWord=${keyWord}&page=${page}&size=${size}`);
+    return this._http.get<any>(`${environment.apiBaseUrl}/compteServer/${id}/Boitiers?keyWord=${keyWord}&page=${page}&size=${size}`);
   }
 
   getCompteServerById(id: number): Observable<any> {
 
-    return this._http.get<any>(`${dns}/compteServer/${id}`);
+    return this._http.get<any>(`${environment.apiBaseUrl}/compteServer/${id}`);
   }
 
   getServerAccountById(id: number): Observable<any> {
 
-    return this._http.get<any>(`${dns}/compteServerWeb/${id}`);
+    return this._http.get<any>(`${environment.apiBaseUrl}/compteServerWeb/${id}`);
   }
 
 }

@@ -1,10 +1,6 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
-/**
- *
- * created by AHMED HAYEL
- *
- */
+
 
 @Injectable()
 export class CoreService {
@@ -24,8 +20,8 @@ export class CoreService {
     }
 
     changeBackgroundImageToRandomImages() {
-      const r = this.images[Math.floor(Math.random() * this.images.length)];
-      document.body.style.background = "url('../../assets/img/background/" + r + ".jpg') no-repeat center fixed";
+        const r = this.images[Math.floor(Math.random() * this.images.length)];
+        document.body.style.background = "url('../../assets/img/background/" + r + ".jpg') no-repeat center fixed";
         document.body.style.backgroundSize = "cover";
     }
 }

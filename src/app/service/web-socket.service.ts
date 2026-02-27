@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { dns } from "../global.config";
+import { environment } from '../../environments/environment';
 
 declare var require: any;
 var SockJs = require("sockjs-client");
@@ -10,7 +10,7 @@ export class WebSocketService {
 
   // Open connection with the back-end socket
  public connect() {
-    let socket = new SockJs(dns + `socket`);
+    let socket = new SockJs(environment.apiBaseUrl + `socket`);
 
     let stompClient = Stomp.over(socket);
 

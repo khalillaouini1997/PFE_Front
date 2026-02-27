@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from "rxjs";
-import { dns } from "../global.config";
+import { environment } from '../../environments/environment';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { AdministratorCompte, CompteServer, Option } from "../data/data";
 

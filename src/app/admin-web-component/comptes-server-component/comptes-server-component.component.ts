@@ -4,27 +4,23 @@ import { saveAs as importedSaveAs } from 'file-saver';
 import { ToastrService } from 'ngx-toastr';
 import { CompteServer, IpAddress } from 'src/app/data/data';
 import { DataService } from 'src/app/service/data.service';
-import {CompteServerService} from "../../service/compte-server.service";
-import {CompteWebService} from "../../service/compte-web.service";
-import {DashboardService} from "../../service/dashboard.service";
+import { CompteServerService } from "../../service/compte-server.service";
+import { CompteWebService } from "../../service/compte-web.service";
+import { DashboardService } from "../../service/dashboard.service";
 import { NgIf, NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 
-/**
- *
- * created by AHMED HAYEL
- *
- */
+
 
 @Component({
-    selector: 'app-comptes-server-component',
-    templateUrl: './comptes-server-component.component.html',
-    styleUrls: ['./comptes-server-component.component.css'],
-    standalone: true,
-    imports: [NgIf, FormsModule, NgFor, RouterLink, PaginationModule, BsDatepickerModule]
+  selector: 'app-comptes-server-component',
+  templateUrl: './comptes-server-component.component.html',
+  styleUrls: ['./comptes-server-component.component.css'],
+  standalone: true,
+  imports: [NgIf, FormsModule, NgFor, RouterLink, PaginationModule, BsDatepickerModule]
 })
 export class ComptesServerComponentComponent implements OnInit {
 
@@ -46,12 +42,12 @@ export class ComptesServerComponentComponent implements OnInit {
     dateFormat: 'dd-mm-yyyy',
   };*/
 
-  constructor(private router: Router, public toastr: ToastrService, vcr: ViewContainerRef,private route: ActivatedRoute,
-              private compteServerService: CompteServerService,
-              private compteWebService: CompteWebService,
-              private dashboardService: DashboardService,
-              private dataService: DataService,) {
-  //  this.toastr.setRootViewContainerRef(vcr);
+  constructor(private router: Router, public toastr: ToastrService, vcr: ViewContainerRef, private route: ActivatedRoute,
+    private compteServerService: CompteServerService,
+    private compteWebService: CompteWebService,
+    private dashboardService: DashboardService,
+    private dataService: DataService,) {
+    //  this.toastr.setRootViewContainerRef(vcr);
   }
 
   ngOnInit() {
@@ -83,20 +79,20 @@ export class ComptesServerComponentComponent implements OnInit {
     this.loading = true;
     this.comptesServer = [];
     this.compteServerService.getAllServerAccount(keyWord, page, size).subscribe(_comptesServer => {
-        this.comptesServer = _comptesServer.content;
-        for (let i = 0; i < this.comptesServer.length; i++) {
+      this.comptesServer = _comptesServer.content;
+      for (let i = 0; i < this.comptesServer.length; i++) {
 
-          if (new Date().getTime() < this.comptesServer[i].date_Expiration) {
+        if (new Date().getTime() < this.comptesServer[i].date_Expiration) {
 
-            this.comptesServer[i].expired = false;
-            this.comptesServer[i].during = true;
-          } else {
-            this.comptesServer[i].expired = true;
-            this.comptesServer[i].during = false;
-          }
+          this.comptesServer[i].expired = false;
+          this.comptesServer[i].during = true;
+        } else {
+          this.comptesServer[i].expired = true;
+          this.comptesServer[i].during = false;
         }
-        this.bigTotalItems = _comptesServer.totalElements;
-      });
+      }
+      this.bigTotalItems = _comptesServer.totalElements;
+    });
   }
   //=====================================
   //    Search server account

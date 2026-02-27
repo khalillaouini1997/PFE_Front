@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { dns } from '../global.config';
+import { environment } from '../../environments/environment';
 
 
 @Injectable({
@@ -12,7 +12,7 @@ export class AuthentificationService {
   USER_TOKEN: string = "";
   TOKEN_PREFIX: string = "Bearer ";
   currentUser = null;
-  constructor(private _http: HttpClient) { }
+  private readonly _http = inject(HttpClient);
 
   //=================================
   // authentication
@@ -24,14 +24,12 @@ export class AuthentificationService {
       password: password
     };
 
-    return this._http.post(dns + "authenticate", loginRequest);
+    return this._http.post(environment.apiBaseUrl + "authenticate", loginRequest);
   }
-
 
   saveTokenInStorage(token: string, isAuthenticated: boolean) {
     this.USER_TOKEN = this.TOKEN_PREFIX + token;
     localStorage.setItem("token", this.USER_TOKEN);
-    localStorage.setItem("id_token", token);
     localStorage.setItem("isAuthenticate", "" + isAuthenticated);
   }
 }

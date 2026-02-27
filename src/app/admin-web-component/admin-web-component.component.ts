@@ -2,15 +2,15 @@ import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/rou
 import { Component, OnInit } from '@angular/core';
 import { AdministratorCompte } from '../data/data';
 import { DataService } from '../service/data.service';
-import { owner } from '../global.config';
+import { environment } from '../../environments/environment';
 import { NgIf, NgClass } from '@angular/common';
 
 @Component({
-    selector: 'app-admin-web-component',
-    templateUrl: './admin-web-component.component.html',
-    styleUrls: ['./admin-web-component.component.css'],
-    standalone: true,
-    imports: [NgIf, NgClass, RouterLink, RouterLinkActive, RouterOutlet]
+  selector: 'app-admin-web-component',
+  templateUrl: './admin-web-component.component.html',
+  styleUrls: ['./admin-web-component.component.css'],
+  standalone: true,
+  imports: [NgIf, NgClass, RouterLink, RouterLinkActive, RouterOutlet]
 })
 export class AdminWebComponentComponent implements OnInit {
 
@@ -25,13 +25,12 @@ export class AdminWebComponentComponent implements OnInit {
   isActiveTraccar: boolean = false;
   isActiveAdminCompte: boolean = false;
   isActiveAddAdminCompte: boolean = false;
-  owner: string;
+  owner: string = environment.owner;
   global: string;
 
   // Declaration vars !!!
   public currentUser: AdministratorCompte = new AdministratorCompte();
   constructor(private router: Router, private service: DataService) {
-    this.owner = owner;
     this.currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
   }
 
@@ -64,7 +63,7 @@ export class AdminWebComponentComponent implements OnInit {
     }
   }
 
-  isWebAdmin() : any {
+  isWebAdmin(): any {
     let currentUser = JSON.parse(localStorage.getItem('user') || '{}');
     if (currentUser.user.role != 'WEBADMIN') {
       return true;
@@ -80,28 +79,28 @@ export class AdminWebComponentComponent implements OnInit {
     }
   }
 
-  isAgent() : any {
+  isAgent(): any {
     let currentUser = JSON.parse(localStorage.getItem('user') || '{}');
     if (currentUser.user.role == 'AGENT') {
       return true;
     }
   }
 
-  isUserName() : any {
+  isUserName(): any {
     let currentUser = JSON.parse(localStorage.getItem('user') || '{}');
     if (currentUser.user.username == 'fasttrackw') {
       return true;
     }
   }
 
-  isGlobalAdmin() : any {
+  isGlobalAdmin(): any {
     let currentUser = JSON.parse(localStorage.getItem('user') || '{}');
     if (currentUser.user.role == 'GLOBALADMIN' || currentUser.user.role == 'WEBADMIN') {
       return true;
     }
   }
 
-  isGlobalAdminDesc() : any {
+  isGlobalAdminDesc(): any {
     let currentUser = JSON.parse(localStorage.getItem('user') || '{}');
     if (currentUser.user.role == 'GLOBALADMINDESC') {
       return true;

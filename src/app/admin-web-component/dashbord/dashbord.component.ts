@@ -1,26 +1,22 @@
-import {Component, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
-import {saveAs as importedSaveAs} from 'file-saver';
-import {Boitier, CompteWeb, Tram} from 'src/app/data/data';
-import {DataService} from 'src/app/service/data.service';
-import {CompteServerService} from "../../service/compte-server.service";
-import {CompteWebService} from "../../service/compte-web.service";
-import {DashboardService} from "../../service/dashboard.service";
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { saveAs as importedSaveAs } from 'file-saver';
+import { Boitier, CompteWeb, Tram } from 'src/app/data/data';
+import { DataService } from 'src/app/service/data.service';
+import { CompteServerService } from "../../service/compte-server.service";
+import { CompteWebService } from "../../service/compte-web.service";
+import { DashboardService } from "../../service/dashboard.service";
 import { FormsModule } from '@angular/forms';
 import { NgFor, NgIf, DecimalPipe, DatePipe } from '@angular/common';
 
-/**
- *
- * created by AHMED HAYEL
- *
- */
+
 
 @Component({
-    selector: 'app-dashbord',
-    templateUrl: './dashbord.component.html',
-    styleUrls: ['./dashbord.component.css'],
-    standalone: true,
-    imports: [FormsModule, NgFor, NgIf, DecimalPipe, DatePipe]
+  selector: 'app-dashbord',
+  templateUrl: './dashbord.component.html',
+  styleUrls: ['./dashbord.component.css'],
+  standalone: true,
+  imports: [FormsModule, NgFor, NgIf, DecimalPipe, DatePipe]
 })
 export class DashbordComponent implements OnInit {
 
@@ -32,10 +28,10 @@ export class DashbordComponent implements OnInit {
   loading: boolean = false;
 
   constructor(private compteServerService: CompteServerService,
-              private compteWebService: CompteWebService,
-              private dashboardService: DashboardService,
-              private dataService: DataService,
-              private router: Router) { }
+    private compteWebService: CompteWebService,
+    private dashboardService: DashboardService,
+    private dataService: DataService,
+    private router: Router) { }
 
   ngOnInit() {
 
