@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  dns: "https://fleet.tn/ws_webadmin/",
+  dns: "http://localhost:8080/",
   owner: "TDS"
 };
 
