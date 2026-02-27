@@ -1,0 +1,2 @@
+node -v && git -C /home/khalil/PFE/Backend status && git -C /home/khalil/PFE/Frontend status
+cd /home/khalil/PFE/Backend
