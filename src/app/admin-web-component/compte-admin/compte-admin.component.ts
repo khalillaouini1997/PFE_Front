@@ -4,6 +4,7 @@ import { AdministratorCompte } from 'src/app/data/data';
 import { AdminAccountService } from 'src/app/service/admin-account.service';
 import { AuthService } from 'src/app/service/auth.service';
 import { finalize } from "rxjs";
+import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 
@@ -12,27 +13,35 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
   templateUrl: './compte-admin.component.html',
   styleUrls: ['./compte-admin.component.css'],
   standalone: true,
-  imports: [FormsModule, PaginationModule]
+  imports: [FormsModule, ReactiveFormsModule, PaginationModule]
 })
 export class CompteAdminComponent implements OnInit {
-  keyWord: string = "";
   public maxSize: number = 5;
   public bigTotalItems: number = 0;
   public bigCurrentPage: number = 1;
   itemsPerPage = 30;
   adminComptes: AdministratorCompte[] = [];
   loading: boolean = false;
+  searchForm!: FormGroup;
 
   private readonly router = inject(Router);
   private readonly adminAccountService = inject(AdminAccountService);
   private readonly authService = inject(AuthService);
+  private readonly fb = inject(FormBuilder);
 
   ngOnInit() {
+    this.initForms();
     if (!this.authService.isAuthenticated()) {
       this.router.navigate(['/error']);
     } else {
-      this.getAllAdminComptes(this.keyWord, this.bigCurrentPage - 1, this.itemsPerPage);
+      this.getAllAdminComptes(this.searchForm.get('keyWord')?.value || "", this.bigCurrentPage - 1, this.itemsPerPage);
     }
+  }
+
+  initForms() {
+    this.searchForm = this.fb.group({
+      keyWord: ['']
+    });
   }
 
   getAllAdminComptes(keyWord: string, page: number, size: number) {
@@ -58,11 +67,11 @@ export class CompteAdminComponent implements OnInit {
 
   searchWebAccount() {
     this.bigCurrentPage = 1;
-    this.getAllAdminComptes(this.keyWord, this.bigCurrentPage - 1, this.itemsPerPage);
+    this.getAllAdminComptes(this.searchForm.get('keyWord')?.value, this.bigCurrentPage - 1, this.itemsPerPage);
   }
 
   public pageChanged(event: any): void {
     this.bigCurrentPage = event.page;
-    this.getAllAdminComptes(this.keyWord, this.bigCurrentPage - 1, this.itemsPerPage);
+    this.getAllAdminComptes(this.searchForm.get('keyWord')?.value, this.bigCurrentPage - 1, this.itemsPerPage);
   }
 }
