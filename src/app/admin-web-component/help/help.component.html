@@ -8,25 +8,28 @@
                 <div class="col-sm-3">
                     <form role="search" style="margin-top:3px;">
                         <div class="is-empty">
-                            <span class="control-label" for="compteserver" style="color:#fff1f3;">Etat</span>
-                            <select class="formulaire" formControlName="type" name="type">
-                                @for (type of types; track type.name) {
-                                <option [value]="type.name">{{type.label}}</option>
-                                }
-                                <option hidden [value]="'null'"></option>
-                            </select>
+                            <label class="control-label" for="type" style="color:#fff1f3;">Etat
+                                <select class="formulaire" formControlName="type" name="type" id="type">
+                                    @for (type of types; track type.name) {
+                                    <option [value]="type.name">{{type.label}}</option>
+                                    }
+                                    <option hidden [value]="'null'"></option>
+                                </select>
+                            </label>
                         </div>
                     </form>
                 </div>
                 <div class="col-sm-3">
                     <form role="search" style="margin-top:3px;">
                         <div class="is-empty">
-                            <span class="control-label" for="compteserver" style="color:#fff1f3;">Client</span>
-                            <select class="formulaire" formControlName="compteWebId" name="compteserver">
-                                @for (CompteWeb of comptesWeb; track CompteWeb.idCompteClientWeb) {
-                                <option [value]="CompteWeb.idCompteClientWeb">{{CompteWeb.login}}</option>
-                                }
-                            </select>
+                            <label class="control-label" for="compteserver" style="color:#fff1f3;">Client
+                                <select class="formulaire" formControlName="compteWebId" name="compteserver"
+                                    id="compteserver">
+                                    @for (CompteWeb of comptesWeb; track CompteWeb.idCompteClientWeb) {
+                                    <option [value]="CompteWeb.idCompteClientWeb">{{CompteWeb.login}}</option>
+                                    }
+                                </select>
+                            </label>
                             <button type="submit" class="btn btn-white btn-sm" title="Rechercher"
                                 style="margin: 0px; padding: 1px 5px; margin: 0px 0px 0px 0px;"
                                 (click)="onSearchClient()"><i class="fa fa-search" style="font-size: 14px"></i>
@@ -67,28 +70,28 @@
                         <td>{{intervention.request}}</td>
                         <td>{{intervention.content}} </td>
                         <td>
-                            @if (intervention?.priority == 0) {
+                            @if (intervention?.priority === 0) {
                             <span>Faible</span>
-                            } @else if (intervention?.priority == 1) {
+                            } @else if (intervention?.priority === 1) {
                             <span>Moyen</span>
-                            } @else if (intervention?.priority == 2) {
+                            } @else if (intervention?.priority === 2) {
                             <span>Urgent</span>
                             }
                         </td>
                         <td>
-                            @if (intervention.type == 'REQUEST') {
+                            @if (intervention.type === 'REQUEST') {
                             <span data-toggle="tooltip" class="badge bg-orange">
                                 Demande d'intervention
                             </span>
-                            } @else if (intervention.type == 'INPROGRESS') {
+                            } @else if (intervention.type === 'INPROGRESS') {
                             <span data-toggle="tooltip" class="badge bg-blue">
                                 En cours de traitement
                             </span>
-                            } @else if (intervention.type == 'CARRYOUT') {
+                            } @else if (intervention.type === 'CARRYOUT') {
                             <span data-toggle="tooltip" class="badge bg-green">
                                 Intervention effectuée
                             </span>
-                            } @else if (intervention.type == 'REJECTED') {
+                            } @else if (intervention.type === 'REJECTED') {
                             <span data-toggle="tooltip" class="badge bg-red">
                                 Intervention annulée
                             </span>
@@ -135,7 +138,7 @@
             <form [formGroup]="updateForm" class="form-horizontal">
                 <div class="box-body">
                     <div class="form-group ">
-                        <label class="col-sm-2 control-label">Date de traitement :</label>
+                        <label class="col-sm-2 control-label" for="typeUpdate">Date de traitement :</label>
                         <div class="col-md-4">
                             <div class="form-group ">
                                 <div class="col-sm-12">
@@ -144,29 +147,33 @@
                                 </div>
                             </div>
                         </div>
-                        <label class="col-sm-2 control-label">Etat</label>
-                        <div class="col-lg-4 col-md-4">
-                            <div class="form-group ">
-                                <div class="col-sm-12">
-                                    <select formControlName="type" name="type" class="form-control" required>
-                                        @for (type of types; track type.name) {
-                                        <option [value]='type.name'>{{type.label}}</option>
-                                        }
-                                    </select>
+                        <label class="col-sm-2 control-label" for="typeUpdate">Etat
+                            <div class="col-lg-4 col-md-4">
+                                <div class="form-group ">
+                                    <div class="col-sm-12">
+                                        <select formControlName="type" name="type" id="typeUpdate" class="form-control"
+                                            required>
+                                            @for (type of types; track type.name) {
+                                            <option [value]='type.name'>{{type.label}}</option>
+                                            }
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </label>
                     </div>
                     <div class="form-group ">
-                        <label class="col-sm-2 control-label">Reponse</label>
-                        <div class="col-lg-10 col-md-10">
-                            <div class="form-group ">
-                                <div class="col-sm-12">
-                                    <textarea formControlName="response" rows="12" name="response" type="text"
-                                        maxlength="1000" placeholder="Détails" class="form-control"></textarea>
+                        <label class="col-sm-2 control-label" for="response">Reponse
+                            <div class="col-lg-10 col-md-10">
+                                <div class="form-group ">
+                                    <div class="col-sm-12">
+                                        <textarea formControlName="response" id="response" rows="12" name="response"
+                                            type="text" maxlength="1000" placeholder="Détails"
+                                            class="form-control"></textarea>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </label>
                     </div>
                 </div>
                 <div class="box-footer">

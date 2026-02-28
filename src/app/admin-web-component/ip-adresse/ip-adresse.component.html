@@ -81,54 +81,61 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group label-floating">
-                                <label class="control-label">Label</label>
-                                <input type="text" formControlName="label" class="form-control">
+                                <label class="control-label">Label
+                                    <input type="text" formControlName="label" class="form-control">
+                                </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group label-floating">
-                                <label class="control-label">Value</label>
-                                <input type="text" formControlName="value" class="form-control">
+                                <label class="control-label">Value
+                                    <input type="text" formControlName="value" class="form-control">
+                                </label>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group label-floating">
-                                <label class="control-label">JDBC User</label>
-                                <input type="text" formControlName="jdbcUser" class="form-control">
+                                <label class="control-label">JDBC User
+                                    <input type="text" formControlName="jdbcUser" class="form-control">
+                                </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group label-floating">
-                                <label class="control-label">JDBC Pass</label>
-                                <input type="password" formControlName="jdbcPass" class="form-control">
+                                <label class="control-label">JDBC Pass
+                                    <input type="password" formControlName="jdbcPass" class="form-control">
+                                </label>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-9">
                             <div class="form-group label-floating">
-                                <label class="control-label">URL</label>
-                                <input type="text" formControlName="url" class="form-control">
+                                <label class="control-label">URL
+                                    <input type="text" formControlName="url" class="form-control">
+                                </label>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group label-floating">
-                                <label class="control-label">Type Connection</label>
-                                <select formControlName="typeConnection" class="form-control">
-                                    @for (type of typeConnection; track type.type) {
-                                    <option [value]="type.type">{{type.type}}</option>
-                                    }
-                                </select>
+                                <label class="control-label">Type Connection
+                                    <select formControlName="typeConnection" class="form-control">
+                                        @for (type of typeConnection; track type.type) {
+                                        <option [value]="type.type">{{type.type}}</option>
+                                        }
+                                    </select>
+                                </label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group label-floating">
-                                <label class="control-label">DB Name</label>
-                                <input type="text" formControlName="dbName" class="form-control">
+                                <label class="control-label">DB Name
+                                    <input type="text" formControlName="dbName" class="form-control">
+                                </label>
                             </div>
                         </div>
                     </div>

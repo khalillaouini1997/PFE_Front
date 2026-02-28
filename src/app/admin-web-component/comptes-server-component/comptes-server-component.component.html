@@ -75,32 +75,36 @@
           <div class="row">
             <div class="col-md-6">
               <div class="form-group label-floating">
-                <label class="control-label">Pseudo</label>
-                <input type="text" class="form-control" formControlName="pseudo">
+                <label class="control-label">Pseudo
+                  <input type="text" class="form-control" formControlName="pseudo">
+                </label>
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group label-floating">
-                <label class="control-label">Login</label>
-                <input type="text" class="form-control" formControlName="login">
+                <label class="control-label">Login
+                  <input type="text" class="form-control" formControlName="login">
+                </label>
               </div>
             </div>
           </div>
           <div class="row">
             <div class="col-md-6">
               <div class="form-group label-floating">
-                <label class="control-label">Password</label>
-                <input type="text" class="form-control" formControlName="password">
+                <label class="control-label">Password
+                  <input type="text" class="form-control" formControlName="password">
+                </label>
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group label-floating">
-                <label class="control-label">IP Address</label>
-                <select formControlName="idIpAdresse" id="adresse" class="form-control">
-                  @for (ip of ips; track ip.idIpAdresse) {
-                  <option [value]="ip.idIpAdresse">{{ ip.label }}</option>
-                  }
-                </select>
+                <label class="control-label">IP Address
+                  <select formControlName="idIpAdresse" id="adresse" class="form-control">
+                    @for (ip of ips; track ip.idIpAdresse) {
+                    <option [value]="ip.idIpAdresse">{{ ip.label }}</option>
+                    }
+                  </select>
+                </label>
               </div>
             </div>
           </div>

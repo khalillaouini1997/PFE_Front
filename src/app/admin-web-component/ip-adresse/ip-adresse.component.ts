@@ -70,7 +70,7 @@ export class IpAdresseComponent implements OnInit {
   }
 
   deleteIpAddress(id: number) {
-    let res = confirm("are you sure that you want to delete this Ip ?");
+    const res = confirm("are you sure that you want to delete this Ip ?");
     if (res) {
       this.ipAddressService.deleteIpAddress(id)
         .pipe(

@@ -7,14 +7,14 @@
       <div class="row" style="margin-top: 0;">
         <div class="col-md-6">
           <div class="form-group label-floating">
-            <label class="control-label">Login</label>
-            <input type="text" class="form-control" formControlName="login">
+            <label class="control-label" for="configLogin">Login</label>
+            <input type="text" class="form-control" formControlName="login" id="configLogin">
           </div>
         </div>
         <div class="col-md-6">
           <div class="form-group label-floating">
-            <label class="control-label">Mot de passe</label>
-            <input type="text" class="form-control" formControlName="password">
+            <label class="control-label" for="configPassword">Mot de passe</label>
+            <input type="text" class="form-control" formControlName="password" id="configPassword">
           </div>
         </div>
       </div>
@@ -22,8 +22,8 @@
       <div class="row" style="margin-top: 0;">
         <div class="col-md-6">
           <div class="form-group label-floating">
-            <label class="control-label">Code Pays</label>
-            <select formControlName="code_pays" class="form-control">
+            <label class="control-label" for="configCodePays">Code Pays</label>
+            <select formControlName="code_pays" class="form-control" id="configCodePays">
               @for (codePays of codesPays; track codePays.value) {
               <option [value]="codePays.value">
                 {{codePays.key}} (+{{codePays.value}}) </option>
@@ -65,16 +65,17 @@
 
         <div class="col-md-6">
           <div class="form-group label-floating">
-            <label class="control-label">Options</label>
-            <ng-multiselect-dropdown formControlName="options" [settings]="dropdownSettings" [data]="options">
+            <label class="control-label" for="configOptions">Options</label>
+            <ng-multiselect-dropdown formControlName="options" [settings]="dropdownSettings" [data]="options"
+              id="configOptions">
             </ng-multiselect-dropdown>
           </div>
         </div>
 
         <div class="col-md-6 ">
           <div class="form-group label-floating">
-            <label class="control-label">Pool</label>
-            <input type="number" min="0" max="4" formControlName="pool" class="form-control">
+            <label class="control-label" for="configPool">Pool</label>
+            <input type="number" min="0" max="4" formControlName="pool" class="form-control" id="configPool">
           </div>
         </div>
       </div>
@@ -83,15 +84,15 @@
 
         <div class="col-md-6">
           <div class="form-group label-floating">
-            <label class="control-label">Nom</label>
-            <input type="text" class="form-control" formControlName="firstname">
+            <label class="control-label" for="configFirstname">Nom</label>
+            <input type="text" class="form-control" formControlName="firstname" id="configFirstname">
           </div>
         </div>
 
         <div class="col-md-6">
           <div class="form-group label-floating">
-            <label class="control-label">Prénom</label>
-            <input type="text" class="form-control" formControlName="lastname">
+            <label class="control-label" for="configLastname">Prénom</label>
+            <input type="text" class="form-control" formControlName="lastname" id="configLastname">
           </div>
         </div>
       </div>
@@ -99,23 +100,23 @@
 
         <div class="col-md-6">
           <div class="form-group label-floating">
-            <label class="control-label">Email</label>
-            <input type="email" class="form-control" formControlName="email">
+            <label class="control-label" for="configEmail">Email</label>
+            <input type="email" class="form-control" formControlName="email" id="configEmail">
           </div>
         </div>
 
         <div class="col-md-6">
           <div class="form-group label-floating">
-            <label class="control-label">Téléphone</label>
-            <input type="tel" class="form-control" formControlName="telephone">
+            <label class="control-label" for="configTelephone">Téléphone</label>
+            <input type="tel" class="form-control" formControlName="telephone" id="configTelephone">
           </div>
         </div>
       </div>
       <div class="row">
         <div class="col-md-6">
           <div class="form-group label-floating">
-            <label class="control-label">Région</label>
-            <select formControlName="area" class="form-control">
+            <label class="control-label" for="configArea">Région</label>
+            <select formControlName="area" class="form-control" id="configArea">
               @for (t of regions; track t) {
               <option [value]="t">{{ t }}</option>
               }
@@ -124,8 +125,8 @@
         </div>
         <div class="col-md-3">
           <div class="form-group label-floating">
-            <label class="control-label">Type de notification</label>
-            <select formControlName="notificationSubquery" class="form-control">
+            <label class="control-label" for="configNotificationSubquery">Type de notification</label>
+            <select formControlName="notificationSubquery" class="form-control" id="configNotificationSubquery">
               @for (notifSub of notifSubs; track notifSub) {
               <option [value]="notifSub">{{ notifSub }}</option>
               }
@@ -134,8 +135,8 @@
         </div>
         <div class="col-md-3">
           <div class="form-group label-floating">
-            <label class="control-label">Notification Mobile</label>
-            <input type="checkbox" formControlName="mobileNotif">
+            <label class="control-label" for="configMobileNotif">Notification Mobile</label>
+            <input type="checkbox" formControlName="mobileNotif" id="configMobileNotif">
           </div>
         </div>
 
@@ -143,8 +144,8 @@
       <div class="row">
         <div class="col-md-6">
           <div class="form-group label-floating">
-            <label class="control-label">ID Compte Serveur</label>
-            <input type="number" class="form-control" formControlName="idCompteServer">
+            <label class="control-label" for="configIdCompteServer">ID Compte Serveur</label>
+            <input type="number" class="form-control" formControlName="idCompteServer" id="configIdCompteServer">
           </div>
         </div>
       </div>
@@ -187,10 +188,12 @@
                   <!--<span class="label label-warning btn clear change" [tooltip]="tooltipup" tooltipPlacement="left" data-backdrop="false" data-toggle="modal"
                             data-target="#Modalupdateserver">
                             <i class="glyphicon glyphicon-refresh"></i> change</span>-->
-                  <span class="labell label-success btn" (click)="prepareDB(serverAccount.idCompteClientServer)">
-                    <i class="fa fa-database"></i> préparer BDD</span>
-                  <span class="labelle label-primary btn" (click)="showDevises(serverAccount.idCompteClientServer)">
-                    <i class="fa fa-mobile"></i> Boitiers</span>
+                  <button type="button" class="labell label-success btn"
+                    (click)="prepareDB(serverAccount.idCompteClientServer)">
+                    <i class="fa fa-database"></i> préparer BDD</button>
+                  <button type="button" class="labelle label-primary btn"
+                    (click)="showDevises(serverAccount.idCompteClientServer)">
+                    <i class="fa fa-mobile"></i> Boitiers</button>
                 </td>
               </tr>
 
@@ -198,7 +201,7 @@
           </table>
         </div>
       </div>
-      <div class="row" *ngIf="boitiersClicked==true">
+      <div class="row" *ngIf="boitiersClicked === true">
 
         <div class="col-md-12 tableFixHead" style="margin-bottom: 20px;">
           <div class="col-md-12" style="background-color: #f2dede; text-align: center;">
@@ -213,7 +216,7 @@
             <thead>
               <tr>
                 <th style="width: 2%;padding-top: 3px;"><input style="margin: 0" type="checkbox" name="checkbox"
-                    [checked]="boitiers.length == numBoitiers.length" (click)="onCheckedAllBoitiers()"></th>
+                    [checked]="boitiers.length === numBoitiers.length" (click)="onCheckedAllBoitiers()"></th>
                 <th>Numéro</th>
                 <th>Etat</th>
                 <th>Configurations</th>
@@ -227,14 +230,14 @@
                 </td>
                 <td>{{boitier.numBoitier}}</td>
                 <td>
-                  @if (boitier.etatBoitier=='INSTALLED') {
+                  @if (boitier.etatBoitier==='INSTALLED') {
                   <span class="label label-success">Installé</span>
                   } @else {
                   <span class="label label-danger">Non installé</span>
                   }
                 </td>
                 <td>
-                  @if (boitier.etatBoitier=='INSTALLED') {
+                  @if (boitier.etatBoitier==='INSTALLED') {
                   <button type="button" class="btn btn-success pull-right"
                     style="padding: 0px 8px;font-size: 8px;margin: 1px 0px 0px 0px;" (click)="editBoitier(boitier)"
                     data-toggle="modal" data-target="#ModalInit" data-backdrop="false">
@@ -280,8 +283,8 @@
             <div class="col-md-6">
               <div class="form-group label-floating">
                 <div class="input-group input-append date">
-                  <label class="control-label">Server Account</label>
-                  <select class="form-control" name="server" required>
+                  <label class="control-label" for="serverAccount">Server Account</label>
+                  <select class="form-control" name="server" required id="serverAccount">
                     @for (server of serverAccounts; track server.idCompteClientServer) {
                     <option [value]="server.idCompteClientServer">{{server.pseudo}} </option>
                     }
@@ -348,8 +351,8 @@
             </div>
             <div class="col-md-6">
               <div class="form-group label-floating">
-                <label class="control-label">Type de recalcule</label>
-                <select formControlName="typeRecalcule" class="form-control">
+                <label class="control-label" for="typeRecalcule">Type de recalcule</label>
+                <select formControlName="typeRecalcule" class="form-control" id="typeRecalcule">
                   <option>recalcule trajet</option>
                   <option>recalcule boitier</option>
                   <option>recalcule carburant</option>
@@ -385,7 +388,7 @@
           <span class="text-danger"><i class="fa fa-exclamation-circle"></i> {{getNumberOfNotificationErrors()}} erreurs
             trouvé</span>
           }
-          @if (getNumberOfNotificationErrors() == 0) {
+          @if (getNumberOfNotificationErrors() === 0) {
           <span class="text-success"><i class="fa fa-check"></i> bien recalculé</span>
           }
         </span>
@@ -463,8 +466,8 @@
                 <div class="row" style="margin-top: 0">
                   <div class="col-md-6">
                     <div class="form-group label-floating">
-                      <label class="control-label">Path Minimun (sec)</label>
-                      <select class="form-control" formControlName="pathMinSec">
+                      <label class="control-label" for="pathMinSec">Path Minimun (sec)</label>
+                      <select class="form-control" formControlName="pathMinSec" id="pathMinSec">
                         <option value="30">30</option>
                         <option value="60">60</option>
                         <option value="90">90</option>
@@ -480,8 +483,8 @@
                   </div>
                   <div class="col-md-6">
                     <div class="form-group label-floating">
-                      <label class="control-label">Stop Minimun (sec)</label>
-                      <select class="form-control" formControlName="stopMinSec">
+                      <label class="control-label" for="stopMinSec">Stop Minimun (sec)</label>
+                      <select class="form-control" formControlName="stopMinSec" id="stopMinSec">
                         <option value="30">30</option>
                         <option value="60">60</option>
                         <option value="90">90</option>
@@ -499,8 +502,8 @@
                 <div class="row" style="margin-top: 0">
                   <div class="col-md-4">
                     <div class="form-group label-floating">
-                      <label class="control-label">Pause Minimun (sec)</label>
-                      <select class="form-control" formControlName="pauseMinSec">
+                      <label class="control-label" for="pauseMinSec">Pause Minimun (sec)</label>
+                      <select class="form-control" formControlName="pauseMinSec" id="pauseMinSec">
                         <option value="30">30</option>
                         <option value="60">60</option>
                         <option value="90">90</option>
@@ -516,8 +519,8 @@
                   </div>
                   <div class="col-md-4">
                     <div class="form-group label-floating">
-                      <label class="control-label">distance Minimun (m)</label>
-                      <select class="form-control" formControlName="distanceMinMeter">
+                      <label class="control-label" for="distanceMinMeter">distance Minimun (m)</label>
+                      <select class="form-control" formControlName="distanceMinMeter" id="distanceMinMeter">
                         <option value="5">5</option>
                         <option value="10">10</option>
                         <option value="20">20</option>
@@ -531,8 +534,8 @@
                   </div>
                   <div class="col-md-4">
                     <div class="form-group label-floating">
-                      <label class="control-label">Speed Minimun (km/h)</label>
-                      <select class="form-control" formControlName="pathMinSpeed">
+                      <label class="control-label" for="pathMinSpeed">Speed Minimun (km/h)</label>
+                      <select class="form-control" formControlName="pathMinSpeed" id="pathMinSpeed">
                         <option value="1">1</option>
                         <option value="5">5</option>
                         <option value="10">10</option>
@@ -620,8 +623,8 @@
         <div class="row" style="margin-top: 0">
           <div class="col-md-3" [formGroup]="deviceSettingForm">
             <div class="form-group label-floating">
-              <label class="control-label">Rawstream Id</label>
-              <select class="form-control" formControlName="idIpAdresse">
+              <label class="control-label" for="rawstreamId">Rawstream Id</label>
+              <select class="form-control" formControlName="idIpAdresse" id="rawstreamId">
                 @for (ip of ipAddresses; track ip.idIpAdresse) {
                 <option [value]="ip.idIpAdresse">{{ip.label}}</option>
                 }
@@ -630,8 +633,8 @@
           </div>
           <div class="col-md-3" [formGroup]="deviceSettingForm">
             <div class="form-group label-floating">
-              <label class="control-label">Stream Id</label>
-              <input type="number" class="form-control" formControlName="streamId">
+              <label class="control-label" for="streamId">Stream Id</label>
+              <input type="number" class="form-control" formControlName="streamId" id="streamId">
             </div>
           </div>
           <form class="navbar-form navbar-right" role="search" style="margin:0;" [formGroup]="imeiSearchForm">

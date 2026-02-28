@@ -13,44 +13,44 @@
 
               <div class="col-md-6">
                 <div class="form-group label-floating">
-                  <label class="control-label">Label</label>
-                  <input type="text" formControlName="label" class="form-control">
+                  <label class="control-label" for="ipLabel">Label</label>
+                  <input type="text" formControlName="label" class="form-control" id="ipLabel">
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="form-group label-floating">
-                  <label class="control-label">Value</label>
-                  <input type="text" formControlName="value" class="form-control">
+                  <label class="control-label" for="ipValue">Value</label>
+                  <input type="text" formControlName="value" class="form-control" id="ipValue">
                 </div>
               </div>
             </div>
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group label-floating">
-                  <label class="control-label">Pseudo</label>
-                  <input type="text" formControlName="jdbcUser" class="form-control">
+                  <label class="control-label" for="jdbcUser">Pseudo</label>
+                  <input type="text" formControlName="jdbcUser" class="form-control" id="jdbcUser">
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="form-group label-floating">
-                  <label class="control-label">Password</label>
-                  <input type="password" formControlName="jdbcPass" class="form-control">
+                  <label class="control-label" for="jdbcPass">Password</label>
+                  <input type="password" formControlName="jdbcPass" class="form-control" id="jdbcPass">
                 </div>
               </div>
             </div>
             <div class="row">
               <div class="col-md-9">
                 <div class="form-group label-floating">
-                  <label class="control-label">URL</label>
-                  <input type="text" formControlName="url" class="form-control">
+                  <label class="control-label" for="ipUrl">URL</label>
+                  <input type="text" formControlName="url" class="form-control" id="ipUrl">
                 </div>
               </div>
             </div>
             <div class="row">
               <div class="col-md-4">
                 <div class="form-group label-floating">
-                  <label class="control-label">Type de Connection</label>
-                  <select formControlName="typeConnection" class="form-control">
+                  <label class="control-label" for="typeConnection">Type de Connection</label>
+                  <select formControlName="typeConnection" class="form-control" id="typeConnection">
                     @for (type of typeConnection; track type.type) {
                     <option [value]="type.type"> {{type.type}} </option>
                     }
@@ -59,8 +59,8 @@
               </div>
               <div class="col-md-4">
                 <div class="form-group label-floating">
-                  <label class="control-label">Data Base Name</label>
-                  <input type="text" formControlName="dbName" class="form-control">
+                  <label class="control-label" for="dbName">Data Base Name</label>
+                  <input type="text" formControlName="dbName" class="form-control" id="dbName">
                 </div>
               </div>
             </div>

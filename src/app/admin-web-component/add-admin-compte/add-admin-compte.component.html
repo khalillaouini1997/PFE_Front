@@ -18,15 +18,15 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group label-floating">
-                  <label class="control-label">username</label>
-                  <input type="text" class="form-control" formControlName="username">
+                  <label class="control-label" for="username">username</label>
+                  <input type="text" class="form-control" formControlName="username" id="username">
                 </div>
               </div>
 
               <div class="col-md-6">
                 <div class="form-group label-floating">
-                  <label class="control-label">Password</label>
-                  <input type="text" class="form-control" formControlName="password">
+                  <label class="control-label" for="password">Password</label>
+                  <input type="text" class="form-control" formControlName="password" id="password">
                 </div>
               </div>
             </div>
@@ -34,8 +34,8 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group label-floating">
-                  <label class="control-label">Role</label>
-                  <select formControlName="role" class="form-control">
+                  <label class="control-label" for="role">Role</label>
+                  <select formControlName="role" class="form-control" id="role">
                     @for (r of roles; track r) {
                     <option [value]="r">{{ r }}</option>
                     }
@@ -45,8 +45,8 @@
 
               <div class="col-md-6">
                 <div class="form-group label-floating">
-                  <label class="control-label">Id Traccar</label>
-                  <input type="number" class="form-control" formControlName="idTraccar">
+                  <label class="control-label" for="idTraccar">Id Traccar</label>
+                  <input type="number" class="form-control" formControlName="idTraccar" id="idTraccar">
                 </div>
               </div>
             </div>
@@ -54,15 +54,15 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group label-floating">
-                  <label class="control-label">Use Fcm</label>
-                  <input type="checkbox" formControlName="useFcm">
+                  <label class="control-label" for="useFcm">Use Fcm</label>
+                  <input type="checkbox" formControlName="useFcm" id="useFcm">
                 </div>
               </div>
 
               <div class="col-md-6">
                 <div class="form-group label-floating">
-                  <label class="control-label">Fcm Prefix</label>
-                  <input type="text" class="form-control" formControlName="fcmPrefix">
+                  <label class="control-label" for="fcmPrefix">Fcm Prefix</label>
+                  <input type="text" class="form-control" formControlName="fcmPrefix" id="fcmPrefix">
                 </div>
               </div>
             </div>
@@ -70,30 +70,31 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group label-floating">
-                  <label class="control-label">Mail Support</label>
-                  <input type="text" class="form-control" formControlName="mailSupport">
+                  <label class="control-label" for="mailSupport">Mail Support</label>
+                  <input type="text" class="form-control" formControlName="mailSupport" id="mailSupport">
                 </div>
               </div>
 
               <div class="col-md-6">
                 <div class="form-group label-floating">
-                  <label class="control-label">Device Cost By Day</label>
-                  <input type="text" class="form-control" formControlName="deviceCostByDay">
+                  <label class="control-label" for="deviceCostByDay">Device Cost By Day</label>
+                  <input type="text" class="form-control" formControlName="deviceCostByDay" id="deviceCostByDay">
                 </div>
               </div>
             </div>
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group label-floating">
-                  <label class="control-label">AccountFreePerMonth</label>
-                  <input type="number" class="form-control" formControlName="accountFreePerMonth">
+                  <label class="control-label" for="accountFreePerMonth">AccountFreePerMonth</label>
+                  <input type="number" class="form-control" formControlName="accountFreePerMonth"
+                    id="accountFreePerMonth">
                 </div>
               </div>
 
               <div class="col-md-6">
                 <div class="form-group label-floating">
-                  <label class="control-label">Transction Fee</label>
-                  <input type="text" class="form-control" formControlName="transctionFee">
+                  <label class="control-label" for="transctionFee">Transction Fee</label>
+                  <input type="text" class="form-control" formControlName="transctionFee" id="transctionFee">
                 </div>
               </div>
             </div>

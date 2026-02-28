@@ -10,17 +10,18 @@
 
                     <form role="search" style="margin-top:3px;">
                         <div class="is-empty">
-                            <span class="control-label" for="compteserver" style="color:#fff1f3;">Comptes
-                                web</span>
-                            <div [formGroup]="dashboardForm">
-                                <select formControlName="compteWeb" class="formulaire" id="compteserver"
-                                    name="compteserver" (change)="getAllLastTramByCompteWeb()">
-                                    <option [ngValue]="null" disabled selected>Choisir un compte web</option>
-                                    @for (compte of comptesWeb; track compte.idCompteClientWeb) {
-                                    <option [ngValue]="compte">{{compte.login}}</option>
-                                    }
-                                </select>
-                            </div>
+                            <label class="control-label" for="compteserver" style="color:#fff1f3;">Comptes
+                                web
+                                <div [formGroup]="dashboardForm">
+                                    <select formControlName="compteWeb" class="formulaire" id="compteserver"
+                                        name="compteserver" (change)="getAllLastTramByCompteWeb()">
+                                        <option [ngValue]="null" disabled selected>Choisir un compte web</option>
+                                        @for (compte of comptesWeb; track compte.idCompteClientWeb) {
+                                        <option [ngValue]="compte">{{compte.login}}</option>
+                                        }
+                                    </select>
+                                </div>
+                            </label>
 
                             <button type="submit" class="btn btn-white btn-sm" title="Rechercher"
                                 style="margin: 0px; padding: 3px 5px; margin: 0px 0px 0px 0px;"><i class="fa fa-search"
@@ -80,11 +81,11 @@
                         <td><span class="label label-info">{{tram.deviceid}}</span></td>
                         <td>{{tram.matricule}}</td>
                         <td>
-                            @if (tram.status == 'TECHNICAL_ISSUE') {
+                            @if (tram.status === 'TECHNICAL_ISSUE') {
                             <span class="label label-danger">{{tram.status}}</span>
-                            } @else if (tram.status == 'NON_VALID') {
+                            } @else if (tram.status === 'NON_VALID') {
                             <span class="label label-warning">{{tram.status}}</span>
-                            } @else if (tram.status == 'VALID') {
+                            } @else if (tram.status === 'VALID') {
                             <span class="label label-success">{{tram.status}}</span>
                             }
                         </td>
@@ -128,7 +129,7 @@
                         </td>
                         <td>{{tram.lastTime | date:'dd-MM-yyyy HH:mm:ss'}}</td>
                         <td>
-                            @if (tram.ignitionStatistique == 0) {
+                            @if (tram.ignitionStatistique === 0) {
                             <span class="label label-danger">{{tram.ignitionStatistique | number: '.2-2'}} %</span>
                             } @else {
                             <span>{{tram.ignitionStatistique | number: '.2-2'}} %</span>
@@ -142,7 +143,7 @@
                             }
                         </td>
                         <td>
-                            @if (tram.speedStatistique == 0) {
+                            @if (tram.speedStatistique === 0) {
                             <span class="label label-danger">{{tram.speedStatistique | number: '.2-2'}} %</span>
                             } @else {
                             <span>{{tram.speedStatistique | number: '.2-2'}} %</span>

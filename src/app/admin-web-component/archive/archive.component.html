@@ -1,11 +1,13 @@
 <h3 style="margin:0;">Archive and Raw of Device
   <button class="btn btn-default" (click)="back()">back</button>
   <span class="label label-success">{{numBoitier}}</span>
-  <label class="control-label">Nbr: </label>
   <div class="navbar-form navbar-right" style="margin:0;">
     <div class="form-group is-empty" [formGroup]="archiveForm">
-      <input type="number" class="form-control" formControlName="limit" placeholder="Limit" style="margin:0;">
-      <span class="material-input"></span>
+      <label class="control-label" for="limit">Nbr:
+        <input type="number" id="limit" class="form-control" formControlName="limit" placeholder="Limit"
+          style="margin:0;">
+        <span class="material-input"></span>
+      </label>
     </div>
     <button type="button" class="btn btn-success" (click)="getArchives()">Afficher</button>
   </div>

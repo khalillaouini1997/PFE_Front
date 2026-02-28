@@ -96,7 +96,7 @@ export class ComptesWebComponentComponent implements OnInit {
 
   onSelect(compteWeb: CompteWeb) {
     this.selectedWebAccount = compteWeb;
-    let dateDecop = new Date(this.selectedWebAccount.date_expiration);
+    const dateDecop = new Date(this.selectedWebAccount.date_expiration);
     if (dateDecop.getUTCHours() == 23) {
       dateDecop.setHours(dateDecop.getHours() + 1);
     }
@@ -107,7 +107,7 @@ export class ComptesWebComponentComponent implements OnInit {
   }
 
   deleteWebAccount() {
-    let res = confirm("are you sure that you want to delete this Account ?");
+    const res = confirm("are you sure that you want to delete this Account ?");
     if (res) {
       const indexCompte = this.comptesWeb.findIndex(x => x.idCompteClientWeb == this.selectedWebAccount.idCompteClientWeb);
       this.webAccountService.deleteWebAccount(this.selectedWebAccount.idCompteClientWeb).subscribe({

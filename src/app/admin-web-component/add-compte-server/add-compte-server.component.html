@@ -19,8 +19,8 @@
 
               <div class="col-md-6">
                 <div class="form-group label-floating">
-                  <label class="control-label">Pseudo</label>
-                  <input type="text" class="form-control" formControlName="pseudo" (keyup)="onKeyPseudo()">
+                  <label class="control-label" for="pseudo">Pseudo</label>
+                  <input type="text" class="form-control" formControlName="pseudo" id="pseudo" (keyup)="onKeyPseudo()">
                 </div>
 
                 @if (serverForm.get('pseudo')?.invalid && serverForm.get('pseudo')?.touched) {
@@ -34,8 +34,8 @@
               </div>
               <div class="col-md-6">
                 <div class="form-group label-floating">
-                  <label class="control-label">Login</label>
-                  <input type="text" class="form-control" formControlName="login" (keyup)="onKeyLogin()">
+                  <label class="control-label" for="login">Login</label>
+                  <input type="text" class="form-control" formControlName="login" id="login" (keyup)="onKeyLogin()">
                 </div>
 
                 @if (serverForm.get('login')?.invalid && serverForm.get('login')?.touched) {
@@ -78,10 +78,11 @@
 
               <div class="col-md-6">
                 <div class="form-group label-floating">
-                  <label class="control-label">Date d'expiration</label>
+                  <label class="control-label" for="dateExpiration">Date d'expiration</label>
                   <div class="input-group input-append date">
                     <input type="text" class="form-control" bsDatepicker formControlName="date_Expiration"
-                      [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }" placeholder="Date d'expiration">
+                      id="dateExpiration" [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }"
+                      placeholder="Date d'expiration">
                     <span class="input-group-addon add-on"></span>
                   </div>
                 </div>
@@ -90,8 +91,8 @@
               <div class="col-md-6">
                 <div class="col-md-6">
                   <div class="form-group label-floating">
-                    <label class="control-label">Number of Devices</label>
-                    <input type="number" min=0 class="form-control" formControlName="numberBoitier">
+                    <label class="control-label" for="numberBoitier">Number of Devices</label>
+                    <input type="number" min=0 class="form-control" formControlName="numberBoitier" id="numberBoitier">
                   </div>
                 </div>
               </div>

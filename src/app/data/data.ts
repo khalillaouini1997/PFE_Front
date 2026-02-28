@@ -86,30 +86,6 @@ export class CompteServerWithBoitier {
   }
 }
 
-export class IpAddress {
-  idIpAdresse: number | null;
-  label: string;
-  value: string;
-  typeConnection: string | null;
-  jdbcUser: string | null;
-  jdbcPass: string | null;
-  url: string | null;
-  dbName: string | null;
-  urlGetId: string | null;
-
-  constructor() {
-    this.idIpAdresse = null;
-    this.label = "";
-    this.value = "";
-    this.typeConnection = null;
-    this.jdbcUser = null;
-    this.jdbcPass = null;
-    this.url = null;
-    this.dbName = null;
-    this.urlGetId = null;
-  }
-}
-
 export class CompteWeb {
   idCompteClientWeb: number;
   login: string;
@@ -180,14 +156,6 @@ export class AdministratorCompte {
   }
 }
 
-export class AccessLog {
-  login: string;
-  date: Date;
-  userId: number;
-  ipAddress: string;
-  agent: string;
-}
-
 export class ConfigurationVehicules {
   idConfig: number;
   vehiculeGender: string;
@@ -207,50 +175,6 @@ export class ConfigurationVehicules {
   }
 }
 
-export class DeviceOpt {
-  idBoitiers: number[];
-  idBoitier: number;
-  useIgnition: boolean;
-  useFuel: boolean;
-  useTemp: boolean;
-  useFms: boolean;
-  useJ1708: boolean;
-  useIdDriver: boolean;
-  useStop: boolean;
-  constructor() {
-
-    this.idBoitiers = [];
-    this.idBoitier = 0;
-    this.useFms = false;
-    this.useFuel = false;
-    this.useIdDriver = false;
-    this.useIgnition = false;
-    this.useJ1708 = false;
-    this.useStop = false;
-    this.useTemp = false;
-  }
-
-}
-
-export class DeviceSetting {
-  idBoitiers: number[];
-  idIpAdresse: number;
-  streamId: number;
-
-  constructor() {
-    this.idBoitiers = [];
-  }
-}
-
-
-export class VehiculeSetting {
-  idBoitiers: number[];
-  accumOdo: number;
-
-  constructor() {
-    this.idBoitiers = [];
-  }
-}
 
 export class Intervention {
   /**intervention id */
@@ -296,18 +220,6 @@ export class Path {
   }
 }
 
-export class PathConfigPayload {
-  boitiersId: number[];
-  pathMinSpeed: number
-  pathMinSec: number
-  stopMinSec: number
-  pauseMinSec: number
-  distanceMinMeter: number
-
-  constructor() { }
-
-}
-
 export class raw {
   gprmc: string = "";
   idTram: number = 0;
@@ -318,20 +230,6 @@ export class raws {
   count: number;
   constructor() {
     this.count = 0;
-  }
-}
-
-export class RecalculatePayload {
-
-  idBoitier: number;
-  idBoitiers: number[];
-  recalculeStartDate: number | null;
-
-  constructor() {
-    this.idBoitier = 0
-    this.idBoitiers = [];
-    this.recalculeStartDate = null;
-
   }
 }
 
@@ -357,9 +255,16 @@ export interface CompteClientWebInfoDTO {
   mobileNotif: boolean;
 }
 
-export interface IpAddress {
-  id: number;
-  ip: string;
+export class IpAddress {
+  idIpAdresse: number | null = null;
+  label: string = "";
+  value: string = "";
+  typeConnection: string | null = null;
+  jdbcUser: string | null = null;
+  jdbcPass: string | null = null;
+  url: string | null = null;
+  dbName: string | null = null;
+  urlGetId: string | null = null;
 }
 
 export interface RealTime {
@@ -385,32 +290,96 @@ export interface AccessLog {
   ipAddress: string;
 }
 
-export interface RecalculatePayload {
+export interface RecalculatePayloadDTO {
   start: Date;
   end: Date;
   devices: number[];
 }
 
-export interface DeviceOpt {
+export class RecalculatePayload {
+  idBoitier: number;
+  idBoitiers: number[];
+  recalculeStartDate: number | null;
+  constructor() {
+    this.idBoitier = 0;
+    this.idBoitiers = [];
+    this.recalculeStartDate = null;
+  }
+}
+
+export interface DeviceOptDTO {
   idBoitier: number;
   optionId: number;
   enabled: boolean;
 }
 
-export interface DeviceSetting {
+export class DeviceOpt {
+  idBoitiers: number[];
+  idBoitier: number;
+  useIgnition: boolean;
+  useFuel: boolean;
+  useTemp: boolean;
+  useFms: boolean;
+  useJ1708: boolean;
+  useIdDriver: boolean;
+  useStop: boolean;
+  constructor() {
+    this.idBoitiers = [];
+    this.idBoitier = 0;
+    this.useFms = false;
+    this.useFuel = false;
+    this.useIdDriver = false;
+    this.useIgnition = false;
+    this.useJ1708 = false;
+    this.useStop = false;
+    this.useTemp = false;
+  }
+}
+
+export interface DeviceSettingDTO {
   idBoitier: number;
   settingName: string;
   settingValue: string;
 }
 
-export interface VehiculeSetting {
+export class DeviceSetting {
+  idBoitiers: number[];
+  idIpAdresse: number = 0;
+  streamId: number = 0;
+
+  constructor() {
+    this.idBoitiers = [];
+  }
+}
+
+export interface VehiculeSettingDTO {
   idBoitier: number;
   odometre: number;
 }
 
-export interface PathConfigPayload {
+export class VehiculeSetting {
+  idBoitiers: number[];
+  accumOdo: number = 0;
+
+  constructor() {
+    this.idBoitiers = [];
+  }
+}
+
+export interface PathConfigPayloadDTO {
   idBoitier: number;
   path: string;
+}
+
+export class PathConfigPayload {
+  boitiersId: number[] = [];
+  pathMinSpeed: number = 0;
+  pathMinSec: number = 0;
+  stopMinSec: number = 0;
+  pauseMinSec: number = 0;
+  distanceMinMeter: number = 0;
+
+  constructor() { }
 }
 
 export class TraccarDto {

@@ -45,9 +45,10 @@
                     <div class="panel-body">
                         <form class="form-inline" [formGroup]="addForm" (ngSubmit)="addBoitiers()">
                             <div class="form-group label-floating">
-                                <label class="control-label">Number of Devices</label>
-                                <input type="number" min=1 class="form-control" name="nbrBoitiers"
-                                    formControlName="nbrBoitiers" required>
+                                <label class="control-label">Number of Devices
+                                    <input type="number" min=1 class="form-control" name="nbrBoitiers"
+                                        formControlName="nbrBoitiers" required>
+                                </label>
                             </div>
 
                             <button type="submit" class="btn btn-warning" [disabled]="!addForm.valid"
@@ -163,9 +164,10 @@
 
                         <div class="col-md-6">
                             <div class="form-group label-floating">
-                                <label class="control-label">Label</label>
-                                <input type="text" class="form-control" value="" name="pseudo" formControlName="label"
-                                    required>
+                                <label class="control-label">Label
+                                    <input type="text" class="form-control" value="" name="pseudo"
+                                        formControlName="label" required>
+                                </label>
                             </div>
                         </div>
 

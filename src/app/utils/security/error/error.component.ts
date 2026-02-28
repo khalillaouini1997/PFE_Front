@@ -17,7 +17,9 @@ export class ErrorComponent implements OnInit {
     this.coreService.changeBackgroundImageTo(0);
   }
 
-  ngOnInit() { }
+  ngOnInit() {
+    // intentional
+  }
 
   back() {
     this.router.navigate(['/authentification']);

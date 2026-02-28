@@ -13,14 +13,14 @@
 
                 <div class="col-md-6">
                   <div class="form-group label-floating">
-                    <label class="control-label">Login</label>
-                    <input type="text" class="form-control" formControlName="login">
+                    <label class="control-label" for="login">Login</label>
+                    <input type="text" class="form-control" formControlName="login" id="login">
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-group label-floating">
-                    <label class="control-label">Mot de passe</label>
-                    <input type="text" class="form-control" formControlName="password">
+                    <label class="control-label" for="password">Mot de passe</label>
+                    <input type="text" class="form-control" formControlName="password" id="password">
                   </div>
                 </div>
               </div>
@@ -30,8 +30,8 @@
 
                 <div class="col-md-6">
                   <div class="form-group label-floating">
-                    <label class="control-label">Code Pays</label>
-                    <select formControlName="code_pays" class="form-control">
+                    <label class="control-label" for="code_pays">Code Pays</label>
+                    <select formControlName="code_pays" class="form-control" id="code_pays">
                       @for (codePays of codesPays; track codePays.value) {
                       <option [value]="codePays.value">
                         {{codePays.key}} (+{{codePays.value}}) </option>
@@ -53,8 +53,8 @@
                 <div class="col-md-6">
                   <div class="form-group label-floating">
                     <div class="input-group input-append date">
-                      <label class="control-label">Compte serveur</label>
-                      <select formControlName="idCompte" class="form-control">
+                      <label class="control-label" for="idCompte">Compte serveur</label>
+                      <select formControlName="idCompte" class="form-control" id="idCompte">
                         @for (server of serverAccounts; track server.idCompteClientServer) {
                         <option [value]="server.idCompteClientServer"> {{server.pseudo}} </option>
                         }
@@ -64,7 +64,7 @@
                 </div>
                 <div class="col-md-6">
                   <div class="form-group label-floating">
-                    <label class="control-label">IP Adresse</label>
+                    <label class="control-label" for="adresseIP">IP Adresse</label>
                     <select formControlName="ipAdresse" id="adresseIP" class="form-control">
                       @for (ip of ipAddresses; track ip.value) {
                       <option [ngValue]="ip.value">{{ip.label}}
@@ -79,15 +79,15 @@
 
                 <div class="col-md-6">
                   <div class="form-group label-floating">
-                    <label class="control-label">Nom</label>
-                    <input type="text" class="form-control" formControlName="firstname">
+                    <label class="control-label" for="firstname">Nom</label>
+                    <input type="text" class="form-control" formControlName="firstname" id="firstname">
                   </div>
                 </div>
 
                 <div class="col-md-6">
                   <div class="form-group label-floating">
-                    <label class="control-label">Prénom</label>
-                    <input type="text" class="form-control" formControlName="lastname">
+                    <label class="control-label" for="lastname">Prénom</label>
+                    <input type="text" class="form-control" formControlName="lastname" id="lastname">
                   </div>
                 </div>
               </div>
@@ -95,23 +95,23 @@
 
                 <div class="col-md-6">
                   <div class="form-group label-floating">
-                    <label class="control-label">Email</label>
-                    <input type="email" class="form-control" formControlName="email">
+                    <label class="control-label" for="email">Email</label>
+                    <input type="email" class="form-control" formControlName="email" id="email">
                   </div>
                 </div>
 
                 <div class="col-md-6">
                   <div class="form-group label-floating">
-                    <label class="control-label">Téléphone</label>
-                    <input type="tel" class="form-control" formControlName="telephone">
+                    <label class="control-label" for="telephone">Téléphone</label>
+                    <input type="tel" class="form-control" formControlName="telephone" id="telephone">
                   </div>
                 </div>
               </div>
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group label-floating">
-                    <label class="control-label">Région</label>
-                    <select formControlName="area" class="form-control">
+                    <label class="control-label" for="area">Région</label>
+                    <select formControlName="area" class="form-control" id="area">
                       @for (t of regions; track t) {
                       <option [value]="t">{{ t }}</option>
                       }
@@ -120,8 +120,8 @@
                 </div>
                 <div class="col-md-3">
                   <div class="form-group label-floating">
-                    <label class="control-label">Type de notification</label>
-                    <select formControlName="notificationSubquery" class="form-control">
+                    <label class="control-label" for="notificationSubquery">Type de notification</label>
+                    <select formControlName="notificationSubquery" class="form-control" id="notificationSubquery">
                       @for (notifSub of notifSubs; track notifSub) {
                       <option [value]="notifSub">{{ notifSub }}
                       </option>
@@ -131,8 +131,8 @@
                 </div>
                 <div class="col-md-3">
                   <div class="form-group label-floating">
-                    <label class="control-label">Notification Mobile</label>
-                    <input type="checkbox" formControlName="mobileNotif">
+                    <label class="control-label" for="mobileNotif">Notification Mobile</label>
+                    <input type="checkbox" formControlName="mobileNotif" id="mobileNotif">
                   </div>
                 </div>
               </div>
@@ -141,15 +141,16 @@
 
                 <div class="col-md-6">
                   <div class="form-group label-floating">
-                    <label class="control-label">Redenance equipement par jour</label>
-                    <input type="number" class="form-control" formControlName="deviceFeeByDay">
+                    <label class="control-label" for="deviceFeeByDay">Redenance equipement par jour</label>
+                    <input type="number" class="form-control" formControlName="deviceFeeByDay" id="deviceFeeByDay">
                   </div>
                 </div>
 
                 <div class="col-md-6">
                   <div class="form-group label-floating">
-                    <label class="control-label">Redenance compte par mois</label>
-                    <input type="number" class="form-control" formControlName="accountFeeByMonth">
+                    <label class="control-label" for="accountFeeByMonth">Redenance compte par mois</label>
+                    <input type="number" class="form-control" formControlName="accountFeeByMonth"
+                      id="accountFeeByMonth">
                   </div>
                 </div>
               </div>
@@ -158,15 +159,17 @@
 
                 <div class="col-md-6">
                   <div class="form-group label-floating">
-                    <label class="control-label">Redenance equipement par mois</label>
-                    <input type="number" class="form-control" formControlName="deviceFeePerMonth">
+                    <label class="control-label" for="deviceFeePerMonth">Redenance equipement par mois</label>
+                    <input type="number" class="form-control" formControlName="deviceFeePerMonth"
+                      id="deviceFeePerMonth">
                   </div>
                 </div>
 
                 <div class="col-md-6">
                   <div class="form-group label-floating">
-                    <label class="control-label">Redenance carte sim par mois</label>
-                    <input type="number" class="form-control" formControlName="simCardFeePerMonth">
+                    <label class="control-label" for="simCardFeePerMonth">Redenance carte sim par mois</label>
+                    <input type="number" class="form-control" formControlName="simCardFeePerMonth"
+                      id="simCardFeePerMonth">
                   </div>
                 </div>
               </div>

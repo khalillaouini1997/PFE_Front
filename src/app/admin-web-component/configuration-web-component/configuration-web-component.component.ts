@@ -608,7 +608,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
 
   getSearchDeviceIemi(imei: string) {
     const idIpAdresse = this.deviceSettingForm.get('idIpAdresse')?.value;
-    let url = this.ipAddresses.find(ip => ip.idIpAdresse == idIpAdresse)?.urlGetId;
+    const url = this.ipAddresses.find(ip => ip.idIpAdresse == idIpAdresse)?.urlGetId;
     if (url) {
       this.boitierService.getDeviceIdImei(url, parseInt(imei)).subscribe(res => {
         this.deviceSettingForm.patchValue({ streamId: res.id });
