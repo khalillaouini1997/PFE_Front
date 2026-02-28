@@ -10,8 +10,8 @@ import { Intervention } from '../data/data';
 export class InterventionService {
     private readonly http = inject(HttpClient);
 
-    getIntervention(idTenant: number): Observable<any> {
-        return this.http.get<any>(`${environment.apiBaseUrl}help/list/${idTenant}`);
+    getIntervention(idTenant: number): Observable<Intervention[]> {
+        return this.http.get<Intervention[]>(`${environment.apiBaseUrl}help/list/${idTenant}`);
     }
 
     updateIntervention(intervention: Intervention, idTenant: number): Observable<boolean> {

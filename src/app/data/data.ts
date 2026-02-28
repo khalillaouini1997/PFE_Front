@@ -150,6 +150,14 @@ export class CompteWeb {
 
 }
 
+export interface PageResponse<T> {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  number: number;
+}
+
 export class AdministratorCompte {
   idAdministratorCompte: number;
   username: string;
@@ -325,6 +333,84 @@ export class RecalculatePayload {
     this.recalculeStartDate = null;
 
   }
+}
+
+export interface OptionInfoDTO {
+  idOption: number;
+  libelle: string;
+  description: string;
+}
+
+export interface CompteClientWebInfoDTO {
+  idCompteClientWeb: number;
+  login: string;
+  date_creation: Date;
+  date_expiration: Date;
+  code_pays: string;
+  pool: number;
+  firstname: string;
+  lastname: string;
+  telephone: number;
+  email: string;
+  area: string;
+  options: OptionInfoDTO[];
+  mobileNotif: boolean;
+}
+
+export interface IpAddress {
+  id: number;
+  ip: string;
+}
+
+export interface RealTime {
+  deviceid: number;
+  matricule: string;
+  status: string;
+  latitude: number;
+  longitude: number;
+  validity: boolean;
+  speed: number;
+  ignition: boolean;
+  record_time: Date;
+  numPuce: string;
+  imei: string;
+  version: string;
+}
+
+export interface AccessLog {
+  id: number;
+  username: string;
+  action: string;
+  timestamp: Date;
+  ipAddress: string;
+}
+
+export interface RecalculatePayload {
+  start: Date;
+  end: Date;
+  devices: number[];
+}
+
+export interface DeviceOpt {
+  idBoitier: number;
+  optionId: number;
+  enabled: boolean;
+}
+
+export interface DeviceSetting {
+  idBoitier: number;
+  settingName: string;
+  settingValue: string;
+}
+
+export interface VehiculeSetting {
+  idBoitier: number;
+  odometre: number;
+}
+
+export interface PathConfigPayload {
+  idBoitier: number;
+  path: string;
 }
 
 export class TraccarDto {

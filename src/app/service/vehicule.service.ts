@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
+import { InterventionInfo, PageResponse } from '../data/data';
 
 @Injectable({
     providedIn: 'root'
@@ -9,8 +10,8 @@ import { environment } from '../../environments/environment';
 export class VehiculeService {
     private readonly http = inject(HttpClient);
 
-    getVehiculeInfo(page: number, size: number): Observable<any> {
-        return this.http.get<any>(`${environment.apiBaseUrl}vehicule/list?page=${page}&size=${size}`);
+    getVehiculeInfo(page: number, size: number): Observable<PageResponse<InterventionInfo>> {
+        return this.http.get<PageResponse<InterventionInfo>>(`${environment.apiBaseUrl}vehicule/list?page=${page}&size=${size}`);
     }
 
     updateTechnicianIntervention(deviceId: number, date: Date): Observable<boolean> {
