@@ -1,29 +1,25 @@
 import { Router } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
-import { DataService } from 'src/app/service/data.service';
+import { Component, OnInit, inject } from '@angular/core';
 import { CoreService } from 'src/app/service/core.service';
 
-/**
- * created by AHMED HAYEL
- */
-
 @Component({
-    selector: 'app-error',
-    templateUrl: './error.component.html',
-    styleUrls: ['./error.component.css'],
-    standalone: true
+  selector: 'app-error',
+  templateUrl: './error.component.html',
+  styleUrls: ['./error.component.css'],
+  standalone: true
 })
 export class ErrorComponent implements OnInit {
 
-  constructor( private service: DataService, private router: Router, private coreService:CoreService) {
-    coreService.changeBackgroundImageTo(0);
+  private readonly router = inject(Router);
+  private readonly coreService = inject(CoreService);
+
+  constructor() {
+    this.coreService.changeBackgroundImageTo(0);
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() { }
+
   back() {
-    //this._location.back();
-    this.router.navigate(['/authentification'])
+    this.router.navigate(['/authentification']);
   }
-
 }
