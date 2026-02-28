@@ -1,15 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { saveAs as importedSaveAs } from 'file-saver';
 import { Boitier, CompteWeb, Tram } from 'src/app/data/data';
-import { DataService } from 'src/app/service/data.service';
-import { CompteServerService } from "../../service/compte-server.service";
-import { CompteWebService } from "../../service/compte-web.service";
-import { DashboardService } from "../../service/dashboard.service";
+import { AuthService } from 'src/app/service/auth.service';
+import { WebAccountService } from "src/app/service/web-account.service";
 import { FormsModule } from '@angular/forms';
 import { NgFor, NgIf, DecimalPipe, DatePipe } from '@angular/common';
-
-
 
 @Component({
   selector: 'app-dashbord',
@@ -24,35 +20,26 @@ export class DashbordComponent implements OnInit {
   compteWeb: CompteWeb = new CompteWeb();
   boitiers: Boitier[] = [];
   listTram: Tram[] = [];
-
   loading: boolean = false;
 
-  constructor(private compteServerService: CompteServerService,
-    private compteWebService: CompteWebService,
-    private dashboardService: DashboardService,
-    private dataService: DataService,
-    private router: Router) { }
+  private readonly authService = inject(AuthService);
+  private readonly webAccountService = inject(WebAccountService);
+  private readonly router = inject(Router);
 
   ngOnInit() {
-
-    if (localStorage.getItem("isReloading") == "true") {
+    if (localStorage.getItem("isReloading") === "true") {
       localStorage.removeItem("isReloading");
       window.location.reload();
     }
 
-    this.dashboardService.isAuthenticated = this.dashboardService.loadTestAuthenticated();
-
-    if (!this.dashboardService.isAuthenticated) {
-
+    if (!this.authService.isAuthenticated()) {
       this.router.navigate(['/error']);
     } else {
-      this.compteWebService.getAllCompteClientWeb().subscribe(res => {
+      this.webAccountService.getAllCompteClientWeb().subscribe(res => {
         this.comptesWeb = res;
       });
-
     }
   }
-
 
   diffHours(date: Date): number {
     date = new Date(date);
@@ -64,23 +51,18 @@ export class DashbordComponent implements OnInit {
 
     this.loading = true;
     this.listTram = [];
-    this.compteWebService.getAllLastTram(this.compteWeb.idCompteClientWeb).subscribe(res => {
+    this.webAccountService.getAllLastTram(this.compteWeb.idCompteClientWeb).subscribe(res => {
       this.listTram = res;
       this.loading = false;
-    })
+    });
   }
 
-  /**
-   * Action exporter rapport
-   */
   onExport() {
     if (this.listTram.length <= 0) return;
 
-    this.compteWebService.exportLastTram(this.listTram)
+    this.webAccountService.exportLastTram(this.listTram)
       .subscribe(blob => {
         importedSaveAs(blob, 'Repport d\'état des boitiers.xlsx');
       });
   }
-
-
 }
