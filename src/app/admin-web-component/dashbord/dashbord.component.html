@@ -14,7 +14,9 @@
                                 web</span>
                             <select [(ngModel)]="compteWeb" class="formulaire" id="compteserver" name="compteserver"
                                 required>
-                                <option *ngFor="let CompteWeb of comptesWeb" [ngValue]="CompteWeb">{{CompteWeb.login}}</option>
+                                @for (CompteWeb of comptesWeb; track CompteWeb.login) {
+                                    <option [ngValue]="CompteWeb">{{CompteWeb.login}}</option>
+                                }
                             </select>
 
                             <button type="submit" class="btn btn-white btn-sm" title="Rechercher" style="margin: 0px; padding: 3px 5px; margin: 0px 0px 0px 0px;"
@@ -59,11 +61,13 @@
                 </thead>
                 <tbody style="font-size: 12px;">
 
-                    <tr *ngIf="loading">
-                        <td style="text-align: center" colspan="23">
-                            <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
-                        </td>
-                    </tr>
+                    @if (loading) {
+                        <tr>
+                            <td style="text-align: center" colspan="23">
+                                <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+                            </td>
+                        </tr>
+                    }
 
                     <tr *ngFor="let tram of listTram">
 
