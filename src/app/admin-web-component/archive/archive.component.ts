@@ -1,39 +1,40 @@
-import { Location, NgFor, NgIf } from '@angular/common';
+import { Location } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { TabsetComponent, TabsModule } from "ngx-bootstrap/tabs";
-import { Archive,raws, raw } from "../../data/data";
-import { CompteServerService } from "../../service/compte-server.service";
-import { FormsModule } from '@angular/forms';
+import { Archive, raws } from "../../data/data";
+import { BoitierService } from "../../service/boitier.service";
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 
 
 @Component({
-    selector: 'app-archive',
-    templateUrl: './archive.component.html',
-    styleUrls: ['./archive.component.css'],
-    standalone: true,
-    imports: [FormsModule, TabsModule, NgFor, NgIf]
+  selector: 'app-archive',
+  templateUrl: './archive.component.html',
+  styleUrls: ['./archive.component.css'],
+  standalone: true,
+  imports: [FormsModule, ReactiveFormsModule, TabsModule]
 })
 export class ArchiveComponent implements OnInit {
   @ViewChild('staticTabs') staticTabs: TabsetComponent;
   archives: Archive[] = [];
   raws: raws = new raws();
   numBoitier: number;
+  archiveForm!: FormGroup;
 
-  limit: number = 200;
+  constructor(private _location: Location, private route: ActivatedRoute, private boitierService: BoitierService, private router: Router, private fb: FormBuilder) { }
 
-  constructor(private _location: Location, private route: ActivatedRoute, private compteServerService: CompteServerService, private router: Router) { }
-
-  ngOnInit() {
-    // if (this.service.isAuthenticated == false) {
-    // this.router.navigate(['/error']);
-    //} else {
+  ngOnInit(): void {
+    this.initForms();
     this.route.params.subscribe((params: Params) => {
       this.numBoitier = (+params['numBoitier']);
     });
     this.getArchives();
-    // }
+  }
 
+  initForms() {
+    this.archiveForm = this.fb.group({
+      limit: [200]
+    });
   }
 
   //=====================================
@@ -49,8 +50,8 @@ export class ArchiveComponent implements OnInit {
   //=====================================
 
   getAllRaws() {
-
-    this.compteServerService.getRaws(this.numBoitier,this.limit).subscribe(_raws => {
+    const limit = this.archiveForm.get('limit')?.value || 200;
+    this.boitierService.getRaws(this.numBoitier, limit).subscribe((_raws: any) => {
       this.raws.raws = _raws.raws;
       this.raws.count = _raws.count;
     });
@@ -60,9 +61,10 @@ export class ArchiveComponent implements OnInit {
   // Get archive of device form database
   //
   //=====================================
-  getArchives(){
-    this.compteServerService.getArchiveOfBoitier(this.numBoitier,this.limit).subscribe(_archives => {
-      this.archives = _archives;
+  getArchives() {
+    const limit = this.archiveForm.get('limit')?.value || 200;
+    this.boitierService.getArchiveOfBoitier(this.numBoitier, limit).subscribe(_archives => {
+      this.archives = _archives as any;
       for (let i = 0; i < this.archives.length; i++) {
         this.archives[i].latitude = (+this.archives[i].latitude.toFixed(5));
         this.archives[i].longitude = (+this.archives[i].longitude.toFixed(5));
