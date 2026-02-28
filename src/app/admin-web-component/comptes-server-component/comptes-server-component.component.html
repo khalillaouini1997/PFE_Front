@@ -1,11 +1,12 @@
-<div class="alert alert-danger" role="alert" *ngIf="mode==true">
+@if (mode) {
+<div class="alert alert-danger" role="alert">
   {{messageError}}
 </div>
+}
 
 <form class="navbar-form navbar-right" role="search" style="margin:0;">
   <div class="form-group is-empty">
-    <input type="text" class="form-control" name="search" [(ngModel)]="keyWord" placeholder="Search"
-           style="margin:0;">
+    <input type="text" class="form-control" name="search" [(ngModel)]="keyWord" placeholder="Search" style="margin:0;">
     <span class="material-input"></span>
   </div>
   <button type="submit" class="btn btn-white btn-round btn-just-icon" style="margin:0;" (click)="searchAccount()">
@@ -22,31 +23,30 @@
     <div class="card-content table-responsive">
       <table class="table">
         <thead class="text-primary">
-        <th>Id</th>
-        <th>Pseudo</th>
-        <th>IP Address</th>
-        <th>Configurations</th>
+          <th>Id</th>
+          <th>Pseudo</th>
+          <th>IP Address</th>
+          <th>Configurations</th>
         </thead>
         <tbody>
-        <tr *ngFor="let compteServer of comptesServer">
-          <td>{{compteServer.idCompteClientServer}}</td>
-          <td>{{compteServer.pseudo}}</td>
-          <td>{{compteServer.ipAdresse}} </td>
-          <td>
-            <button class="btn btn-warning btn-xs" (click)="onSelect(compteServer)"
-                    data-toggle="modal" data-target="#Modalupdate" data-backdrop="false">
-              <i class="material-icons md-24">build</i>
-            </button>
+          @for (compteServer of comptesServer; track compteServer.idCompteClientServer) {
+          <tr>
+            <td>{{compteServer.idCompteClientServer}}</td>
+            <td>{{compteServer.pseudo}}</td>
+            <td>{{compteServer.ipAdresse}} </td>
+            <td>
+              <button class="btn btn-warning btn-xs" (click)="onSelect(compteServer)" data-toggle="modal"
+                data-target="#Modalupdate" data-backdrop="false">
+                <i class="material-icons md-24">build</i>
+              </button>
 
-            <button class="btn btn-info btn-xs" [routerLink]="['/adminWeb/compteDetails', compteServer.idCompteClientServer]">
-              <i class="material-icons md-24">list</i>
-            </button>
-
-            <!--<button class="btn btn-danger btn-xs" (click)="onSelect(compteServer);deleteCompteServer();">
-                <i class="material-icons md-24" title="Delete server account">delete_forever</i>
-            </button>-->
-          </td>
-        </tr>
+              <button class="btn btn-info btn-xs"
+                [routerLink]="['/adminWeb/compteDetails', compteServer.idCompteClientServer]">
+                <i class="material-icons md-24">list</i>
+              </button>
+            </td>
+          </tr>
+          }
         </tbody>
       </table>
     </div>
@@ -55,9 +55,8 @@
 
 <div class="col-md-6 text-center">
   <pagination [hidden]="loading" [totalItems]="bigTotalItems" [(ngModel)]="bigCurrentPage" [maxSize]="maxSize"
-              class="pagination-sm" [boundaryLinks]="true" [rotate]="false" [itemsPerPage]="itemsPerPage"
-              (pageChanged)="pageChanged($event)" previousText="Previous" nextText="Next" firstText="First"
-              lastText="Last">
+    class="pagination-sm" [boundaryLinks]="true" [rotate]="false" [itemsPerPage]="itemsPerPage"
+    (pageChanged)="pageChanged($event)" previousText="Previous" nextText="Next" firstText="First" lastText="Last">
   </pagination>
 </div>
 
@@ -75,29 +74,30 @@
           <div class="row">
             <div class="col-md-6">
               <div class="form-group label-floating">
-                <input type="text" class="form-control" value="" name="pseudo"
-                       [(ngModel)]="selectedCompteServer.pseudo" required>
+                <input type="text" class="form-control" value="" name="pseudo" [(ngModel)]="selectedCompteServer.pseudo"
+                  required>
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group label-floating">
-                <input type="text" class="form-control" name="login"
-                       [(ngModel)]="selectedCompteServer.login" required>
+                <input type="text" class="form-control" name="login" [(ngModel)]="selectedCompteServer.login" required>
               </div>
             </div>
           </div>
           <div class="row">
             <div class="col-md-6">
               <div class="form-group label-floating">
-                <input type="text" class="form-control" name="password"
-                       [(ngModel)]="selectedCompteServer.password" required>
+                <input type="text" class="form-control" name="password" [(ngModel)]="selectedCompteServer.password"
+                  required>
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group label-floating">
-                <select [(ngModel)]="selectedCompteServer.ipAdresse" name="ipAdress" id="adresse"
-                        class="form-control" required>
-                  <option *ngFor="let ip of ips" [ngValue]="ip.value">{{ ip.label }}</option>
+                <select [(ngModel)]="selectedCompteServer.ipAdresse" name="ipAdress" id="adresse" class="form-control"
+                  required>
+                  @for (ip of ips; track ip.value) {
+                  <option [ngValue]="ip.value">{{ ip.label }}</option>
+                  }
                 </select>
               </div>
             </div>
@@ -107,8 +107,8 @@
               <div class="form-group label-floating">
                 <div class="input-group input-append date">
                   <input type="text" class="form-control" bsDatepicker [(ngModel)]="dt"
-                  [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }" name="date" placement="bottom"
-                  placeholder="Date expiration" required autocomplete="off">
+                    [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }" name="date" placement="bottom"
+                    placeholder="Date expiration" required autocomplete="off">
                 </div>
               </div>
             </div>
@@ -116,7 +116,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-warning" (click)="updateCompteServer()"
-                  data-dismiss="modal">Update</button>
+            data-dismiss="modal">Update</button>
           <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
         </div>
       </div>

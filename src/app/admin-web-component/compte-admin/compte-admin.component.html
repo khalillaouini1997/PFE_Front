@@ -43,13 +43,16 @@
         </thead>
         <tbody style="font-size: 12px;">
 
-          <tr *ngIf="loading">
+          @if (loading) {
+          <tr>
             <td style="text-align: center" colspan="7">
               <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
             </td>
           </tr>
+          }
 
-          <tr *ngFor="let adminCompte of adminComptes">
+          @for (adminCompte of adminComptes; track adminCompte.idAdministratorCompte) {
+          <tr>
             <td>{{adminCompte.idAdministratorCompte}}</td>
             <td>{{adminCompte.username}}</td>
             <td>{{adminCompte.password}}</td>
@@ -64,14 +67,15 @@
             <td>{{adminCompte.transctionFee}} </td>
             <td>
               <!-- <button class="btn btn-info btn-xs" style="padding: 0px 8px;font-size: 8px;margin: 1px 0px 0px 0px;"
-                [routerLink]="['/adminWeb/configurations',compteWeb.idCompteClientWeb]" data-backdrop="false">
-                <i class="material-icons md-24" title="Configurer le compte Web">account_box</i></button>
+                  [routerLink]="['/adminWeb/configurations',compteWeb.idCompteClientWeb]" data-backdrop="false">
+                  <i class="material-icons md-24" title="Configurer le compte Web">account_box</i></button>
 
-              <button class="btn btn-danger btn-xs" style="padding: 0px 8px;font-size: 8px;margin: 1px 0px 0px 0px;"
-                (click)="onSelect(compteWeb);deleteWebAccount();">
-                <i class="material-icons md-24" title=" Supprimer le compte Web">delete_forever</i></button>-->
+                <button class="btn btn-danger btn-xs" style="padding: 0px 8px;font-size: 8px;margin: 1px 0px 0px 0px;"
+                  (click)="onSelect(compteWeb);deleteWebAccount();">
+                  <i class="material-icons md-24" title=" Supprimer le compte Web">delete_forever</i></button>-->
             </td>
           </tr>
+          }
         </tbody>
       </table>
     </div>

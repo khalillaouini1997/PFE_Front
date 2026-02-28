@@ -15,65 +15,72 @@
 
       <table class="table table-hover table-striped">
         <thead style="font-size: 12px;">
-        <th>Date</th>
-        <th>Trame</th>
-        <th>Latitude</th>
-        <th>Longitude</th>
-        <th>Speed</th>
-        <th>temp</th>
-        <th>X</th>
-        <th>Y</th>
-        <th>Z</th>
-        <th>Ignition</th>
-        <th>RPM</th>
-        <th>Fuel Rate</th>
-        <th>Tfu</th>
-        <th>Odometre</th>
-        <th>satInView</th>
-        <th>Signal</th>
-        <th>Heading</th>
-        <th>Charger</th>
+          <th>Date</th>
+          <th>Trame</th>
+          <th>Latitude</th>
+          <th>Longitude</th>
+          <th>Speed</th>
+          <th>temp</th>
+          <th>X</th>
+          <th>Y</th>
+          <th>Z</th>
+          <th>Ignition</th>
+          <th>RPM</th>
+          <th>Fuel Rate</th>
+          <th>Tfu</th>
+          <th>Odometre</th>
+          <th>satInView</th>
+          <th>Signal</th>
+          <th>Heading</th>
+          <th>Charger</th>
         </thead>
         <tbody>
-        <tr *ngFor="let archive of archives">
-          <td style="font-size: 12px;">{{archive.date}}</td>
+          @for (archive of archives; track $index) {
+          <tr>
+            <td style="font-size: 12px;">{{archive.date}}</td>
 
-          <td><span class="label label-warning">{{archive.trame_id}}</span></td>
+            <td><span class="label label-warning">{{archive.trame_id}}</span></td>
 
-          <td>{{archive.latitude}}</td>
+            <td>{{archive.latitude}}</td>
 
-          <td>{{archive.longitude}}</td>
-          <td><span class="label label-danger" *ngIf="archive.ignition==false">Off</span>
-            <span class="label label-success" *ngIf="archive.ignition==true">On</span></td>
-          <td>{{archive.speed}}</td>
+            <td>{{archive.longitude}}</td>
+            <td>
+              @if (archive.ignition) {
+              <span class="label label-success">On</span>
+              } @else {
+              <span class="label label-danger">Off</span>
+              }
+            </td>
+            <td>{{archive.speed}}</td>
 
-          <td>{{archive.temp}}</td>
-          s
-          <td>{{archive.x}}</td>
+            <td>{{archive.temp}}</td>
+            s
+            <td>{{archive.x}}</td>
 
-          <td>{{archive.y}}</td>
+            <td>{{archive.y}}</td>
 
-          <td>{{archive.z}}</td>
+            <td>{{archive.z}}</td>
 
 
 
-          <td>{{archive.rpm}}</td>
+            <td>{{archive.rpm}}</td>
 
-          <td>{{archive.fuel_rate}}</td>
+            <td>{{archive.fuel_rate}}</td>
 
-          <td>{{archive.tfu}}</td>
+            <td>{{archive.tfu}}</td>
 
-          <td>{{archive.odo}}</td>
+            <td>{{archive.odo}}</td>
 
-          <td>{{archive.satInView}}</td>
+            <td>{{archive.satInView}}</td>
 
-          <td>{{archive.signal}}</td>
+            <td>{{archive.signal}}</td>
 
-          <td>{{archive.heading}}</td>
+            <td>{{archive.heading}}</td>
 
-          <td>{{archive.charger}}</td>
+            <td>{{archive.charger}}</td>
 
-        </tr>
+          </tr>
+          }
         </tbody>
       </table>
     </div>
@@ -82,19 +89,21 @@
     <div class="card-content table-responsive">
       <table class="table table-bordered">
         <thead>
-        <tr>
-          <th>ID</th>
-          <th>GPRMC</th>
-        </tr>
+          <tr>
+            <th>ID</th>
+            <th>GPRMC</th>
+          </tr>
         </thead>
         <tbody>
-        <tr>
-          <td colspan="2">$count: {{raws.count}}</td>
-        </tr>
-        <tr *ngFor="let raw of raws.raws">
-          <td>{{raw.idTram}}</td>
-          <td class="table table-bordered table-condensed ecriture">{{raw.gprmc}}</td>
-        </tr>
+          <tr>
+            <td colspan="2">$count: {{raws.count}}</td>
+          </tr>
+          @for (raw of raws.raws; track raw.idTram) {
+          <tr>
+            <td>{{raw.idTram}}</td>
+            <td class="table table-bordered table-condensed ecriture">{{raw.gprmc}}</td>
+          </tr>
+          }
         </tbody>
       </table>
     </div>
