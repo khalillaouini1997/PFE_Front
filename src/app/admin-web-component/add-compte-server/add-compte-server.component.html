@@ -14,33 +14,37 @@
           <p class="category">Complete this Form</p>
         </div>
         <div class="card-content">
-          <form #serverForm="ngForm">
+          <form [formGroup]="serverForm">
             <div class="row">
 
               <div class="col-md-6">
                 <div class="form-group label-floating">
                   <label class="control-label">Pseudo</label>
-                  <input type="text" class="form-control" name="pseudo" [(ngModel)]="compteServer.pseudo" required
-                    isExistPseudo="false" #pseudo="ngModel">
+                  <input type="text" class="form-control" formControlName="pseudo" (keyup)="onKeyPseudo()">
                 </div>
 
-                @if (pseudo.invalid && pseudo.touched) {
+                @if (serverForm.get('pseudo')?.invalid && serverForm.get('pseudo')?.touched) {
                 <div class="invalid-feedback text-danger">
-                  <i class="fa fa-thumbs-o-down" aria-hidden="true"></i> Please provide a valid Pseudo
+                  Please provide a valid Pseudo
                 </div>
+                }
+                @if (isExistPseudo) {
+                <div class="text-danger small">Pseudo already exists</div>
                 }
               </div>
               <div class="col-md-6">
                 <div class="form-group label-floating">
                   <label class="control-label">Login</label>
-                  <input type="text" class="form-control" name="login" [(ngModel)]="compteServer.login" required
-                    #login="ngModel">
+                  <input type="text" class="form-control" formControlName="login" (keyup)="onKeyLogin()">
                 </div>
 
-                @if (login.invalid && login.touched) {
+                @if (serverForm.get('login')?.invalid && serverForm.get('login')?.touched) {
                 <div class="invalid-feedback text-danger">
-                  <i class="fa fa-thumbs-o-down" aria-hidden="true"></i> Please provide a valid Login
+                  Please provide a valid Login
                 </div>
+                }
+                @if (isExistLogin) {
+                <div class="text-danger small">Login already exists</div>
                 }
               </div>
             </div>
@@ -48,27 +52,24 @@
 
             <div class="row">
               <div class="col-md-6">
-                <div class="form-group label-floating" [class.has-error]="password.touched && password.invalid">
+                <div class="form-group label-floating"
+                  [class.has-error]="serverForm.get('password')?.touched && serverForm.get('password')?.invalid">
                   <label for="password" class="control-label">Password</label>
-                  <input type="password" data-minlength="6" class="form-control" name="password" id="Password"
-                    [(ngModel)]="compteServer.password" #password="ngModel" required>
-                  @if (compteServer.password.length < 6) { <span class="help-block with-errors">Minimum of 6
-                    characters</span>
-                    }
+                  <input type="password" class="form-control" formControlName="password" id="Password">
+                  @if (serverForm.get('password')?.errors?.['minlength']) {
+                  <span class="help-block with-errors">Minimum of 6 characters</span>
+                  }
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="form-group label-floating"
-                  [class.has-error]="confirmPassword.touched && confirmPassword.invalid">
+                  [class.has-error]="serverForm.get('confirmationPassword')?.touched && (serverForm.get('confirmationPassword')?.invalid || serverForm.errors?.['mismatch'])">
                   <label for=confirmPassword class="control-label">Confirmation Password</label>
-                  <input type="password" class="form-control" name="confirmPassword" id="confirmPassword"
-                    appConfirmEqualValidator="password" #confirmPassword="ngModel" [(ngModel)]="confirmationPassword"
-                    required>
-                  <span class="help-block "></span>
-                  <!--<span class="help-block with-errors" *ngIf=" confirmPassword.errors?.notEqual &&
-                                  !confirmPassword.errors?.required"> password and Confirm Password does not match
-
-                  </span>-->
+                  <input type="password" class="form-control" formControlName="confirmationPassword"
+                    id="confirmPassword">
+                  @if (serverForm.get('confirmationPassword')?.touched && serverForm.errors?.['mismatch']) {
+                  <span class="help-block text-danger">Passwords do not match</span>
+                  }
                 </div>
               </div>
 
@@ -79,8 +80,8 @@
                 <div class="form-group label-floating">
                   <label class="control-label">Date d'expiration</label>
                   <div class="input-group input-append date">
-                    <input type="text" class="form-control" bsDatepicker name="date" [(ngModel)]="date"
-                      [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }" placeholder="Date d'expiration" required>
+                    <input type="text" class="form-control" bsDatepicker formControlName="date_Expiration"
+                      [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }" placeholder="Date d'expiration">
                     <span class="input-group-addon add-on"></span>
                   </div>
                 </div>
@@ -90,8 +91,7 @@
                 <div class="col-md-6">
                   <div class="form-group label-floating">
                     <label class="control-label">Number of Devices</label>
-                    <input type="number" min=0 class="form-control" name="numberBoitier" [(ngModel)]="numberBoitier"
-                      required>
+                    <input type="number" min=0 class="form-control" formControlName="numberBoitier">
                   </div>
                 </div>
               </div>
@@ -101,8 +101,9 @@
               <div class="col-md-6">
                 <!-- Add button here if needed -->
               </div>
-              <button type="button" class="btn btn-info pull-right" [disabled]="!serverForm.form.valid "
-                (click)="addCompteServer()" data-toggle="modal" data-target="#Modalupdate" data-backdrop="false">Save
+              <button type="button" class="btn btn-info pull-right"
+                [disabled]="serverForm.invalid || isExistPseudo || isExistLogin" (click)="addCompteServer()"
+                data-toggle="modal" data-target="#Modalupdate" data-backdrop="false">Save
                 Server account
               </button>
             </div>
