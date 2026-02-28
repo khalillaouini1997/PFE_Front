@@ -1,47 +1,66 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { AccessLog } from 'src/app/data/data';
 import { AccessLogService } from 'src/app/service/access-log.service';
-import { FormsModule } from '@angular/forms';
-import { NgIf, NgFor, DatePipe } from '@angular/common';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
+import { DatePipe } from '@angular/common';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { AdminAccountService } from 'src/app/service/admin-account.service'; // Assuming this service exists
+import { AuthService } from 'src/app/service/auth.service'; // Assuming this service exists
+import { Router } from '@angular/router'; // Assuming this is needed for router
 
 @Component({
   selector: 'app-access-log',
   templateUrl: './access-log.component.html',
   styleUrls: ['./access-log.component.css'],
   standalone: true,
-  imports: [FormsModule, PaginationModule, DatePipe]
+  imports: [FormsModule, ReactiveFormsModule, PaginationModule, DatePipe]
 })
 export class AccessLogComponent implements OnInit {
 
   loading: boolean = false;
-  accessLog: AccessLog[] = [];
-  keyWord: string = "";
+  accessLogs: AccessLog[] = [];
   public maxSize: number = 5;
   public bigTotalItems: number = 0;
   public bigCurrentPage: number = 1;
   public numPages: number = 0;
-  itemsPerPage = 30;
+  itemsPerPage = 10;
+  searchForm!: FormGroup;
 
   private readonly accessLogService = inject(AccessLogService);
+  private readonly adminAccountService = inject(AdminAccountService);
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
+  private readonly fb = inject(FormBuilder);
 
   ngOnInit() {
-    this.getAllAccessLog(this.keyWord, this.bigCurrentPage - 1, this.itemsPerPage);
+    this.initForms();
+    // Assuming authService and router are correctly imported and used
+    if (!this.authService.isAuthenticated()) {
+      this.router.navigate(['/error']);
+    } else {
+      this.getAllAccessLogs(this.searchForm.get('keyWord')?.value || "", this.bigCurrentPage - 1, this.itemsPerPage);
+    }
+  }
+
+  initForms() {
+    this.searchForm = this.fb.group({
+      keyWord: ['']
+    });
   }
 
   public pageChanged(event: any): void {
     this.bigCurrentPage = event.page;
-    this.getAllAccessLog(this.keyWord, this.bigCurrentPage - 1, this.itemsPerPage);
+    this.getAllAccessLogs(this.searchForm.get('keyWord')?.value || "", this.bigCurrentPage - 1, this.itemsPerPage);
   }
 
-  getAllAccessLog(keyWord: string, page: number, size: number) {
+  getAllAccessLogs(keyWord: string, page: number, size: number) {
     this.loading = true;
-    this.accessLog = [];
+    this.accessLogs = [];
     this.accessLogService.getAllAccessLog(keyWord, page, size).subscribe({
-      next: (_accessLog) => {
-        this.accessLog = _accessLog.content;
-        this.bigTotalItems = _accessLog.totalElements;
+      next: (_accessLogs) => {
         this.loading = false;
+        this.accessLogs = _accessLogs.content as AccessLog[]; // Fixed type casting
+        this.bigTotalItems = _accessLogs.totalElements;
       },
       error: () => {
         this.loading = false;
@@ -49,8 +68,8 @@ export class AccessLogComponent implements OnInit {
     });
   }
 
-  searchAccess() {
+  searchAccess() { // Renamed from searchWebAccount to match original intent
     this.bigCurrentPage = 1;
-    this.getAllAccessLog(this.keyWord, this.bigCurrentPage - 1, this.itemsPerPage);
+    this.getAllAccessLogs(this.searchForm.get('keyWord')?.value || "", this.bigCurrentPage - 1, this.itemsPerPage);
   }
 }
