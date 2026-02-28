@@ -5,7 +5,7 @@ import { CompteServerService } from "../../service/compte-server.service";
 import { BoitierService } from "../../service/boitier.service";
 import { AuthService } from "../../service/auth.service";
 import { ToastrService } from "ngx-toastr";
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 
@@ -14,9 +14,14 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
   templateUrl: './compte-server-details.component.html',
   styleUrls: ['./compte-server-details.component.css'],
   standalone: true,
-  imports: [FormsModule, PaginationModule, DatePipe]
+  imports: [FormsModule, ReactiveFormsModule, PaginationModule, DatePipe]
 })
 export class CompteServerDetailsComponent implements OnInit, OnDestroy {
+  addForm!: FormGroup;
+  searchForm!: FormGroup;
+  paginationForm!: FormGroup;
+  updateForm!: FormGroup;
+
   private refreshInterval: any;
   compteServer: CompteServer = new CompteServer();
   boitiers: Boitier[] = [];
@@ -43,8 +48,10 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
   private readonly boitierService = inject(BoitierService);
   private readonly authService = inject(AuthService);
   private readonly toastr = inject(ToastrService);
+  private readonly fb = inject(FormBuilder);
 
   ngOnInit() {
+    this.initForms();
     if (!this.authService.isAuthenticated()) {
       this.router.navigate(['/error']);
       return;
@@ -59,6 +66,25 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
     this.refreshInterval = setInterval(() => {
       this.refreshBoitierArchives();
     }, 20000);
+  }
+
+  initForms() {
+    this.addForm = this.fb.group({
+      nbrBoitiers: [0, [Validators.required, Validators.min(1)]]
+    });
+    this.searchForm = this.fb.group({
+      searchBoitier: ['']
+    });
+    this.paginationForm = this.fb.group({
+      bigCurrentPage: [1]
+    });
+    this.updateForm = this.fb.group({
+      label: ['', Validators.required]
+    });
+
+    this.paginationForm.get('bigCurrentPage')?.valueChanges.subscribe(val => {
+      this.bigCurrentPage = val;
+    });
   }
 
   ngOnDestroy() {
@@ -77,7 +103,7 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
   }
 
   private loadBoitierList() {
-    const keyword = this.searchBoitier;
+    const keyword = this.searchForm.get('searchBoitier')?.value;
     this.boitierService.getBoitierOfAccount(this.ID_COMPTE, keyword, this.bigCurrentPage - 1, this.itemsPerPage).subscribe(res => {
       this.boitiers = res.content.map((b: Boitier) => ({
         ...b,
@@ -91,7 +117,7 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
 
   private refreshBoitierArchives() {
     this.boitiers.forEach(boitier => {
-      this.boitierService.lastArchiveOfBoitier(boitier.numBoitier).subscribe(arch => {
+      this.boitierService.lastArchiveOfBoitier(boitier.numBoitier).subscribe((arch: any) => {
         boitier.dateLastTrame = arch.dateLastTrame;
         if (arch.latitude && arch.longitude) {
           boitier.emplacement = `${arch.latitude.toFixed(3)} : ${arch.longitude.toFixed(3)}`;
@@ -110,14 +136,19 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
 
   searchBoitiers() {
     this.bigCurrentPage = 1;
+    this.paginationForm.get('bigCurrentPage')?.setValue(1, { emitEvent: false });
     this.loadBoitierList();
   }
 
   onSelect(boitier: Boitier) {
     this.selectedBoitier = { ...boitier };
+    this.updateForm.patchValue({
+      label: boitier.label
+    });
   }
 
   updateBoitier() {
+    this.selectedBoitier.label = this.updateForm.get('label')?.value;
     this.boitierService.updateBoitier(this.selectedBoitier, this.ID_COMPTE, "label").subscribe({
       next: (res) => {
         const index = this.boitiers.findIndex(x => x.idBoitier === this.selectedBoitier.idBoitier);
@@ -131,22 +162,23 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
   }
 
   addBoitiers() {
-    if (this.BOITIER_NOT_INSTALLED < this.nbrBoitiers) {
+    const nbrBoitiersToAdd = this.addForm.get('nbrBoitiers')?.value;
+    if (this.BOITIER_NOT_INSTALLED < nbrBoitiersToAdd) {
       if (!confirm("Vous êtes sur de vouloir ajouter une nouvelle intervalle libre ?")) return;
     }
-    this.addBoitierAfterConfirmation();
+    this.addBoitierAfterConfirmation(nbrBoitiersToAdd);
   }
 
-  private addBoitierAfterConfirmation() {
-    this.boitierService.addBoitiers(this.ID_COMPTE, this.nbrBoitiers).subscribe({
-      next: (res) => {
+  private addBoitierAfterConfirmation(nbrBoitiersToAdd: number) {
+    this.boitierService.addBoitiers(this.ID_COMPTE, nbrBoitiersToAdd).subscribe({
+      next: (res: any) => {
         this.mode = false;
         this.BOITIER_NOT_INSTALLED = res.compteserver.intervaleEnd - res.compteserver.intervaleStart + 1;
         this.intervalFrom = res.compteserver.intervaleStart;
         this.intervalTo = res.compteserver.intervaleEnd;
         this.loadBoitierList();
-        this.toastr.success(this.nbrBoitiers + ' devices added', 'Success!');
-        this.nbrBoitiers = 0;
+        this.toastr.success(nbrBoitiersToAdd + ' devices added', 'Success!');
+        this.addForm.reset({ nbrBoitiers: 0 });
       },
       error: (err) => {
         this.mode = true;

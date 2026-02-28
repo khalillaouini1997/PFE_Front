@@ -8,14 +8,14 @@
             <h4 class="title">recalcule of {{compteWeb.login}} for boitier number {{recalculeP.idBoitier}} </h4>
           </div>
           <div class="card-content">
-            <form #recalculeForm="ngForm">
+            <form [formGroup]="recalculForm">
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group label-floating">
                     <div class="input-group input-append date">
                       <!-- Replace my-date-picker with input element and bsDatepicker directive -->
-                      <input type="text" class="form-control" placeholder="date of the start" [(ngModel)]="datestart"
-                        bsDatepicker [bsConfig]="{ containerClass: 'theme-red' }" required>
+                      <input type="text" class="form-control" placeholder="date of the start"
+                        formControlName="datestart" bsDatepicker [bsConfig]="{ containerClass: 'theme-red' }" required>
                       <span class="input-group-addon add-on"></span>
                     </div>
                   </div>
@@ -23,7 +23,7 @@
                 <div class="col-md-6">
                   <div class="form-group label-floating">
                     <label class="control-label">Type Recalcule</label>
-                    <select [(ngModel)]="typeRecalcule" class="form-control" name="typeRecalcule" required>
+                    <select formControlName="typeRecalcule" class="form-control" name="typeRecalcule" required>
                       <option>recalcule historique</option>
                       <option>recalcule carburant</option>
                       <option>recalcule alert</option>
@@ -32,7 +32,7 @@
                   </div>
                 </div>
               </div>
-              <button type="button" class="btn btn-danger pull-right" [disabled]="!recalculeForm.form.valid"
+              <button type="button" class="btn btn-danger pull-right" [disabled]="!recalculForm.valid"
                 (click)="recalcule()" [tooltip]="tooltipup" tooltipPlacement="top" data-toggle="modal"
                 data-target="#Modalupdate" data-backdrop="false">recalcule</button>
               <div class="clearfix"></div>
@@ -47,7 +47,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <div class="alert alert-warning" role="alert">
-              <h1>Notifications: {{typeRecalcule}}</h1>
+              <h1>Notifications: {{recalculForm.get('typeRecalcule')?.value}}</h1>
             </div>
             <div style="text-align:center; margin-top: 100px;">
               <h6

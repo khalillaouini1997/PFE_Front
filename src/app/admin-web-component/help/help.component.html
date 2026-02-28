@@ -1,7 +1,7 @@
 <div class="col-md-12">
     <div class="card">
         <div class="card-header" data-background-color="red">
-            <div class="row">
+            <div class="row" [formGroup]="searchForm">
                 <div class="col-sm-6">
                     <h4 class="title">Demandes clients</h4>
                 </div>
@@ -9,8 +9,7 @@
                     <form role="search" style="margin-top:3px;">
                         <div class="is-empty">
                             <span class="control-label" for="compteserver" style="color:#fff1f3;">Etat</span>
-                            <select class="formulaire" [(ngModel)]='selectedType' name="type"
-                                (change)='onSelectState()'>
+                            <select class="formulaire" formControlName="type" name="type">
                                 @for (type of types; track type.name) {
                                 <option [value]="type.name">{{type.label}}</option>
                                 }
@@ -23,7 +22,7 @@
                     <form role="search" style="margin-top:3px;">
                         <div class="is-empty">
                             <span class="control-label" for="compteserver" style="color:#fff1f3;">Client</span>
-                            <select class="formulaire" [(ngModel)]='selectedCompteWebId' name="compteserver">
+                            <select class="formulaire" formControlName="compteWebId" name="compteserver">
                                 @for (CompteWeb of comptesWeb; track CompteWeb.idCompteClientWeb) {
                                 <option [value]="CompteWeb.idCompteClientWeb">{{CompteWeb.login}}</option>
                                 }
@@ -98,13 +97,11 @@
                         <td>{{intervention.submitAt | date:'dd-MM-yyyy'}}</td>
                         <td>{{intervention.response}}</td>
                         <td>
-                            <!--<button class="btn btn-info btn-xs" style="padding: 0px 8px;font-size: 8px;margin: 1px 0px 0px 0px;"
-                                  (click)='currentIntervention = intervention;' [tooltip]="tooltipdel" tooltipPlacement="top"
-                                  data-toggle="modal" data-target="#ModalInit">
-                                  <i class="fa fa-edit" aria-hidden="true"></i></button>
-                              <tooltip-content #tooltipdel>
-                                  Modifier 
-                              </tooltip-content>-->
+                            <button class="btn btn-info btn-xs"
+                                style="padding: 0px 8px;font-size: 8px;margin: 1px 0px 0px 0px;"
+                                (click)="openUpdateModal(intervention)" [tooltip]="'Modifier'" tooltipPlacement="top"
+                                data-toggle="modal" data-target="#ModalInit">
+                                <i class="fa fa-edit" aria-hidden="true"></i></button>
                         </td>
                     </tr>
                     }
@@ -135,7 +132,7 @@
                 <h4 class="modal-title">Modifier la demande selectionnée :
                 </h4>
             </div>
-            <form #ChangeServerForm="ngForm" class="form-horizontal">
+            <form [formGroup]="updateForm" class="form-horizontal">
                 <div class="box-body">
                     <div class="form-group ">
                         <label class="col-sm-2 control-label">Date de traitement :</label>
@@ -151,8 +148,7 @@
                         <div class="col-lg-4 col-md-4">
                             <div class="form-group ">
                                 <div class="col-sm-12">
-                                    <select [(ngModel)]='currentIntervention.type' name="type" class="form-control"
-                                        required>
+                                    <select formControlName="type" name="type" class="form-control" required>
                                         @for (type of types; track type.name) {
                                         <option [value]='type.name'>{{type.label}}</option>
                                         }
@@ -166,9 +162,8 @@
                         <div class="col-lg-10 col-md-10">
                             <div class="form-group ">
                                 <div class="col-sm-12">
-                                    <textarea [(ngModel)]='currentIntervention.response' rows="12" name="response"
-                                        type="text" maxlength="1000" placeholder="Détails"
-                                        class="form-control"></textarea>
+                                    <textarea formControlName="response" rows="12" name="response" type="text"
+                                        maxlength="1000" placeholder="Détails" class="form-control"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -177,7 +172,7 @@
                 <div class="box-footer">
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-                        <button type="button" class="btn btn-warning" [hidden]="!ChangeServerForm.form.valid"
+                        <button type="button" class="btn btn-warning" [hidden]="!updateForm.valid"
                             (click)="updateIntervention()" data-dismiss="modal">Enregistrer</button>
                     </div>
                 </div>

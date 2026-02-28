@@ -1,21 +1,21 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CompteWeb, RecalculatePayload } from "../../data/data";
-import { WebSocketService } from "../../service/web-socket.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { BoitierService } from "../../service/boitier.service";
 import { WebAccountService } from "../../service/web-account.service";
 import { ToastrService } from "ngx-toastr";
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { NgFor, LowerCasePipe } from '@angular/common';
+import { WebSocketService } from 'src/app/service/web-socket.service';
 
 @Component({
   selector: 'app-recalcul-web',
   templateUrl: './recalcul-web.component.html',
   styleUrls: ['./recalcul-web.component.css'],
   standalone: true,
-  imports: [FormsModule, BsDatepickerModule, TooltipModule, LowerCasePipe]
+  imports: [FormsModule, ReactiveFormsModule, BsDatepickerModule, TooltipModule, LowerCasePipe]
 })
 export class RecalculWebComponent implements OnInit {
 
@@ -23,27 +23,28 @@ export class RecalculWebComponent implements OnInit {
   recalculeP: RecalculatePayload = new RecalculatePayload();
   idCompteClientWeb: number = 0;
   numBoitier: number = 0;
-  compteWeb: CompteWeb = new CompteWeb();
-  datestart: any = { jsdate: new Date() };
-  typeRecalcule: string = "";
+  compteWeb: any = {};
+  recalculForm!: FormGroup;
+
+  tooltipup = 'recalcule';
 
   private readonly route = inject(ActivatedRoute);
   private readonly webAccountService = inject(WebAccountService);
   private readonly boitierService = inject(BoitierService);
   private readonly webSocketService = inject(WebSocketService);
   private readonly toastr = inject(ToastrService);
+  private readonly fb = inject(FormBuilder);
 
   constructor() {
-    // Open connection with server socket
-    const stompClient = this.webSocketService.connect();
-    stompClient.connect({}, frame => {
-      stompClient.subscribe('/topic/notification', notifications => {
-        this.notifications.push(JSON.parse(notifications.body).info);
-      });
+    this.webSocketService.getNotifications().subscribe((notification: any) => {
+      if (notification) {
+        this.toastr.success(notification.message, "Notification " + notification.type);
+      }
     });
   }
 
   ngOnInit(): void {
+    this.initForms();
     this.idCompteClientWeb = parseInt(this.route.snapshot.params['idCompteClientWeb']);
     this.recalculeP.idBoitier = parseInt(this.route.snapshot.params['numBoitier']);
     this.webAccountService.getWebAccountById(this.idCompteClientWeb).subscribe(_compteWeb => {
@@ -51,12 +52,20 @@ export class RecalculWebComponent implements OnInit {
     });
   }
 
+  initForms() {
+    this.recalculForm = this.fb.group({
+      datestart: [new Date(), Validators.required],
+      typeRecalcule: ['', Validators.required]
+    });
+  }
+
   recalcule() {
-    if (this.typeRecalcule == "recalcule historique") {
+    const typeRecalcule = this.recalculForm.get('typeRecalcule')?.value;
+    if (typeRecalcule == "recalcule historique") {
       this.recalculePath();
-    } else if (this.typeRecalcule == "recalcule carburant") {
+    } else if (typeRecalcule == "recalcule carburant") {
       this.recalculeFuel();
-    } else if (this.typeRecalcule == "recalcule boitier") {
+    } else if (typeRecalcule == "recalcule boitier") {
       this.recalculeBoitier();
     }
   }
@@ -64,7 +73,8 @@ export class RecalculWebComponent implements OnInit {
   recalculePath() {
     this.notifications = [];
     if (confirm("Vous êtes sur de vouloir faire le recalcule ?")) {
-      this.recalculeP.recalculeStartDate = new Date(this.datestart.jsdate).getTime();
+      const datestart = this.recalculForm.get('datestart')?.value;
+      this.recalculeP.recalculeStartDate = datestart ? new Date(datestart).getTime() : new Date().getTime();
       this.boitierService.recalculePaths(this.idCompteClientWeb, this.recalculeP).subscribe();
     }
   }
@@ -72,7 +82,8 @@ export class RecalculWebComponent implements OnInit {
   recalculeBoitier() {
     this.notifications = [];
     if (confirm("Vous êtes sur de vouloir faire le recalcule ?")) {
-      this.recalculeP.recalculeStartDate = new Date(this.datestart.jsdate).getTime();
+      const datestart = this.recalculForm.get('datestart')?.value;
+      this.recalculeP.recalculeStartDate = datestart ? new Date(datestart).getTime() : new Date().getTime();
       this.boitierService.recalculeBoitier(this.idCompteClientWeb, this.recalculeP).subscribe();
     }
   }
@@ -80,8 +91,13 @@ export class RecalculWebComponent implements OnInit {
   recalculeFuel() {
     this.notifications = [];
     if (confirm("Vous êtes sur de vouloir faire le recalcule ?")) {
-      this.recalculeP.recalculeStartDate = new Date(this.datestart.jsdate).getTime();
+      const datestart = this.recalculForm.get('datestart')?.value;
+      this.recalculeP.recalculeStartDate = datestart ? new Date(datestart).getTime() : new Date().getTime();
       this.boitierService.recalculeFuel(this.idCompteClientWeb, this.recalculeP).subscribe();
     }
+  }
+
+  reinitialisation() {
+    this.notifications = [];
   }
 }
