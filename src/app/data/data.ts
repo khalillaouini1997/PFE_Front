@@ -33,13 +33,13 @@ export class Boitier {
   gsmLastTrame: number;
   stat: boolean = true;
   streamId: number;
-  ipAdresse: IpAdresse;
+  ipAdresse: IpAddress;
   constructor() {
     this.idBoitier = 0;
     this.label = '';
     this.numBoitier = 0;
     this.etatBoitier = '';
-    this.ipAdresse = new IpAdresse();
+    this.ipAdresse = new IpAddress();
   }
 }
 
@@ -87,14 +87,16 @@ export class CompteServerWithBoitier {
 }
 
 export class IpAddress {
-  idIpAdresse: number | null; // Allow null or number
+  idIpAdresse: number | null;
   label: string;
   value: string;
-  typeConnection: String | null; // Allow null or String
-  jdbcUser: String | null;  // Allow null or String
-  jdbcPass: String | null; // Allow null or String
-  url: String | null;  // Allow null or String
-  dbName: String | null;  // Allow null or String
+  typeConnection: string | null;
+  jdbcUser: string | null;
+  jdbcPass: string | null;
+  url: string | null;
+  dbName: string | null;
+  urlGetId: string | null;
+
   constructor() {
     this.idIpAdresse = null;
     this.label = "";
@@ -104,6 +106,7 @@ export class IpAddress {
     this.jdbcPass = null;
     this.url = null;
     this.dbName = null;
+    this.urlGetId = null;
   }
 }
 
@@ -161,7 +164,7 @@ export class AdministratorCompte {
   deviceCostByDay: number;
   accountFreePerMonth: number;
   transctionFee: number;
-  numLastBoitierAvailable:number;
+  numLastBoitierAvailable: number;
   constructor() {
     this.idAdministratorCompte = 0;
     this.username = '';
@@ -206,24 +209,24 @@ export class DeviceOpt {
   useJ1708: boolean;
   useIdDriver: boolean;
   useStop: boolean;
-  constructor(){
+  constructor() {
 
-    this.idBoitiers=[];
+    this.idBoitiers = [];
     this.idBoitier = 0;
-    this.useFms=false;
-    this.useFuel=false;
-    this.useIdDriver=false;
-    this.useIgnition=false;
-    this.useJ1708=false;
-    this.useStop=false;
-    this.useTemp=false;
+    this.useFms = false;
+    this.useFuel = false;
+    this.useIdDriver = false;
+    this.useIgnition = false;
+    this.useJ1708 = false;
+    this.useStop = false;
+    this.useTemp = false;
   }
 
 }
 
 export class DeviceSetting {
   idBoitiers: number[];
-  idIpAdresse : number;
+  idIpAdresse: number;
   streamId: number;
 
   constructor() {
@@ -231,17 +234,10 @@ export class DeviceSetting {
   }
 }
 
-export class IpAdresse {
-  idIpAdresse: number;
-  label: string;
-  value: string;
-  urlGetId: string;
-  constructor() {}
-}
 
 export class VehiculeSetting {
   idBoitiers: number[];
-  accumOdo : number;
+  accumOdo: number;
 
   constructor() {
     this.idBoitiers = [];
@@ -321,7 +317,7 @@ export class RecalculatePayload {
 
   idBoitier: number;
   idBoitiers: number[];
-  recalculeStartDate: number | null ;
+  recalculeStartDate: number | null;
 
   constructor() {
     this.idBoitier = 0
@@ -386,5 +382,5 @@ export class InterventionInfo {
   createdAt: Date;
   verifiedAt: Date;
   verified: boolean;
-  constructor(){}
+  constructor() { }
 }
