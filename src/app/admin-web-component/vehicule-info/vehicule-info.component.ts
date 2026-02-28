@@ -4,7 +4,7 @@ import { InterventionInfo } from "../../data/data";
 import { ToastrService } from "ngx-toastr";
 import { VehiculeService } from "../../service/vehicule.service";
 import { finalize } from "rxjs";
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 
@@ -13,7 +13,7 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
   templateUrl: './vehicule-info.component.html',
   styleUrls: ['./vehicule-info.component.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule, TooltipModule, PaginationModule]
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TooltipModule, PaginationModule]
 })
 export class VehiculeInfoComponent implements OnInit {
 
@@ -28,12 +28,21 @@ export class VehiculeInfoComponent implements OnInit {
   vehiculeInfos: InterventionInfo[] = [];
   vehiculeInfosFiltered: InterventionInfo[] = [];
   loading: boolean = false;
+  vehiculeForm!: FormGroup;
 
   private readonly vehiculeService = inject(VehiculeService);
   private readonly toastr = inject(ToastrService);
+  private readonly fb = inject(FormBuilder);
 
   ngOnInit() {
+    this.initForms();
     this.getVehiculeInfo(this.bigCurrentPage - 1, this.itemsPerPage);
+  }
+
+  initForms() {
+    this.vehiculeForm = this.fb.group({
+      selectedState: ['ALL']
+    });
   }
 
   getVehiculeInfo(page: number, size: number) {
@@ -72,7 +81,8 @@ export class VehiculeInfoComponent implements OnInit {
   }
 
   onSelectState() {
-    switch (this.selectedState) {
+    const selectedState = this.vehiculeForm.get('selectedState')?.value;
+    switch (selectedState) {
       case 'untreated':
         this.vehiculeInfosFiltered = this.vehiculeInfos.filter(v => !v.verified);
         break;

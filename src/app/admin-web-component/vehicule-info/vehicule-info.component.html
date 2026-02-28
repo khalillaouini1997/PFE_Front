@@ -8,10 +8,10 @@
           <h4 class="title">Les interventions :</h4>
         </div>
         <div class="col-sm-3">
-          <form role="search" style="margin-top:3px;">
+          <form [formGroup]="vehiculeForm" role="search" style="margin-top:3px;">
             <div class="is-empty">
               <span class="control-label" for="compteserver" style="color:#fff1f3;">Etat</span>
-              <select [(ngModel)]='selectedState' class="formulaire" name="type" (change)='onSelectState()'>
+              <select formControlName="selectedState" class="formulaire" name="type" (change)='onSelectState()'>
                 @for (state of states; track state.name) {
                 <option [value]="state.name">{{state.label}}</option>
                 }
