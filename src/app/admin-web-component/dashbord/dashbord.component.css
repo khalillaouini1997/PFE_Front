@@ -1,65 +1,117 @@
-/* created by AHMED HAYEL */
-    
-    .sidebar {
-        display: none !important;
-    }
-    .main-panel {
-        width: 100% !important;
-    }
-    .ecriture{
-        font-size: 12px;
-    }
+.sidebar {
+    display: none !important;
+}
 
-    .row{
-        margin-right: -10px;
-        margin-left: -10px;
-        margin-bottom: -15px;
-        margin-top: -15px;
-    }
+.main-panel {
+    width: 100% !important;
+}
 
-    .title{
-        margin-top: 0px;
-        margin-bottom: 0px;
-        margin-left: 24px;
-        padding-top: 2px;
-    }
-    .form-group .form-control {
-        margin-bottom: 7px;
-        margin-top: -10px;
-    }
-    .col-xs-1[_ngcontent-c2], .col-sm-1[_ngcontent-c2], .col-md-1[_ngcontent-c2], .col-lg-1[_ngcontent-c2], .col-xs-2[_ngcontent-c2], .col-md-2[_ngcontent-c2], .col-lg-2[_ngcontent-c2], .col-xs-3[_ngcontent-c2], .col-sm-3[_ngcontent-c2], .col-md-3[_ngcontent-c2], .col-lg-3[_ngcontent-c2], .col-xs-4[_ngcontent-c2], .col-sm-4[_ngcontent-c2], .col-md-4[_ngcontent-c2], .col-lg-4[_ngcontent-c2], .col-xs-5[_ngcontent-c2], .col-sm-5[_ngcontent-c2], .col-md-5[_ngcontent-c2], .col-lg-5[_ngcontent-c2], .col-xs-6[_ngcontent-c2], .col-sm-6[_ngcontent-c2], .col-md-6[_ngcontent-c2], .col-lg-6[_ngcontent-c2], .col-xs-7[_ngcontent-c2], .col-sm-7[_ngcontent-c2], .col-md-7[_ngcontent-c2], .col-lg-7[_ngcontent-c2], .col-xs-8[_ngcontent-c2], .col-sm-8[_ngcontent-c2], .col-md-8[_ngcontent-c2], .col-lg-8[_ngcontent-c2], .col-xs-9[_ngcontent-c2], .col-sm-9[_ngcontent-c2], .col-md-9[_ngcontent-c2], .col-lg-9[_ngcontent-c2], .col-xs-10[_ngcontent-c2], .col-sm-10[_ngcontent-c2], .col-md-10[_ngcontent-c2], .col-lg-10[_ngcontent-c2], .col-xs-11[_ngcontent-c2], .col-sm-11[_ngcontent-c2], .col-md-11[_ngcontent-c2], .col-lg-11[_ngcontent-c2], .col-xs-12[_ngcontent-c2], .col-sm-12[_ngcontent-c2], .col-md-12[_ngcontent-c2], .col-lg-12[_ngcontent-c2] {
-        position: relative;
-        min-height: 0px;
-        padding-right: 9px;
-        padding-left: 9px;
-    }
+.ecriture {
+    font-size: 12px;
+}
 
-        .col-sm-2{
-            padding-left:-5px
-        }
+.row {
+    margin-right: -10px;
+    margin-left: -10px;
+    margin-bottom: -15px;
+    margin-top: -15px;
+}
 
-        .formulaire{
-            background-color: rgb(255, 241, 243);
-            color: rgb(0, 0, 0);
-            border-radius: 10px;
-            padding-bottom: 0px;
-            padding-top: 0px;
-            padding-left: 0px;
-           }
+.title {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-left: 24px;
+    padding-top: 2px;
+}
 
-        .form-group {
-            padding-bottom: 7px;
-            margin: 11px 0 0 0;
-        }
-        
+.form-group .form-control {
+    margin-bottom: 7px;
+    margin-top: -10px;
+}
 
- input, optgroup, select, textarea {
+.col-xs-1[_ngcontent-c2],
+.col-sm-1[_ngcontent-c2],
+.col-md-1[_ngcontent-c2],
+.col-lg-1[_ngcontent-c2],
+.col-xs-2[_ngcontent-c2],
+.col-md-2[_ngcontent-c2],
+.col-lg-2[_ngcontent-c2],
+.col-xs-3[_ngcontent-c2],
+.col-sm-3[_ngcontent-c2],
+.col-md-3[_ngcontent-c2],
+.col-lg-3[_ngcontent-c2],
+.col-xs-4[_ngcontent-c2],
+.col-sm-4[_ngcontent-c2],
+.col-md-4[_ngcontent-c2],
+.col-lg-4[_ngcontent-c2],
+.col-xs-5[_ngcontent-c2],
+.col-sm-5[_ngcontent-c2],
+.col-md-5[_ngcontent-c2],
+.col-lg-5[_ngcontent-c2],
+.col-xs-6[_ngcontent-c2],
+.col-sm-6[_ngcontent-c2],
+.col-md-6[_ngcontent-c2],
+.col-lg-6[_ngcontent-c2],
+.col-xs-7[_ngcontent-c2],
+.col-sm-7[_ngcontent-c2],
+.col-md-7[_ngcontent-c2],
+.col-lg-7[_ngcontent-c2],
+.col-xs-8[_ngcontent-c2],
+.col-sm-8[_ngcontent-c2],
+.col-md-8[_ngcontent-c2],
+.col-lg-8[_ngcontent-c2],
+.col-xs-9[_ngcontent-c2],
+.col-sm-9[_ngcontent-c2],
+.col-md-9[_ngcontent-c2],
+.col-lg-9[_ngcontent-c2],
+.col-xs-10[_ngcontent-c2],
+.col-sm-10[_ngcontent-c2],
+.col-md-10[_ngcontent-c2],
+.col-lg-10[_ngcontent-c2],
+.col-xs-11[_ngcontent-c2],
+.col-sm-11[_ngcontent-c2],
+.col-md-11[_ngcontent-c2],
+.col-lg-11[_ngcontent-c2],
+.col-xs-12[_ngcontent-c2],
+.col-sm-12[_ngcontent-c2],
+.col-md-12[_ngcontent-c2],
+.col-lg-12[_ngcontent-c2] {
+    position: relative;
+    min-height: 0px;
+    padding-right: 9px;
+    padding-left: 9px;
+}
+
+.col-sm-2 {
+    padding-left: -5px
+}
+
+.formulaire {
+    background-color: rgb(255, 241, 243);
+    color: rgb(0, 0, 0);
+    border-radius: 10px;
+    padding-bottom: 0px;
+    padding-top: 0px;
+    padding-left: 0px;
+}
+
+.form-group {
+    padding-bottom: 7px;
+    margin: 11px 0 0 0;
+}
+
+
+input,
+optgroup,
+select,
+textarea {
     font-family: sans-serif;
     font-size: 100%;
     line-height: 1.15;
     margin-top: 0px;
 
 }
+
 button {
     font-family: sans-serif;
     font-size: 100%;
@@ -67,12 +119,17 @@ button {
     margin-top: 8px;
 
 }
+
 .card {
     margin: 32px 0 0 0;
 }
 
-.tableFixHead table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+.tableFixHead table>thead>tr>th,
+.table>tbody>tr>th,
+.table>tfoot>tr>th,
+.table>thead>tr>td,
+.table>tbody>tr>td,
+.table>tfoot>tr>td {
     padding: 0px 8px;
     vertical-align: middle;
-  }
-  
+}

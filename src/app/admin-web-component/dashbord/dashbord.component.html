@@ -12,22 +12,27 @@
                         <div class="is-empty">
                             <span class="control-label" for="compteserver" style="color:#fff1f3;">Comptes
                                 web</span>
-                            <select [(ngModel)]="compteWeb" class="formulaire" id="compteserver" name="compteserver"
-                                required>
-                                @for (CompteWeb of comptesWeb; track CompteWeb.login) {
-                                    <option [ngValue]="CompteWeb">{{CompteWeb.login}}</option>
-                                }
-                            </select>
+                            <div [formGroup]="dashboardForm">
+                                <select formControlName="compteWeb" class="formulaire" id="compteserver"
+                                    name="compteserver" (change)="getAllLastTramByCompteWeb()">
+                                    <option [ngValue]="null" disabled selected>Choisir un compte web</option>
+                                    @for (compte of comptesWeb; track compte.idCompteClientWeb) {
+                                    <option [ngValue]="compte">{{compte.login}}</option>
+                                    }
+                                </select>
+                            </div>
 
-                            <button type="submit" class="btn btn-white btn-sm" title="Rechercher" style="margin: 0px; padding: 3px 5px; margin: 0px 0px 0px 0px;"
-                                (click)="getAllLastTramByCompteWeb()"><i class="fa fa-search" style="font-size: 14px"></i> Rechercher</button>
+                            <button type="submit" class="btn btn-white btn-sm" title="Rechercher"
+                                style="margin: 0px; padding: 3px 5px; margin: 0px 0px 0px 0px;"><i class="fa fa-search"
+                                    style="font-size: 14px"></i> Rechercher</button>
                         </div>
 
                     </form>
                 </div>
                 <div class="col-sm-1">
-                    <button class="btn btn-white btn-sm pull-right" style="padding: 3px 5px; margin: 5px 0px 0px 0px;" title="Exporter"
-                        (click)="onExport()"><i class="fa fa-download" title="Exporter" style="font-size: 14px"></i> Exporter</button>
+                    <button class="btn btn-white btn-sm pull-right" style="padding: 3px 5px; margin: 5px 0px 0px 0px;"
+                        title="Exporter" (click)="onExport()"><i class="fa fa-download" title="Exporter"
+                            style="font-size: 14px"></i> Exporter</button>
                 </div>
             </div>
 
@@ -62,90 +67,91 @@
                 <tbody style="font-size: 12px;">
 
                     @if (loading) {
-                        <tr>
-                            <td style="text-align: center" colspan="23">
-                                <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td style="text-align: center" colspan="23">
+                            <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+                        </td>
+                    </tr>
                     }
 
-                    @for (tram of listTram; track tram.deviceid) {
-                        <tr>
+                    @for (tram of realtimes; track tram.deviceid) {
+                    <tr>
 
-                            <td><span class="label label-info">{{tram.deviceid}}</span></td>
-                            <td>{{tram.matricule}}</td>
-                            <td>
-                                @if (tram.status == 'TECHNICAL_ISSUE') {
-                                    <span class="label label-danger">{{tram.status}}</span>
-                                } @else if (tram.status == 'NON_VALID') {
-                                    <span class="label label-warning">{{tram.status}}</span>
-                                } @else if (tram.status == 'VALID') {
-                                    <span class="label label-success">{{tram.status}}</span>
-                                }
-                            </td>
-                            <td>{{tram.latitude}}</td>
-                            <td>{{tram.longitude}}</td>
-                            <td>
-                                @if (tram.validity) {
-                                    <span class="label label-success">Vrai</span>
-                                } @else {
-                                    <span class="label label-danger">Faux</span>
-                                }
-                            </td>
-                            <td>{{tram.speed}}</td>
-                            <td>
-                                @if (!tram.ignition) {
-                                    <span>Off</span>
-                                } @else {
-                                    <span>On</span>
-                                }
-                            </td>
-                            <td>{{tram.sat_in_view}}</td>
-                            <td>{{tram.signal}}</td>
-                            <td>
-                                @if (diffHours(tram.record_time) >= 1 && diffHours(tram.record_time) < 24) {
-                                    <span class="label label-warning">{{tram.record_time | date:'dd-MM-yyyy HH:mm:ss' }}</span>
+                        <td><span class="label label-info">{{tram.deviceid}}</span></td>
+                        <td>{{tram.matricule}}</td>
+                        <td>
+                            @if (tram.status == 'TECHNICAL_ISSUE') {
+                            <span class="label label-danger">{{tram.status}}</span>
+                            } @else if (tram.status == 'NON_VALID') {
+                            <span class="label label-warning">{{tram.status}}</span>
+                            } @else if (tram.status == 'VALID') {
+                            <span class="label label-success">{{tram.status}}</span>
+                            }
+                        </td>
+                        <td>{{tram.latitude}}</td>
+                        <td>{{tram.longitude}}</td>
+                        <td>
+                            @if (tram.validity) {
+                            <span class="label label-success">Vrai</span>
+                            } @else {
+                            <span class="label label-danger">Faux</span>
+                            }
+                        </td>
+                        <td>{{tram.speed}}</td>
+                        <td>
+                            @if (!tram.ignition) {
+                            <span>Off</span>
+                            } @else {
+                            <span>On</span>
+                            }
+                        </td>
+                        <td>{{tram.sat_in_view}}</td>
+                        <td>{{tram.signal}}</td>
+                        <td>
+                            @if (diffHours(tram.record_time) >= 1 && diffHours(tram.record_time) < 24) { <span
+                                class="label label-warning">{{tram.record_time | date:'dd-MM-yyyy HH:mm:ss' }}</span>
                                 } @else if (diffHours(tram.record_time) >= 24) {
-                                    <span class="label label-danger">{{tram.record_time | date:'dd-MM-yyyy HH:mm:ss' }}</span>
+                                <span class="label label-danger">{{tram.record_time | date:'dd-MM-yyyy HH:mm:ss'
+                                    }}</span>
                                 } @else {
-                                    <span>{{tram.record_time | date:'dd-MM-yyyy HH:mm:ss' }}</span>
+                                <span>{{tram.record_time | date:'dd-MM-yyyy HH:mm:ss' }}</span>
                                 }
-                            </td>
-                            <td>{{tram.last_raw_time | date:'dd-MM-yyyy HH:mm:ss'}}</td>
-                            <td>{{tram.lastId}}</td>
-                            <td>
-                                @if ((tram.lastId - tram.lastIdRaw) >= 20) {
-                                    <span class="label label-danger">{{tram.lastIdRaw}}</span>
-                                } @else {
-                                    <span>{{tram.lastIdRaw}}</span>
-                                }
-                            </td>
-                            <td>{{tram.lastTime | date:'dd-MM-yyyy HH:mm:ss'}}</td>
-                            <td>
-                                @if (tram.ignitionStatistique == 0) {
-                                    <span class="label label-danger">{{tram.ignitionStatistique | number: '.2-2'}} %</span>
-                                } @else {
-                                    <span>{{tram.ignitionStatistique | number: '.2-2'}} %</span>
-                                }
-                            </td>
-                            <td>
-                                @if (tram.invalidityStatistique > 10) {
-                                    <span class="label label-danger">{{tram.invalidityStatistique | number: '.2-2'}} %</span>
-                                } @else {
-                                    <span>{{tram.invalidityStatistique | number: '.2-2'}} %</span>
-                                }
-                            </td>
-                            <td>
-                                @if (tram.speedStatistique == 0) {
-                                    <span class="label label-danger">{{tram.speedStatistique | number: '.2-2'}} %</span>
-                                } @else {
-                                    <span>{{tram.speedStatistique | number: '.2-2'}} %</span>
-                                }
-                            </td>
-                            <td>{{tram.numPuce}}</td>
-                            <td>{{tram.imei}}</td>
-                            <td>{{tram.version}}</td>
-                        </tr>
+                        </td>
+                        <td>{{tram.last_raw_time | date:'dd-MM-yyyy HH:mm:ss'}}</td>
+                        <td>{{tram.lastId}}</td>
+                        <td>
+                            @if ((tram.lastId - tram.lastIdRaw) >= 20) {
+                            <span class="label label-danger">{{tram.lastIdRaw}}</span>
+                            } @else {
+                            <span>{{tram.lastIdRaw}}</span>
+                            }
+                        </td>
+                        <td>{{tram.lastTime | date:'dd-MM-yyyy HH:mm:ss'}}</td>
+                        <td>
+                            @if (tram.ignitionStatistique == 0) {
+                            <span class="label label-danger">{{tram.ignitionStatistique | number: '.2-2'}} %</span>
+                            } @else {
+                            <span>{{tram.ignitionStatistique | number: '.2-2'}} %</span>
+                            }
+                        </td>
+                        <td>
+                            @if (tram.invalidityStatistique > 10) {
+                            <span class="label label-danger">{{tram.invalidityStatistique | number: '.2-2'}} %</span>
+                            } @else {
+                            <span>{{tram.invalidityStatistique | number: '.2-2'}} %</span>
+                            }
+                        </td>
+                        <td>
+                            @if (tram.speedStatistique == 0) {
+                            <span class="label label-danger">{{tram.speedStatistique | number: '.2-2'}} %</span>
+                            } @else {
+                            <span>{{tram.speedStatistique | number: '.2-2'}} %</span>
+                            }
+                        </td>
+                        <td>{{tram.numPuce}}</td>
+                        <td>{{tram.imei}}</td>
+                        <td>{{tram.version}}</td>
+                    </tr>
                     }
                 </tbody>
             </table>
