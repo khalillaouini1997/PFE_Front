@@ -12,7 +12,9 @@
             <div class="is-empty">
               <span class="control-label" for="compteserver" style="color:#fff1f3;">Etat</span>
               <select [(ngModel)]='selectedState' class="formulaire" name="type" (change)='onSelectState()'>
-                <option *ngFor="let state of states" [value]="state.name">{{state.label}}</option>
+                @for (state of states; track state.name) {
+                <option [value]="state.name">{{state.label}}</option>
+                }
               </select>
             </div>
           </form>
@@ -23,57 +25,65 @@
     <div class="table-responsive tableFixHead">
       <table class="table table-bordered table-hover table-sm">
         <thead>
-        <tr>
-          <th>Boitier </th>
-          <th>Matricule</th>
-          <th>Marque</th>
-          <th>Chauffeur</th>
-          <th>Technicien</th>
-          <th>Ajouté le</th>
-          <th>Traité </th>
-          <th>Traité le</th>
-          <th></th>
-        </tr>
+          <tr>
+            <th>Boitier </th>
+            <th>Matricule</th>
+            <th>Marque</th>
+            <th>Chauffeur</th>
+            <th>Technicien</th>
+            <th>Ajouté le</th>
+            <th>Traité </th>
+            <th>Traité le</th>
+            <th></th>
+          </tr>
         </thead>
         <tbody style="font-size: 12px;">
 
-        <tr *ngIf="loading">
-          <td style="text-align: center" colspan="9">
-            <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
-          </td>
-        </tr>
+          @if (loading) {
+          <tr>
+            <td style="text-align: center" colspan="9">
+              <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+            </td>
+          </tr>
+          }
 
-        <tr *ngFor="let vehiculeInfo of vehiculeInfosFiltered">
-          <td>{{vehiculeInfo.deviceId}}</td>
-          <td>{{vehiculeInfo.matricule}}</td>
-          <td>{{vehiculeInfo.mark}} </td>
-          <td>
-            {{vehiculeInfo.driver}}
-          </td>
-          <td>
-            {{vehiculeInfo.technician}}
-          </td>
-          <td>
-            {{vehiculeInfo.createdAt | date:'dd-MM-yyyy'}}
-          </td>
-          <td>
-              <span *ngIf="vehiculeInfo.verified" class="label label-success">
+          @for (vehiculeInfo of vehiculeInfosFiltered; track vehiculeInfo.deviceId) {
+          <tr>
+            <td>{{vehiculeInfo.deviceId}}</td>
+            <td>{{vehiculeInfo.matricule}}</td>
+            <td>{{vehiculeInfo.mark}} </td>
+            <td>
+              {{vehiculeInfo.driver}}
+            </td>
+            <td>
+              {{vehiculeInfo.technician}}
+            </td>
+            <td>
+              {{vehiculeInfo.createdAt | date:'dd-MM-yyyy'}}
+            </td>
+            <td>
+              @if (vehiculeInfo.verified) {
+              <span class="label label-success">
                 Traité
               </span>
-            <span *ngIf="!vehiculeInfo.verified" data-toggle="tooltip" class="label label-danger">
+              } @else {
+              <span data-toggle="tooltip" class="label label-danger">
                 non traité
               </span>
-          </td>
-          <td>
-            {{vehiculeInfo.verifiedAt | date:'dd-MM-yyyy'}}
-          </td>
-          <td>
-            <button class="btn btn-info btn-xs" style="padding: 0px 8px;font-size: 8px;margin: 1px 0px 0px 0px;"
-                    [tooltip]="'Modifier'" Placement="top" (click)='updateIntervention(vehiculeInfo)'> <i class="fa fa-edit" aria-hidden="true"></i>
-            </button>
-          </td>
+              }
+            </td>
+            <td>
+              {{vehiculeInfo.verifiedAt | date:'dd-MM-yyyy'}}
+            </td>
+            <td>
+              <button class="btn btn-info btn-xs" style="padding: 0px 8px;font-size: 8px;margin: 1px 0px 0px 0px;"
+                [tooltip]="'Modifier'" Placement="top" (click)='updateIntervention(vehiculeInfo)'> <i class="fa fa-edit"
+                  aria-hidden="true"></i>
+              </button>
+            </td>
 
-        </tr>
+          </tr>
+          }
         </tbody>
       </table>
     </div>
@@ -82,7 +92,8 @@
 <div>
 </div>
 <div class="col-md-12 text-center">
-  <pagination [hidden]="loading" [totalItems]="bigTotalItems" [(ngModel)]="bigCurrentPage" [maxSize]="maxSize" class="pagination-sm"
-              [boundaryLinks]="true" [rotate]="false" [itemsPerPage]="itemsPerPage" (pageChanged)="pageChanged($event)"
-              previousText="Précédent" nextText="Suivant" firstText="Premier" lastText="Dernier"></pagination>
+  <pagination [hidden]="loading" [totalItems]="bigTotalItems" [(ngModel)]="bigCurrentPage" [maxSize]="maxSize"
+    class="pagination-sm" [boundaryLinks]="true" [rotate]="false" [itemsPerPage]="itemsPerPage"
+    (pageChanged)="pageChanged($event)" previousText="Précédent" nextText="Suivant" firstText="Premier"
+    lastText="Dernier"></pagination>
 </div>
