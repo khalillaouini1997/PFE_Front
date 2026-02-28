@@ -16,8 +16,7 @@
         <div class="col-md-6">
           <div class="form-group label-floating">
             <label class="control-label">Mot de passe</label>
-            <input type="text" class="form-control" [(ngModel)]="compteWeb.rawPassword" name="rawPassword"
-                   required>
+            <input type="text" class="form-control" [(ngModel)]="compteWeb.rawPassword" name="rawPassword" required>
           </div>
         </div>
       </div>
@@ -27,8 +26,10 @@
           <div class="form-group label-floating">
             <label class="control-label">Code Pays</label>
             <select [(ngModel)]="compteWeb.code_pays" class="form-control" name="code_paysconf" required>
-              <option *ngFor="let codePays of codesPays" [value]="codePays.value">
+              @for (codePays of codesPays; track codePays.value) {
+              <option [value]="codePays.value">
                 {{codePays.key}} (+{{codePays.value}}) </option>
+              }
             </select>
           </div>
         </div>
@@ -36,46 +37,41 @@
           <div class="form-group label-floating">
             <div class="input-group input-append date">
               <input type="text" class="form-control" bsDatepicker [(ngModel)]="date"
-                     [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }" name="date" placement="bottom"
-                     placeholder="Date expiration" required >
+                [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }" name="date" placement="bottom"
+                placeholder="Date expiration" required>
             </div>
           </div>
         </div>
 
       </div>
       <div class="row" style="margin-top: 0;">
-<!--        <div class="col-md-6 ">-->
-<!--          <div class="form-group label-floating">-->
-<!--            <label class="control-label">Options</label>-->
-<!--            <input id="country" type="text" class="form-control" (click)="charge()" [(ngModel)]=query-->
-<!--                   (keyup)=filter()>-->
-<!--          </div>-->
-<!--          <div class="suggestions" *ngIf="filteredList.length > 0">-->
-<!--            <ul *ngFor="let item of filteredList" class="itemsSelect">-->
-<!--              <li>-->
-<!--                <a class="selectedItem" (click)="select(item)">{{item.description}}</a>-->
-<!--              </li>-->
-<!--            </ul>-->
-<!--          </div>-->
-<!--          <div *ngFor="let item of selected">-->
-<!--            <div class="btn btn-warning">-->
-<!--              <span>{{item.description}} &nbsp;</span>-->
-<!--              <a class="selected" (click)="remove(item)">&times;</a>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
+        <!--        <div class="col-md-6 ">-->
+        <!--          <div class="form-group label-floating">-->
+        <!--            <label class="control-label">Options</label>-->
+        <!--            <input id="country" type="text" class="form-control" (click)="charge()" [(ngModel)]=query-->
+        <!--                   (keyup)=filter()>-->
+        <!--          </div>-->
+        <!--          <div class="suggestions" *ngIf="filteredList.length > 0">-->
+        <!--            <ul *ngFor="let item of filteredList" class="itemsSelect">-->
+        <!--              <li>-->
+        <!--                <a class="selectedItem" (click)="select(item)">{{item.description}}</a>-->
+        <!--              </li>-->
+        <!--            </ul>-->
+        <!--          </div>-->
+        <!--          <div *ngFor="let item of selected">-->
+        <!--            <div class="btn btn-warning">-->
+        <!--              <span>{{item.description}} &nbsp;</span>-->
+        <!--              <a class="selected" (click)="remove(item)">&times;</a>-->
+        <!--            </div>-->
+        <!--          </div>-->
+        <!--        </div>-->
 
         <div class="col-md-6">
           <div class="form-group label-floating">
             <label class="control-label">Options</label>
-            <ng-multiselect-dropdown
-              [(ngModel)]="selected"
-              [settings]="dropdownSettings"
-              [data]="options"
-              (onSelect)="onItemSelect($event)"
-              (onSelectAll)="onSelectAll($event)"
-              (onDeSelect)="onItemDeselect($event)"
-              (onDeSelectAll)="onDeselectAll($event)">
+            <ng-multiselect-dropdown [(ngModel)]="selected" [settings]="dropdownSettings" [data]="options"
+              (onSelect)="onItemSelect($event)" (onSelectAll)="onSelectAll($event)"
+              (onDeSelect)="onItemDeselect($event)" (onDeSelectAll)="onDeselectAll($event)">
             </ng-multiselect-dropdown>
           </div>
         </div>
@@ -86,8 +82,7 @@
         <div class="col-md-6 ">
           <div class="form-group label-floating">
             <label class="control-label">Pool</label>
-            <input type="number" min="0" max="4" [(ngModel)]="compteWeb.pool" class="form-control"
-                   name="pool" required>
+            <input type="number" min="0" max="4" [(ngModel)]="compteWeb.pool" class="form-control" name="pool" required>
           </div>
         </div>
       </div>
@@ -97,16 +92,14 @@
         <div class="col-md-6">
           <div class="form-group label-floating">
             <label class="control-label">Nom</label>
-            <input type="text" class="form-control" [(ngModel)]="compteWeb.firstname" name="firstname"
-                   required>
+            <input type="text" class="form-control" [(ngModel)]="compteWeb.firstname" name="firstname" required>
           </div>
         </div>
 
         <div class="col-md-6">
           <div class="form-group label-floating">
             <label class="control-label">Prénom</label>
-            <input type="text" class="form-control" [(ngModel)]="compteWeb.lastname" name="lastname"
-                   required>
+            <input type="text" class="form-control" [(ngModel)]="compteWeb.lastname" name="lastname" required>
           </div>
         </div>
       </div>
@@ -122,8 +115,7 @@
         <div class="col-md-6">
           <div class="form-group label-floating">
             <label class="control-label">Téléphone</label>
-            <input type="tel" class="form-control" [(ngModel)]="compteWeb.telephone" name="telephone"
-                   required>
+            <input type="tel" class="form-control" [(ngModel)]="compteWeb.telephone" name="telephone" required>
           </div>
         </div>
       </div>
@@ -132,7 +124,9 @@
           <div class="form-group label-floating">
             <label class="control-label">Région</label>
             <select [(ngModel)]="compteWeb.area" class="form-control" name="code_pays" required>
-              <option *ngFor="let t of regions" [value]="t">{{ t }}</option>
+              @for (t of regions; track t) {
+              <option [value]="t">{{ t }}</option>
+              }
             </select>
           </div>
         </div>
@@ -140,8 +134,9 @@
           <div class="form-group label-floating">
             <label class="control-label">Type de notification</label>
             <select [(ngModel)]="compteWeb.notificationSubquery" class="form-control" name="type_notif">
-              <option *ngFor="let notifSub of notifSubs" [value]="notifSub">{{ notifSub }}
-              </option>
+              @for (notifSub of notifSubs; track notifSub) {
+              <option [value]="notifSub">{{ notifSub }}</option>
+              }
             </select>
           </div>
         </div>
@@ -153,49 +148,51 @@
         </div>
 
       </div>
-      <button type="button" class="btn btn-success btn-sm pull-right" (click)="saveChange()"><i
-        class="fa fa-check"></i> sauvegarder les
+      <button type="button" class="btn btn-success btn-sm pull-right" (click)="saveChange()"><i class="fa fa-check"></i>
+        sauvegarder les
         modifications</button>
 
       <div class="row">
         <div class="col-md-12">
           <table class="table table-condensed table-bordered">
             <thead>
-            <tr>
-              <th class="danger" colspan="6" style="text-align:center;font-weight: bold;">Compte
-                serveur associé</th>
-            </tr>
-            <tr style="background: linear-gradient(60deg, #ef5350, #e53935); color:white;">
-              <th>Id</th>
-              <th>Pseudo</th>
-              <th>IP address</th>
-              <th>Créé à</th>
-              <th>Expiré le</th>
-              <th>Configurations</th>
-            </tr>
+              <tr>
+                <th class="danger" colspan="6" style="text-align:center;font-weight: bold;">Compte
+                  serveur associé</th>
+              </tr>
+              <tr style="background: linear-gradient(60deg, #ef5350, #e53935); color:white;">
+                <th>Id</th>
+                <th>Pseudo</th>
+                <th>IP address</th>
+                <th>Créé à</th>
+                <th>Expiré le</th>
+                <th>Configurations</th>
+              </tr>
             </thead>
             <tbody>
-            <tr>
-              <td>{{serverAccount.idCompteClientServer}}</td>
-              <td>{{serverAccount.pseudo}}</td>
-              <td>{{serverAccount.ipAdresse}}</td>
-              <td>{{serverAccount.date_creation | date:'dd-MM-yyyy'}}</td>
-              <td>{{serverAccount.date_Expiration | date:'dd-MM-yyyy'}}
-                <span class="label label-success" *ngIf="serverAccount.during==true">Active</span>
-                <span class="label label-danger" *ngIf="serverAccount.expired==true">Expiré</span>
-              </td>
-              <td>
-                <!--<span class="label label-warning btn clear change" [tooltip]="tooltipup" tooltipPlacement="left" data-backdrop="false" data-toggle="modal"
+              <tr>
+                <td>{{serverAccount.idCompteClientServer}}</td>
+                <td>{{serverAccount.pseudo}}</td>
+                <td>{{serverAccount.ipAdresse}}</td>
+                <td>{{serverAccount.date_creation | date:'dd-MM-yyyy'}}</td>
+                <td>{{serverAccount.date_Expiration | date:'dd-MM-yyyy'}}
+                  @if (serverAccount.during) {
+                  <span class="label label-success">Active</span>
+                  }
+                  @if (serverAccount.expired) {
+                  <span class="label label-danger">Expiré</span>
+                  }
+                </td>
+                <td>
+                  <!--<span class="label label-warning btn clear change" [tooltip]="tooltipup" tooltipPlacement="left" data-backdrop="false" data-toggle="modal"
                             data-target="#Modalupdateserver">
                             <i class="glyphicon glyphicon-refresh"></i> change</span>-->
-                <span class="labell label-success btn"
-                      (click)="prepareDB(serverAccount.idCompteClientServer)">
-                                        <i class="fa fa-database"></i> préparer BDD</span>
-                <span class="labelle label-primary btn"
-                      (click)="showDevises(serverAccount.idCompteClientServer)">
-                                        <i class="fa fa-mobile"></i> Boitiers</span>
-              </td>
-            </tr>
+                  <span class="labell label-success btn" (click)="prepareDB(serverAccount.idCompteClientServer)">
+                    <i class="fa fa-database"></i> préparer BDD</span>
+                  <span class="labelle label-primary btn" (click)="showDevises(serverAccount.idCompteClientServer)">
+                    <i class="fa fa-mobile"></i> Boitiers</span>
+                </td>
+              </tr>
 
             </tbody>
           </table>
@@ -206,50 +203,54 @@
         <div class="col-md-12 tableFixHead" style="margin-bottom: 20px;">
           <div class="col-md-12" style="background-color: #f2dede; text-align: center;">
             <span style="font-weight: bold;">Boitiers ({{boitiers.length}})</span>
-            <span class="text-warning" style="font-weight: bold;"
-                  *ngIf="getNumberOfBoitiersNotInstall() > 0"> {{getNumberOfBoitiersNotInstall()}} non
-                            installé</span>
+            @if (getNumberOfBoitiersNotInstall() > 0) {
+            <span class="text-warning" style="font-weight: bold;">
+              {{getNumberOfBoitiersNotInstall()}} non
+              installé</span>
+            }
           </div>
           <table class="table table-condensed table-hover table-bordered">
             <thead>
-            <tr>
-              <th style="width: 2%;padding-top: 3px;"><input style="margin: 0" type="checkbox"
-                                                             name="checkbox" [checked]="boitiers.length == numBoitiers.length"
-                                                             (click)="onCheckedAllBoitiers()"></th>
-              <th>Numéro</th>
-              <th>Etat</th>
-              <th>Configurations</th>
-            </tr>
+              <tr>
+                <th style="width: 2%;padding-top: 3px;"><input style="margin: 0" type="checkbox" name="checkbox"
+                    [checked]="boitiers.length == numBoitiers.length" (click)="onCheckedAllBoitiers()"></th>
+                <th>Numéro</th>
+                <th>Etat</th>
+                <th>Configurations</th>
+              </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let boitier of boitiers">
-              <td><input style="margin: 0" type="checkbox" name="checkbox"
-                         [checked]="isCheckedBoitier(boitier.numBoitier)"
-                         (click)="onCheckedBoitier(boitier.numBoitier)"></td>
-              <td>{{boitier.numBoitier}}</td>
-              <td>
-                                    <span class="label label-success"
-                                          *ngIf="boitier.etatBoitier=='INSTALLED'">Installé</span>
-                <span class="label label-danger" *ngIf="boitier.etatBoitier=='NOT_INSTALLED'">Non
-                                        installé</span>
-              </td>
-              <td>
-                <button *ngIf="boitier.etatBoitier=='INSTALLED'" type="button"
-                        class="btn btn-success pull-right"
-                        style="padding: 0px 8px;font-size: 8px;margin: 1px 0px 0px 0px;"
-                        (click)="editBoitier(boitier)" data-toggle="modal" data-target="#ModalInit"
-                        data-backdrop="false">
-                  <i class="material-icons">
-                    settings
-                  </i> Configurer</button>
-                <button *ngIf="boitier.etatBoitier=='NOT_INSTALLED'" type="button"
-                        class="btn btn-success pull-right"
-                        (click)="perpareDBForSingleDevice(boitier.numBoitier)">
-                  <i class="material-icons">
-                    build
-                  </i> Preparer BDD</button>
-              </td>
-            </tr>
+              @for (boitier of boitiers; track boitier.numBoitier) {
+              <tr>
+                <td><input style="margin: 0" type="checkbox" name="checkbox"
+                    [checked]="isCheckedBoitier(boitier.numBoitier)" (click)="onCheckedBoitier(boitier.numBoitier)">
+                </td>
+                <td>{{boitier.numBoitier}}</td>
+                <td>
+                  @if (boitier.etatBoitier=='INSTALLED') {
+                  <span class="label label-success">Installé</span>
+                  } @else {
+                  <span class="label label-danger">Non installé</span>
+                  }
+                </td>
+                <td>
+                  @if (boitier.etatBoitier=='INSTALLED') {
+                  <button type="button" class="btn btn-success pull-right"
+                    style="padding: 0px 8px;font-size: 8px;margin: 1px 0px 0px 0px;" (click)="editBoitier(boitier)"
+                    data-toggle="modal" data-target="#ModalInit" data-backdrop="false">
+                    <i class="material-icons">
+                      settings
+                    </i> Configurer</button>
+                  } @else {
+                  <button type="button" class="btn btn-success pull-right"
+                    (click)="perpareDBForSingleDevice(boitier.numBoitier)">
+                    <i class="material-icons">
+                      build
+                    </i> Preparer BDD</button>
+                  }
+                </td>
+              </tr>
+              }
             </tbody>
           </table>
         </div>
@@ -281,9 +282,9 @@
                 <div class="input-group input-append date">
                   <label class="control-label">Server Account</label>
                   <select [(ngModel)]="idCompteServer" class="form-control" name="server" required>
-                    <option *ngFor="let server of serverAccounts"
-                            [value]="server.idCompteClientServer">
-                      {{server.pseudo}} </option>
+                    @for (server of serverAccounts; track server.idCompteClientServer) {
+                    <option [value]="server.idCompteClientServer">{{server.pseudo}} </option>
+                    }
                   </select>
                 </div>
               </div>
@@ -312,33 +313,37 @@
 
       <form #recalcule="ngForm">
         <div class="modal-header">
-          <button type="button" class="close"
-                  style="margin-top: 5px;margin-right: 5px; color: white; font-size: 20px;"
-                  data-dismiss="modal">&times;</button>
+          <button type="button" class="close" style="margin-top: 5px;margin-right: 5px; color: white; font-size: 20px;"
+            data-dismiss="modal">&times;</button>
           <div style="background-color: #e73f3b; color: white;">
             <h4 class="title">Recalcule du boitier : {{selectedBoitierId}}</h4>
           </div>
         </div>
         <div class="modal-body">
 
-          <div class="row" style="margin-top: 0" *ngIf="numBoitiers.length > 0">
-            <div class="col-md-12"
-                 style="padding-bottom: 10px; padding-top: 10px; border-bottom: 1px solid #d2d2d2;">
+          @if (numBoitiers.length > 0) {
+          <div class="row" style="margin-top: 0">
+            <div class="col-md-12" style="padding-bottom: 10px; padding-top: 10px; border-bottom: 1px solid #d2d2d2;">
               <div style="font-weight: bold">Appliquer aux : </div>
-              <div style="overflow-x: auto;"><span class="label label-info" style="margin-left: 5px;"
-                                                   *ngFor="let numBoitier of numBoitiers">{{numBoitier}}</span></div>
+              <div style="overflow-x: auto;">
+                @for (numBoitier of numBoitiers; track numBoitier) {
+                <span class="label label-info" style="margin-left: 5px;">{{numBoitier}}</span>
+                }
+              </div>
             </div>
           </div>
+          }
           <div class="row" style="margin-top: 0">
             <div class="col-md-6">
               <div class="form-group label-floating">
 
-                <div class="input-group input-append date" *ngIf="dateBoolean">
-                  <input type="text" class="form-control" bsDatepicker [(ngModel)]="datestart"
-                         [maxDate]="maxDate" [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY, HH:mm' }"
-                         name="datestart" placement="bottom" placeholder="Date de début"
-                         autocomplete="off">
+                @if (dateBoolean) {
+                <div class="input-group input-append date">
+                  <input type="text" class="form-control" bsDatepicker [(ngModel)]="datestart" [maxDate]="maxDate"
+                    [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY, HH:mm' }" name="datestart" placement="bottom"
+                    placeholder="Date de début" autocomplete="off">
                 </div>
+                }
               </div>
             </div>
             <div class="col-md-6">
@@ -357,21 +362,34 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-success btn-sm" [disabled]="!recalcule.form.valid"
-                  (click)="recalculate()"><i *ngIf="!loadingRecalculate" class="fa fa-retweet"></i> <i
-            *ngIf="loadingRecalculate" class="fa fa-spinner fa-spin"></i>Recalculer</button>
+            (click)="recalculate()">
+            @if (!loadingRecalculate) {
+            <i class="fa fa-retweet"></i>
+            }
+            @if (loadingRecalculate) {
+            <i class="fa fa-spinner fa-spin"></i>
+            }
+            Recalculer
+          </button>
         </div>
       </form>
       <div class="modal-header">
-                <span class="modal-title"><i *ngIf="loadingRecalculate" class="fa fa-spinner fa-spin"></i>
-                    Notifications</span>
-        <span style="font-weight: bold; font-size: 12px;"
-              *ngIf="notifications.length > 0 && !loadingRecalculate">
-                    <span *ngIf="getNumberOfNotificationErrors() > 0" class="text-danger"><i
-                      class="fa fa-exclamation-circle"></i> {{getNumberOfNotificationErrors()}} erreurs
-                        trouvé</span>
-                    <span *ngIf="getNumberOfNotificationErrors() == 0" class="text-success"><i class="fa fa-check"></i>
-                        bien recalculé</span>
-                </span>
+        <span class="modal-title">
+          @if (loadingRecalculate) {
+          <i class="fa fa-spinner fa-spin"></i>
+          }
+          Notifications</span>
+        @if (notifications.length > 0 && !loadingRecalculate) {
+        <span style="font-weight: bold; font-size: 12px;">
+          @if (getNumberOfNotificationErrors() > 0) {
+          <span class="text-danger"><i class="fa fa-exclamation-circle"></i> {{getNumberOfNotificationErrors()}} erreurs
+            trouvé</span>
+          }
+          @if (getNumberOfNotificationErrors() == 0) {
+          <span class="text-success"><i class="fa fa-check"></i> bien recalculé</span>
+          }
+        </span>
+        }
       </div>
       <div class="modal-body">
         <div style="text-align:center; margin-top: 0px;;">
@@ -381,12 +399,16 @@
                                 text-align: justify;
                                 border: 1px solid black;
                                 overflow: auto;">
-            <div *ngFor="let notification of notifications ; let i = index ">
-              <!--<i class="fas "></i>-->
-              <span [ngClass]="{'text-danger': !notification.status}"><i
-                [ngClass]="{'fa-exclamation-circle': !notification.status, 'fa-check-circle text-success': notification.status}"
-                class="fa"></i>{{i + 1}}__{{notification.value}}</span>
-            </div>
+            @for (notification of notifications; track $index) {
+            <span [ngClass]="{'text-danger': !notification.status}">
+              @if (notification.status) {
+              <i class="fa fa-check-circle text-success"></i>
+              } @else {
+              <i class="fa fa-exclamation-circle"></i>
+              }
+              {{$index + 1}}__{{notification.value}}
+            </span>
+            }
           </h6>
 
         </div>
@@ -400,39 +422,32 @@
                 <div class="row">
                   <div class="col-md-6">
                     <span>ignition</span>
-                    <input class="pull-right" type="checkbox" name="useIgnition"
-                           [(ngModel)]="deviceOpt.useIgnition" />
+                    <input class="pull-right" type="checkbox" name="useIgnition" [(ngModel)]="deviceOpt.useIgnition" />
                   </div>
                   <div class="col-md-6">
                     <span>fuel</span>
-                    <input class="pull-right" type="checkbox" name="useFuel"
-                           [(ngModel)]="deviceOpt.useFuel" />
+                    <input class="pull-right" type="checkbox" name="useFuel" [(ngModel)]="deviceOpt.useFuel" />
                   </div>
                   <div class="col-md-6">
                     <span>temp</span>
-                    <input class="pull-right" type="checkbox" name="useTemp"
-                           [(ngModel)]="deviceOpt.useTemp" />
+                    <input class="pull-right" type="checkbox" name="useTemp" [(ngModel)]="deviceOpt.useTemp" />
                   </div>
                   <div class="col-md-6">
                     <span>fms</span>
-                    <input class="pull-right" type="checkbox" name="useFms"
-                           [(ngModel)]="deviceOpt.useFms" />
+                    <input class="pull-right" type="checkbox" name="useFms" [(ngModel)]="deviceOpt.useFms" />
                   </div>
 
                   <div class="col-md-6">
                     <span>j1708</span>
-                    <input class="pull-right" type="checkbox" name="useJ1708"
-                           [(ngModel)]="deviceOpt.useJ1708" />
+                    <input class="pull-right" type="checkbox" name="useJ1708" [(ngModel)]="deviceOpt.useJ1708" />
                   </div>
                   <div class="col-md-6">
                     <span>id driver</span>
-                    <input class="pull-right" type="checkbox" name="useIdDriver"
-                           [(ngModel)]="deviceOpt.useIdDriver" />
+                    <input class="pull-right" type="checkbox" name="useIdDriver" [(ngModel)]="deviceOpt.useIdDriver" />
                   </div>
                   <div class="col-md-6">
                     <span>stop</span>
-                    <input class="pull-right" type="checkbox" name="useStop"
-                           [(ngModel)]="deviceOpt.useStop" />
+                    <input class="pull-right" type="checkbox" name="useStop" [(ngModel)]="deviceOpt.useStop" />
                   </div>
                 </div>
               </div>
@@ -449,8 +464,7 @@
                   <div class="col-md-6">
                     <div class="form-group label-floating">
                       <label class="control-label">Path Minimun (sec)</label>
-                      <select class="form-control" [(ngModel)]="pathConfig.pathMinSec"
-                              name="pathmin" required>
+                      <select class="form-control" [(ngModel)]="pathConfig.pathMinSec" name="pathmin" required>
                         <option>30</option>
                         <option selected>60</option>
                         <option>90</option>
@@ -467,8 +481,7 @@
                   <div class="col-md-6">
                     <div class="form-group label-floating">
                       <label class="control-label">Stop Minimun (sec)</label>
-                      <select class="form-control" [(ngModel)]="pathConfig.stopMinSec"
-                              name="stopmin" required>
+                      <select class="form-control" [(ngModel)]="pathConfig.stopMinSec" name="stopmin" required>
                         <option>30</option>
                         <option>60</option>
                         <option>90</option>
@@ -487,8 +500,7 @@
                   <div class="col-md-4">
                     <div class="form-group label-floating">
                       <label class="control-label">Pause Minimun (sec)</label>
-                      <select class="form-control" [(ngModel)]="pathConfig.pauseMinSec"
-                              name="pausemin" required>
+                      <select class="form-control" [(ngModel)]="pathConfig.pauseMinSec" name="pausemin" required>
                         <option>30</option>
                         <option selected>60</option>
                         <option>90</option>
@@ -505,8 +517,8 @@
                   <div class="col-md-4">
                     <div class="form-group label-floating">
                       <label class="control-label">distance Minimun (m)</label>
-                      <select class="form-control" [(ngModel)]="pathConfig.distanceMinMeter"
-                              name="distancemin" required>
+                      <select class="form-control" [(ngModel)]="pathConfig.distanceMinMeter" name="distancemin"
+                        required>
                         <option>5</option>
                         <option selected>10</option>
                         <option>20</option>
@@ -521,8 +533,7 @@
                   <div class="col-md-4">
                     <div class="form-group label-floating">
                       <label class="control-label">Speed Minimun (km/h)</label>
-                      <select class="form-control" [(ngModel)]="pathConfig.pathMinSpeed"
-                              name="speedmin" required>
+                      <select class="form-control" [(ngModel)]="pathConfig.pathMinSpeed" name="speedmin" required>
                         <option selected>1</option>
                         <option>5</option>
                         <option>10</option>
@@ -556,11 +567,15 @@
                 <input class="pull-right" type="number" name="useIgnition" />
               </div>
               <div class="col-m6-2">
-                <button type="button" class="btn btn-success btn-sm pull-left"
-                        [hidden]="!Opt.form.valid" (click)="editDeviceOptionConfig()"><i
-                  *ngIf="!loadingEditDeviceOption" class="fa fa-check"></i> <i
-                  *ngIf="loadingEditDeviceOption" class="fa fa-spinner fa-spin"></i> Modifier les
-                  options</button>
+                <button type="button" class="btn btn-success btn-sm pull-left" [hidden]="!Opt.form.valid"
+                  (click)="editDeviceOptionConfig()">
+                  @if (!loadingEditDeviceOption) {
+                  <i class="fa fa-check"></i>
+                  }
+                  @if (loadingEditDeviceOption) {
+                  <i class="fa fa-spinner fa-spin"></i>
+                  }
+                  Modifier les options</button>
               </div>
             </form>
           </div>
@@ -569,23 +584,38 @@
         <div class="row" style="margin-top: 0">
           <div class="col-md-4">
             <button type="button" class="btn btn-success btn-sm pull-left" [hidden]="!Opt.form.valid"
-                    (click)="editDeviceOptionConfig()"><i *ngIf="!loadingEditDeviceOption"
-                                                          class="fa fa-check"></i> <i *ngIf="loadingEditDeviceOption"
-                                                                                      class="fa fa-spinner fa-spin"></i> Modifier les options</button>
+              (click)="editDeviceOptionConfig()">
+              @if (!loadingEditDeviceOption) {
+              <i class="fa fa-check"></i>
+              }
+              @if (loadingEditDeviceOption) {
+              <i class="fa fa-spinner fa-spin"></i>
+              }
+              Modifier les options</button>
           </div>
           <div class="col-md-2">
             <button type="button" class="btn btn-success btn-sm pull-right" (click)="resetOdometre()">
-              <i *ngIf="!loadingResetOdometre" class="fa fa-check"></i> <i *ngIf="loadingResetOdometre"
-                                                                           class="fa fa-spinner fa-spin"></i>
+              @if (!loadingResetOdometre) {
+              <i class="fa fa-check"></i>
+              }
+              @if (loadingResetOdometre) {
+              <i class="fa fa-spinner fa-spin"></i>
+              }
               Reset Kilometrage
             </button>
           </div>
           <div class="col-md-6">
             <button type="button" class="btn btn-default btn-sm pull-right" data-dismiss="modal"><i
-              class="fa fa-times"></i> Annuler</button>
+                class="fa fa-times"></i> Annuler</button>
             <button type="button" class="btn btn-success btn-sm pull-right" [hidden]="!Init.form.valid"
-                    (click)="editPathConfig()"><i *ngIf="!loadingEditPathConfig" class="fa fa-check"></i> <i
-              *ngIf="loadingEditPathConfig" class="fa fa-spinner fa-spin"></i> Initialiser</button>
+              (click)="editPathConfig()">
+              @if (!loadingEditPathConfig) {
+              <i class="fa fa-check"></i>
+              }
+              @if (loadingEditPathConfig) {
+              <i class="fa fa-spinner fa-spin"></i>
+              }
+              Initialiser</button>
           </div>
         </div>
 
@@ -596,26 +626,27 @@
             <div class="form-group label-floating">
               <label class="control-label">Rawstream Id</label>
               <select class="form-control" [(ngModel)]="deviceSetting.idIpAdresse" name="idIpAdresse">
-                <option *ngFor="let ip of ipAddresses" [ngValue]="ip.idIpAdresse">{{ip.label}}</option>
+                @for (ip of ipAddresses; track ip.idIpAdresse) {
+                <option [ngValue]="ip.idIpAdresse">{{ip.label}}</option>
+                }
               </select>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group label-floating">
               <label class="control-label">Stream Id</label>
-              <input type="number" class="form-control" name="streamId"
-                     [(ngModel)]="deviceSetting.streamId">
+              <input type="number" class="form-control" name="streamId" [(ngModel)]="deviceSetting.streamId">
             </div>
           </div>
           <form class="navbar-form navbar-right" role="search" style="margin:0;">
             <div class="form-group  is-empty">
               <input type="text" class="form-control" name="search" [(ngModel)]="imei"
-                     placeholder="Rechercher Imei..." />
+                placeholder="Rechercher Imei..." />
               <span class="material-input"></span>
             </div>
             <button type="submit" class="btn btn-white btn-sm" title="Rechercher"
-                    style="margin: 0px; padding: 1px 5px; margin: 0px 0px 0px 0px;"
-                    (click)="getSearchDeviceIemi(imei)"><i class="fa fa-search" style="font-size: 14px"></i>
+              style="margin: 0px; padding: 1px 5px; margin: 0px 0px 0px 0px;" (click)="getSearchDeviceIemi(imei)"><i
+                class="fa fa-search" style="font-size: 14px"></i>
               Rechercher Imei</button>
           </form>
         </div>
@@ -623,9 +654,14 @@
 
         <div class="row" style="margin-top: 0">
           <div class="col-md-6">
-            <button type="button" class="btn btn-success btn-sm pull-right" (click)="editDeviceSetting()"><i
-              *ngIf="!loadingDeviceSetting" class="fa fa-check"></i> <i *ngIf="loadingDeviceSetting"
-                                                                        class="fa fa-spinner fa-spin"></i> Modifier les paramétres boitier</button>
+            <button type="button" class="btn btn-success btn-sm pull-right" (click)="editDeviceSetting()">
+              @if (!loadingDeviceSetting) {
+              <i class="fa fa-check"></i>
+              }
+              @if (loadingDeviceSetting) {
+              <i class="fa fa-spinner fa-spin"></i>
+              }
+              Modifier les paramétres boitier</button>
           </div>
         </div>
 
