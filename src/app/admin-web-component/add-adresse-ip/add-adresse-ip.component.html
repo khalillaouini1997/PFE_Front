@@ -8,19 +8,19 @@
           <p class="category">Complete this Form</p>
         </div>
         <div class="card-content">
-          <form #IpForm="ngForm">
+          <form [formGroup]="ipForm">
             <div class="row">
 
               <div class="col-md-6">
                 <div class="form-group label-floating">
                   <label class="control-label">Label</label>
-                  <input type="text" [(ngModel)]="ipAddress.label" class="form-control" name="label" required>
+                  <input type="text" formControlName="label" class="form-control">
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="form-group label-floating">
                   <label class="control-label">Value</label>
-                  <input type="text" [(ngModel)]="ipAddress.value" class="form-control" name="value" required>
+                  <input type="text" formControlName="value" class="form-control">
                 </div>
               </div>
             </div>
@@ -28,13 +28,13 @@
               <div class="col-md-6">
                 <div class="form-group label-floating">
                   <label class="control-label">Pseudo</label>
-                  <input type="text" [(ngModel)]="ipAddress.jdbcUser" class="form-control" name="jdbcUser">
+                  <input type="text" formControlName="jdbcUser" class="form-control">
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="form-group label-floating">
                   <label class="control-label">Password</label>
-                  <input type="password" [(ngModel)]="ipAddress.jdbcPass" class="form-control" name="jdbcPass">
+                  <input type="password" formControlName="jdbcPass" class="form-control">
                 </div>
               </div>
             </div>
@@ -42,7 +42,7 @@
               <div class="col-md-9">
                 <div class="form-group label-floating">
                   <label class="control-label">URL</label>
-                  <input type="text" [(ngModel)]="ipAddress.url" class="form-control" name="url">
+                  <input type="text" formControlName="url" class="form-control">
                 </div>
               </div>
             </div>
@@ -50,7 +50,7 @@
               <div class="col-md-4">
                 <div class="form-group label-floating">
                   <label class="control-label">Type de Connection</label>
-                  <select [(ngModel)]="ipAddress.typeConnection" class="form-control" name="typeConnection">
+                  <select formControlName="typeConnection" class="form-control">
                     @for (type of typeConnection; track type.type) {
                     <option [value]="type.type"> {{type.type}} </option>
                     }
@@ -60,7 +60,7 @@
               <div class="col-md-4">
                 <div class="form-group label-floating">
                   <label class="control-label">Data Base Name</label>
-                  <input type="text" [(ngModel)]="ipAddress.dbName" class="form-control" name="dbName">
+                  <input type="text" formControlName="dbName" class="form-control">
                 </div>
               </div>
             </div>
@@ -68,7 +68,7 @@
               <div class="col-md-6">
 
               </div>
-              <button type="button" class="btn btn-info pull-right" [disabled]="!IpForm.form.valid "
+              <button type="button" class="btn btn-info pull-right" [disabled]="ipForm.invalid"
                 (click)="saveIpAddres()">Save Ip Address</button>
 
             </div>

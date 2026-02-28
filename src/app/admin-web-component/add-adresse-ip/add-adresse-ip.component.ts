@@ -1,8 +1,8 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { IpAddress } from "../../data/data";
 import { IpAddressService } from "../../service/ip-address.service";
-import { FormsModule } from '@angular/forms';
-import { NgFor } from '@angular/common';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -10,25 +10,47 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './add-adresse-ip.component.html',
   styleUrls: ['./add-adresse-ip.component.css'],
   standalone: true,
-  imports: [FormsModule]
+  imports: [ReactiveFormsModule, CommonModule]
 })
 export class AddAdresseIpComponent implements OnInit {
 
-  ipAddress: IpAddress = new IpAddress();
+  ipForm!: FormGroup;
   typeConnection: { type: string; }[] = [];
 
   private readonly ipAddressService = inject(IpAddressService);
   private readonly toastr = inject(ToastrService);
+  private readonly fb = inject(FormBuilder);
+
+  constructor() {
+    this.initForm();
+  }
+
+  initForm() {
+    this.ipForm = this.fb.group({
+      label: ['', Validators.required],
+      value: ['', [Validators.required, Validators.pattern(/^(?!0)(?!.*\.$)((1?\d?\d|25[0-5]|2[0-4]\d)(\.|$)){4}$/)]],
+      jdbcUser: [''],
+      jdbcPass: [''],
+      url: [''],
+      typeConnection: ['SSH'],
+      dbName: ['']
+    });
+  }
 
   ngOnInit() {
     this.typeConnection = this.ipAddressService.typeConnection;
   }
 
   saveIpAddres() {
-    this.ipAddressService.saveIpAddress(this.ipAddress).subscribe({
+    if (this.ipForm.invalid) {
+      this.toastr.warning('Please fill all required fields correctly', 'Warning');
+      return;
+    }
+
+    this.ipAddressService.saveIpAddress(this.ipForm.value).subscribe({
       next: () => {
         this.toastr.success('IP Address saved', 'Success');
-        this.ipAddress = new IpAddress();
+        this.ipForm.reset({ typeConnection: 'SSH' });
       },
       error: () => {
         this.toastr.error('Error saving IP address', 'Error');
