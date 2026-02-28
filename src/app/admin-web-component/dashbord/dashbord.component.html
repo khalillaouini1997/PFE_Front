@@ -69,63 +69,84 @@
                         </tr>
                     }
 
-                    <tr *ngFor="let tram of listTram">
+                    @for (tram of listTram; track tram.deviceid) {
+                        <tr>
 
-                        <td><span class="label label-info">{{tram.deviceid}}</span></td>
-                        <td>{{tram.matricule}}</td>
-                        <td>
-                            <span *ngIf="tram.status == 'TECHNICAL_ISSUE'" class="label label-danger">{{tram.status}}</span>
-                            <span *ngIf="tram.status == 'NON_VALID'" class="label label-warning">{{tram.status}}</span>
-                            <span *ngIf="tram.status == 'VALID'" class="label label-success">{{tram.status}}</span>
-                        </td>
-                        <td>{{tram.latitude}}</td>
-                        <td>{{tram.longitude}}</td>
-                        <td>
-                            <span *ngIf="tram.validity" class="label label-success">Vrai</span>
-                            <span *ngIf="!tram.validity" class="label label-danger">Faux</span>
-                        </td>
-                        <td>{{tram.speed}}</td>
-                        <td><span *ngIf="tram.ignition==false">Off</span>
-                            <span *ngIf="tram.ignition==true">On</span></td>
-                        <td>{{tram.sat_in_view}}</td>
-                        <td>{{tram.signal}}</td>
-                        <td>
-                            <span *ngIf="diffHours(tram.record_time) >= 1 && diffHours(tram.record_time) < 24" class="label label-warning">{{tram.record_time
-                                | date:'dd-MM-yyyy HH:mm:ss' }}</span>
-                            <span *ngIf="diffHours(tram.record_time) >= 24" class="label label-danger">{{tram.record_time
-                                | date:'dd-MM-yyyy HH:mm:ss' }}</span>
-                            <span *ngIf="diffHours(tram.record_time) < 1">{{tram.record_time |
-                                date:'dd-MM-yyyy HH:mm:ss' }}</span>
-                        </td>
-                        <td>{{tram.last_raw_time | date:'dd-MM-yyyy HH:mm:ss'}}</td>
-                        <td>{{tram.lastId}}</td>
-                        <td>
-                            <span *ngIf="(tram.lastId - tram.lastIdRaw) >= 20" class="label label-danger">{{tram.lastIdRaw}}</span>
-                            <span *ngIf="(tram.lastId - tram.lastIdRaw) < 20">{{tram.lastIdRaw}}</span>
-                        </td>
-                        <td>{{tram.lastTime | date:'dd-MM-yyyy HH:mm:ss'}}</td>
-                        <td>
-                            <span *ngIf="tram.ignitionStatistique == 0" class="label label-danger">{{tram.ignitionStatistique
-                                | number: '.2-2'}} %</span>
-                            <span *ngIf="tram.ignitionStatistique != 0">{{tram.ignitionStatistique |
-                                number: '.2-2'}} %</span>
-                        </td>
-                        <td>
-                            <span *ngIf="tram.invalidityStatistique > 10" class="label label-danger">{{tram.invalidityStatistique
-                                | number: '.2-2'}} %</span>
-                            <span *ngIf="tram.invalidityStatistique <= 10">{{tram.invalidityStatistique |
-                                number: '.2-2'}} %</span>
-                        </td>
-                        <td>
-                            <span *ngIf="tram.speedStatistique == 0" class="label label-danger">{{tram.speedStatistique
-                                | number: '.2-2'}} %</span>
-                            <span *ngIf="tram.speedStatistique != 0">{{tram.speedStatistique | number:
-                                '.2-2'}} %</span>
-                        </td>
-                        <td>{{tram.numPuce}}</td>
-                        <td>{{tram.imei}}</td>
-                        <td>{{tram.version}}</td>
-                    </tr>
+                            <td><span class="label label-info">{{tram.deviceid}}</span></td>
+                            <td>{{tram.matricule}}</td>
+                            <td>
+                                @if (tram.status == 'TECHNICAL_ISSUE') {
+                                    <span class="label label-danger">{{tram.status}}</span>
+                                } @else if (tram.status == 'NON_VALID') {
+                                    <span class="label label-warning">{{tram.status}}</span>
+                                } @else if (tram.status == 'VALID') {
+                                    <span class="label label-success">{{tram.status}}</span>
+                                }
+                            </td>
+                            <td>{{tram.latitude}}</td>
+                            <td>{{tram.longitude}}</td>
+                            <td>
+                                @if (tram.validity) {
+                                    <span class="label label-success">Vrai</span>
+                                } @else {
+                                    <span class="label label-danger">Faux</span>
+                                }
+                            </td>
+                            <td>{{tram.speed}}</td>
+                            <td>
+                                @if (!tram.ignition) {
+                                    <span>Off</span>
+                                } @else {
+                                    <span>On</span>
+                                }
+                            </td>
+                            <td>{{tram.sat_in_view}}</td>
+                            <td>{{tram.signal}}</td>
+                            <td>
+                                @if (diffHours(tram.record_time) >= 1 && diffHours(tram.record_time) < 24) {
+                                    <span class="label label-warning">{{tram.record_time | date:'dd-MM-yyyy HH:mm:ss' }}</span>
+                                } @else if (diffHours(tram.record_time) >= 24) {
+                                    <span class="label label-danger">{{tram.record_time | date:'dd-MM-yyyy HH:mm:ss' }}</span>
+                                } @else {
+                                    <span>{{tram.record_time | date:'dd-MM-yyyy HH:mm:ss' }}</span>
+                                }
+                            </td>
+                            <td>{{tram.last_raw_time | date:'dd-MM-yyyy HH:mm:ss'}}</td>
+                            <td>{{tram.lastId}}</td>
+                            <td>
+                                @if ((tram.lastId - tram.lastIdRaw) >= 20) {
+                                    <span class="label label-danger">{{tram.lastIdRaw}}</span>
+                                } @else {
+                                    <span>{{tram.lastIdRaw}}</span>
+                                }
+                            </td>
+                            <td>{{tram.lastTime | date:'dd-MM-yyyy HH:mm:ss'}}</td>
+                            <td>
+                                @if (tram.ignitionStatistique == 0) {
+                                    <span class="label label-danger">{{tram.ignitionStatistique | number: '.2-2'}} %</span>
+                                } @else {
+                                    <span>{{tram.ignitionStatistique | number: '.2-2'}} %</span>
+                                }
+                            </td>
+                            <td>
+                                @if (tram.invalidityStatistique > 10) {
+                                    <span class="label label-danger">{{tram.invalidityStatistique | number: '.2-2'}} %</span>
+                                } @else {
+                                    <span>{{tram.invalidityStatistique | number: '.2-2'}} %</span>
+                                }
+                            </td>
+                            <td>
+                                @if (tram.speedStatistique == 0) {
+                                    <span class="label label-danger">{{tram.speedStatistique | number: '.2-2'}} %</span>
+                                } @else {
+                                    <span>{{tram.speedStatistique | number: '.2-2'}} %</span>
+                                }
+                            </td>
+                            <td>{{tram.numPuce}}</td>
+                            <td>{{tram.imei}}</td>
+                            <td>{{tram.version}}</td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>
