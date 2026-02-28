@@ -14,19 +14,19 @@
           <p class="category">Complete this Form</p>
         </div>
         <div class="card-content">
-          <form #webForm="ngForm">
+          <form [formGroup]="adminForm">
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group label-floating">
                   <label class="control-label">username</label>
-                  <input type="text" class="form-control" name="username" [(ngModel)]="adminCompte.username" required>
+                  <input type="text" class="form-control" formControlName="username">
                 </div>
               </div>
 
               <div class="col-md-6">
                 <div class="form-group label-floating">
                   <label class="control-label">Password</label>
-                  <input type="text" class="form-control" name="password" [(ngModel)]="adminCompte.password" required>
+                  <input type="text" class="form-control" formControlName="password">
                 </div>
               </div>
             </div>
@@ -35,7 +35,7 @@
               <div class="col-md-6">
                 <div class="form-group label-floating">
                   <label class="control-label">Role</label>
-                  <select [(ngModel)]="adminCompte.role" class="form-control" name="code_pays">
+                  <select formControlName="role" class="form-control">
                     @for (r of roles; track r) {
                     <option [value]="r">{{ r }}</option>
                     }
@@ -46,7 +46,7 @@
               <div class="col-md-6">
                 <div class="form-group label-floating">
                   <label class="control-label">Id Traccar</label>
-                  <input type="number" class="form-control" name="idTraccar" [(ngModel)]="adminCompte.idTraccar">
+                  <input type="number" class="form-control" formControlName="idTraccar">
                 </div>
               </div>
             </div>
@@ -55,14 +55,14 @@
               <div class="col-md-6">
                 <div class="form-group label-floating">
                   <label class="control-label">Use Fcm</label>
-                  <input type="checkbox" [checked]="checked" name="checked" [(ngModel)]="adminCompte.useFcm">
+                  <input type="checkbox" formControlName="useFcm">
                 </div>
               </div>
 
               <div class="col-md-6">
                 <div class="form-group label-floating">
                   <label class="control-label">Fcm Prefix</label>
-                  <input type="text" class="form-control" name="fcmPrefix" [(ngModel)]="adminCompte.fcmPrefix">
+                  <input type="text" class="form-control" formControlName="fcmPrefix">
                 </div>
               </div>
             </div>
@@ -71,15 +71,14 @@
               <div class="col-md-6">
                 <div class="form-group label-floating">
                   <label class="control-label">Mail Support</label>
-                  <input type="text" class="form-control" name="mailSupport" [(ngModel)]="adminCompte.mailSupport">
+                  <input type="text" class="form-control" formControlName="mailSupport">
                 </div>
               </div>
 
               <div class="col-md-6">
                 <div class="form-group label-floating">
                   <label class="control-label">Device Cost By Day</label>
-                  <input type="text" class="form-control" name="deviceCostByDay"
-                    [(ngModel)]="adminCompte.deviceCostByDay">
+                  <input type="text" class="form-control" formControlName="deviceCostByDay">
                 </div>
               </div>
             </div>
@@ -87,20 +86,19 @@
               <div class="col-md-6">
                 <div class="form-group label-floating">
                   <label class="control-label">AccountFreePerMonth</label>
-                  <input type="number" class="form-control" name="accountFreePerMonth"
-                    [(ngModel)]="adminCompte.accountFreePerMonth">
+                  <input type="number" class="form-control" formControlName="accountFreePerMonth">
                 </div>
               </div>
 
               <div class="col-md-6">
                 <div class="form-group label-floating">
                   <label class="control-label">Transction Fee</label>
-                  <input type="text" class="form-control" name="transctionFee" [(ngModel)]="adminCompte.transctionFee">
+                  <input type="text" class="form-control" formControlName="transctionFee">
                 </div>
               </div>
             </div>
 
-            <button type="button" class="btn btn-danger pull-right" [disabled]="!webForm.form.valid"
+            <button type="button" class="btn btn-danger pull-right" [disabled]="adminForm.invalid"
               (click)="addAdminCompte()">Enregistrer le admin compte</button>
             <div class="clearfix"></div>
           </form>
