@@ -1,4 +1,3 @@
-
 <div class="col-md-12">
     <div class="card">
         <div class="card-header" data-background-color="red">
@@ -44,21 +43,27 @@
                 </thead>
                 <tbody style="font-size: 12px;">
 
-                    <tr *ngIf="loading">
-                      <td style="text-align: center" colspan="23">
-                        <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
-                      </td>
+                    @if (loading) {
+                    <tr>
+                        <td style="text-align: center" colspan="23">
+                            <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+                        </td>
                     </tr>
+                    }
 
-                    <tr *ngFor="let compteWeb of comptesWeb"
-                        [routerLink]="['/adminWeb/configurations',compteWeb.idCompteClientWeb]" class="cl">
+                    @for (compteWeb of comptesWeb; track compteWeb.idCompteClientWeb) {
+                    <tr [routerLink]="['/adminWeb/configurations',compteWeb.idCompteClientWeb]" class="cl">
                         <td>{{compteWeb.idCompteClientWeb}}</td>
                         <td>{{compteWeb.login}}</td>
                         <td>{{compteWeb.rawPassword}}</td>
                         <td>{{compteWeb.date_creation | date:'dd-MM-yyyy'}}</td>
                         <td>{{compteWeb.date_expiration | date:'dd-MM-yyyy' }}
-                            <span class="label label-success" *ngIf="compteWeb.during==true">During</span>
-                            <span class="label label-danger" *ngIf="compteWeb.expired==true">Expired</span>
+                            @if (compteWeb.during) {
+                            <span class="label label-success">During</span>
+                            }
+                            @if (compteWeb.expired) {
+                            <span class="label label-danger">Expired</span>
+                            }
                         </td>
                         <td>{{compteWeb.firstname}}&nbsp;{{compteWeb.lastname}}</td>
                         <td>{{compteWeb.telephone}}</td>
@@ -75,23 +80,15 @@
                                 data-backdrop="false">
                                 <i class="material-icons md-24"
                                     title="Configurer le compte Web">account_box</i></button>
-                            <!---[tooltip]="tooltipcon"
-                                tooltipPlacement="top"
-                                <tooltip-content #tooltipcon>
-                                Configurer le compte Web
-                            </tooltip-content>-->
+
                             <button class="btn btn-danger btn-xs"
                                 style="padding: 0px 8px;font-size: 8px;margin: 1px 0px 0px 0px;"
                                 (click)="onSelect(compteWeb);deleteWebAccount();">
                                 <i class="material-icons md-24"
                                     title=" Supprimer le compte Web">delete_forever</i></button>
-                            <!--[tooltip]="tooltipdel"
-                                tooltipPlacement="top"
-                                <tooltip-content #tooltipdel>
-                                Supprimer le compte Web
-                            </tooltip-content>-->
                         </td>
                     </tr>
+                    }
                 </tbody>
             </table>
         </div>
