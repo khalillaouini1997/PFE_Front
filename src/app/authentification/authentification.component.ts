@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthentificationService } from './authentification.service';
+import { AuthService } from '../service/auth.service';
 import { ToastrService } from 'ngx-toastr';
-import { DataService } from '../service/data.service';
 import { FormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
 
@@ -13,67 +12,39 @@ import { NgIf } from '@angular/common';
   standalone: true,
   imports: [FormsModule, NgIf]
 })
-export class AuthentificationComponent implements OnInit {
+export class AuthentificationComponent {
 
-
-  //login et password
   login: string = '';
   password: string = '';
-  // error message
-  errorMessage: string;
+  errorMessage: string = '';
   errorVisible: boolean = false;
   loading: boolean = false;
 
-
-  constructor(private authentificationService: AuthentificationService, private router: Router,
-    private dataService: DataService, private toastr: ToastrService) { }
-
-  ngOnInit() {
-
-  }
-
-  //=====================================
-  //           authentification
-  //=====================================
-
-  /*onSubmit() {
-    this.authentificationService.authentificate(this.login, this.password).subscribe(_admin => {
-      this.authentificationService.saveTokenInStorage(_admin.token, true);
-      localStorage.setItem("user", JSON.stringify(_admin));
-      this.errorVisible = false;
-      localStorage.setItem("isReloading", "true");
-      if (_admin.user.role == 'AGENT') {
-        this.router.navigate(['/adminWeb/compteweb']);
-      } else {
-        this.router.navigate(['/adminWeb/dashboard']);
-      }
-    }, error => { this.errorVisible = true; this.errorMessage = "this login or password is not correct or you are not allowed "; });
-  }*/
-
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
+  private readonly toastr = inject(ToastrService);
 
   onSubmit() {
     this.loading = true;
+    this.authService.logout();
 
-    this.authentificationService.currentUser = null;
-
-    localStorage.removeItem('currentUser');
-    localStorage.removeItem('token');
-
-    this.authentificationService.authentificate(this.login, this.password).subscribe(_admin => {
-      this.authentificationService.saveTokenInStorage(_admin.token, true);
-      localStorage.setItem('currentUser', JSON.stringify(_admin));
-      this.dataService.currentUser = _admin;
-      this.authentificationService.currentUser = _admin;
-      localStorage.setItem("isReloading", "true");
-      if (_admin.user.role == 'AGENT') {
-        this.router.navigate(['/adminWeb/compteweb']);
-      } else {
-        this.router.navigate(['/adminWeb/dashboard']);
+    this.authService.authentificate(this.login, this.password).subscribe({
+      next: (_admin) => {
+        this.loading = false;
+        this.authService.saveSession(_admin);
+        localStorage.setItem("isReloading", "true");
+        if (_admin.user.role === 'AGENT') {
+          this.router.navigate(['/adminWeb/compteweb']);
+        } else {
+          this.router.navigate(['/adminWeb/dashboard']);
+        }
+      },
+      error: (error) => {
+        this.loading = false;
+        this.errorVisible = true;
+        this.errorMessage = "Login or password is incorrect";
+        this.toastr.error('Username Or Password are incorrect', 'Login Error');
       }
-    }), (error: any) => {
-      {
-        this.toastr.error('Username Or Password are incorrect', 'Login Error',);
-      }
-    }
+    });
   }
 }
