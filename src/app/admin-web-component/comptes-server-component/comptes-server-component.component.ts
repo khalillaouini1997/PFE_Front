@@ -1,112 +1,86 @@
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { Component, OnInit, ViewContainerRef } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { saveAs as importedSaveAs } from 'file-saver';
 import { ToastrService } from 'ngx-toastr';
 import { CompteServer, IpAddress } from 'src/app/data/data';
-import { DataService } from 'src/app/service/data.service';
 import { CompteServerService } from "../../service/compte-server.service";
-import { CompteWebService } from "../../service/compte-web.service";
-import { DashboardService } from "../../service/dashboard.service";
-import { NgIf, NgFor } from '@angular/common';
+import { IpAddressService } from "../../service/ip-address.service";
+import { AuthService } from "../../service/auth.service";
 import { FormsModule } from '@angular/forms';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-
-
-
 
 @Component({
   selector: 'app-comptes-server-component',
   templateUrl: './comptes-server-component.component.html',
   styleUrls: ['./comptes-server-component.component.css'],
   standalone: true,
-  imports: [NgIf, FormsModule, NgFor, RouterLink, PaginationModule, BsDatepickerModule]
+  imports: [FormsModule, RouterLink, PaginationModule, BsDatepickerModule]
 })
 export class ComptesServerComponentComponent implements OnInit {
 
   keyWord: string = "";
   public maxSize: number = 5;
-  public bigTotalItems: number = 175;
+  public bigTotalItems: number = 0;
   public bigCurrentPage: number = 1;
-  public numPages: number = 0;
   itemsPerPage = 30;
-  comptesServer: CompteServer[];
+  comptesServer: CompteServer[] = [];
   loading: boolean = false;
-  dt: Object;
+  dt: Date = new Date();
   selectedCompteServer: CompteServer = new CompteServer();
   mode: boolean = false;
-  messageError: string;
+  messageError: string = "";
   ips: IpAddress[] = [];
 
-  /*public myDatePickerOptions: IMyOptions = {
-    dateFormat: 'dd-mm-yyyy',
-  };*/
-
-  constructor(private router: Router, public toastr: ToastrService, vcr: ViewContainerRef, private route: ActivatedRoute,
-    private compteServerService: CompteServerService,
-    private compteWebService: CompteWebService,
-    private dashboardService: DashboardService,
-    private dataService: DataService,) {
-    //  this.toastr.setRootViewContainerRef(vcr);
-  }
+  private readonly router = inject(Router);
+  private readonly toastr = inject(ToastrService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly compteServerService = inject(CompteServerService);
+  private readonly ipAddressService = inject(IpAddressService);
+  private readonly authService = inject(AuthService);
 
   ngOnInit() {
-    this.dashboardService.isAuthenticated = this.dashboardService.loadTestAuthenticated();
-    if (!this.dashboardService.isAuthenticated) {
-
+    if (!this.authService.isAuthenticated()) {
       this.router.navigate(['/error']);
-
-    } else {
-      this.getAllcompteServer(this.keyWord, this.bigCurrentPage - 1, this.itemsPerPage);
-      this.ips = this.dataService.ips;
+      return;
     }
-  }
 
-  //=====================================
-  //    Change page
-  //=====================================
+    this.getAllcompteServer(this.keyWord, this.bigCurrentPage - 1, this.itemsPerPage);
+    this.ipAddressService.getAllIps().subscribe(res => {
+      this.ips = res;
+    });
+  }
 
   public pageChanged(event: any): void {
     this.bigCurrentPage = event.page;
     this.getAllcompteServer(this.keyWord, this.bigCurrentPage - 1, this.itemsPerPage);
   }
-  //=====================================
-  //     Get All server account
-  //     by keyword or not
-  //=====================================
 
   getAllcompteServer(keyWord: string, page: number, size: number) {
     this.loading = true;
     this.comptesServer = [];
-    this.compteServerService.getAllServerAccount(keyWord, page, size).subscribe(_comptesServer => {
-      this.comptesServer = _comptesServer.content;
-      for (let i = 0; i < this.comptesServer.length; i++) {
-
-        if (new Date().getTime() < this.comptesServer[i].date_Expiration) {
-
-          this.comptesServer[i].expired = false;
-          this.comptesServer[i].during = true;
-        } else {
-          this.comptesServer[i].expired = true;
-          this.comptesServer[i].during = false;
-        }
+    this.compteServerService.getAllServerAccount(keyWord, page, size).subscribe({
+      next: (_comptesServer) => {
+        this.comptesServer = _comptesServer.content;
+        const now = new Date().getTime();
+        this.comptesServer.forEach(s => {
+          s.expired = now >= s.date_Expiration;
+          s.during = !s.expired;
+        });
+        this.bigTotalItems = _comptesServer.totalElements;
+        this.loading = false;
+      },
+      error: () => {
+        this.loading = false;
       }
-      this.bigTotalItems = _comptesServer.totalElements;
     });
   }
-  //=====================================
-  //    Search server account
-  //=====================================
 
-  searchServerAccount() {
+  searchAccount() {
     this.bigCurrentPage = 1;
     this.getAllcompteServer(this.keyWord, this.bigCurrentPage - 1, this.itemsPerPage);
   }
 
-
-  /**
-   * Action exporter rapport
-   */
   onExport() {
     if (this.comptesServer.length <= 0) return;
 
@@ -116,80 +90,45 @@ export class ComptesServerComponentComponent implements OnInit {
       });
   }
 
-  //=====================================
-  //    Search server account
-  //=====================================
-
-  searchAccount() {
-    this.bigCurrentPage = 1;
-    this.getAllcompteServer(this.keyWord, this.bigCurrentPage - 1, this.itemsPerPage);
-  }
-
-  //=======================================
-  //    Delete server account with boitiers
-  //=======================================
-
   deleteCompteServer() {
-    let res = confirm("are you sure that you want to delete this Account ?");
-    if (res) {
-      let indexCompte: number = 0;
-      indexCompte = this.comptesServer.findIndex(x => x.idCompteClientServer == this.selectedCompteServer.idCompteClientServer);
-
-      this.compteServerService.deleteCompteServer(this.selectedCompteServer.idCompteClientServer);
-      this.comptesServer.splice(indexCompte, 1);
-      this.toastr.success(' Account was deleted ', 'Success!')
-    } else {
-      this.toastr.error(' Account was not deleted ', 'Error!')
+    if (confirm("are you sure that you want to delete this Account ?")) {
+      this.compteServerService.deleteCompteServer(this.selectedCompteServer.idCompteClientServer).subscribe({
+        next: () => {
+          this.comptesServer = this.comptesServer.filter(x => x.idCompteClientServer !== this.selectedCompteServer.idCompteClientServer);
+          this.toastr.success(' Account was deleted ', 'Success!');
+        },
+        error: () => {
+          this.toastr.error(' Account was not deleted ', 'Error!');
+        }
+      });
     }
-
   }
-
-  //=======================================
-  //   Update server account
-  //=======================================
 
   updateCompteServer() {
-    let myDate = new Date(this.dt['jsdate']);
-    if (myDate.getUTCHours() == 23) {
-      myDate.setHours(myDate.getHours() + 1);
-    }
-    this.selectedCompteServer.date_Expiration = myDate.getTime();
-    this.compteServerService.updateServerCompte(this.selectedCompteServer.idCompteClientServer, this.selectedCompteServer).subscribe(_compteUp => {
-      this.mode = false;
-      if (new Date().getTime() < _compteUp.date_Expiration) {
-        _compteUp.expired = false;
-        _compteUp.during = true;
-      } else {
-        _compteUp.expired = true;
-        _compteUp.during = false;
-      }
-      let index: number = 0
-      index = this.comptesServer.findIndex(x => x.idCompteClientServer == _compteUp.idCompteClientServer);
-      this.comptesServer.splice(index, 1, _compteUp);
-      this.toastr.success(' Server account updated ', 'Success!')
-    }, error => {
-      this.mode = true;
+    this.selectedCompteServer.date_Expiration = this.dt.getTime();
+    this.compteServerService.updateServerCompte(this.selectedCompteServer.idCompteClientServer, this.selectedCompteServer).subscribe({
+      next: (_compteUp) => {
+        this.mode = false;
+        const now = new Date().getTime();
+        _compteUp.expired = now >= _compteUp.date_Expiration;
+        _compteUp.during = !_compteUp.expired;
 
-      const jsonError = error.json();
-      this.messageError = jsonError.message;
+        const index = this.comptesServer.findIndex(x => x.idCompteClientServer === _compteUp.idCompteClientServer);
+        if (index !== -1) {
+          this.comptesServer[index] = _compteUp;
+        }
+        this.toastr.success(' Server account updated ', 'Success!');
+      },
+      error: (error) => {
+        this.mode = true;
+        this.messageError = error.error?.message || "An error occurred";
+      }
     });
     this.selectedCompteServer = new CompteServer();
   }
-  addZero(i) {
-    return (i < 10) ? "0" + i : "" + i;
-  }
-
-  //=====================================
-  //     selected server account
-  //=====================================
 
   onSelect(compteServer: CompteServer) {
-    this.selectedCompteServer = compteServer;
-    let dateDecop = new Date(this.selectedCompteServer.date_Expiration);
-
-    this.dt = {
-      date: { year: dateDecop.getFullYear(), month: dateDecop.getUTCMonth() + 1, day: dateDecop.getUTCDate() }
-    };
-    this.dt['jsdate'] = dateDecop;
+    this.selectedCompteServer = { ...compteServer };
+    this.dt = new Date(this.selectedCompteServer.date_Expiration);
   }
 }
