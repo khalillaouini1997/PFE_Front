@@ -1,17 +1,13 @@
-import { Component, OnInit, ViewContainerRef } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CompteWeb } from 'src/app/data/data';
 import { environment } from '../../../environments/environment';
-import { DataService } from 'src/app/service/data.service';
-import { CompteServerService } from "../../service/compte-server.service";
-import { CompteWebService } from "../../service/compte-web.service";
-import { DashboardService } from "../../service/dashboard.service";
+import { AuthService } from 'src/app/service/auth.service';
+import { WebAccountService } from 'src/app/service/web-account.service';
 import { FormsModule } from '@angular/forms';
 import { NgIf, NgFor, DatePipe } from '@angular/common';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
-
-
 
 @Component({
   selector: 'app-comptes-web-component',
@@ -27,75 +23,61 @@ export class ComptesWebComponentComponent implements OnInit {
   public bigCurrentPage: number = 1;
   public numPages: number = 0;
   itemsPerPage = 30;
-  comptesWeb: CompteWeb[];
+  comptesWeb: CompteWeb[] = [];
   loading: boolean = false;
   selectedWebAccount: CompteWeb = new CompteWeb();
-  dt: Object;
+  dt: any;
   code_pays = [];
 
   owner: string = environment.owner;
 
-  constructor(private router: Router, public toastr: ToastrService, vcr: ViewContainerRef,
-    private compteServerService: CompteServerService,
-    private compteWebService: CompteWebService,
-    private dashboardService: DashboardService,
-    private dataService: DataService,) {
-  }
+  private readonly authService = inject(AuthService);
+  private readonly webAccountService = inject(WebAccountService);
+  private readonly router = inject(Router);
+  private readonly toastr = inject(ToastrService);
 
   ngOnInit() {
-    this.dashboardService.isAuthenticated = this.dashboardService.loadTestAuthenticated();
-    if (!this.dashboardService.isAuthenticated) {
-      // this.router.navigate(['/error']);
+    if (!this.authService.isAuthenticated()) {
+      this.router.navigate(['/error']);
     } else {
       this.getAllWebAccount(this.keyWord, this.bigCurrentPage - 1, this.itemsPerPage);
     }
-
-    //this.getDateLogF("test");
   }
-
-  //=====================================
-  //    Change page
-  //=====================================
 
   public pageChanged(event: any): void {
     this.bigCurrentPage = event.page;
     this.getAllWebAccount(this.keyWord, this.bigCurrentPage - 1, this.itemsPerPage);
   }
-  //=====================================
-  //     Get All Web account
-  //     by keyword or not
-  //=====================================
 
   getAllWebAccount(keyWord: string, page: number, size: number) {
     this.loading = true;
     this.comptesWeb = [];
-    this.compteWebService.getAllWebAccountByKeyWord(keyWord, page, size).subscribe(_comptesWeb => {
-      this.loading = false;
-      this.comptesWeb = _comptesWeb.content;
+    this.webAccountService.getAllWebAccountByKeyWord(keyWord, page, size).subscribe({
+      next: (_comptesWeb) => {
+        this.loading = false;
+        this.comptesWeb = _comptesWeb.content;
 
-      for (let i = 0; i < this.comptesWeb.length; i++) {
-
-        if (new Date().getTime() < new Date(this.comptesWeb[i].date_expiration).getTime()) {
-
-          this.comptesWeb[i].expired = false;
-          this.comptesWeb[i].during = true;
-        } else {
-          this.comptesWeb[i].expired = true;
-          this.comptesWeb[i].during = false;
+        for (let i = 0; i < this.comptesWeb.length; i++) {
+          if (new Date().getTime() < new Date(this.comptesWeb[i].date_expiration).getTime()) {
+            this.comptesWeb[i].expired = false;
+            this.comptesWeb[i].during = true;
+          } else {
+            this.comptesWeb[i].expired = true;
+            this.comptesWeb[i].during = false;
+          }
         }
+        this.bigTotalItems = _comptesWeb.totalElements;
+      },
+      error: (err) => {
+        this.loading = false;
+        this.toastr.error('Error loading web accounts', 'Error');
       }
-      this.bigTotalItems = _comptesWeb.totalElements;
     });
   }
 
-
   getDateLogF(username: string) {
-    this.compteWebService.getDateLog(username).subscribe(res => {
-    })
+    this.webAccountService.getDateLog(username).subscribe();
   }
-  //=====================================
-  //    Search server account
-  //=====================================
 
   searchWebAccount() {
     this.loading = true;
@@ -104,10 +86,6 @@ export class ComptesWebComponentComponent implements OnInit {
     this.loading = false;
   }
 
-  //=====================================
-  //    Selected Web account
-  //=====================================
-
   onSelect(compteWeb: CompteWeb) {
     this.selectedWebAccount = compteWeb;
     let dateDecop = new Date(this.selectedWebAccount.date_expiration);
@@ -115,28 +93,26 @@ export class ComptesWebComponentComponent implements OnInit {
       dateDecop.setHours(dateDecop.getHours() + 1);
     }
     this.dt = {
-      date: { year: dateDecop.getFullYear(), month: dateDecop.getUTCMonth() + 1, day: dateDecop.getUTCDate() }
+      date: { year: dateDecop.getFullYear(), month: dateDecop.getUTCMonth() + 1, day: dateDecop.getUTCDate() },
+      jsdate: dateDecop
     };
-    this.dt['jsdate'] = dateDecop;
   }
-
-  //=====================================
-  //    delete Web account
-  //=====================================
 
   deleteWebAccount() {
     let res = confirm("are you sure that you want to delete this Account ?");
     if (res) {
-      let indexCompte: number = 0;
-      indexCompte = this.comptesWeb.findIndex(x => x.idCompteClientWeb == this.selectedWebAccount.idCompteClientWeb);
-      this.compteWebService.deleteWebAccount(this.selectedWebAccount.idCompteClientWeb).subscribe(res => {
-        this.toastr.success(' Account was deleted ', 'Success!')
+      const indexCompte = this.comptesWeb.findIndex(x => x.idCompteClientWeb == this.selectedWebAccount.idCompteClientWeb);
+      this.webAccountService.deleteWebAccount(this.selectedWebAccount.idCompteClientWeb).subscribe({
+        next: () => {
+          this.toastr.success(' Account was deleted ', 'Success!');
+          if (indexCompte > -1) {
+            this.comptesWeb.splice(indexCompte, 1);
+          }
+        },
+        error: () => {
+          this.toastr.error(' Account was not deleted ', 'Error!');
+        }
       });
-      this.comptesWeb.splice(indexCompte, 1);
-    } else {
-      this.toastr.error(' Account was not deleted ', 'Error!')
     }
   }
-
-
 }
