@@ -6,7 +6,7 @@ import { CompteServer, IpAddress } from 'src/app/data/data';
 import { CompteServerService } from "../../service/compte-server.service";
 import { IpAddressService } from "../../service/ip-address.service";
 import { AuthService } from "../../service/auth.service";
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
@@ -15,7 +15,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
   templateUrl: './comptes-server-component.component.html',
   styleUrls: ['./comptes-server-component.component.css'],
   standalone: true,
-  imports: [FormsModule, RouterLink, PaginationModule, BsDatepickerModule]
+  imports: [FormsModule, ReactiveFormsModule, RouterLink, PaginationModule, BsDatepickerModule]
 })
 export class ComptesServerComponentComponent implements OnInit {
 
@@ -27,10 +27,12 @@ export class ComptesServerComponentComponent implements OnInit {
   comptesServer: CompteServer[] = [];
   loading: boolean = false;
   dt: Date = new Date();
-  selectedCompteServer: CompteServer = new CompteServer();
   mode: boolean = false;
   messageError: string = "";
   ips: IpAddress[] = [];
+
+  searchForm!: FormGroup;
+  updateServerForm!: FormGroup;
 
   private readonly router = inject(Router);
   private readonly toastr = inject(ToastrService);
@@ -38,22 +40,38 @@ export class ComptesServerComponentComponent implements OnInit {
   private readonly compteServerService = inject(CompteServerService);
   private readonly ipAddressService = inject(IpAddressService);
   private readonly authService = inject(AuthService);
+  private readonly fb = inject(FormBuilder);
 
   ngOnInit() {
+    this.initForms();
     if (!this.authService.isAuthenticated()) {
       this.router.navigate(['/error']);
       return;
     }
 
-    this.getAllcompteServer(this.keyWord, this.bigCurrentPage - 1, this.itemsPerPage);
+    this.getAllcompteServer(this.searchForm.get('keyWord')?.value || "", this.bigCurrentPage - 1, this.itemsPerPage);
     this.ipAddressService.getAllIps().subscribe(res => {
       this.ips = res;
     });
   }
 
+  initForms() {
+    this.searchForm = this.fb.group({
+      keyWord: ['']
+    });
+
+    this.updateServerForm = this.fb.group({
+      idCompteClientServer: [null],
+      pseudo: ['', Validators.required],
+      login: ['', Validators.required],
+      password: ['', Validators.required],
+      idIpAdresse: [null, Validators.required]
+    });
+  }
+
   public pageChanged(event: any): void {
     this.bigCurrentPage = event.page;
-    this.getAllcompteServer(this.keyWord, this.bigCurrentPage - 1, this.itemsPerPage);
+    this.getAllcompteServer(this.searchForm.get('keyWord')?.value || "", this.bigCurrentPage - 1, this.itemsPerPage);
   }
 
   getAllcompteServer(keyWord: string, page: number, size: number) {
@@ -61,7 +79,7 @@ export class ComptesServerComponentComponent implements OnInit {
     this.comptesServer = [];
     this.compteServerService.getAllServerAccount(keyWord, page, size).subscribe({
       next: (_comptesServer) => {
-        this.comptesServer = _comptesServer.content;
+        this.comptesServer = _comptesServer.content as any;
         const now = new Date().getTime();
         this.comptesServer.forEach(s => {
           s.expired = now >= s.date_Expiration;
@@ -78,7 +96,7 @@ export class ComptesServerComponentComponent implements OnInit {
 
   searchAccount() {
     this.bigCurrentPage = 1;
-    this.getAllcompteServer(this.keyWord, this.bigCurrentPage - 1, this.itemsPerPage);
+    this.getAllcompteServer(this.searchForm.get('keyWord')?.value || "", this.bigCurrentPage - 1, this.itemsPerPage);
   }
 
   onExport() {
@@ -91,10 +109,11 @@ export class ComptesServerComponentComponent implements OnInit {
   }
 
   deleteCompteServer() {
-    if (confirm("are you sure that you want to delete this Account ?")) {
-      this.compteServerService.deleteCompteServer(this.selectedCompteServer.idCompteClientServer).subscribe({
+    const selectedId = this.updateServerForm.get('idCompteClientServer')?.value;
+    if (selectedId && confirm("are you sure that you want to delete this Account ?")) {
+      this.compteServerService.deleteCompteServer(selectedId).subscribe({
         next: () => {
-          this.comptesServer = this.comptesServer.filter(x => x.idCompteClientServer !== this.selectedCompteServer.idCompteClientServer);
+          this.comptesServer = this.comptesServer.filter(x => x.idCompteClientServer !== selectedId);
           this.toastr.success(' Account was deleted ', 'Success!');
         },
         error: () => {
@@ -105,9 +124,9 @@ export class ComptesServerComponentComponent implements OnInit {
   }
 
   updateCompteServer() {
-    this.selectedCompteServer.date_Expiration = this.dt.getTime();
-    this.compteServerService.updateServerCompte(this.selectedCompteServer.idCompteClientServer, this.selectedCompteServer).subscribe({
-      next: (_compteUp) => {
+    const updatedCompte = { ...this.updateServerForm.value, date_Expiration: this.dt.getTime() };
+    this.compteServerService.updateServerCompte(updatedCompte.idCompteClientServer, updatedCompte).subscribe({
+      next: (_compteUp: any) => {
         this.mode = false;
         const now = new Date().getTime();
         _compteUp.expired = now >= _compteUp.date_Expiration;
@@ -124,11 +143,10 @@ export class ComptesServerComponentComponent implements OnInit {
         this.messageError = error.error?.message || "An error occurred";
       }
     });
-    this.selectedCompteServer = new CompteServer();
   }
 
   onSelect(compteServer: CompteServer) {
-    this.selectedCompteServer = { ...compteServer };
-    this.dt = new Date(this.selectedCompteServer.date_Expiration);
+    this.updateServerForm.patchValue(compteServer);
+    this.dt = new Date(compteServer.date_Expiration);
   }
 }

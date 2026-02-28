@@ -4,12 +4,13 @@
 </div>
 }
 
-<form class="navbar-form navbar-right" role="search" style="margin:0;">
+<form class="navbar-form navbar-right" role="search" style="margin:0;" [formGroup]="searchForm"
+  (ngSubmit)="searchAccount()">
   <div class="form-group is-empty">
-    <input type="text" class="form-control" name="search" [(ngModel)]="keyWord" placeholder="Search" style="margin:0;">
+    <input type="text" class="form-control" formControlName="keyWord" placeholder="Search" style="margin:0;">
     <span class="material-input"></span>
   </div>
-  <button type="submit" class="btn btn-white btn-round btn-just-icon" style="margin:0;" (click)="searchAccount()">
+  <button type="submit" class="btn btn-white btn-round btn-just-icon" style="margin:0;">
     <i class="material-icons">search</i>
     <div class="ripple-container"></div>
   </button>
@@ -63,40 +64,41 @@
 <!-- Start modal update compte server -->
 <div id="Modalupdate" class="modal fade" role="dialog">
   <div class="modal-dialog">
-    <form #updateServerForm="ngForm">
+    <form [formGroup]="updateServerForm" (ngSubmit)="updateCompteServer()">
       <!-- Modal content -->
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Update server account {{selectedCompteServer.pseudo}}</h4>
+          <h4 class="modal-title">Update server account {{updateServerForm.get('pseudo')?.value}}</h4>
         </div>
         <div class="modal-body">
           <div class="row">
             <div class="col-md-6">
               <div class="form-group label-floating">
-                <input type="text" class="form-control" value="" name="pseudo" [(ngModel)]="selectedCompteServer.pseudo"
-                  required>
+                <label class="control-label">Pseudo</label>
+                <input type="text" class="form-control" formControlName="pseudo">
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group label-floating">
-                <input type="text" class="form-control" name="login" [(ngModel)]="selectedCompteServer.login" required>
+                <label class="control-label">Login</label>
+                <input type="text" class="form-control" formControlName="login">
               </div>
             </div>
           </div>
           <div class="row">
             <div class="col-md-6">
               <div class="form-group label-floating">
-                <input type="text" class="form-control" name="password" [(ngModel)]="selectedCompteServer.password"
-                  required>
+                <label class="control-label">Password</label>
+                <input type="text" class="form-control" formControlName="password">
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group label-floating">
-                <select [(ngModel)]="selectedCompteServer.ipAdresse" name="ipAdress" id="adresse" class="form-control"
-                  required>
-                  @for (ip of ips; track ip.value) {
-                  <option [ngValue]="ip.value">{{ ip.label }}</option>
+                <label class="control-label">IP Address</label>
+                <select formControlName="idIpAdresse" id="adresse" class="form-control">
+                  @for (ip of ips; track ip.idIpAdresse) {
+                  <option [value]="ip.idIpAdresse">{{ ip.label }}</option>
                   }
                 </select>
               </div>
@@ -107,15 +109,15 @@
               <div class="form-group label-floating">
                 <div class="input-group input-append date">
                   <input type="text" class="form-control" bsDatepicker [(ngModel)]="dt"
-                    [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }" name="date" placement="bottom"
-                    placeholder="Date expiration" required autocomplete="off">
+                    [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }" [ngModelOptions]="{standalone: true}" name="date"
+                    placement="bottom" placeholder="Date expiration" required autocomplete="off">
                 </div>
               </div>
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-warning" (click)="updateCompteServer()"
+          <button type="submit" class="btn btn-warning" [disabled]="updateServerForm.invalid"
             data-dismiss="modal">Update</button>
           <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
         </div>
