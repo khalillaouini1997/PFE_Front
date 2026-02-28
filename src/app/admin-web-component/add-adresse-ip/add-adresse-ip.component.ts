@@ -1,34 +1,38 @@
-import { Component, OnInit } from '@angular/core';
-import {IpAddress} from "../../data/data";
-import {DataService} from "../../service/data.service";
-import {CompteServerService} from "../../service/compte-server.service";
+import { Component, OnInit, inject } from '@angular/core';
+import { IpAddress } from "../../data/data";
+import { IpAddressService } from "../../service/ip-address.service";
 import { FormsModule } from '@angular/forms';
 import { NgFor } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
-    selector: 'app-add-adresse-ip',
-    templateUrl: './add-adresse-ip.component.html',
-    styleUrls: ['./add-adresse-ip.component.css'],
-    standalone: true,
-    imports: [FormsModule, NgFor]
+  selector: 'app-add-adresse-ip',
+  templateUrl: './add-adresse-ip.component.html',
+  styleUrls: ['./add-adresse-ip.component.css'],
+  standalone: true,
+  imports: [FormsModule, NgFor]
 })
 export class AddAdresseIpComponent implements OnInit {
 
   ipAddress: IpAddress = new IpAddress();
   typeConnection: { type: string; }[] = [];
 
-  constructor(private dataService: DataService) { }
+  private readonly ipAddressService = inject(IpAddressService);
+  private readonly toastr = inject(ToastrService);
 
   ngOnInit() {
-    this.typeConnection = this.dataService.typeConnection;
+    this.typeConnection = this.ipAddressService.typeConnection;
   }
 
-  // sauvgarder une adresse Ip
   saveIpAddres() {
-
-    this.dataService.saveIpAddres(this.ipAddress).subscribe(res => {
-
+    this.ipAddressService.saveIpAddress(this.ipAddress).subscribe({
+      next: () => {
+        this.toastr.success('IP Address saved', 'Success');
+        this.ipAddress = new IpAddress();
+      },
+      error: () => {
+        this.toastr.error('Error saving IP address', 'Error');
+      }
     });
-    this.ipAddress = new IpAddress();
   }
 }

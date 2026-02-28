@@ -1,99 +1,88 @@
-import { Component, OnInit, ViewContainerRef } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, inject } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { IpAddress } from 'src/app/data/data';
-import { DataService } from 'src/app/service/data.service';
-import {catchError} from "rxjs/operators";
-import {of, throwError} from "rxjs";
+import { IpAddressService } from 'src/app/service/ip-address.service';
+import { catchError } from "rxjs/operators";
+import { of } from "rxjs";
 import { FormsModule } from '@angular/forms';
 import { NgFor } from '@angular/common';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 @Component({
-    selector: 'app-ip-adresse',
-    templateUrl: './ip-adresse.component.html',
-    styleUrls: ['./ip-adresse.component.css'],
-    standalone: true,
-    imports: [FormsModule, NgFor, PaginationModule]
+  selector: 'app-ip-adresse',
+  templateUrl: './ip-adresse.component.html',
+  styleUrls: ['./ip-adresse.component.css'],
+  standalone: true,
+  imports: [FormsModule, NgFor, PaginationModule]
 })
 export class IpAdresseComponent implements OnInit {
 
   ipAddressSelected: IpAddress = new IpAddress();
   ips: IpAddress[] = [];
-  public bigTotalItems: number = 175;
+  public bigTotalItems: number = 0;
   public bigCurrentPage: number = 1;
   itemsPerPage = 15;
   keyWord: string = "";
   typeConnection: { type: string; }[] = [];
   public maxSize: number = 5;
 
-
-  constructor(public toastr: ToastrService, private service: DataService) {
-
-  }
+  private readonly ipAddressService = inject(IpAddressService);
+  private readonly toastr = inject(ToastrService);
 
   ngOnInit() {
-
-    //if (this.service.isAuthenticated == false) {
-    // this.router.navigate(['/error']);
-    //} else {
     this.getAllIpAddresse(this.keyWord, this.bigCurrentPage - 1, this.itemsPerPage);
-
-    this.typeConnection = this.service.typeConnection;
-    // }
-
+    this.typeConnection = this.ipAddressService.typeConnection;
   }
 
   getAllIpAddresse(keyWord: string, page: number, size: number) {
-    this.service.getAllIpAddresse(keyWord, page, size).subscribe(res => {
-      this.ips = res.content;
-      this.bigTotalItems = res.totalElements;
-    })
+    this.ipAddressService.getAllIpAddresses(keyWord, page, size).subscribe({
+      next: (res) => {
+        this.ips = res.content;
+        this.bigTotalItems = res.totalElements;
+      }
+    });
   }
+
   searchIpAddress() {
     this.bigCurrentPage = 1;
     this.getAllIpAddresse(this.keyWord, this.bigCurrentPage - 1, this.itemsPerPage);
   }
+
   deleteIpAddress(id: number) {
     let res = confirm("are you sure that you want to delete this Ip ?");
-
     if (res) {
-      this.service.deleteIpAdress(id)
+      this.ipAddressService.deleteIpAddress(id)
         .pipe(
           catchError(error => {
-            console.error('Error occurred while deleting IP address:', error); // Log the error for inspection
-            // Analyze the error response to provide more specific feedback to the user
-            return of('Failed to delete IP address: ' + error.message); // Return an observable with the error message
+            console.error('Error occurred while deleting IP address:', error);
+            return of('Failed to delete IP address: ' + error.message);
           })
         )
         .subscribe({
           next: () => {
             this.toastr.success(' Account was deleted ', 'Success!');
-            // Consider reloading with the current page after successful deletion
-            this.getAllIpAddresse(this.keyWord, this.bigCurrentPage, this.itemsPerPage);
+            this.getAllIpAddresse(this.keyWord, this.bigCurrentPage - 1, this.itemsPerPage);
           },
           error: (error) => {
             this.toastr.error(error, 'Error!');
           }
         });
-    } else {
-      this.toastr.error(' Account was not deleted ', 'Error!')
     }
   }
 
   onSelect(IpAddres: IpAddress) {
-    this.ipAddressSelected = IpAddres
+    this.ipAddressSelected = IpAddres;
   }
 
   updateIpAdress() {
-    if (this.ipAddressSelected.idIpAdresse !== null) { // Check if not null
-      this.service.updateIpAdress(this.ipAddressSelected.idIpAdresse, this.ipAddressSelected)
-        .subscribe(() => {
-          this.getAllIpAddresse(this.keyWord, this.bigCurrentPage - 1, this.itemsPerPage);
+    if (this.ipAddressSelected.idIpAdresse !== null) {
+      this.ipAddressService.updateIpAddress(this.ipAddressSelected.idIpAdresse, this.ipAddressSelected)
+        .subscribe({
+          next: () => {
+            this.toastr.success('IP Address updated', 'Success');
+            this.getAllIpAddresse(this.keyWord, this.bigCurrentPage - 1, this.itemsPerPage);
+          }
         });
-    } else {
-      // Handle the case where idIpAdresse is null (e.g., show an error message)
-      console.error("Cannot update IP address: idIpAdresse is null");
     }
   }
 
