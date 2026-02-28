@@ -420,12 +420,12 @@ export class TraccarDto {
 }
 
 export interface Tram {
-  login: String;
+  login: string;
   deviceid: number;
-  status: String;
+  status: string;
   latitude: number;
   longitude: number;
-  fuel: Number;
+  fuel: number;
   ignition: boolean;
   mems_x: number;
   mems_y: number;
@@ -435,8 +435,8 @@ export interface Tram {
   sat_in_view: number;
   send_flag: number;
   speed: number;
-  temperature: String;
-  type: String;
+  temperature: string;
+  type: string;
   validity: boolean;
   signal: number;
   rotation_angle: number;
@@ -446,14 +446,14 @@ export interface Tram {
   temp_engine: number;
   accum_odo: number;
   last_raw_time: Date;
-  matricule: String;
+  matricule: string;
   ignitionStatistique: number;
   speedStatistique: number;
   invalidityStatistique: number;
 
-  numPuce: String;
-  imei: String;
-  version: String;
+  numPuce: string;
+  imei: string;
+  version: string;
   lastIdRaw: number;
   lastId: number;
   lastTime: Date;
