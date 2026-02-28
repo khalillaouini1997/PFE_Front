@@ -14,7 +14,7 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
   templateUrl: './comptes-web-component.component.html',
   styleUrls: ['./comptes-web-component.component.css'],
   standalone: true,
-  imports: [FormsModule, NgIf, NgFor, RouterLink, PaginationModule, DatePipe]
+  imports: [FormsModule, RouterLink, PaginationModule, DatePipe]
 })
 export class ComptesWebComponentComponent implements OnInit {
   keyWord: string = "";

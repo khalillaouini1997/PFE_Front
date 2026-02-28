@@ -10,7 +10,7 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './add-adresse-ip.component.html',
   styleUrls: ['./add-adresse-ip.component.css'],
   standalone: true,
-  imports: [FormsModule, NgFor]
+  imports: [FormsModule]
 })
 export class AddAdresseIpComponent implements OnInit {
 

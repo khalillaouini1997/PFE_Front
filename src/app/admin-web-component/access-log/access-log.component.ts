@@ -10,7 +10,7 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
   templateUrl: './access-log.component.html',
   styleUrls: ['./access-log.component.css'],
   standalone: true,
-  imports: [FormsModule, NgIf, NgFor, PaginationModule, DatePipe]
+  imports: [FormsModule, PaginationModule, DatePipe]
 })
 export class AccessLogComponent implements OnInit {
 

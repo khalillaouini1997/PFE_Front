@@ -1,10 +1,10 @@
 import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule, DatePipe, NgFor, NgIf } from '@angular/common';
 import { InterventionInfo } from "../../data/data";
 import { ToastrService } from "ngx-toastr";
 import { VehiculeService } from "../../service/vehicule.service";
 import { finalize } from "rxjs";
 import { FormsModule } from '@angular/forms';
-import { NgFor, NgIf, DatePipe } from '@angular/common';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 
@@ -13,7 +13,7 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
   templateUrl: './vehicule-info.component.html',
   styleUrls: ['./vehicule-info.component.css'],
   standalone: true,
-  imports: [FormsModule, NgFor, NgIf, TooltipModule, PaginationModule, DatePipe]
+  imports: [CommonModule, FormsModule, TooltipModule, PaginationModule]
 })
 export class VehiculeInfoComponent implements OnInit {
 

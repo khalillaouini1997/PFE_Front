@@ -4,8 +4,8 @@ import { IpAddress } from 'src/app/data/data';
 import { IpAddressService } from 'src/app/service/ip-address.service';
 import { catchError } from "rxjs/operators";
 import { of } from "rxjs";
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { NgFor } from '@angular/common';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 @Component({
@@ -13,7 +13,7 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
   templateUrl: './ip-adresse.component.html',
   styleUrls: ['./ip-adresse.component.css'],
   standalone: true,
-  imports: [FormsModule, NgFor, PaginationModule]
+  imports: [CommonModule, FormsModule, PaginationModule]
 })
 export class IpAdresseComponent implements OnInit {
 

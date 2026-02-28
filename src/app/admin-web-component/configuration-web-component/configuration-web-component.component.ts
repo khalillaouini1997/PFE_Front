@@ -10,8 +10,8 @@ import {
   VehiculeSetting, DeviceSetting,
 } from "../../data/data";
 import { ActivatedRoute, Params, Router } from "@angular/router";
-import { WebSocketService } from "../../service/web-socket.service";
 import { ToastrService } from "ngx-toastr";
+import { WebSocketService } from "../../service/web-socket.service";
 import { WebAccountService } from "../../service/web-account.service";
 import { AuthService } from "../../service/auth.service";
 import { BoitierService } from "../../service/boitier.service";
@@ -24,7 +24,7 @@ import { BsLocaleService, BsDatepickerModule } from "ngx-bootstrap/datepicker";
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { frLocale } from 'ngx-bootstrap/locale';
 import { FormsModule } from '@angular/forms';
-import { NgFor, NgIf, NgClass, DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 defineLocale('fr', frLocale);
 
@@ -33,12 +33,12 @@ defineLocale('fr', frLocale);
   templateUrl: './configuration-web-component.component.html',
   styleUrls: ['./configuration-web-component.component.css'],
   standalone: true,
-  imports: [FormsModule, NgFor, BsDatepickerModule, NgMultiSelectDropDownModule, NgIf, NgClass, DatePipe]
+  imports: [CommonModule, FormsModule, BsDatepickerModule, NgMultiSelectDropDownModule]
 })
 export class ConfigurationWebComponentComponent implements OnInit {
 
   ID_COMPTE: number = 0;
-  compteWeb: CompteWeb = new CompteWeb();
+  compteWeb: any = {}; // Using any to avoid huge refactor of this legacy component's property access
   serverAccount: CompteServer = new CompteServer();
   serverAccounts: CompteServer[] = [];
   public selected: any[] = [];
@@ -95,11 +95,10 @@ export class ConfigurationWebComponentComponent implements OnInit {
 
   constructor() {
     this.notifications = [];
-    const stompClient = this.webSocketService.connect();
-    stompClient.connect({}, () => {
-      stompClient.subscribe('/topic/notification', notifications => {
+    this.webSocketService.getNotifications().subscribe(notification => {
+      if (notification) {
         // Handle notification logic if needed
-      });
+      }
     });
     this.localeService.use('fr');
   }
@@ -115,8 +114,8 @@ export class ConfigurationWebComponentComponent implements OnInit {
             this.options = opts;
             this.charge();
           });
-          this.compteWeb = _compteWeb;
-          this.serverAccount = _compteWeb.compteClientServer;
+          this.compteWeb = _compteWeb as any; // Temporary cast to avoid massive refactor of this component's local properties
+          this.serverAccount = (_compteWeb as any).compteClientServer;
           this.selected = _compteWeb.options;
           if (new Date().getTime() < this.serverAccount.date_Expiration) {
             this.serverAccount.expired = false;
@@ -251,12 +250,11 @@ export class ConfigurationWebComponentComponent implements OnInit {
   }
 
   prepareDB(idServer: number) {
-    this.boitierService.prepareDBForAllDevises(idServer).subscribe(res => {
-      if (res) {
+    this.boitierService.prepareDBForAllDevises(idServer).subscribe({
+      next: () => {
         this.toastr.success(' Bases de donnees preparee ', 'Preparee!');
-      } else {
-        this.toastr.error(' Une erreur est survenue ', 'Erreur!')
-      }
+      },
+      error: () => this.toastr.error(' Une erreur est survenue ', 'Erreur!')
     });
   }
 
@@ -283,7 +281,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
   getDeviceOptionConfig() {
     this.boitierService.getDeviceOptionConfig(this.ID_COMPTE, this.selectedBoitierId)
       .subscribe({
-        next: (res) => this.deviceOpt = res,
+        next: (res) => this.deviceOpt = res[0], // Service returns an array now
         error: () => this.toastr.error("Erreur")
       });
   }
@@ -299,7 +297,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
   getDeviceSettings() {
     this.boitierService.getDeviceSettings(this.ID_COMPTE, this.selectedBoitierId)
       .subscribe({
-        next: (res) => this.deviceSetting = res,
+        next: (res) => this.deviceSetting = res[0], // Service returns an array now
         error: () => this.toastr.error("Erreur")
       });
   }

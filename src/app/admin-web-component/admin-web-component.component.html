@@ -44,7 +44,11 @@
                         <a routerLink="/adminWeb/dashboard" routerLinkActive="active"
                             (click)="isActiveDashBoard = true; isActiveAddAdminCompte= false; isActiveAdminCompte = false; isActiveServerForm = false;isActiveForm = false;isActiveListServer = false;isActiveListWeb = false;isActiveRequest=false;isActiveIntervention=false;isActiveAccessLog = false;isActiveTraccar =false;">
                             <i class="material-icons">dashboard</i>
-                            <p>Tableau de bord</p>
+                            <p>Tableau de bord
+                                @if (notificationCount > 0) {
+                                <span class="badge bg-danger">{{notificationCount}}</span>
+                                }
+                            </p>
                         </a>
                     </li>
 
