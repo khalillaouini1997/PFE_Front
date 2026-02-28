@@ -34,18 +34,22 @@
       </thead>
       <tbody style="font-size: 12px;">
 
-        <tr *ngIf="loading">
+        @if (loading) {
+        <tr>
           <td style="text-align: center" colspan="7">
             <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
           </td>
         </tr>
+        }
 
-        <tr *ngFor="let access of accessLog">
+        @for (access of accessLog; track access.date) {
+        <tr>
           <td style="width: 25%;">{{access.login}}</td>
           <td style="width: 25%;">{{access.date | date:'dd-MM-yyyy HH:mm:ss'}}</td>
           <td style="width: 20%;">{{access.ipAddress}}</td>
           <td style="width: 30%;">{{access.agent}}</td>
         </tr>
+        }
       </tbody>
     </table>
   </div>

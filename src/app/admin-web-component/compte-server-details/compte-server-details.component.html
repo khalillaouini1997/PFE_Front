@@ -109,8 +109,8 @@
                     </thead>
                     <tbody>
 
-                        <tr *ngFor="let boitier of boitiers ">
-
+                        @for (boitier of boitiers; track boitier.idBoitier) {
+                        <tr>
                             <td>{{boitier.idBoitier}}</td>
                             <td>{{boitier.label}}</td>
                             <td><span class="label label-info">{{boitier.numBoitier}}</span></td>
@@ -118,29 +118,16 @@
                             <td>{{boitier.dateLastTrame | date:'dd-MM-yyyy hh:mm'}}</td>
                             <td>{{boitier.vitesse}}</td>
                             <td>
-                                <span class="label label-success" *ngIf="boitier.stat==true">installed</span>
-                                <span class="label label-danger" *ngIf="boitier.stat==false">not installed</span>
+                                @if (boitier.stat) {
+                                <span class="label label-success">installed</span>
+                                } @else {
+                                <span class="label label-danger">not installed</span>
+                                }
                             </td>
                             <td>{{boitier.gpsLastTrame}}</td>
                             <td>{{boitier.gsmLastTrame}}</td>
-                            <!--<td>
-                                <button class="btn btn-success btn-xs" [tooltip]="tooltipadd" tooltipPlacement="left"><i
-                                        class="material-icons md-24">featured_play_list</i></button>
-                                <tooltip-content #tooltipadd>
-                                    CMD.
-                                </tooltip-content>
-
-
-
-                                <button class="btn btn-info btn-xs" [tooltip]="tooltipinfo"
-                                    [routerLink]="['/adminWeb/archiveBoitier/',boitier.numBoitier]"
-                                    tooltipPlacement="top"><i class="material-icons md-24">list</i></button>
-                                <tooltip-content #tooltipinfo>
-                                    archive for {{boitier.numBoitier}}
-                                </tooltip-content>
-
-                            </td>-->
                         </tr>
+                        }
 
                     </tbody>
                 </table>
