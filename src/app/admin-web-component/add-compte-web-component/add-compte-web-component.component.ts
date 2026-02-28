@@ -6,23 +6,21 @@ import { AuthService } from "../../service/auth.service";
 import { CompteServerService } from "../../service/compte-server.service";
 import { IpAddressService } from "../../service/ip-address.service";
 import { ToastrService } from "ngx-toastr";
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-add-compte-web-component',
   templateUrl: './add-compte-web-component.component.html',
   styleUrls: ['./add-compte-web-component.component.css'],
   standalone: true,
-  imports: [FormsModule, BsDatepickerModule]
+  imports: [ReactiveFormsModule, BsDatepickerModule, CommonModule]
 })
 export class AddCompteWebComponentComponent implements OnInit {
 
-  compteWeb: CompteWeb = new CompteWeb();
+  webForm!: FormGroup;
   serverAccounts: CompteServer[] = [];
-  numberBoitier: number = 0;
-  idCompte: number = 0;
-  date: Date = new Date();
   codesPays: any[] = [];
   ipAddresses: IpAddress[] = [];
   regions = ['Tunis', 'Sfax', 'Sousse'];
@@ -35,6 +33,33 @@ export class AddCompteWebComponentComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly ipAddressService = inject(IpAddressService);
   private readonly compteServerService = inject(CompteServerService);
+  private readonly fb = inject(FormBuilder);
+
+  constructor() {
+    this.initForm();
+  }
+
+  initForm() {
+    this.webForm = this.fb.group({
+      login: ['', Validators.required],
+      password: ['', Validators.required],
+      code_pays: ['', Validators.required],
+      date_expiration: [new Date(), Validators.required],
+      idCompte: ['', Validators.required],
+      ipAdresse: ['', Validators.required],
+      firstname: [''],
+      lastname: [''],
+      email: ['', [Validators.email]],
+      telephone: [''],
+      area: ['Tunis'],
+      notificationSubquery: ['date_sub(NOW(), INTERVAL 1 DAY)'],
+      mobileNotif: [false],
+      deviceFeeByDay: [0],
+      accountFeeByMonth: [0],
+      deviceFeePerMonth: [0],
+      simCardFeePerMonth: [0]
+    });
+  }
 
   ngOnInit() {
     if (!this.authService.isAuthenticated()) {
@@ -53,18 +78,27 @@ export class AddCompteWebComponentComponent implements OnInit {
   }
 
   addCompteWeb() {
-    this.compteWeb.date_expiration = this.date.getTime();
-    const selectedServer = this.serverAccounts.find(s => s.idCompteClientServer == this.idCompte);
-    if (selectedServer) {
-      this.compteWeb.compteClientServer = selectedServer;
+    if (this.webForm.invalid) {
+      this.toastr.warning('Please fill all required fields', 'Warning');
+      return;
     }
 
-    this.webAccountService.addCompteWeb(this.compteWeb).subscribe({
+    const formValue = this.webForm.value;
+    const compteWeb: CompteWeb = {
+      ...formValue,
+      date_expiration: (formValue.date_expiration as Date).getTime()
+    };
+
+    const idCompteServer = formValue.idCompte;
+    const selectedServer = this.serverAccounts.find(s => s.idCompteClientServer == idCompteServer);
+    if (selectedServer) {
+      compteWeb.compteClientServer = selectedServer;
+    }
+
+    this.webAccountService.addCompteWeb(compteWeb).subscribe({
       next: (_compteWeb) => {
-        this.compteWeb = _compteWeb;
-        this.webAccountService.associateCompteWebToCompteServer(this.compteWeb.idCompteClientWeb, this.idCompte).subscribe();
+        this.webAccountService.associateCompteWebToCompteServer(_compteWeb.idCompteClientWeb, idCompteServer).subscribe();
         this.toastr.success('Web Account is added successfully', 'Success!');
-        this.compteWeb = new CompteWeb();
         this.router.navigate(['/adminWeb/listWebs']);
       },
       error: () => {

@@ -1,4 +1,3 @@
-<!--created by AHMED HAYEL-->
 <div class="content">
   <div class="container-fluid">
     <div class="row">
@@ -9,19 +8,19 @@
             <p class="category">Remplissez ce formulaire</p>
           </div>
           <div class="card-content">
-            <form #webForm="ngForm">
+            <form [formGroup]="webForm">
               <div class="row">
 
                 <div class="col-md-6">
                   <div class="form-group label-floating">
                     <label class="control-label">Login</label>
-                    <input type="text" class="form-control" [(ngModel)]="compteWeb.login" name="login" required>
+                    <input type="text" class="form-control" formControlName="login">
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-group label-floating">
                     <label class="control-label">Mot de passe</label>
-                    <input type="text" class="form-control" [(ngModel)]="compteWeb.password" name="password" required>
+                    <input type="text" class="form-control" formControlName="password">
                   </div>
                 </div>
               </div>
@@ -32,7 +31,7 @@
                 <div class="col-md-6">
                   <div class="form-group label-floating">
                     <label class="control-label">Code Pays</label>
-                    <select [(ngModel)]="compteWeb.code_pays" class="form-control" name="code_pays" required>
+                    <select formControlName="code_pays" class="form-control">
                       @for (codePays of codesPays; track codePays.value) {
                       <option [value]="codePays.value">
                         {{codePays.key}} (+{{codePays.value}}) </option>
@@ -43,8 +42,8 @@
                 <div class="col-md-6">
                   <div class="form-group label-floating">
                     <div class="input-group input-append date">
-                      <input type="text" class="form-control" bsDatepicker name="date" [(ngModel)]="date"
-                        [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }" placeholder="Date d'expiration" required>
+                      <input type="text" class="form-control" bsDatepicker formControlName="date_expiration"
+                        [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }" placeholder="Date d'expiration">
                     </div>
 
                   </div>
@@ -55,7 +54,7 @@
                   <div class="form-group label-floating">
                     <div class="input-group input-append date">
                       <label class="control-label">Compte serveur</label>
-                      <select [(ngModel)]="idCompte" class="form-control" name="server" required>
+                      <select formControlName="idCompte" class="form-control">
                         @for (server of serverAccounts; track server.idCompteClientServer) {
                         <option [value]="server.idCompteClientServer"> {{server.pseudo}} </option>
                         }
@@ -66,10 +65,7 @@
                 <div class="col-md-6">
                   <div class="form-group label-floating">
                     <label class="control-label">IP Adresse</label>
-                    <!-- <input type="text" class="form-control" name="ipAdresse" [(ngModel)]="compteServer.ipAdresse" pattern="^(?!0)(?!.*\.$)((1?\d?\d|25[0-5]|2[0-4]\d)(\.|$)){4}$"
-                    required>-->
-                    <select [(ngModel)]="compteWeb.ipAdresse" name="ipAdresse" id="adresseIP" class="form-control"
-                      #ipAdresse="ngModel" required>
+                    <select formControlName="ipAdresse" id="adresseIP" class="form-control">
                       @for (ip of ipAddresses; track ip.value) {
                       <option [ngValue]="ip.value">{{ip.label}}
                       </option>
@@ -84,14 +80,14 @@
                 <div class="col-md-6">
                   <div class="form-group label-floating">
                     <label class="control-label">Nom</label>
-                    <input type="text" class="form-control" [(ngModel)]="compteWeb.firstname" name="firstname">
+                    <input type="text" class="form-control" formControlName="firstname">
                   </div>
                 </div>
 
                 <div class="col-md-6">
                   <div class="form-group label-floating">
                     <label class="control-label">Prénom</label>
-                    <input type="text" class="form-control" [(ngModel)]="compteWeb.lastname" name="lastname">
+                    <input type="text" class="form-control" formControlName="lastname">
                   </div>
                 </div>
               </div>
@@ -100,14 +96,14 @@
                 <div class="col-md-6">
                   <div class="form-group label-floating">
                     <label class="control-label">Email</label>
-                    <input type="email" class="form-control" [(ngModel)]="compteWeb.email" name="email">
+                    <input type="email" class="form-control" formControlName="email">
                   </div>
                 </div>
 
                 <div class="col-md-6">
                   <div class="form-group label-floating">
                     <label class="control-label">Téléphone</label>
-                    <input type="tel" class="form-control" [(ngModel)]="compteWeb.telephone" name="telephone">
+                    <input type="tel" class="form-control" formControlName="telephone">
                   </div>
                 </div>
               </div>
@@ -115,7 +111,7 @@
                 <div class="col-md-6">
                   <div class="form-group label-floating">
                     <label class="control-label">Région</label>
-                    <select [(ngModel)]="compteWeb.area" class="form-control" name="code_pays">
+                    <select formControlName="area" class="form-control">
                       @for (t of regions; track t) {
                       <option [value]="t">{{ t }}</option>
                       }
@@ -125,7 +121,7 @@
                 <div class="col-md-3">
                   <div class="form-group label-floating">
                     <label class="control-label">Type de notification</label>
-                    <select [(ngModel)]="compteWeb.notificationSubquery" class="form-control" name="type_notif">
+                    <select formControlName="notificationSubquery" class="form-control">
                       @for (notifSub of notifSubs; track notifSub) {
                       <option [value]="notifSub">{{ notifSub }}
                       </option>
@@ -136,7 +132,7 @@
                 <div class="col-md-3">
                   <div class="form-group label-floating">
                     <label class="control-label">Notification Mobile</label>
-                    <input type="checkbox" [checked]="checked" name="checked" [(ngModel)]="compteWeb.mobileNotif">
+                    <input type="checkbox" formControlName="mobileNotif">
                   </div>
                 </div>
               </div>
@@ -146,16 +142,14 @@
                 <div class="col-md-6">
                   <div class="form-group label-floating">
                     <label class="control-label">Redenance equipement par jour</label>
-                    <input type="number" class="form-control" [(ngModel)]="compteWeb.deviceFeeByDay"
-                      name="deviceFeeByDay">
+                    <input type="number" class="form-control" formControlName="deviceFeeByDay">
                   </div>
                 </div>
 
                 <div class="col-md-6">
                   <div class="form-group label-floating">
                     <label class="control-label">Redenance compte par mois</label>
-                    <input type="number" class="form-control" [(ngModel)]="compteWeb.accountFeeByMonth"
-                      name="accountFeeByMonth">
+                    <input type="number" class="form-control" formControlName="accountFeeByMonth">
                   </div>
                 </div>
               </div>
@@ -165,21 +159,19 @@
                 <div class="col-md-6">
                   <div class="form-group label-floating">
                     <label class="control-label">Redenance equipement par mois</label>
-                    <input type="number" class="form-control" [(ngModel)]="compteWeb.deviceFeePerMonth"
-                      name="deviceFeePerMonth">
+                    <input type="number" class="form-control" formControlName="deviceFeePerMonth">
                   </div>
                 </div>
 
                 <div class="col-md-6">
                   <div class="form-group label-floating">
                     <label class="control-label">Redenance carte sim par mois</label>
-                    <input type="number" class="form-control" [(ngModel)]="compteWeb.simCardFeePerMonth"
-                      name="simCardFeePerMonth">
+                    <input type="number" class="form-control" formControlName="simCardFeePerMonth">
                   </div>
                 </div>
               </div>
 
-              <button type="button" class="btn btn-danger pull-right" [disabled]="!webForm.form.valid"
+              <button type="button" class="btn btn-danger pull-right" [disabled]="webForm.invalid"
                 (click)="addCompteWeb()">Enregistrer le compte Web</button>
               <div class="clearfix"></div>
             </form>
