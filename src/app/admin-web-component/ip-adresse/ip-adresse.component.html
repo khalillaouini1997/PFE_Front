@@ -1,41 +1,44 @@
 <form class="navbar-form navbar-right" role="search" style="margin:0;">
-  <div class="form-group  is-empty">
-    <input type="text" class="form-control" name="search" [(ngModel)]="keyWord" placeholder="Search" style="margin:0;">
-    <span class="material-input"></span>
-  </div>
-  <button type="submit" class="btn btn-white btn-round btn-just-icon" style="margin:0;" (click)="searchIpAddress()">
-                <i class="material-icons">search</i><div class="ripple-container"></div>
-              </button>
+    <div class="form-group  is-empty">
+        <input type="text" class="form-control" name="search" [(ngModel)]="keyWord" placeholder="Search"
+            style="margin:0;">
+        <span class="material-input"></span>
+    </div>
+    <button type="submit" class="btn btn-white btn-round btn-just-icon" style="margin:0;" (click)="searchIpAddress()">
+        <i class="material-icons">search</i>
+        <div class="ripple-container"></div>
+    </button>
 </form>
 <div class="col-md-12">
     <div class="card">
-      <div class="card-header" data-background-color="blue">
-        <h4 class="title">List of Ip Address</h4>
-      </div>
-      <div class="card-content table-responsive">
-        <table class="table">
-          <thead class="text-primary">
-              <th>Id</th>
-              <th>Label</th>
-              <th>Ip </th>
-              <th>Pseudo</th>
-              <th>DB Name</th>
-              <th>Type</th>
-              <th>Url</th>
-              <th>Configurations</th>
-            </thead>
-            <tbody>
-                <tr *ngFor="let IpAddres of ips">
-                    <td>{{IpAddres.idIpAdresse}}</td>
-                    <td>{{IpAddres.label}}</td>
-                    <td>{{IpAddres.value}} </td>
-                    <td>{{IpAddres.jdbcUser }}</td>
-                    <td>{{IpAddres.dbName }}</td>
-                    <td>{{IpAddres.typeConnection}}</td>
-                    <td>{{IpAddres.url }}</td>
-                    
-                    <td>
-                       <!--<button class="btn btn-warning btn-xs" (click)="onSelect(IpAddres)"[tooltip]="tooltipup" tooltipPlacement="top" data-toggle="modal"
+        <div class="card-header" data-background-color="blue">
+            <h4 class="title">List of Ip Address</h4>
+        </div>
+        <div class="card-content table-responsive">
+            <table class="table">
+                <thead class="text-primary">
+                    <th>Id</th>
+                    <th>Label</th>
+                    <th>Ip </th>
+                    <th>Pseudo</th>
+                    <th>DB Name</th>
+                    <th>Type</th>
+                    <th>Url</th>
+                    <th>Configurations</th>
+                </thead>
+                <tbody>
+                    @for (IpAddres of ips; track IpAddres.idIpAdresse) {
+                    <tr>
+                        <td>{{IpAddres.idIpAdresse}}</td>
+                        <td>{{IpAddres.label}}</td>
+                        <td>{{IpAddres.value}} </td>
+                        <td>{{IpAddres.jdbcUser }}</td>
+                        <td>{{IpAddres.dbName }}</td>
+                        <td>{{IpAddres.typeConnection}}</td>
+                        <td>{{IpAddres.url }}</td>
+
+                        <td>
+                            <!--<button class="btn btn-warning btn-xs" (click)="onSelect(IpAddres)"[tooltip]="tooltipup" tooltipPlacement="top" data-toggle="modal"
                         data-target="#Modalupdate" data-backdrop="false"><i class="material-icons md-24">build</i></button>
                           <tooltip-content #tooltipup>
                             update Ip Adress.
@@ -44,95 +47,104 @@
                           <button class="btn btn-danger btn-xs" [tooltip]="tooltipinfo" tooltipPlacement="top" (click)="deleteIpAddress(IpAddres.idIpAdresse)" ><i class="material-icons md-24">delete_forever</i></button>
                           <tooltip-content #tooltipinfo>
                             Delete Ip Adress
-                          </tooltip-content>--> 
-          
-                        
-                      </td>
-          
-          
+                          </tooltip-content>-->
+
+
+                        </td>
+
+
                     </tr>
+                    }
 
-            </tbody>
+                </tbody>
             </table>
-            </div>
-            </div>
-            <div class="col-md-6">
-                <pagination [totalItems]="bigTotalItems" [(ngModel)]="bigCurrentPage" [maxSize]="maxSize" class="pagination-sm" [boundaryLinks]="true"
-                    [rotate]="false" [itemsPerPage]="itemsPerPage" (pageChanged)="pageChanged($event)"></pagination>
-            
-            </div>
-            </div>
-            
-            <div id="Modalupdate" class="modal fade" role="dialog">
-                <div class="modal-dialog">
-                    <form #updateIpAddressForm="ngForm">
+        </div>
+    </div>
+    <div class="col-md-6">
+        <pagination [totalItems]="bigTotalItems" [(ngModel)]="bigCurrentPage" [maxSize]="maxSize" class="pagination-sm"
+            [boundaryLinks]="true" [rotate]="false" [itemsPerPage]="itemsPerPage" (pageChanged)="pageChanged($event)">
+        </pagination>
 
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                <h4 class="modal-title">update Ip Address  {{ipAddressSelected.label}}</h4>
-                            </div>
-                            <div class="modal-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group label-floating">
-                                         
-                                            <input type="text" [(ngModel)]="ipAddressSelected.label" class="form-control" name="label"  required>
-                                        </div>
-                                      </div>
-                                      <div class="col-md-6">
-                                          <div class="form-group label-floating">
-                                             
-                                              <input type="text" [(ngModel)]="ipAddressSelected.value" class="form-control" name="value"  required>
-                                          </div>
-                                        </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group label-floating">
-                                      
-                                            <input type="text" [(ngModel)]="ipAddressSelected.jdbcUser" class="form-control" name="jdbcUser" >
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group label-floating">
-                                      
-                                            <input type="text" [(ngModel)]="ipAddressSelected.jdbcPass" class="form-control" name="jdbcPass" >
-                                        </div>
-                                      </div>
-                                      </div>
-                                      <div class="row">
-                                          <div class="col-md-9">
-                                              <div class="form-group label-floating">
-                                                
-                                                  <input type="text" [(ngModel)]="ipAddressSelected.url" class="form-control" name="url" >
-                                              </div>
-                                          </div>
-                                          </div>
-                                          <div class="row">
-                                        <div class="col-md-4">
-                                            <div class="form-group label-floating">
-                                              
-                                                <select [(ngModel)]="ipAddressSelected.typeConnection" class="form-control" name="typeConnection">
-                                                      <!--<option *ngFor="let type of typeConnection" [value]="type?.type"> {{type.type}} </option>-->
-                                                   </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group label-floating">
-                                              
-                                                <input type="text" [(ngModel)]="ipAddressSelected.dbName" class="form-control" name="dbName" >
-                                            </div>
-                                        </div>
-                                        </div>
-                                        
+    </div>
+</div>
 
+<div id="Modalupdate" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <form #updateIpAddressForm="ngForm">
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">update Ip Address {{ipAddressSelected.label}}</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group label-floating">
+
+                                <input type="text" [(ngModel)]="ipAddressSelected.label" class="form-control"
+                                    name="label" required>
                             </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-warning" [hidden]="!updateIpAddressForm.form.valid" (click)="updateIpAdress()" data-dismiss="modal">update</button>
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                              </div>
                         </div>
-                    </form>
+                        <div class="col-md-6">
+                            <div class="form-group label-floating">
+
+                                <input type="text" [(ngModel)]="ipAddressSelected.value" class="form-control"
+                                    name="value" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group label-floating">
+
+                                <input type="text" [(ngModel)]="ipAddressSelected.jdbcUser" class="form-control"
+                                    name="jdbcUser">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group label-floating">
+
+                                <input type="text" [(ngModel)]="ipAddressSelected.jdbcPass" class="form-control"
+                                    name="jdbcPass">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-9">
+                            <div class="form-group label-floating">
+
+                                <input type="text" [(ngModel)]="ipAddressSelected.url" class="form-control" name="url">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group label-floating">
+
+                                <select [(ngModel)]="ipAddressSelected.typeConnection" class="form-control"
+                                    name="typeConnection">
+                                    <!--<option *ngFor="let type of typeConnection" [value]="type?.type"> {{type.type}} </option>-->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group label-floating">
+
+                                <input type="text" [(ngModel)]="ipAddressSelected.dbName" class="form-control"
+                                    name="dbName">
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" [hidden]="!updateIpAddressForm.form.valid"
+                        (click)="updateIpAdress()" data-dismiss="modal">update</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                 </div>
             </div>
+        </form>
+    </div>
+</div>

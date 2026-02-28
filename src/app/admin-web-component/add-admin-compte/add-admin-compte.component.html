@@ -1,9 +1,11 @@
 <!--created by CHAIMA TABOUBI-->
 
 <div class="container-fluid">
-  <div class="alert alert-danger" role="alert" *ngIf="mode==true">
+  @if (mode) {
+  <div class="alert alert-danger" role="alert">
     {{messageError}}
   </div>
+  }
   <div class="row">
     <div class="center">
       <div class="card">
@@ -34,7 +36,9 @@
                 <div class="form-group label-floating">
                   <label class="control-label">Role</label>
                   <select [(ngModel)]="adminCompte.role" class="form-control" name="code_pays">
-                    <option *ngFor="let r of roles" [value]="r">{{ r }}</option>
+                    @for (r of roles; track r) {
+                    <option [value]="r">{{ r }}</option>
+                    }
                   </select>
                 </div>
               </div>

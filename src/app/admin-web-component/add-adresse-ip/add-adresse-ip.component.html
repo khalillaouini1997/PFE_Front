@@ -51,7 +51,9 @@
                 <div class="form-group label-floating">
                   <label class="control-label">Type de Connection</label>
                   <select [(ngModel)]="ipAddress.typeConnection" class="form-control" name="typeConnection">
-                    <option *ngFor="let type of typeConnection" [value]="type.type"> {{type.type}} </option>
+                    @for (type of typeConnection; track type.type) {
+                    <option [value]="type.type"> {{type.type}} </option>
+                    }
                   </select>
                 </div>
               </div>
@@ -67,7 +69,7 @@
 
               </div>
               <button type="button" class="btn btn-info pull-right" [disabled]="!IpForm.form.valid "
-                      (click)="saveIpAddres()">Save Ip Address</button>
+                (click)="saveIpAddres()">Save Ip Address</button>
 
             </div>
           </form>
