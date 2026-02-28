@@ -23,7 +23,7 @@ import { catchError } from "rxjs/operators";
 import { BsLocaleService, BsDatepickerModule } from "ngx-bootstrap/datepicker";
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { frLocale } from 'ngx-bootstrap/locale';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 defineLocale('fr', frLocale);
@@ -33,54 +33,16 @@ defineLocale('fr', frLocale);
   templateUrl: './configuration-web-component.component.html',
   styleUrls: ['./configuration-web-component.component.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule, BsDatepickerModule, NgMultiSelectDropDownModule]
+  imports: [CommonModule, ReactiveFormsModule, BsDatepickerModule, NgMultiSelectDropDownModule]
 })
 export class ConfigurationWebComponentComponent implements OnInit {
 
-  ID_COMPTE: number = 0;
-  compteWeb: any = {}; // Using any to avoid huge refactor of this legacy component's property access
-  serverAccount: CompteServer = new CompteServer();
-  serverAccounts: CompteServer[] = [];
-  public selected: any[] = [];
-  public query = '';
-  idCompteServer: number = 0;
-  codesPays: { key: string; value: string; }[] = [];
-  date: Date | null = new Date();
-  options: Option[] = [];
-  boitiers: any[] = [];
-  boitiersClicked = false;
-  public filteredList: any[] = [];
-  selectedBoitierId: number = 0;
-  selectedServerId: number = 0;
-  deviceOpt: DeviceOpt = new DeviceOpt();
-  imei: number = 0;
-  checked: boolean = false;
-  pathConfig = {
-    "distanceMinMeter": 10,
-    "pathMinSec": 60,
-    "pathMinSpeed": 1,
-    "pauseMinSec": 60,
-    "stopMinSec": 120
-  };
-  loadingDeviceSetting: boolean = false;
-  deviceSetting: DeviceSetting = new DeviceSetting();
-  vehiculeSetting: VehiculeSetting = new VehiculeSetting();
-  datestart: Date | null = new Date();
-  typeRecalcule: string = "";
-  recalculeP: RecalculatePayload = new RecalculatePayload();
-  selectedIemi: number = 0;
-  notifications: { value: string, status: boolean }[] = [];
-  loadingRecalculate: boolean = false;
-  loadingEditDeviceOption: boolean = false;
-  loadingEditPathConfig: boolean = false;
-  loadingResetOdometre: boolean = false;
-  maxDate: Date = new Date();
-  ipAddresses: IpAddress[] = [];
-  regions = ['Tunis', 'Sfax', 'Sousse'];
-  notifSubs = ['date_sub(NOW(), INTERVAL 6 hour)', 'date_sub(NOW(), INTERVAL 1 DAY)', 'date_sub(NOW(), INTERVAL 2 DAY)'];
-  dateBoolean: boolean = true;
-
-  dropdownSettings = {};
+  mainConfigForm!: FormGroup;
+  recalculateForm!: FormGroup;
+  deviceOptForm!: FormGroup;
+  pathConfigForm!: FormGroup;
+  deviceSettingForm!: FormGroup;
+  imeiSearchForm!: FormGroup;
 
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
@@ -91,16 +53,103 @@ export class ConfigurationWebComponentComponent implements OnInit {
   private readonly ipAddressService = inject(IpAddressService);
   private readonly compteServerService = inject(CompteServerService);
   private readonly webSocketService = inject(WebSocketService);
+  private readonly fb = inject(FormBuilder);
   private readonly localeService = inject(BsLocaleService);
+
+  ID_COMPTE: number = 0;
+  compteWeb: any = {};
+  serverAccount: CompteServer = new CompteServer();
+  serverAccounts: CompteServer[] = [];
+  public selected: any[] = [];
+  codesPays: { key: string; value: string; }[] = [];
+  options: Option[] = [];
+  boitiers: any[] = [];
+  boitiersClicked = false;
+  selectedBoitierId: number = 0;
+  selectedServerId: number = 0;
+  loadingDeviceSetting: boolean = false;
+  loadingRecalculate: boolean = false;
+  loadingEditDeviceOption: boolean = false;
+  loadingEditPathConfig: boolean = false;
+  loadingResetOdometre: boolean = false;
+  numBoitiers: number[] = [];
+  notifications: { value: string, status: boolean }[] = [];
+  recalculeP: RecalculatePayload = new RecalculatePayload();
+  vehiculeSetting: VehiculeSetting = new VehiculeSetting();
+  ipAddresses: IpAddress[] = [];
+
+  get date(): Date | null { return this.mainConfigForm.get('date_expiration')?.value; }
+  get checked(): boolean { return this.mainConfigForm.get('mobileNotif')?.value; }
+  get datestart(): Date | null { return this.recalculateForm.get('datestart')?.value; }
+  get typeRecalcule(): string { return this.recalculateForm.get('typeRecalcule')?.value; }
+  get deviceSetting(): any { return this.deviceSettingForm.value; }
+  get imei(): string { return this.imeiSearchForm.get('imei')?.value; }
+  get deviceOpt(): any { return this.deviceOptForm.value; }
+  get pathConfig(): any { return this.pathConfigForm.value; }
+
+  regions = ['Tunis', 'Sfax', 'Sousse'];
+  notifSubs = ['date_sub(NOW(), INTERVAL 6 hour)', 'date_sub(NOW(), INTERVAL 1 DAY)', 'date_sub(NOW(), INTERVAL 2 DAY)'];
+  dateBoolean: boolean = true;
+  maxDate: Date = new Date();
+
+  dropdownSettings = {};
 
   constructor() {
     this.notifications = [];
-    this.webSocketService.getNotifications().subscribe(notification => {
-      if (notification) {
-        // Handle notification logic if needed
-      }
-    });
+    this.webSocketService.getNotifications().subscribe(_ => { });
     this.localeService.use('fr');
+    this.initForms();
+  }
+
+  initForms() {
+    this.mainConfigForm = this.fb.group({
+      login: ['', Validators.required],
+      password: ['', Validators.required],
+      code_pays: ['', Validators.required],
+      date_expiration: [new Date(), Validators.required],
+      options: [[]],
+      pool: [0, [Validators.required, Validators.min(0), Validators.max(4)]],
+      firstname: ['', Validators.required],
+      lastname: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      telephone: ['', Validators.required],
+      area: ['', Validators.required],
+      notificationSubquery: [''],
+      mobileNotif: [false],
+      idCompteServer: [null, Validators.required] // Added idCompteServer
+    });
+
+    this.recalculateForm = this.fb.group({
+      datestart: [new Date(), Validators.required],
+      typeRecalcule: ['', Validators.required]
+    });
+
+    this.deviceOptForm = this.fb.group({
+      useIgnition: [false],
+      useFuel: [false],
+      useTemp: [false],
+      useFms: [false],
+      useJ1708: [false],
+      useIdDriver: [false],
+      useStop: [false]
+    });
+
+    this.pathConfigForm = this.fb.group({
+      pathMinSec: [60, Validators.required],
+      stopMinSec: [120, Validators.required],
+      pauseMinSec: [60, Validators.required],
+      distanceMinMeter: [10, Validators.required],
+      pathMinSpeed: [1, Validators.required]
+    });
+
+    this.deviceSettingForm = this.fb.group({
+      idIpAdresse: [''],
+      streamId: [0]
+    });
+
+    this.imeiSearchForm = this.fb.group({
+      imei: ['']
+    });
   }
 
   ngOnInit() {
@@ -109,14 +158,31 @@ export class ConfigurationWebComponentComponent implements OnInit {
     } else {
       this.route.params.subscribe((params: Params) => {
         this.ID_COMPTE = (+params['idCompteClientWeb']);
-        this.webAccountService.getWebAccountById(this.ID_COMPTE).subscribe(async _compteWeb => {
+        this.webAccountService.getWebAccountById(this.ID_COMPTE).subscribe(async (_compteWeb: any) => {
           this.webAccountService.getAllOptions().subscribe(opts => {
             this.options = opts;
-            this.charge();
           });
-          this.compteWeb = _compteWeb as any; // Temporary cast to avoid massive refactor of this component's local properties
-          this.serverAccount = (_compteWeb as any).compteClientServer;
+          this.compteWeb = _compteWeb;
+          this.serverAccount = _compteWeb.compteClientServer;
           this.selected = _compteWeb.options;
+
+          this.mainConfigForm.patchValue({
+            login: _compteWeb.login,
+            password: '', // Password is not returned for security
+            code_pays: _compteWeb.code_pays,
+            date_expiration: new Date(_compteWeb.date_expiration),
+            options: _compteWeb.options,
+            pool: _compteWeb.pool,
+            firstname: _compteWeb.firstname,
+            lastname: _compteWeb.lastname,
+            email: _compteWeb.email,
+            telephone: _compteWeb.telephone,
+            area: _compteWeb.area,
+            notificationSubquery: _compteWeb.notificationSubquery,
+            mobileNotif: _compteWeb.mobileNotif,
+            idCompteServer: _compteWeb.compteClientServer?.idCompteClientServer // Map server ID
+          });
+
           if (new Date().getTime() < this.serverAccount.date_Expiration) {
             this.serverAccount.expired = false;
             this.serverAccount.during = true;
@@ -124,7 +190,6 @@ export class ConfigurationWebComponentComponent implements OnInit {
             this.serverAccount.expired = true;
             this.serverAccount.during = false;
           }
-          this.date = new Date(this.compteWeb.date_expiration);
         });
       });
       this.codesPays = this.webAccountService.codesPays;
@@ -159,12 +224,33 @@ export class ConfigurationWebComponentComponent implements OnInit {
   }
 
   charge() {
-    this.filteredList = this.options;
+
   }
 
   saveChange() {
-    this.updateWebAccount();
-    this.webAccountService.addOptionsToWebAccount(this.compteWeb.idCompteClientWeb, this.selected).subscribe();
+    if (this.mainConfigForm.invalid) {
+      this.toastr.warning('Please check regular settings form', 'Warning');
+      return;
+    }
+    const formValue = this.mainConfigForm.value;
+    const updatedCompte = {
+      ...this.compteWeb,
+      ...formValue,
+      date_expiration: (formValue.date_expiration as Date).getTime(),
+      options: this.selected // Multi-select might still be using this.selected
+    };
+
+    this.webAccountService.updateWebAccount(this.ID_COMPTE, updatedCompte)
+      .pipe(
+        tap(() => this.toastr.success('Web account updated', 'Success!')),
+        catchError(() => {
+          this.toastr.error('Error during update', 'Error!');
+          return of(null);
+        })
+      )
+      .subscribe();
+
+    this.webAccountService.addOptionsToWebAccount(this.ID_COMPTE, this.selected).subscribe();
   }
 
   updateWebAccount() {
@@ -197,19 +283,17 @@ export class ConfigurationWebComponentComponent implements OnInit {
   }
 
   editPathConfig() {
+    if (this.pathConfigForm.invalid) return;
     this.loadingEditPathConfig = true;
     const selectedBoitiersId = [...this.numBoitiers];
     if (!this.isCheckedBoitier(this.selectedBoitierId)) {
       selectedBoitiersId.push(this.selectedBoitierId);
     }
 
-    const pathConfigPayload: PathConfigPayload = new PathConfigPayload();
-    pathConfigPayload.boitiersId = selectedBoitiersId;
-    pathConfigPayload.pathMinSpeed = this.pathConfig.pathMinSpeed;
-    pathConfigPayload.pathMinSec = this.pathConfig.pathMinSec;
-    pathConfigPayload.stopMinSec = this.pathConfig.stopMinSec;
-    pathConfigPayload.pauseMinSec = this.pathConfig.pauseMinSec;
-    pathConfigPayload.distanceMinMeter = this.pathConfig.distanceMinMeter;
+    const pathConfigPayload: PathConfigPayload = {
+      ...this.pathConfigForm.value,
+      boitiersId: selectedBoitiersId
+    };
 
     this.boitierService.editPathConfig(this.selectedServerId, pathConfigPayload)
       .pipe(
@@ -268,9 +352,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
 
   editBoitier(boitier: Boitier) {
     this.selectedBoitierId = boitier.numBoitier;
-    this.typeRecalcule = "";
-    this.datestart = null;
-    this.recalculeP = new RecalculatePayload();
+    this.recalculateForm.reset({ datestart: new Date(), typeRecalcule: '' });
     this.notifications = [];
     this.recalculeP.idBoitier = boitier.numBoitier;
     this.getDeviceOptionConfig();
@@ -281,7 +363,11 @@ export class ConfigurationWebComponentComponent implements OnInit {
   getDeviceOptionConfig() {
     this.boitierService.getDeviceOptionConfig(this.ID_COMPTE, this.selectedBoitierId)
       .subscribe({
-        next: (res) => this.deviceOpt = res[0], // Service returns an array now
+        next: (res) => {
+          if (res && res.length > 0) {
+            this.deviceOptForm.patchValue(res[0]);
+          }
+        },
         error: () => this.toastr.error("Erreur")
       });
   }
@@ -289,7 +375,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
   getPathConfig() {
     this.boitierService.getPathConfig(this.ID_COMPTE, this.selectedBoitierId)
       .subscribe({
-        next: (res) => this.pathConfig = res,
+        next: (res) => this.pathConfigForm.patchValue(res),
         error: () => this.toastr.error("Erreur")
       });
   }
@@ -297,7 +383,11 @@ export class ConfigurationWebComponentComponent implements OnInit {
   getDeviceSettings() {
     this.boitierService.getDeviceSettings(this.ID_COMPTE, this.selectedBoitierId)
       .subscribe({
-        next: (res) => this.deviceSetting = res[0], // Service returns an array now
+        next: (res) => {
+          if (res && res.length > 0) {
+            this.deviceSettingForm.patchValue(res[0]);
+          }
+        },
         error: () => this.toastr.error("Erreur")
       });
   }
@@ -305,12 +395,16 @@ export class ConfigurationWebComponentComponent implements OnInit {
   editDeviceOptionConfig() {
     this.loadingEditDeviceOption = true;
     const selectedBoitiersId = [...this.numBoitiers];
-    if (!this.isCheckedBoitier(this.recalculeP.idBoitier)) {
-      selectedBoitiersId.push(this.recalculeP.idBoitier);
+    if (!this.isCheckedBoitier(this.selectedBoitierId)) {
+      selectedBoitiersId.push(this.selectedBoitierId);
     }
-    this.deviceOpt.idBoitiers = selectedBoitiersId;
 
-    this.boitierService.editDeviceOptionConfig(this.ID_COMPTE, this.deviceOpt)
+    const deviceOpt = {
+      ...this.deviceOptForm.value,
+      idBoitiers: selectedBoitiersId
+    };
+
+    this.boitierService.editDeviceOptionConfig(this.ID_COMPTE, deviceOpt)
       .subscribe({
         next: () => {
           this.loadingEditDeviceOption = false;
@@ -438,8 +532,8 @@ export class ConfigurationWebComponentComponent implements OnInit {
       this.loadingRecalculate = true;
       const recalculePayload = new RecalculatePayload();
       recalculePayload.idBoitiers = [...this.numBoitiers];
-      if (!this.isCheckedBoitier(this.recalculeP.idBoitier)) {
-        recalculePayload.idBoitiers.push(this.recalculeP.idBoitier);
+      if (!this.isCheckedBoitier(this.selectedBoitierId)) {
+        recalculePayload.idBoitiers.push(this.selectedBoitierId);
       }
 
       this.boitierService.resetRT(this.ID_COMPTE, recalculePayload)
@@ -454,20 +548,19 @@ export class ConfigurationWebComponentComponent implements OnInit {
   }
 
   recalculate() {
-    if (this.typeRecalcule == "recalcule carburant") {
+    const type = this.recalculateForm.get('typeRecalcule')?.value;
+    if (type == "recalcule carburant") {
       this.recalculeFuel();
-    } else if (this.typeRecalcule == "recalcule Temps reel") {
+    } else if (type == "recalcule Temps reel") {
       this.resetRT();
-    } else if (this.typeRecalcule == "recalcule boitier") {
+    } else if (type == "recalcule boitier") {
       this.recalculeBoitier();
-    } else if (this.typeRecalcule == "recalcule alert") {
+    } else if (type == "recalcule alert") {
       this.recalculeAlert();
-    } else if (this.typeRecalcule == "recalcule trajet") {
+    } else if (type == "recalcule trajet") {
       this.recalculePaths();
     }
   }
-
-  numBoitiers: number[] = [];
 
   onCheckedBoitier(numBoitier: number): void {
     const index = this.numBoitiers.indexOf(numBoitier);
@@ -489,15 +582,18 @@ export class ConfigurationWebComponentComponent implements OnInit {
   async editDeviceSetting() {
     this.loadingDeviceSetting = true;
     const selectedBoitiersId = [...this.numBoitiers];
-    if (!this.isCheckedBoitier(this.recalculeP.idBoitier)) {
-      selectedBoitiersId.push(this.recalculeP.idBoitier);
+    if (!this.isCheckedBoitier(this.selectedBoitierId)) {
+      selectedBoitiersId.push(this.selectedBoitierId);
     }
 
-    this.deviceSetting.idBoitiers = selectedBoitiersId;
-    if (!this.deviceSetting.streamId || this.deviceSetting.streamId == 0)
-      this.deviceSetting.streamId = this.deviceSetting.idBoitiers[0];
+    const deviceSetting = {
+      ...this.deviceSettingForm.value,
+      idBoitiers: selectedBoitiersId
+    };
+    if (!deviceSetting.streamId || deviceSetting.streamId == 0)
+      deviceSetting.streamId = deviceSetting.idBoitiers[0];
 
-    this.boitierService.editDeviceSetting(this.ID_COMPTE, this.deviceSetting).subscribe({
+    this.boitierService.editDeviceSetting(this.ID_COMPTE, deviceSetting).subscribe({
       next: () => {
         this.showDevises(this.serverAccount.idCompteClientServer);
         this.loadingDeviceSetting = false;
@@ -510,11 +606,12 @@ export class ConfigurationWebComponentComponent implements OnInit {
     });
   }
 
-  getSearchDeviceIemi(imei: number) {
-    let url = this.ipAddresses.find(ip => ip.idIpAdresse == this.deviceSetting.idIpAdresse)?.urlGetId;
+  getSearchDeviceIemi(imei: string) {
+    const idIpAdresse = this.deviceSettingForm.get('idIpAdresse')?.value;
+    let url = this.ipAddresses.find(ip => ip.idIpAdresse == idIpAdresse)?.urlGetId;
     if (url) {
-      this.boitierService.getDeviceIdImei(url, imei).subscribe(res => {
-        this.deviceSetting.streamId = res.id;
+      this.boitierService.getDeviceIdImei(url, parseInt(imei)).subscribe(res => {
+        this.deviceSettingForm.patchValue({ streamId: res.id });
       });
     }
   }

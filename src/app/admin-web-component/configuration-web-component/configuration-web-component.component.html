@@ -1,6 +1,4 @@
-<!--created by AHMED HAYEL-->
-
-<div class="col-md-12">
+<div class="col-md-12" [formGroup]="mainConfigForm">
   <div class="card">
     <div class="card-header" data-background-color="red">
       <h4 class="title">Configurer l'identifiant du compte web : {{compteWeb.idCompteClientWeb}}</h4>
@@ -10,13 +8,13 @@
         <div class="col-md-6">
           <div class="form-group label-floating">
             <label class="control-label">Login</label>
-            <input type="text" class="form-control" [(ngModel)]="compteWeb.login" name="loginConf" required>
+            <input type="text" class="form-control" formControlName="login">
           </div>
         </div>
         <div class="col-md-6">
           <div class="form-group label-floating">
             <label class="control-label">Mot de passe</label>
-            <input type="text" class="form-control" [(ngModel)]="compteWeb.rawPassword" name="rawPassword" required>
+            <input type="text" class="form-control" formControlName="password">
           </div>
         </div>
       </div>
@@ -25,7 +23,7 @@
         <div class="col-md-6">
           <div class="form-group label-floating">
             <label class="control-label">Code Pays</label>
-            <select [(ngModel)]="compteWeb.code_pays" class="form-control" name="code_paysconf" required>
+            <select formControlName="code_pays" class="form-control">
               @for (codePays of codesPays; track codePays.value) {
               <option [value]="codePays.value">
                 {{codePays.key}} (+{{codePays.value}}) </option>
@@ -36,9 +34,8 @@
         <div class="col-md-6">
           <div class="form-group label-floating">
             <div class="input-group input-append date">
-              <input type="text" class="form-control" bsDatepicker [(ngModel)]="date"
-                [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }" name="date" placement="bottom"
-                placeholder="Date expiration" required>
+              <input type="text" class="form-control" bsDatepicker formControlName="date_expiration"
+                [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }" placement="bottom" placeholder="Date expiration">
             </div>
           </div>
         </div>
@@ -69,20 +66,15 @@
         <div class="col-md-6">
           <div class="form-group label-floating">
             <label class="control-label">Options</label>
-            <ng-multiselect-dropdown [(ngModel)]="selected" [settings]="dropdownSettings" [data]="options"
-              (onSelect)="onItemSelect($event)" (onSelectAll)="onSelectAll($event)"
-              (onDeSelect)="onItemDeselect($event)" (onDeSelectAll)="onDeselectAll($event)">
+            <ng-multiselect-dropdown formControlName="options" [settings]="dropdownSettings" [data]="options">
             </ng-multiselect-dropdown>
           </div>
         </div>
 
-
-
-
         <div class="col-md-6 ">
           <div class="form-group label-floating">
             <label class="control-label">Pool</label>
-            <input type="number" min="0" max="4" [(ngModel)]="compteWeb.pool" class="form-control" name="pool" required>
+            <input type="number" min="0" max="4" formControlName="pool" class="form-control">
           </div>
         </div>
       </div>
@@ -92,14 +84,14 @@
         <div class="col-md-6">
           <div class="form-group label-floating">
             <label class="control-label">Nom</label>
-            <input type="text" class="form-control" [(ngModel)]="compteWeb.firstname" name="firstname" required>
+            <input type="text" class="form-control" formControlName="firstname">
           </div>
         </div>
 
         <div class="col-md-6">
           <div class="form-group label-floating">
             <label class="control-label">Prénom</label>
-            <input type="text" class="form-control" [(ngModel)]="compteWeb.lastname" name="lastname" required>
+            <input type="text" class="form-control" formControlName="lastname">
           </div>
         </div>
       </div>
@@ -108,14 +100,14 @@
         <div class="col-md-6">
           <div class="form-group label-floating">
             <label class="control-label">Email</label>
-            <input type="email" class="form-control" [(ngModel)]="compteWeb.email" name="email" required>
+            <input type="email" class="form-control" formControlName="email">
           </div>
         </div>
 
         <div class="col-md-6">
           <div class="form-group label-floating">
             <label class="control-label">Téléphone</label>
-            <input type="tel" class="form-control" [(ngModel)]="compteWeb.telephone" name="telephone" required>
+            <input type="tel" class="form-control" formControlName="telephone">
           </div>
         </div>
       </div>
@@ -123,7 +115,7 @@
         <div class="col-md-6">
           <div class="form-group label-floating">
             <label class="control-label">Région</label>
-            <select [(ngModel)]="compteWeb.area" class="form-control" name="code_pays" required>
+            <select formControlName="area" class="form-control">
               @for (t of regions; track t) {
               <option [value]="t">{{ t }}</option>
               }
@@ -133,7 +125,7 @@
         <div class="col-md-3">
           <div class="form-group label-floating">
             <label class="control-label">Type de notification</label>
-            <select [(ngModel)]="compteWeb.notificationSubquery" class="form-control" name="type_notif">
+            <select formControlName="notificationSubquery" class="form-control">
               @for (notifSub of notifSubs; track notifSub) {
               <option [value]="notifSub">{{ notifSub }}</option>
               }
@@ -143,10 +135,18 @@
         <div class="col-md-3">
           <div class="form-group label-floating">
             <label class="control-label">Notification Mobile</label>
-            <input type="checkbox" [checked]="checked" [(ngModel)]="compteWeb.mobileNotif">
+            <input type="checkbox" formControlName="mobileNotif">
           </div>
         </div>
 
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group label-floating">
+            <label class="control-label">ID Compte Serveur</label>
+            <input type="number" class="form-control" formControlName="idCompteServer">
+          </div>
+        </div>
       </div>
       <button type="button" class="btn btn-success btn-sm pull-right" (click)="saveChange()"><i class="fa fa-check"></i>
         sauvegarder les
@@ -265,7 +265,7 @@
 
 <div id="Modalupdateserver" class="modal fade" role="dialog">
   <div class="modal-dialog modal-sm">
-    <form #ChangeServerForm="ngForm">
+    <div [formGroup]="mainConfigForm">
       <!-- Modal content-->
       <div class="modal-content">
         <div class="modal-header">
@@ -281,7 +281,7 @@
               <div class="form-group label-floating">
                 <div class="input-group input-append date">
                   <label class="control-label">Server Account</label>
-                  <select [(ngModel)]="idCompteServer" class="form-control" name="server" required>
+                  <select class="form-control" name="server" required>
                     @for (server of serverAccounts; track server.idCompteClientServer) {
                     <option [value]="server.idCompteClientServer">{{server.pseudo}} </option>
                     }
@@ -299,7 +299,7 @@
           <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
         </div>-->
       </div>
-    </form>
+    </div>
   </div>
 </div>
 
@@ -311,7 +311,7 @@
     <!-- Modal content-->
     <div class="modal-content">
 
-      <form #recalcule="ngForm">
+      <form [formGroup]="recalculateForm">
         <div class="modal-header">
           <button type="button" class="close" style="margin-top: 5px;margin-right: 5px; color: white; font-size: 20px;"
             data-dismiss="modal">&times;</button>
@@ -339,9 +339,9 @@
 
                 @if (dateBoolean) {
                 <div class="input-group input-append date">
-                  <input type="text" class="form-control" bsDatepicker [(ngModel)]="datestart" [maxDate]="maxDate"
-                    [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY, HH:mm' }" name="datestart" placement="bottom"
-                    placeholder="Date de début" autocomplete="off">
+                  <input type="text" class="form-control" bsDatepicker formControlName="datestart" [maxDate]="maxDate"
+                    [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY, HH:mm' }" placement="bottom" placeholder="Date de début"
+                    autocomplete="off">
                 </div>
                 }
               </div>
@@ -349,7 +349,7 @@
             <div class="col-md-6">
               <div class="form-group label-floating">
                 <label class="control-label">Type de recalcule</label>
-                <select [(ngModel)]="typeRecalcule" class="form-control" name="typeRecalcule" required>
+                <select formControlName="typeRecalcule" class="form-control">
                   <option>recalcule trajet</option>
                   <option>recalcule boitier</option>
                   <option>recalcule carburant</option>
@@ -361,7 +361,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-success btn-sm" [disabled]="!recalcule.form.valid"
+          <button type="button" class="btn btn-success btn-sm" [disabled]="recalculateForm.invalid"
             (click)="recalculate()">
             @if (!loadingRecalculate) {
             <i class="fa fa-retweet"></i>
@@ -414,7 +414,7 @@
         </div>
         <div class="row">
           <div class="col-md-4">
-            <form #Opt="ngForm">
+            <form [formGroup]="deviceOptForm">
               <div class="modal-header">
                 <span class="modal-title">Options de configuration de boitier</span>
               </div>
@@ -422,32 +422,32 @@
                 <div class="row">
                   <div class="col-md-6">
                     <span>ignition</span>
-                    <input class="pull-right" type="checkbox" name="useIgnition" [(ngModel)]="deviceOpt.useIgnition" />
+                    <input class="pull-right" type="checkbox" formControlName="useIgnition" />
                   </div>
                   <div class="col-md-6">
                     <span>fuel</span>
-                    <input class="pull-right" type="checkbox" name="useFuel" [(ngModel)]="deviceOpt.useFuel" />
+                    <input class="pull-right" type="checkbox" formControlName="useFuel" />
                   </div>
                   <div class="col-md-6">
                     <span>temp</span>
-                    <input class="pull-right" type="checkbox" name="useTemp" [(ngModel)]="deviceOpt.useTemp" />
+                    <input class="pull-right" type="checkbox" formControlName="useTemp" />
                   </div>
                   <div class="col-md-6">
                     <span>fms</span>
-                    <input class="pull-right" type="checkbox" name="useFms" [(ngModel)]="deviceOpt.useFms" />
+                    <input class="pull-right" type="checkbox" formControlName="useFms" />
                   </div>
 
                   <div class="col-md-6">
                     <span>j1708</span>
-                    <input class="pull-right" type="checkbox" name="useJ1708" [(ngModel)]="deviceOpt.useJ1708" />
+                    <input class="pull-right" type="checkbox" formControlName="useJ1708" />
                   </div>
                   <div class="col-md-6">
                     <span>id driver</span>
-                    <input class="pull-right" type="checkbox" name="useIdDriver" [(ngModel)]="deviceOpt.useIdDriver" />
+                    <input class="pull-right" type="checkbox" formControlName="useIdDriver" />
                   </div>
                   <div class="col-md-6">
                     <span>stop</span>
-                    <input class="pull-right" type="checkbox" name="useStop" [(ngModel)]="deviceOpt.useStop" />
+                    <input class="pull-right" type="checkbox" formControlName="useStop" />
                   </div>
                 </div>
               </div>
@@ -455,7 +455,7 @@
           </div>
 
           <div class="col-md-8">
-            <form #Init="ngForm">
+            <form [formGroup]="pathConfigForm">
               <div class="modal-header">
                 <span class="modal-title">Configurations de base de données</span>
               </div>
@@ -464,34 +464,34 @@
                   <div class="col-md-6">
                     <div class="form-group label-floating">
                       <label class="control-label">Path Minimun (sec)</label>
-                      <select class="form-control" [(ngModel)]="pathConfig.pathMinSec" name="pathmin" required>
-                        <option>30</option>
-                        <option selected>60</option>
-                        <option>90</option>
-                        <option>120</option>
-                        <option>150</option>
-                        <option>180</option>
-                        <option>210</option>
-                        <option>240</option>
-                        <option>270</option>
-                        <option>300</option>
+                      <select class="form-control" formControlName="pathMinSec">
+                        <option value="30">30</option>
+                        <option value="60">60</option>
+                        <option value="90">90</option>
+                        <option value="120">120</option>
+                        <option value="150">150</option>
+                        <option value="180">180</option>
+                        <option value="210">210</option>
+                        <option value="240">240</option>
+                        <option value="270">270</option>
+                        <option value="300">300</option>
                       </select>
                     </div>
                   </div>
                   <div class="col-md-6">
                     <div class="form-group label-floating">
                       <label class="control-label">Stop Minimun (sec)</label>
-                      <select class="form-control" [(ngModel)]="pathConfig.stopMinSec" name="stopmin" required>
-                        <option>30</option>
-                        <option>60</option>
-                        <option>90</option>
-                        <option selected>120</option>
-                        <option>150</option>
-                        <option>180</option>
-                        <option>210</option>
-                        <option>240</option>
-                        <option>270</option>
-                        <option>300</option>
+                      <select class="form-control" formControlName="stopMinSec">
+                        <option value="30">30</option>
+                        <option value="60">60</option>
+                        <option value="90">90</option>
+                        <option value="120">120</option>
+                        <option value="150">150</option>
+                        <option value="180">180</option>
+                        <option value="210">210</option>
+                        <option value="240">240</option>
+                        <option value="270">270</option>
+                        <option value="300">300</option>
                       </select>
                     </div>
                   </div>
@@ -500,54 +500,50 @@
                   <div class="col-md-4">
                     <div class="form-group label-floating">
                       <label class="control-label">Pause Minimun (sec)</label>
-                      <select class="form-control" [(ngModel)]="pathConfig.pauseMinSec" name="pausemin" required>
-                        <option>30</option>
-                        <option selected>60</option>
-                        <option>90</option>
-                        <option>120</option>
-                        <option>150</option>
-                        <option>180</option>
-                        <option>210</option>
-                        <option>240</option>
-                        <option>270</option>
-                        <option>300</option>
+                      <select class="form-control" formControlName="pauseMinSec">
+                        <option value="30">30</option>
+                        <option value="60">60</option>
+                        <option value="90">90</option>
+                        <option value="120">120</option>
+                        <option value="150">150</option>
+                        <option value="180">180</option>
+                        <option value="210">210</option>
+                        <option value="240">240</option>
+                        <option value="270">270</option>
+                        <option value="300">300</option>
                       </select>
                     </div>
                   </div>
                   <div class="col-md-4">
                     <div class="form-group label-floating">
                       <label class="control-label">distance Minimun (m)</label>
-                      <select class="form-control" [(ngModel)]="pathConfig.distanceMinMeter" name="distancemin"
-                        required>
-                        <option>5</option>
-                        <option selected>10</option>
-                        <option>20</option>
-                        <option>50</option>
-                        <option>100</option>
-                        <option>300</option>
-                        <option>500</option>
-                        <option>1000</option>
+                      <select class="form-control" formControlName="distanceMinMeter">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="300">300</option>
+                        <option value="500">500</option>
+                        <option value="1000">1000</option>
                       </select>
                     </div>
                   </div>
                   <div class="col-md-4">
                     <div class="form-group label-floating">
                       <label class="control-label">Speed Minimun (km/h)</label>
-                      <select class="form-control" [(ngModel)]="pathConfig.pathMinSpeed" name="speedmin" required>
-                        <option selected>1</option>
-                        <option>5</option>
-                        <option>10</option>
-                        <option>15</option>
-                        <option>20</option>
+                      <select class="form-control" formControlName="pathMinSpeed">
+                        <option value="1">1</option>
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
                       </select>
                     </div>
                   </div>
                 </div>
 
               </div>
-              <!--<div class="modal-footer">
-
-              </div>-->
             </form>
 
           </div>
@@ -556,7 +552,7 @@
 
         <div class="row">
           <div class="col-md-12">
-            <form #Opt="ngForm">
+            <div [formGroup]="deviceOptForm">
               <div class="modal-header">
                 <span class="modal-title">Coordonnées de boitier</span>
               </div>
@@ -567,7 +563,7 @@
                 <input class="pull-right" type="number" name="useIgnition" />
               </div>
               <div class="col-m6-2">
-                <button type="button" class="btn btn-success btn-sm pull-left" [hidden]="!Opt.form.valid"
+                <button type="button" class="btn btn-success btn-sm pull-left" [disabled]="deviceOptForm.invalid"
                   (click)="editDeviceOptionConfig()">
                   @if (!loadingEditDeviceOption) {
                   <i class="fa fa-check"></i>
@@ -577,13 +573,13 @@
                   }
                   Modifier les options</button>
               </div>
-            </form>
+            </div>
           </div>
         </div>
 
         <div class="row" style="margin-top: 0">
           <div class="col-md-4">
-            <button type="button" class="btn btn-success btn-sm pull-left" [hidden]="!Opt.form.valid"
+            <button type="button" class="btn btn-success btn-sm pull-left" [disabled]="deviceOptForm.invalid"
               (click)="editDeviceOptionConfig()">
               @if (!loadingEditDeviceOption) {
               <i class="fa fa-check"></i>
@@ -607,7 +603,7 @@
           <div class="col-md-6">
             <button type="button" class="btn btn-default btn-sm pull-right" data-dismiss="modal"><i
                 class="fa fa-times"></i> Annuler</button>
-            <button type="button" class="btn btn-success btn-sm pull-right" [hidden]="!Init.form.valid"
+            <button type="button" class="btn btn-success btn-sm pull-right" [disabled]="pathConfigForm.invalid"
               (click)="editPathConfig()">
               @if (!loadingEditPathConfig) {
               <i class="fa fa-check"></i>
@@ -622,31 +618,31 @@
 
         <!-- device setting config-->
         <div class="row" style="margin-top: 0">
-          <div class="col-md-3">
+          <div class="col-md-3" [formGroup]="deviceSettingForm">
             <div class="form-group label-floating">
               <label class="control-label">Rawstream Id</label>
-              <select class="form-control" [(ngModel)]="deviceSetting.idIpAdresse" name="idIpAdresse">
+              <select class="form-control" formControlName="idIpAdresse">
                 @for (ip of ipAddresses; track ip.idIpAdresse) {
-                <option [ngValue]="ip.idIpAdresse">{{ip.label}}</option>
+                <option [value]="ip.idIpAdresse">{{ip.label}}</option>
                 }
               </select>
             </div>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-3" [formGroup]="deviceSettingForm">
             <div class="form-group label-floating">
               <label class="control-label">Stream Id</label>
-              <input type="number" class="form-control" name="streamId" [(ngModel)]="deviceSetting.streamId">
+              <input type="number" class="form-control" formControlName="streamId">
             </div>
           </div>
-          <form class="navbar-form navbar-right" role="search" style="margin:0;">
-            <div class="form-group  is-empty">
-              <input type="text" class="form-control" name="search" [(ngModel)]="imei"
-                placeholder="Rechercher Imei..." />
+          <form class="navbar-form navbar-right" role="search" style="margin:0;" [formGroup]="imeiSearchForm">
+            <div class="form-group is-empty">
+              <input type="text" class="form-control" formControlName="imei" placeholder="Rechercher Imei..." />
               <span class="material-input"></span>
             </div>
             <button type="submit" class="btn btn-white btn-sm" title="Rechercher"
-              style="margin: 0px; padding: 1px 5px; margin: 0px 0px 0px 0px;" (click)="getSearchDeviceIemi(imei)"><i
-                class="fa fa-search" style="font-size: 14px"></i>
+              style="margin: 0px; padding: 1px 5px; margin: 0px 0px 0px 0px;"
+              (click)="getSearchDeviceIemi(imeiSearchForm.get('imei')?.value)"><i class="fa fa-search"
+                style="font-size: 14px"></i>
               Rechercher Imei</button>
           </form>
         </div>

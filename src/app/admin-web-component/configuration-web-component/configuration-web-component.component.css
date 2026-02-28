@@ -1,59 +1,68 @@
-/* created by AHMED HAYEL */
-
 .center {
   float: none;
   margin-left: auto;
   margin-right: auto;
 }
-.left-drag{
-  border:solid;
+
+.left-drag {
+  border: solid;
   border-color: mediumvioletred;
 }
-.right-drag{
-  border:solid;
+
+.right-drag {
+  border: solid;
   border-color: dodgerblue;
 }
-.bor{
+
+.bor {
   margin-top: 15px;
   margin-bottom: 20px;
 
 }
 
 
-.selected{
-  cursor:pointer;
-  font-weight:bold;
+.selected {
+  cursor: pointer;
+  font-weight: bold;
   color: black;
 }
-ul li{
-  list-style-type:none;
+
+ul li {
+  list-style-type: none;
 }
 
-.btn-warning{
-  float:left;
-  margin:2px;
+.btn-warning {
+  float: left;
+  margin: 2px;
   padding: 6px;
 }
-.selectedItem{
-  color:black;
+
+.selectedItem {
+  color: black;
 }
-.row{
+
+.row {
   margin-top: 25px;
 }
-.config{
-  margin:2px;
-  margin-left:10px;
+
+.config {
+  margin: 2px;
+  margin-left: 10px;
 }
-.change{
-  cursor:pointer;
+
+.change {
+  cursor: pointer;
 }
-.itemsSelect{
-  cursor:pointer;
+
+.itemsSelect {
+  cursor: pointer;
 }
-.itemsSelect:hover{
-  background-color:lightgray;
-  color:mediumvioletred
+
+.itemsSelect:hover {
+  background-color: lightgray;
+  color: mediumvioletred
 }
+
 .container-fluid {
   padding-right: 80px;
   padding-left: 80px;
@@ -61,7 +70,12 @@ ul li{
   margin-left: auto;
 }
 
-.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+.table>thead>tr>th,
+.table>tbody>tr>th,
+.table>tfoot>tr>th,
+.table>thead>tr>td,
+.table>tbody>tr>td,
+.table>tfoot>tr>td {
   padding: 0px 8px;
 }
 
@@ -70,20 +84,43 @@ ul li{
   background: purple;
   padding: 4px;
 }
+
 .labelle {
   border-radius: 2px;
   background: green;
   padding: 4px;
 }
-.btn.btn-success, .btn.btn-success:hover, .btn.btn-success:focus, .btn.btn-success:active, .btn.btn-success.active, .btn.btn-success:active:focus, .btn.btn-success:active:hover, .btn.btn-success.active:focus, .btn.btn-success.active:hover, .open > .btn.btn-success.dropdown-toggle, .open > .btn.btn-success.dropdown-toggle:focus, .open > .btn.btn-success.dropdown-toggle:hover, .navbar .navbar-nav > li > a.btn.btn-success, .navbar .navbar-nav > li > a.btn.btn-success:hover, .navbar .navbar-nav > li > a.btn.btn-success:focus, .navbar .navbar-nav > li > a.btn.btn-success:active, .navbar .navbar-nav > li > a.btn.btn-success.active, .navbar .navbar-nav > li > a.btn.btn-success:active:focus, .navbar .navbar-nav > li > a.btn.btn-success:active:hover, .navbar .navbar-nav > li > a.btn.btn-success.active:focus, .navbar .navbar-nav > li > a.btn.btn-success.active:hover, .open >
-.navbar .navbar-nav > li > a.btn.btn-success.dropdown-toggle, .open >
-.navbar .navbar-nav > li > a.btn.btn-success.dropdown-toggle:focus, .open >
-.navbar .navbar-nav > li > a.btn.btn-success.dropdown-toggle:hover {
+
+.btn.btn-success,
+.btn.btn-success:hover,
+.btn.btn-success:focus,
+.btn.btn-success:active,
+.btn.btn-success.active,
+.btn.btn-success:active:focus,
+.btn.btn-success:active:hover,
+.btn.btn-success.active:focus,
+.btn.btn-success.active:hover,
+.open>.btn.btn-success.dropdown-toggle,
+.open>.btn.btn-success.dropdown-toggle:focus,
+.open>.btn.btn-success.dropdown-toggle:hover,
+.navbar .navbar-nav>li>a.btn.btn-success,
+.navbar .navbar-nav>li>a.btn.btn-success:hover,
+.navbar .navbar-nav>li>a.btn.btn-success:focus,
+.navbar .navbar-nav>li>a.btn.btn-success:active,
+.navbar .navbar-nav>li>a.btn.btn-success.active,
+.navbar .navbar-nav>li>a.btn.btn-success:active:focus,
+.navbar .navbar-nav>li>a.btn.btn-success:active:hover,
+.navbar .navbar-nav>li>a.btn.btn-success.active:focus,
+.navbar .navbar-nav>li>a.btn.btn-success.active:hover,
+.open>.navbar .navbar-nav>li>a.btn.btn-success.dropdown-toggle,
+.open>.navbar .navbar-nav>li>a.btn.btn-success.dropdown-toggle:focus,
+.open>.navbar .navbar-nav>li>a.btn.btn-success.dropdown-toggle:hover {
   background-color: green;
   color: #FFFFFF;
 }
 
-input[type=radio], input[type=checkbox] {
+input[type=radio],
+input[type=checkbox] {
   margin: 0px 15px 0;
   margin-top: 1px \9;
   line-height: normal;
@@ -95,6 +132,7 @@ input[type=radio], input[type=checkbox] {
   padding-bottom: 0px;
   padding-left: 24px;
 }
+
 .modal-content .modal-header {
   border-bottom: none;
   padding-top: 10px;
@@ -102,6 +140,7 @@ input[type=radio], input[type=checkbox] {
   padding-bottom: 0;
   padding-left: 24px;
 }
+
 label.control-label {
   font-size: 15px;
   line-height: 1.07143;
@@ -110,20 +149,25 @@ label.control-label {
   margin: 16px 0 0 0;
 }
 
-table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+table>thead>tr>th,
+.table>tbody>tr>th,
+.table>tfoot>tr>th,
+.table>thead>tr>td,
+.table>tbody>tr>td,
+.table>tfoot>tr>td {
   padding: 0px 8px;
   vertical-align: middle;
 }
 
 
-.title{
+.title {
   margin-top: 0px;
   margin-bottom: 0px;
   margin-left: 24px;
   padding-top: 2px;
 }
 
-.card .card-header{
+.card .card-header {
   border-radius: 3px;
   padding: 0px 15px 0px 20px;
 }
@@ -139,7 +183,12 @@ table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .ta
 }
 
 
-.tableFixHead table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+.tableFixHead table>thead>tr>th,
+.table>tbody>tr>th,
+.table>tfoot>tr>th,
+.table>thead>tr>td,
+.table>tbody>tr>td,
+.table>tfoot>tr>td {
   padding: 0px 8px;
   vertical-align: middle;
 }
