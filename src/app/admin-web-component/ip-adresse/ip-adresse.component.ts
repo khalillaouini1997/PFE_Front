@@ -5,7 +5,7 @@ import { IpAddressService } from 'src/app/service/ip-address.service';
 import { catchError } from "rxjs/operators";
 import { of } from "rxjs";
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 @Component({
@@ -13,7 +13,7 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
   templateUrl: './ip-adresse.component.html',
   styleUrls: ['./ip-adresse.component.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule, PaginationModule]
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, PaginationModule]
 })
 export class IpAdresseComponent implements OnInit {
 
@@ -22,16 +22,37 @@ export class IpAdresseComponent implements OnInit {
   public bigTotalItems: number = 0;
   public bigCurrentPage: number = 1;
   itemsPerPage = 15;
-  keyWord: string = "";
   typeConnection: { type: string; }[] = [];
   public maxSize: number = 5;
 
+  searchForm!: FormGroup;
+  updateIpForm!: FormGroup;
+
   private readonly ipAddressService = inject(IpAddressService);
   private readonly toastr = inject(ToastrService);
+  private readonly fb = inject(FormBuilder);
 
   ngOnInit() {
-    this.getAllIpAddresse(this.keyWord, this.bigCurrentPage - 1, this.itemsPerPage);
+    this.initForms();
+    this.getAllIpAddresse(this.searchForm.get('keyWord')?.value || "", this.bigCurrentPage - 1, this.itemsPerPage);
     this.typeConnection = this.ipAddressService.typeConnection;
+  }
+
+  initForms() {
+    this.searchForm = this.fb.group({
+      keyWord: ['']
+    });
+
+    this.updateIpForm = this.fb.group({
+      idIpAdresse: [null],
+      label: ['', Validators.required],
+      value: ['', Validators.required],
+      jdbcUser: [''],
+      jdbcPass: [''],
+      url: [''],
+      typeConnection: [''],
+      dbName: ['']
+    });
   }
 
   getAllIpAddresse(keyWord: string, page: number, size: number) {
@@ -45,7 +66,7 @@ export class IpAdresseComponent implements OnInit {
 
   searchIpAddress() {
     this.bigCurrentPage = 1;
-    this.getAllIpAddresse(this.keyWord, this.bigCurrentPage - 1, this.itemsPerPage);
+    this.getAllIpAddresse(this.searchForm.get('keyWord')?.value, this.bigCurrentPage - 1, this.itemsPerPage);
   }
 
   deleteIpAddress(id: number) {
@@ -61,7 +82,7 @@ export class IpAdresseComponent implements OnInit {
         .subscribe({
           next: () => {
             this.toastr.success(' Account was deleted ', 'Success!');
-            this.getAllIpAddresse(this.keyWord, this.bigCurrentPage - 1, this.itemsPerPage);
+            this.getAllIpAddresse(this.searchForm.get('keyWord')?.value, this.bigCurrentPage - 1, this.itemsPerPage);
           },
           error: (error) => {
             this.toastr.error(error, 'Error!');
@@ -72,15 +93,17 @@ export class IpAdresseComponent implements OnInit {
 
   onSelect(IpAddres: IpAddress) {
     this.ipAddressSelected = IpAddres;
+    this.updateIpForm.patchValue(IpAddres);
   }
 
   updateIpAdress() {
-    if (this.ipAddressSelected.idIpAdresse !== null) {
-      this.ipAddressService.updateIpAddress(this.ipAddressSelected.idIpAdresse, this.ipAddressSelected)
+    const updatedIp = this.updateIpForm.value;
+    if (updatedIp.idIpAdresse !== null) {
+      this.ipAddressService.updateIpAddress(updatedIp.idIpAdresse, updatedIp)
         .subscribe({
           next: () => {
             this.toastr.success('IP Address updated', 'Success');
-            this.getAllIpAddresse(this.keyWord, this.bigCurrentPage - 1, this.itemsPerPage);
+            this.getAllIpAddresse(this.searchForm.get('keyWord')?.value, this.bigCurrentPage - 1, this.itemsPerPage);
           }
         });
     }
@@ -88,6 +111,6 @@ export class IpAdresseComponent implements OnInit {
 
   public pageChanged(event: any): void {
     this.bigCurrentPage = event.page;
-    this.getAllIpAddresse(this.keyWord, this.bigCurrentPage - 1, this.itemsPerPage);
+    this.getAllIpAddresse(this.searchForm.get('keyWord')?.value, this.bigCurrentPage - 1, this.itemsPerPage);
   }
 }

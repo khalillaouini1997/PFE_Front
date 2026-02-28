@@ -1,10 +1,10 @@
-<form class="navbar-form navbar-right" role="search" style="margin:0;">
-    <div class="form-group  is-empty">
-        <input type="text" class="form-control" name="search" [(ngModel)]="keyWord" placeholder="Search"
-            style="margin:0;">
+<form class="navbar-form navbar-right" role="search" style="margin:0;" [formGroup]="searchForm"
+    (ngSubmit)="searchIpAddress()">
+    <div class="form-group is-empty">
+        <input type="text" class="form-control" formControlName="keyWord" placeholder="Search" style="margin:0;">
         <span class="material-input"></span>
     </div>
-    <button type="submit" class="btn btn-white btn-round btn-just-icon" style="margin:0;" (click)="searchIpAddress()">
+    <button type="submit" class="btn btn-white btn-round btn-just-icon" style="margin:0;">
         <i class="material-icons">search</i>
         <div class="ripple-container"></div>
     </button>
@@ -70,69 +70,65 @@
 
 <div id="Modalupdate" class="modal fade" role="dialog">
     <div class="modal-dialog">
-        <form #updateIpAddressForm="ngForm">
+        <form [formGroup]="updateIpForm" (ngSubmit)="updateIpAdress()">
 
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">update Ip Address {{ipAddressSelected.label}}</h4>
+                    <h4 class="modal-title">update Ip Address {{updateIpForm.get('label')?.value}}</h4>
                 </div>
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group label-floating">
-
-                                <input type="text" [(ngModel)]="ipAddressSelected.label" class="form-control"
-                                    name="label" required>
+                                <label class="control-label">Label</label>
+                                <input type="text" formControlName="label" class="form-control">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group label-floating">
-
-                                <input type="text" [(ngModel)]="ipAddressSelected.value" class="form-control"
-                                    name="value" required>
+                                <label class="control-label">Value</label>
+                                <input type="text" formControlName="value" class="form-control">
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group label-floating">
-
-                                <input type="text" [(ngModel)]="ipAddressSelected.jdbcUser" class="form-control"
-                                    name="jdbcUser">
+                                <label class="control-label">JDBC User</label>
+                                <input type="text" formControlName="jdbcUser" class="form-control">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group label-floating">
-
-                                <input type="text" [(ngModel)]="ipAddressSelected.jdbcPass" class="form-control"
-                                    name="jdbcPass">
+                                <label class="control-label">JDBC Pass</label>
+                                <input type="password" formControlName="jdbcPass" class="form-control">
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-9">
                             <div class="form-group label-floating">
-
-                                <input type="text" [(ngModel)]="ipAddressSelected.url" class="form-control" name="url">
+                                <label class="control-label">URL</label>
+                                <input type="text" formControlName="url" class="form-control">
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group label-floating">
-
-                                <select [(ngModel)]="ipAddressSelected.typeConnection" class="form-control"
-                                    name="typeConnection">
-                                    <!--<option *ngFor="let type of typeConnection" [value]="type?.type"> {{type.type}} </option>-->
+                                <label class="control-label">Type Connection</label>
+                                <select formControlName="typeConnection" class="form-control">
+                                    @for (type of typeConnection; track type.type) {
+                                    <option [value]="type.type">{{type.type}}</option>
+                                    }
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group label-floating">
-
-                                <input type="text" [(ngModel)]="ipAddressSelected.dbName" class="form-control"
-                                    name="dbName">
+                                <label class="control-label">DB Name</label>
+                                <input type="text" formControlName="dbName" class="form-control">
                             </div>
                         </div>
                     </div>
@@ -140,8 +136,8 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-warning" [hidden]="!updateIpAddressForm.form.valid"
-                        (click)="updateIpAdress()" data-dismiss="modal">update</button>
+                    <button type="submit" class="btn btn-warning" [disabled]="updateIpForm.invalid"
+                        data-dismiss="modal">update</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                 </div>
             </div>
