@@ -1,16 +1,17 @@
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { AdministratorCompte } from '../data/data';
-import { DataService } from '../service/data.service';
+import { AuthService } from '../service/auth.service';
+import { WebAccountService } from '../service/web-account.service';
 import { environment } from '../../environments/environment';
-import { NgIf, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-admin-web-component',
   templateUrl: './admin-web-component.component.html',
   styleUrls: ['./admin-web-component.component.css'],
   standalone: true,
-  imports: [NgIf, NgClass, RouterLink, RouterLinkActive, RouterOutlet]
+  imports: [NgClass, RouterLink, RouterLinkActive, RouterOutlet]
 })
 export class AdminWebComponentComponent implements OnInit {
 
@@ -26,89 +27,56 @@ export class AdminWebComponentComponent implements OnInit {
   isActiveAdminCompte: boolean = false;
   isActiveAddAdminCompte: boolean = false;
   owner: string = environment.owner;
-  global: string;
 
-  // Declaration vars !!!
   public currentUser: AdministratorCompte = new AdministratorCompte();
-  constructor(private router: Router, private service: DataService) {
+
+  private readonly router = inject(Router);
+  private readonly authService = inject(AuthService);
+  private readonly webAccountService = inject(WebAccountService);
+
+  constructor() {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
   }
 
   ngOnInit() {
-    this.service.isAuthenticated = this.service.loadTestAuthenticated();
-
-    if (!this.service.isAuthenticated) {
-      this.router.navigate(['/error']);
-    } else {
-      this.service.getAllOptions().subscribe(res => {
-        this.service.options = res;
-      });
+    if (!this.authService.isAuthenticated()) {
+      this.router.navigate(['/authentification']);
+      return;
     }
 
+    this.webAccountService.getAllOptions().subscribe({
+      next: (res) => {
+        // Options are handled centrally if needed, or locally here
+      }
+    });
   }
-
-  //=====================================
-  //    Log Out
-  //=====================================
 
   logout() {
+    this.authService.logout();
     this.router.navigate(['/authentification']);
-    this.service.logoutStorage();
   }
 
-  isAdminGolbal(): any {
-    let currentUser = JSON.parse(localStorage.getItem('user') || '{}');
-    if (currentUser.user.role != 'REPORTER') {
-      return true;
-    }
+  isAdminGolbal(): boolean {
+    return this.authService.hasRole('GLOBALADMIN');
   }
 
-  isWebAdmin(): any {
-    let currentUser = JSON.parse(localStorage.getItem('user') || '{}');
-    if (currentUser.user.role != 'WEBADMIN') {
-      return true;
-    }
+  isWebAdmin(): boolean {
+    return this.authService.hasRole('WEBADMIN');
   }
 
-
-  isReporter(): any {
-    for (let i = 0; i < this.service.administratorCompte.length; i++) {
-      if (this.service.administratorCompte[i].role == 'REPORTER') {
-        return 'REPORTER';
-      }
-    }
+  isReporter(): boolean {
+    return this.authService.hasRole('REPORTER');
   }
 
-  isAgent(): any {
-    let currentUser = JSON.parse(localStorage.getItem('user') || '{}');
-    if (currentUser.user.role == 'AGENT') {
-      return true;
-    }
+  isAgent(): boolean {
+    return this.authService.hasRole('AGENT');
   }
 
-  isUserName(): any {
-    let currentUser = JSON.parse(localStorage.getItem('user') || '{}');
-    if (currentUser.user.username == 'fasttrackw') {
-      return true;
-    }
+  isGlobalAdmin(): boolean {
+    return this.authService.hasRole('GLOBALADMIN') || this.authService.hasRole('WEBADMIN');
   }
 
-  isGlobalAdmin(): any {
-    let currentUser = JSON.parse(localStorage.getItem('user') || '{}');
-    if (currentUser.user.role == 'GLOBALADMIN' || currentUser.user.role == 'WEBADMIN') {
-      return true;
-    }
-  }
-
-  isGlobalAdminDesc(): any {
-    let currentUser = JSON.parse(localStorage.getItem('user') || '{}');
-    if (currentUser.user.role == 'GLOBALADMINDESC') {
-      return true;
-    }
-  }
-
-  isAgentAdmin(): boolean {
-    const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
-    return currentUser && currentUser.user && currentUser.user.role === 'GLOBALADMIN';
+  isGlobalAdminDesc(): boolean {
+    return this.authService.hasRole('GLOBALADMINDESC');
   }
 }
