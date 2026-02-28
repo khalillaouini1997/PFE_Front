@@ -9,8 +9,11 @@
                     <form role="search" style="margin-top:3px;">
                         <div class="is-empty">
                             <span class="control-label" for="compteserver" style="color:#fff1f3;">Etat</span>
-                            <select class="formulaire" [(ngModel)]='selectedType' name="type" (change)='onSelectState()'>
-                                <option *ngFor="let type of types" [value]="type.name">{{type.label}}</option>
+                            <select class="formulaire" [(ngModel)]='selectedType' name="type"
+                                (change)='onSelectState()'>
+                                @for (type of types; track type.name) {
+                                <option [value]="type.name">{{type.label}}</option>
+                                }
                                 <option hidden [value]="'null'"></option>
                             </select>
                         </div>
@@ -21,9 +24,12 @@
                         <div class="is-empty">
                             <span class="control-label" for="compteserver" style="color:#fff1f3;">Client</span>
                             <select class="formulaire" [(ngModel)]='selectedCompteWebId' name="compteserver">
-                                <option *ngFor="let CompteWeb of comptesWeb" [value]="CompteWeb.idCompteClientWeb">{{CompteWeb.login}}</option>
+                                @for (CompteWeb of comptesWeb; track CompteWeb.idCompteClientWeb) {
+                                <option [value]="CompteWeb.idCompteClientWeb">{{CompteWeb.login}}</option>
+                                }
                             </select>
-                            <button type="submit" class="btn btn-white btn-sm" title="Rechercher" style="margin: 0px; padding: 1px 5px; margin: 0px 0px 0px 0px;"
+                            <button type="submit" class="btn btn-white btn-sm" title="Rechercher"
+                                style="margin: 0px; padding: 1px 5px; margin: 0px 0px 0px 0px;"
                                 (click)="onSearchClient()"><i class="fa fa-search" style="font-size: 14px"></i>
                                 Rechercher</button>
                         </div>
@@ -48,47 +54,60 @@
                 </thead>
                 <tbody>
 
-                    <tr *ngIf="loading">
+                    @if (loading) {
+                    <tr>
                         <td style="text-align: center" colspan="8">
                             <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
                         </td>
                     </tr>
+                    }
 
-                    <tr *ngFor="let intervention of interventionsFilter">
+                    @for (intervention of interventionsFilter; track $index) {
+                    <tr>
                         <td>{{intervention.createdAt | date:'dd-MM-yyyy'}}</td>
                         <td>{{intervention.request}}</td>
                         <td>{{intervention.content}} </td>
                         <td>
-                            <span *ngIf="intervention?.priority == 0">Faible</span>
-                            <span *ngIf="intervention?.priority == 1">Moyen</span>
-                            <span *ngIf="intervention?.priority == 2">Urgent</span>
+                            @if (intervention?.priority == 0) {
+                            <span>Faible</span>
+                            } @else if (intervention?.priority == 1) {
+                            <span>Moyen</span>
+                            } @else if (intervention?.priority == 2) {
+                            <span>Urgent</span>
+                            }
                         </td>
                         <td>
-                            <span *ngIf="intervention.type == 'REQUEST'" data-toggle="tooltip" class="badge bg-orange">
+                            @if (intervention.type == 'REQUEST') {
+                            <span data-toggle="tooltip" class="badge bg-orange">
                                 Demande d'intervention
                             </span>
-                            <span *ngIf="intervention.type == 'INPROGRESS'" data-toggle="tooltip" class="badge bg-blue">
+                            } @else if (intervention.type == 'INPROGRESS') {
+                            <span data-toggle="tooltip" class="badge bg-blue">
                                 En cours de traitement
                             </span>
-                            <span *ngIf="intervention.type == 'CARRYOUT'" data-toggle="tooltip" class="badge bg-green">
+                            } @else if (intervention.type == 'CARRYOUT') {
+                            <span data-toggle="tooltip" class="badge bg-green">
                                 Intervention effectuée
                             </span>
-                            <span *ngIf="intervention.type == 'REJECTED'" data-toggle="tooltip" class="badge bg-red">
+                            } @else if (intervention.type == 'REJECTED') {
+                            <span data-toggle="tooltip" class="badge bg-red">
                                 Intervention annulée
                             </span>
+                            }
                         </td>
                         <td>{{intervention.submitAt | date:'dd-MM-yyyy'}}</td>
                         <td>{{intervention.response}}</td>
                         <td>
                             <!--<button class="btn btn-info btn-xs" style="padding: 0px 8px;font-size: 8px;margin: 1px 0px 0px 0px;"
-                                (click)='currentIntervention = intervention;' [tooltip]="tooltipdel" tooltipPlacement="top"
-                                data-toggle="modal" data-target="#ModalInit">
-                                <i class="fa fa-edit" aria-hidden="true"></i></button>
-                            <tooltip-content #tooltipdel>
-                                Modifier 
-                            </tooltip-content>-->
+                                  (click)='currentIntervention = intervention;' [tooltip]="tooltipdel" tooltipPlacement="top"
+                                  data-toggle="modal" data-target="#ModalInit">
+                                  <i class="fa fa-edit" aria-hidden="true"></i></button>
+                              <tooltip-content #tooltipdel>
+                                  Modifier 
+                              </tooltip-content>-->
                         </td>
                     </tr>
+                    }
                 </tbody>
             </table>
         </div>
@@ -134,7 +153,9 @@
                                 <div class="col-sm-12">
                                     <select [(ngModel)]='currentIntervention.type' name="type" class="form-control"
                                         required>
-                                        <option *ngFor='let type of types ' [value]='type.name'>{{type.label}}</option>
+                                        @for (type of types; track type.name) {
+                                        <option [value]='type.name'>{{type.label}}</option>
+                                        }
                                     </select>
                                 </div>
                             </div>
@@ -145,8 +166,9 @@
                         <div class="col-lg-10 col-md-10">
                             <div class="form-group ">
                                 <div class="col-sm-12">
-                                    <textarea [(ngModel)]='currentIntervention.response' rows="12" name="response" type="text"
-                                        maxlength="1000" placeholder="Détails" class="form-control"></textarea>
+                                    <textarea [(ngModel)]='currentIntervention.response' rows="12" name="response"
+                                        type="text" maxlength="1000" placeholder="Détails"
+                                        class="form-control"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -155,8 +177,8 @@
                 <div class="box-footer">
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-                        <button type="button" class="btn btn-warning" [hidden]="!ChangeServerForm.form.valid" (click)="updateIntervention()"
-                            data-dismiss="modal">Enregistrer</button>
+                        <button type="button" class="btn btn-warning" [hidden]="!ChangeServerForm.form.valid"
+                            (click)="updateIntervention()" data-dismiss="modal">Enregistrer</button>
                     </div>
                 </div>
             </form>
