@@ -5,7 +5,7 @@ import { CompteWeb } from 'src/app/data/data';
 import { environment } from '../../../environments/environment';
 import { AuthService } from 'src/app/service/auth.service';
 import { WebAccountService } from 'src/app/service/web-account.service';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { NgIf, NgFor, DatePipe } from '@angular/common';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 
@@ -14,20 +14,20 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
   templateUrl: './comptes-web-component.component.html',
   styleUrls: ['./comptes-web-component.component.css'],
   standalone: true,
-  imports: [FormsModule, RouterLink, PaginationModule, DatePipe]
+  imports: [FormsModule, ReactiveFormsModule, RouterLink, PaginationModule, DatePipe]
 })
 export class ComptesWebComponentComponent implements OnInit {
-  keyWord: string = "";
-  public maxSize: number = 5;
-  public bigTotalItems: number = 175;
-  public bigCurrentPage: number = 1;
-  public numPages: number = 0;
   itemsPerPage = 30;
+  public bigTotalItems: number = 0;
+  public bigCurrentPage: number = 1;
+  public maxSize: number = 5;
   comptesWeb: CompteWeb[] = [];
   loading: boolean = false;
   selectedWebAccount: CompteWeb = new CompteWeb();
   dt: any;
   code_pays = [];
+
+  searchForm!: FormGroup;
 
   owner: string = environment.owner;
 
@@ -35,18 +35,26 @@ export class ComptesWebComponentComponent implements OnInit {
   private readonly webAccountService = inject(WebAccountService);
   private readonly router = inject(Router);
   private readonly toastr = inject(ToastrService);
+  private readonly fb = inject(FormBuilder);
 
   ngOnInit() {
+    this.initForms();
     if (!this.authService.isAuthenticated()) {
       this.router.navigate(['/error']);
     } else {
-      this.getAllWebAccount(this.keyWord, this.bigCurrentPage - 1, this.itemsPerPage);
+      this.getAllWebAccount(this.searchForm.get('keyWord')?.value || "", this.bigCurrentPage - 1, this.itemsPerPage);
     }
+  }
+
+  initForms() {
+    this.searchForm = this.fb.group({
+      keyWord: ['']
+    });
   }
 
   public pageChanged(event: any): void {
     this.bigCurrentPage = event.page;
-    this.getAllWebAccount(this.keyWord, this.bigCurrentPage - 1, this.itemsPerPage);
+    this.getAllWebAccount(this.searchForm.get('keyWord')?.value, this.bigCurrentPage - 1, this.itemsPerPage);
   }
 
   getAllWebAccount(keyWord: string, page: number, size: number) {
@@ -55,7 +63,7 @@ export class ComptesWebComponentComponent implements OnInit {
     this.webAccountService.getAllWebAccountByKeyWord(keyWord, page, size).subscribe({
       next: (_comptesWeb) => {
         this.loading = false;
-        this.comptesWeb = _comptesWeb.content;
+        this.comptesWeb = _comptesWeb.content as any;
 
         for (let i = 0; i < this.comptesWeb.length; i++) {
           if (new Date().getTime() < new Date(this.comptesWeb[i].date_expiration).getTime()) {
@@ -82,7 +90,7 @@ export class ComptesWebComponentComponent implements OnInit {
   searchWebAccount() {
     this.loading = true;
     this.bigCurrentPage = 1;
-    this.getAllWebAccount(this.keyWord, this.bigCurrentPage - 1, this.itemsPerPage);
+    this.getAllWebAccount(this.searchForm.get('keyWord')?.value, this.bigCurrentPage - 1, this.itemsPerPage);
     this.loading = false;
   }
 
