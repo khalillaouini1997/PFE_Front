@@ -63,9 +63,11 @@
         </div>
     </div>
 </div>
-<div class="alert alert-danger" role="alert" *ngIf="mode==true">
+@if (mode) {
+<div class="alert alert-danger" role="alert">
     {{messageError}}
 </div>
+}
 <!-- table boitier details -->
 <div>
 
