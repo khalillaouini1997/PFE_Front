@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { Boitier, DeviceOpt, DeviceSetting, PageResponse, PathConfigPayload, RealTime, RecalculatePayload, VehiculeSetting } from '../data/data';
+import { Archive, Boitier, BoitierRealTime, DeviceOpt, DeviceSetting, PageResponse, PathConfigPayload, raws, RecalculatePayload, VehiculeSetting } from '../data/data';
 
 @Injectable({
     providedIn: 'root'
@@ -45,16 +45,16 @@ export class BoitierService {
     }
 
     // Archives & Raws
-    lastArchiveOfBoitier(numBoitier: number): Observable<RealTime> {
-        return this.http.get<RealTime>(`${environment.apiBaseUrl}boities/${numBoitier}/lastArchive`);
+    lastArchiveOfBoitier(numBoitier: number): Observable<BoitierRealTime> {
+        return this.http.get<BoitierRealTime>(`${environment.apiBaseUrl}boities/${numBoitier}/lastArchive`);
     }
 
-    getRaws(numBoitier: number, limit: number): Observable<any[]> {
-        return this.http.get<any[]>(`${environment.apiBaseUrl}boities/${numBoitier}/Raw/${limit}`);
+    getRaws(numBoitier: number, limit: number): Observable<raws> {
+        return this.http.get<raws>(`${environment.apiBaseUrl}boities/${numBoitier}/Raw/${limit}`);
     }
 
-    getArchiveOfBoitier(numboitier: number, limit: number): Observable<RealTime[]> {
-        return this.http.get<RealTime[]>(`${environment.apiBaseUrl}boities/${numboitier}/Archives/${limit}`);
+    getArchiveOfBoitier(numboitier: number, limit: number): Observable<Archive[]> {
+        return this.http.get<Archive[]>(`${environment.apiBaseUrl}boities/${numboitier}/Archives/${limit}`);
     }
 
     // Recalculation

@@ -25,22 +25,36 @@ export class Boitier {
   idBoitier: number;
   label: string;
   numBoitier: number;
-  emplacement: string;
-  dateLastTrame: number;
-  vitesse: number;
   etatBoitier: string;
-  gpsLastTrame: number;
-  gsmLastTrame: number;
-  stat: boolean = true;
   streamId: number;
   ipAdresse: IpAddress;
+
+  // Real-time fields (transient/runtime only)
+  emplacement?: string;
+  dateLastTrame?: number;
+  vitesse?: number;
+  gpsLastTrame?: number;
+  gsmLastTrame?: number;
+  stat?: boolean = true;
+
   constructor() {
     this.idBoitier = 0;
     this.label = '';
     this.numBoitier = 0;
     this.etatBoitier = '';
     this.ipAdresse = new IpAddress();
+    this.streamId = 0;
   }
+}
+
+export interface BoitierRealTime {
+  idBoitier: number;
+  numBoitier: number;
+  emplacement: string;
+  dateLastTrame: number;
+  vitesse: number;
+  gpsLastTrame: number;
+  gsmLastTrame: number;
 }
 
 export class CompteServer {

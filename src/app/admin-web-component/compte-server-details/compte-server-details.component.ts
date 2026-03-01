@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Boitier, CompteServer } from 'src/app/data/data';
+import { Boitier, BoitierRealTime, CompteServer } from 'src/app/data/data';
 import { CompteServerService } from "../../service/compte-server.service";
 import { BoitierService } from "../../service/boitier.service";
 import { AuthService } from "../../service/auth.service";
@@ -117,10 +117,12 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
 
   private refreshBoitierArchives() {
     this.boitiers.forEach(boitier => {
-      this.boitierService.lastArchiveOfBoitier(boitier.numBoitier).subscribe((arch: any) => {
+      this.boitierService.lastArchiveOfBoitier(boitier.numBoitier).subscribe((arch: BoitierRealTime) => {
         boitier.dateLastTrame = arch.dateLastTrame;
-        if (arch.latitude && arch.longitude) {
-          boitier.emplacement = `${arch.latitude.toFixed(3)} : ${arch.longitude.toFixed(3)}`;
+        if (arch.emplacement) {
+          boitier.emplacement = arch.emplacement;
+        } else if (arch.vitesse !== undefined) {
+          // Fallback if needed, but BoitierRealTime should have it
         }
         boitier.vitesse = arch.vitesse;
         boitier.gpsLastTrame = arch.gpsLastTrame;
