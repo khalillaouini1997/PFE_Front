@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-edit',
@@ -6,12 +6,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./edit.component.css'],
   standalone: true
 })
-export class EditComponent implements OnInit {
+export class EditComponent {
 
   constructor() { }
-
-  ngOnInit() {
-    // intentional empty method
-  }
 
 }

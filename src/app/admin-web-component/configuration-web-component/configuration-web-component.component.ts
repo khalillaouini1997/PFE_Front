@@ -223,9 +223,6 @@ export class ConfigurationWebComponentComponent implements OnInit {
     }
   }
 
-  charge() {
-
-  }
 
   saveChange() {
     if (this.mainConfigForm.invalid) {

@@ -1,5 +1,5 @@
 import { Router } from '@angular/router';
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CoreService } from 'src/app/service/core.service';
 
 @Component({
@@ -8,17 +8,13 @@ import { CoreService } from 'src/app/service/core.service';
   styleUrls: ['./error.component.css'],
   standalone: true
 })
-export class ErrorComponent implements OnInit {
+export class ErrorComponent {
 
   private readonly router = inject(Router);
   private readonly coreService = inject(CoreService);
 
   constructor() {
     this.coreService.changeBackgroundImageTo(0);
-  }
-
-  ngOnInit() {
-    // intentional
   }
 
   back() {
