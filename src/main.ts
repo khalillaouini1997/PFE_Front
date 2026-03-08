@@ -1,11 +1,12 @@
 import { enableProdMode, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 
 import { environment } from './environments/environment';
-import { HTTP_INTERCEPTORS, withInterceptorsFromDi, provideHttpClient } from '@angular/common/http';
-import { AuthInterceptor } from './app/utils/security/auth.interceptor';
+import { authInterceptor } from './app/utils/security/auth.interceptor';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { AppRoutingModule } from './app/app-routing.module';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { routes } from './app/app-routing.module';
+import { NgOptimizedImage } from '@angular/common';
+import { provideRouter } from '@angular/router'; // Removed withHashLocation if not needed
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
@@ -21,9 +22,9 @@ if (environment.production) {
 
 bootstrapApplication(AppComponent, {
   providers: [
-    provideZoneChangeDetection(),importProvidersFrom(
-      AppRoutingModule,
-      CommonModule,
+    provideZoneChangeDetection(),
+    provideRouter(routes), // Hash location was false in original config
+    importProvidersFrom(
       FormsModule,
       PaginationModule,
       BsDatepickerModule.forRoot(),
@@ -34,8 +35,7 @@ bootstrapApplication(AppComponent, {
         positionClass: 'toast-bottom-right',
       })
     ),
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClient(withInterceptors([authInterceptor])),
     provideAnimations()
   ]
 })
