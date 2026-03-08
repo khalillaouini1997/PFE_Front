@@ -1,4 +1,8 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideRouter } from '@angular/router';
+import { importProvidersFrom } from '@angular/core';
+import { ToastrModule } from 'ngx-toastr';
 
 import { AddCompteServerComponent } from './add-compte-server.component';
 
@@ -6,12 +10,12 @@ describe('AddCompteServerComponent', () => {
   let component: AddCompteServerComponent;
   let fixture: ComponentFixture<AddCompteServerComponent>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
     imports: [AddCompteServerComponent]
 })
     .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(AddCompteServerComponent);

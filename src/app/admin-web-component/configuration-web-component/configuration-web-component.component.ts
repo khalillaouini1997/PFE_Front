@@ -25,14 +25,14 @@ import { defineLocale } from 'ngx-bootstrap/chronos';
 import { frLocale } from 'ngx-bootstrap/locale';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
-import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { NgSelectModule } from '@ng-select/ng-select';
 defineLocale('fr', frLocale);
 
 @Component({
     selector: 'app-configuration-web-component',
     templateUrl: './configuration-web-component.component.html',
     styleUrls: ['./configuration-web-component.component.css'],
-    imports: [CommonModule, ReactiveFormsModule, BsDatepickerModule, NgMultiSelectDropDownModule]
+    imports: [CommonModule, ReactiveFormsModule, BsDatepickerModule, NgSelectModule]
 })
 export class ConfigurationWebComponentComponent implements OnInit {
 
@@ -91,7 +91,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
   dateBoolean: boolean = true;
   maxDate: Date = new Date();
 
-  dropdownSettings = {};
+
 
   constructor() {
     this.notifications = [];
@@ -197,16 +197,6 @@ export class ConfigurationWebComponentComponent implements OnInit {
       });
     }
     this.getAllIps();
-
-    this.dropdownSettings = {
-      singleSelection: false,
-      idField: 'idOption',
-      textField: 'description',
-      selectAllText: 'Select All',
-      unSelectAllText: 'UnSelect All',
-      itemsShowLimit: 5,
-      allowSearchFilter: true
-    };
   }
 
   getAllIps() {

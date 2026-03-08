@@ -18,8 +18,16 @@
     "experimentalDecorators": true,
     "moduleResolution": "bundler",
     "importHelpers": true,
-    "target": "es2020",
-    "module": "es2020",
+    "target": "ESNext",
+    "lib": [
+      "ESNext",
+      "dom"
+    ],
+    "skipLibCheck": true,
+    "types": [
+      "vitest/globals"
+    ],
+    "module": "ESNext",
     "paths": {
       "net": [
         "src/app/mocks/empty.ts"
@@ -30,13 +38,13 @@
       "tls": [
         "src/app/mocks/empty.ts"
       ]
-    }
+    },
+    "strictNullChecks": true
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
-    "strictTemplates": true,
-    "strictNullChecks": true
+    "strictTemplates": true
   }
 }

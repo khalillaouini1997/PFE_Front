@@ -4,7 +4,9 @@ import { environment } from '../../environments/environment';
 import { AdministratorCompte } from '../data/data';
 import { HttpClient } from '@angular/common/http';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class TraccarService {
   public currentUser: AdministratorCompte;
 
@@ -19,3 +21,4 @@ export class TraccarService {
   }
 
 }
+
