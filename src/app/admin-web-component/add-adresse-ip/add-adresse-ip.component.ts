@@ -2,14 +2,14 @@ import { Component, OnInit, inject } from '@angular/core';
 import { IpAddress } from "../../data/data";
 import { IpAddressService } from "../../service/ip-address.service";
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'app-add-adresse-ip',
     templateUrl: './add-adresse-ip.component.html',
     styleUrls: ['./add-adresse-ip.component.css'],
-    imports: [ReactiveFormsModule, CommonModule]
+    imports: [ReactiveFormsModule]
 })
 export class AddAdresseIpComponent implements OnInit {
 

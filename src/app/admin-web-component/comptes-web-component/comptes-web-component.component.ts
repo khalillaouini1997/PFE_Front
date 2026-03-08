@@ -6,7 +6,7 @@ import { environment } from '../../../environments/environment';
 import { AuthService } from 'src/app/service/auth.service';
 import { WebAccountService } from 'src/app/service/web-account.service';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
-import { NgIf, NgFor, DatePipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 @Component({

@@ -10,7 +10,7 @@ import { ToastrService } from 'ngx-toastr';
 import { catchError } from "rxjs/operators";
 import { Router } from "@angular/router";
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+
 
 defineLocale('fr', frLocale);
 
@@ -18,7 +18,7 @@ defineLocale('fr', frLocale);
     selector: 'app-add-compte-server',
     templateUrl: './add-compte-server.component.html',
     styleUrls: ['./add-compte-server.component.css'],
-    imports: [ReactiveFormsModule, BsDatepickerModule, CommonModule]
+    imports: [ReactiveFormsModule, BsDatepickerModule]
 })
 export class AddCompteServerComponent implements OnInit {
 

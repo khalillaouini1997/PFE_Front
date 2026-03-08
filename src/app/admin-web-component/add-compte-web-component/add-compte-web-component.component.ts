@@ -8,13 +8,13 @@ import { IpAddressService } from "../../service/ip-address.service";
 import { ToastrService } from "ngx-toastr";
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
     selector: 'app-add-compte-web-component',
     templateUrl: './add-compte-web-component.component.html',
     styleUrls: ['./add-compte-web-component.component.css'],
-    imports: [ReactiveFormsModule, BsDatepickerModule, CommonModule]
+    imports: [ReactiveFormsModule, BsDatepickerModule]
 })
 export class AddCompteWebComponentComponent implements OnInit {
 

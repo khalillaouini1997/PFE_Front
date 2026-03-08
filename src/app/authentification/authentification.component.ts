@@ -3,13 +3,13 @@ import { Router } from '@angular/router';
 import { AuthService } from '../service/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
     selector: 'app-authentification',
     templateUrl: './authentification.component.html',
     styleUrls: ['./authentification.component.scss'],
-    imports: [CommonModule, FormsModule]
+    imports: [FormsModule]
 })
 export class AuthentificationComponent {
 

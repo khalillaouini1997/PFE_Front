@@ -1,5 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule, DatePipe, NgFor, NgIf } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { InterventionInfo } from "../../data/data";
 import { ToastrService } from "ngx-toastr";
 import { VehiculeService } from "../../service/vehicule.service";

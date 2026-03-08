@@ -7,13 +7,13 @@ import { catchError } from "rxjs/operators";
 import { of, tap } from "rxjs";
 import { ToastrService } from "ngx-toastr";
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
     selector: 'app-add-admin-compte',
     templateUrl: './add-admin-compte.component.html',
     styleUrls: ['./add-admin-compte.component.css'],
-    imports: [ReactiveFormsModule, CommonModule]
+    imports: [ReactiveFormsModule]
 })
 export class AddAdminCompteComponent implements OnInit {
 

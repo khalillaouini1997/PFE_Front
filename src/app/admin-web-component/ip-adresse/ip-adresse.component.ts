@@ -4,7 +4,7 @@ import { IpAddress } from 'src/app/data/data';
 import { IpAddressService } from 'src/app/service/ip-address.service';
 import { catchError } from "rxjs/operators";
 import { of } from "rxjs";
-import { CommonModule } from '@angular/common';
+
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 
@@ -12,7 +12,7 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
     selector: 'app-ip-adresse',
     templateUrl: './ip-adresse.component.html',
     styleUrls: ['./ip-adresse.component.css'],
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, PaginationModule]
+    imports: [FormsModule, ReactiveFormsModule, PaginationModule]
 })
 export class IpAdresseComponent implements OnInit {
 
