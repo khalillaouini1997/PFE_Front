@@ -29,11 +29,10 @@ import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 defineLocale('fr', frLocale);
 
 @Component({
-  selector: 'app-configuration-web-component',
-  templateUrl: './configuration-web-component.component.html',
-  styleUrls: ['./configuration-web-component.component.css'],
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, BsDatepickerModule, NgMultiSelectDropDownModule]
+    selector: 'app-configuration-web-component',
+    templateUrl: './configuration-web-component.component.html',
+    styleUrls: ['./configuration-web-component.component.css'],
+    imports: [CommonModule, ReactiveFormsModule, BsDatepickerModule, NgMultiSelectDropDownModule]
 })
 export class ConfigurationWebComponentComponent implements OnInit {
 

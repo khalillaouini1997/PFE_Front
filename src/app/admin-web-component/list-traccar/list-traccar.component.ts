@@ -4,11 +4,10 @@ import { TraccarService } from 'src/app/service/traccar.service';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
-  selector: 'app-list-traccar',
-  templateUrl: './list-traccar.component.html',
-  styleUrls: ['./list-traccar.component.css'],
-  standalone: true,
-  imports: [FormsModule, ReactiveFormsModule]
+    selector: 'app-list-traccar',
+    templateUrl: './list-traccar.component.html',
+    styleUrls: ['./list-traccar.component.css'],
+    imports: [FormsModule, ReactiveFormsModule]
 })
 export class ListTraccarComponent implements OnInit {
 

@@ -9,11 +9,10 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } 
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 @Component({
-  selector: 'app-ip-adresse',
-  templateUrl: './ip-adresse.component.html',
-  styleUrls: ['./ip-adresse.component.css'],
-  standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, PaginationModule]
+    selector: 'app-ip-adresse',
+    templateUrl: './ip-adresse.component.html',
+    styleUrls: ['./ip-adresse.component.css'],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, PaginationModule]
 })
 export class IpAdresseComponent implements OnInit {
 

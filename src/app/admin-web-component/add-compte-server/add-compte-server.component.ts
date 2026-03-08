@@ -15,11 +15,10 @@ import { CommonModule } from '@angular/common';
 defineLocale('fr', frLocale);
 
 @Component({
-  selector: 'app-add-compte-server',
-  templateUrl: './add-compte-server.component.html',
-  styleUrls: ['./add-compte-server.component.css'],
-  standalone: true,
-  imports: [ReactiveFormsModule, BsDatepickerModule, CommonModule]
+    selector: 'app-add-compte-server',
+    templateUrl: './add-compte-server.component.html',
+    styleUrls: ['./add-compte-server.component.css'],
+    imports: [ReactiveFormsModule, BsDatepickerModule, CommonModule]
 })
 export class AddCompteServerComponent implements OnInit {
 

@@ -6,11 +6,10 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-authentification',
-  templateUrl: './authentification.component.html',
-  styleUrls: ['./authentification.component.scss'],
-  standalone: true,
-  imports: [CommonModule, FormsModule]
+    selector: 'app-authentification',
+    templateUrl: './authentification.component.html',
+    styleUrls: ['./authentification.component.scss'],
+    imports: [CommonModule, FormsModule]
 })
 export class AuthentificationComponent {
 

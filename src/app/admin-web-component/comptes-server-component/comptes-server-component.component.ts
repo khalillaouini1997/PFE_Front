@@ -11,11 +11,10 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 @Component({
-  selector: 'app-comptes-server-component',
-  templateUrl: './comptes-server-component.component.html',
-  styleUrls: ['./comptes-server-component.component.css'],
-  standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, RouterLink, PaginationModule, BsDatepickerModule]
+    selector: 'app-comptes-server-component',
+    templateUrl: './comptes-server-component.component.html',
+    styleUrls: ['./comptes-server-component.component.css'],
+    imports: [FormsModule, ReactiveFormsModule, RouterLink, PaginationModule, BsDatepickerModule]
 })
 export class ComptesServerComponentComponent implements OnInit {
 

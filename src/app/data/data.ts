@@ -299,9 +299,12 @@ export interface RealTime {
 export interface AccessLog {
   id: number;
   username: string;
+  login?: string;
   action: string;
   timestamp: Date;
+  date?: any;
   ipAddress: string;
+  agent?: string;
 }
 
 export interface RecalculatePayloadDTO {

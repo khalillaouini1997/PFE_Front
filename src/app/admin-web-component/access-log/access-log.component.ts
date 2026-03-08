@@ -9,11 +9,10 @@ import { AuthService } from 'src/app/service/auth.service'; // Assuming this ser
 import { Router } from '@angular/router'; // Assuming this is needed for router
 
 @Component({
-  selector: 'app-access-log',
-  templateUrl: './access-log.component.html',
-  styleUrls: ['./access-log.component.css'],
-  standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, PaginationModule, DatePipe]
+    selector: 'app-access-log',
+    templateUrl: './access-log.component.html',
+    styleUrls: ['./access-log.component.css'],
+    imports: [FormsModule, ReactiveFormsModule, PaginationModule, DatePipe]
 })
 export class AccessLogComponent implements OnInit {
 

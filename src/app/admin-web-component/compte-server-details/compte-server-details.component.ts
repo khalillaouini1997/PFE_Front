@@ -10,11 +10,10 @@ import { DatePipe } from '@angular/common';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 @Component({
-  selector: 'app-compte-server-details',
-  templateUrl: './compte-server-details.component.html',
-  styleUrls: ['./compte-server-details.component.css'],
-  standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, PaginationModule, DatePipe]
+    selector: 'app-compte-server-details',
+    templateUrl: './compte-server-details.component.html',
+    styleUrls: ['./compte-server-details.component.css'],
+    imports: [FormsModule, ReactiveFormsModule, PaginationModule, DatePipe]
 })
 export class CompteServerDetailsComponent implements OnInit, OnDestroy {
   addForm!: FormGroup;

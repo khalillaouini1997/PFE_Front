@@ -8,11 +8,10 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angul
 
 
 @Component({
-  selector: 'app-archive',
-  templateUrl: './archive.component.html',
-  styleUrls: ['./archive.component.css'],
-  standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, TabsModule]
+    selector: 'app-archive',
+    templateUrl: './archive.component.html',
+    styleUrls: ['./archive.component.css'],
+    imports: [FormsModule, ReactiveFormsModule, TabsModule]
 })
 export class ArchiveComponent implements OnInit {
   @ViewChild('staticTabs') staticTabs: TabsetComponent;

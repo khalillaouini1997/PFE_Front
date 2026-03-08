@@ -9,11 +9,10 @@ import { FormsModule } from '@angular/forms';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 @Component({
-  selector: 'app-compte-admin',
-  templateUrl: './compte-admin.component.html',
-  styleUrls: ['./compte-admin.component.css'],
-  standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, PaginationModule]
+    selector: 'app-compte-admin',
+    templateUrl: './compte-admin.component.html',
+    styleUrls: ['./compte-admin.component.css'],
+    imports: [FormsModule, ReactiveFormsModule, PaginationModule]
 })
 export class CompteAdminComponent implements OnInit {
   public maxSize: number = 5;

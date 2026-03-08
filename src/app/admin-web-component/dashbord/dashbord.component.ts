@@ -8,11 +8,10 @@ import { WebAccountService } from "src/app/service/web-account.service";
 import { saveAs as importedSaveAs } from 'file-saver';
 
 @Component({
-  selector: 'app-dashbord',
-  templateUrl: './dashbord.component.html',
-  styleUrls: ['./dashbord.component.css'],
-  standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule, DecimalPipe, DatePipe]
+    selector: 'app-dashbord',
+    templateUrl: './dashbord.component.html',
+    styleUrls: ['./dashbord.component.css'],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule, DecimalPipe, DatePipe]
 })
 export class DashbordComponent implements OnInit {
 

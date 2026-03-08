@@ -6,11 +6,10 @@ import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
-  selector: 'app-add-adresse-ip',
-  templateUrl: './add-adresse-ip.component.html',
-  styleUrls: ['./add-adresse-ip.component.css'],
-  standalone: true,
-  imports: [ReactiveFormsModule, CommonModule]
+    selector: 'app-add-adresse-ip',
+    templateUrl: './add-adresse-ip.component.html',
+    styleUrls: ['./add-adresse-ip.component.css'],
+    imports: [ReactiveFormsModule, CommonModule]
 })
 export class AddAdresseIpComponent implements OnInit {
 

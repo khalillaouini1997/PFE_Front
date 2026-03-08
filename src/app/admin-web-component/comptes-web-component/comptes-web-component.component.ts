@@ -10,11 +10,10 @@ import { NgIf, NgFor, DatePipe } from '@angular/common';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 @Component({
-  selector: 'app-comptes-web-component',
-  templateUrl: './comptes-web-component.component.html',
-  styleUrls: ['./comptes-web-component.component.css'],
-  standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, RouterLink, PaginationModule, DatePipe]
+    selector: 'app-comptes-web-component',
+    templateUrl: './comptes-web-component.component.html',
+    styleUrls: ['./comptes-web-component.component.css'],
+    imports: [FormsModule, ReactiveFormsModule, RouterLink, PaginationModule, DatePipe]
 })
 export class ComptesWebComponentComponent implements OnInit {
   itemsPerPage = 30;

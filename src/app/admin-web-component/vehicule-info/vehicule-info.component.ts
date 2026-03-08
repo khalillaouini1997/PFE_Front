@@ -9,11 +9,10 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 @Component({
-  selector: 'app-vehicule-info',
-  templateUrl: './vehicule-info.component.html',
-  styleUrls: ['./vehicule-info.component.css'],
-  standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, TooltipModule, PaginationModule]
+    selector: 'app-vehicule-info',
+    templateUrl: './vehicule-info.component.html',
+    styleUrls: ['./vehicule-info.component.css'],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, TooltipModule, PaginationModule]
 })
 export class VehiculeInfoComponent implements OnInit {
 

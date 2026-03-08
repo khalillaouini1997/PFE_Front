@@ -10,11 +10,10 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-add-admin-compte',
-  templateUrl: './add-admin-compte.component.html',
-  styleUrls: ['./add-admin-compte.component.css'],
-  standalone: true,
-  imports: [ReactiveFormsModule, CommonModule]
+    selector: 'app-add-admin-compte',
+    templateUrl: './add-admin-compte.component.html',
+    styleUrls: ['./add-admin-compte.component.css'],
+    imports: [ReactiveFormsModule, CommonModule]
 })
 export class AddAdminCompteComponent implements OnInit {
 

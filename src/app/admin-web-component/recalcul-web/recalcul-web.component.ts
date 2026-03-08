@@ -11,11 +11,10 @@ import { NgFor, LowerCasePipe } from '@angular/common';
 import { WebSocketService } from 'src/app/service/web-socket.service';
 
 @Component({
-  selector: 'app-recalcul-web',
-  templateUrl: './recalcul-web.component.html',
-  styleUrls: ['./recalcul-web.component.css'],
-  standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, BsDatepickerModule, TooltipModule, LowerCasePipe]
+    selector: 'app-recalcul-web',
+    templateUrl: './recalcul-web.component.html',
+    styleUrls: ['./recalcul-web.component.css'],
+    imports: [FormsModule, ReactiveFormsModule, BsDatepickerModule, TooltipModule, LowerCasePipe]
 })
 export class RecalculWebComponent implements OnInit {
 
