@@ -12,7 +12,7 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
-import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+
 import { ToastrModule } from 'ngx-toastr';
 import { AppComponent } from './app/app.component';
 
@@ -30,7 +30,6 @@ bootstrapApplication(AppComponent, {
       BsDatepickerModule.forRoot(),
       TooltipModule.forRoot(),
       NgOptimizedImage,
-      NgMultiSelectDropDownModule.forRoot(),
       ToastrModule.forRoot({
         positionClass: 'toast-bottom-right',
       })

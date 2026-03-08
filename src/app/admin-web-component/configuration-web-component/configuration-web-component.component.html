@@ -66,9 +66,9 @@
 <div class="col-md-6">
   <div class="form-group label-floating">
     <label class="control-label" for="configOptions">Options</label>
-    <ng-multiselect-dropdown formControlName="options" [settings]="dropdownSettings" [data]="options"
-      id="configOptions">
-    </ng-multiselect-dropdown>
+    <ng-select formControlName="options" [items]="options" [multiple]="true" bindLabel="description"
+      placeholder="Select options" id="configOptions">
+    </ng-select>
   </div>
 </div>
 

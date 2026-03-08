@@ -1,4 +1,8 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideRouter } from '@angular/router';
+import { importProvidersFrom } from '@angular/core';
+import { ToastrModule } from 'ngx-toastr';
 
 import { DashbordComponent } from './dashbord.component';
 
@@ -6,12 +10,12 @@ describe('DashbordComponent', () => {
   let component: DashbordComponent;
   let fixture: ComponentFixture<DashbordComponent>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
     imports: [DashbordComponent]
 })
     .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(DashbordComponent);

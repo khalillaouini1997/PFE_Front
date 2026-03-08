@@ -1,4 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideRouter } from '@angular/router';
+import { importProvidersFrom } from '@angular/core';
+import { ToastrModule } from 'ngx-toastr';
 
 import { AuthentificationComponent } from './authentification.component';
 
@@ -8,9 +12,13 @@ describe('AuthentificationComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [AuthentificationComponent]
-})
-    .compileComponents();
+      providers: [
+        provideHttpClient(),
+        provideRouter([]),
+        importProvidersFrom(ToastrModule.forRoot())
+      ],
+      imports: [AuthentificationComponent]
+    }).compileComponents();
 
     fixture = TestBed.createComponent(AuthentificationComponent);
     component = fixture.componentInstance;

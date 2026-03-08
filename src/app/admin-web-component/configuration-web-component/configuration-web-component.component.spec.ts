@@ -1,4 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideRouter } from '@angular/router';
+import { importProvidersFrom } from '@angular/core';
+import { ToastrModule } from 'ngx-toastr';
 
 import { ConfigurationWebComponentComponent } from './configuration-web-component.component';
 
@@ -8,6 +12,7 @@ describe('ConfigurationWebComponentComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+    providers: [provideHttpClient(), provideRouter([]), importProvidersFrom(ToastrModule.forRoot())],
     imports: [ConfigurationWebComponentComponent]
 })
     .compileComponents();
