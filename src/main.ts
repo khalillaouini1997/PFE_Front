@@ -14,6 +14,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 import { ToastrModule } from 'ngx-toastr';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { AppComponent } from './app/app.component';
 
 if (environment.production) {
@@ -32,7 +33,8 @@ bootstrapApplication(AppComponent, {
       NgOptimizedImage,
       ToastrModule.forRoot({
         positionClass: 'toast-bottom-right',
-      })
+      }),
+      NgMultiSelectDropDownModule.forRoot()
     ),
     provideHttpClient(withInterceptors([authInterceptor])),
     provideAnimations()
