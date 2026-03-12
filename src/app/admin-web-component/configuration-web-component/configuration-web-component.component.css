@@ -176,6 +176,147 @@ table>thead>tr>th,
   margin: 32px 0 0 0;
 }
 
+.modal {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal-backdrop-custom {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  z-index: 10040;
+}
+
+.modal-custom {
+  display: block;
+  z-index: 10050;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.modal-dialog-custom {
+  width: 900px;
+  margin-top: 20px;
+}
+
+.modal-dialog-small-margin {
+  margin-top: 5px;
+  margin-right: 5px; 
+  color: white; 
+  font-size: 20px;
+}
+
+.notification-box {
+  color: rgb(0, 0, 0);
+  width: 850px;
+  height: 150px;
+  text-align: justify;
+  border: 1px solid black;
+  overflow: auto;
+}
+
+.card-content-padding {
+  padding: 0px 20px;
+}
+
+.options-label {
+  color: #AAAAAA; 
+  font-size: 12px; 
+  position: static; 
+  display: block; 
+  margin-bottom: 5px;
+}
+
+.navbar-form-nomargin {
+  margin: 0;
+}
+
+.imei-search-button {
+  margin: 0px; 
+  padding: 1px 5px; 
+  margin: 0px 0px 0px 0px;
+}
+
+.table-header-gradient {
+  background: linear-gradient(60deg, #ef5350, #e53935); 
+  color:white;
+}
+
+.config-btn {
+  padding: 0px 8px;
+  font-size: 8px;
+  margin: 1px 0px 0px 0px;
+}
+
+.margin-top-0 {
+  margin-top: 0;
+}
+
+.text-center-bold {
+  text-align: center;
+  font-weight: bold;
+}
+
+.header-accent-red {
+  background-color: #e73f3b; 
+  color: white;
+}
+
+.modal-backdrop-fs {
+  position: fixed; 
+  top: 0; 
+  left: 0; 
+  width: 100%; 
+  height: 100%;
+}
+
+.modal-dialog-responsive {
+  width: 900px; 
+  margin-top: 20px;
+}
+
+.text-center-nomargin {
+  text-align: center; 
+  margin-top: 0px;
+}
+
+.font-size-14 {
+  font-size: 14px;
+}
+
+.options-title {
+  color: #AAAAAA; 
+  font-size: 12px; 
+  position: static; 
+  display: block; 
+  margin-bottom: 5px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-backdrop.fade-in {
+  animation: fadeInBackdrop 0.3s ease-in-out;
+}
+
+@keyframes fadeInBackdrop {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 
 .modal-title {
   font-weight: bold;

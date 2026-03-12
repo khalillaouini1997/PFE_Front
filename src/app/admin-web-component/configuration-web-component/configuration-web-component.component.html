@@ -3,8 +3,8 @@
     <div class="card-header" data-background-color="red">
       <h4 class="title">Configurer l'identifiant du compte web : {{compteWeb.idCompteClientWeb}}</h4>
     </div>
-    <div class="card-content" style="padding: 0px 20px;">
-      <div class="row" style="margin-top: 0;">
+    <div class="card-content card-content-padding">
+      <div class="row margin-top-0">
         <div class="col-md-6">
           <div class="form-group label-floating">
             <label class="control-label" for="configLogin">Login</label>
@@ -19,13 +19,13 @@
         </div>
       </div>
 
-      <div class="row" style="margin-top: 0;">
+      <div class="row margin-top-0">
         <div class="col-md-6">
           <div class="form-group label-floating">
             <label class="control-label" for="configCodePays">Code Pays</label>
             <select formControlName="code_pays" class="form-control" id="configCodePays">
               @for (codePays of codesPays; track codePays.value) {
-                <option [value]="codePays.value">
+              <option [value]="codePays.value">
                 {{codePays.key}} (+{{codePays.value}}) </option>
               }
             </select>
@@ -36,268 +36,265 @@
             <div class="input-group input-append date">
               <input type="text" class="form-control" bsDatepicker formControlName="date_expiration"
                 [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }" placement="bottom" placeholder="Date expiration">
-              </div>
             </div>
           </div>
-
         </div>
-        <div class="row" style="margin-top: 0;">
-          <!--        <div class="col-md-6 ">-->
-          <!--          <div class="form-group label-floating">-->
-          <!--            <label class="control-label">Options</label>-->
-          <!--            <input id="country" type="text" class="form-control" (click)="charge()" [(ngModel)]=query-->
-          <!--                   (keyup)=filter()>-->
+
+      </div>
+      <div class="row margin-top-0">
+        <!--        <div class="col-md-6 ">-->
+        <!--          <div class="form-group label-floating">-->
+        <!--            <label class="control-label">Options</label>-->
+        <!--            <input id="country" type="text" class="form-control" (click)="charge()" [(ngModel)]=query-->
+        <!--                   (keyup)=filter()>-->
         <!--          </div>-->
         <!--          <div class="suggestions" *ngIf="filteredList.length > 0">-->
         <!--            <ul *ngFor="let item of filteredList" class="itemsSelect">-->
         <!--              <li>-->
         <!--                <a class="selectedItem" (click)="select(item)">{{item.description}}</a>-->
-      <!--              </li>-->
-    <!--            </ul>-->
-  <!--          </div>-->
-  <!--          <div *ngFor="let item of selected">-->
-  <!--            <div class="btn btn-warning">-->
-  <!--              <span>{{item.description}} &nbsp;</span>-->
-  <!--              <a class="selected" (click)="remove(item)">&times;</a>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
+        <!--              </li>-->
+        <!--            </ul>-->
+        <!--          </div>-->
+        <!--          <div *ngFor="let item of selected">-->
+        <!--            <div class="btn btn-warning">-->
+        <!--              <span>{{item.description}} &nbsp;</span>-->
+        <!--              <a class="selected" (click)="remove(item)">&times;</a>-->
+        <!--            </div>-->
+        <!--          </div>-->
+        <!--        </div>-->
 
-<div class="col-md-6">
-  <div class="form-group label-floating">
-    <label class="control-label" for="configOptions">Options</label>
-    <ng-select formControlName="options" [items]="options" [multiple]="true" bindLabel="description"
-      placeholder="Select options" id="configOptions">
-    </ng-select>
-  </div>
-</div>
+        <div class="col-md-6">
+          <div class="form-group margin-top-25">
+            <label class="options-title" for="configOptions">Options</label>
+            <ng-multiselect-dropdown [placeholder]="'Sélectionner des options'" [settings]="dropdownSettings"
+              [data]="options" formControlName="options" id="configOptions">
+            </ng-multiselect-dropdown>
+          </div>
+        </div>
 
-<div class="col-md-6 ">
-  <div class="form-group label-floating">
-    <label class="control-label" for="configPool">Pool</label>
-    <input type="number" min="0" max="4" formControlName="pool" class="form-control" id="configPool">
-  </div>
-</div>
-</div>
+        <div class="col-md-6">
+          <div class="form-group margin-top-25">
+            <label class="options-title" for="configPool">Pool</label>
+            <input type="number" min="0" max="4" formControlName="pool" class="form-control" id="configPool">
+          </div>
+        </div>
+      </div>
 
-<div class="row">
+      <div class="row">
 
-  <div class="col-md-6">
-    <div class="form-group label-floating">
-      <label class="control-label" for="configFirstname">Nom</label>
-      <input type="text" class="form-control" formControlName="firstname" id="configFirstname">
-    </div>
-  </div>
+        <div class="col-md-6">
+          <div class="form-group label-floating">
+            <label class="control-label" for="configFirstname">Nom</label>
+            <input type="text" class="form-control" formControlName="firstname" id="configFirstname">
+          </div>
+        </div>
 
-  <div class="col-md-6">
-    <div class="form-group label-floating">
-      <label class="control-label" for="configLastname">Prénom</label>
-      <input type="text" class="form-control" formControlName="lastname" id="configLastname">
-    </div>
-  </div>
-</div>
-<div class="row">
+        <div class="col-md-6">
+          <div class="form-group label-floating">
+            <label class="control-label" for="configLastname">Prénom</label>
+            <input type="text" class="form-control" formControlName="lastname" id="configLastname">
+          </div>
+        </div>
+      </div>
+      <div class="row">
 
-  <div class="col-md-6">
-    <div class="form-group label-floating">
-      <label class="control-label" for="configEmail">Email</label>
-      <input type="email" class="form-control" formControlName="email" id="configEmail">
-    </div>
-  </div>
+        <div class="col-md-6">
+          <div class="form-group label-floating">
+            <label class="control-label" for="configEmail">Email</label>
+            <input type="email" class="form-control" formControlName="email" id="configEmail">
+          </div>
+        </div>
 
-  <div class="col-md-6">
-    <div class="form-group label-floating">
-      <label class="control-label" for="configTelephone">Téléphone</label>
-      <input type="tel" class="form-control" formControlName="telephone" id="configTelephone">
-    </div>
-  </div>
-</div>
-<div class="row">
-  <div class="col-md-6">
-    <div class="form-group label-floating">
-      <label class="control-label" for="configArea">Région</label>
-      <select formControlName="area" class="form-control" id="configArea">
-        @for (t of regions; track t) {
-          <option [value]="t">{{ t }}</option>
-        }
-      </select>
-    </div>
-  </div>
-  <div class="col-md-3">
-    <div class="form-group label-floating">
-      <label class="control-label" for="configNotificationSubquery">Type de notification</label>
-      <select formControlName="notificationSubquery" class="form-control" id="configNotificationSubquery">
-        @for (notifSub of notifSubs; track notifSub) {
-          <option [value]="notifSub">{{ notifSub }}</option>
-        }
-      </select>
-    </div>
-  </div>
-  <div class="col-md-3">
-    <div class="form-group label-floating">
-      <label class="control-label" for="configMobileNotif">Notification Mobile</label>
-      <input type="checkbox" formControlName="mobileNotif" id="configMobileNotif">
-    </div>
-  </div>
+        <div class="col-md-6">
+          <div class="form-group label-floating">
+            <label class="control-label" for="configTelephone">Téléphone</label>
+            <input type="tel" class="form-control" formControlName="telephone" id="configTelephone">
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group label-floating">
+            <label class="control-label" for="configArea">Région</label>
+            <select formControlName="area" class="form-control" id="configArea">
+              @for (t of regions; track t) {
+              <option [value]="t">{{ t }}</option>
+              }
+            </select>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group label-floating">
+            <label class="control-label" for="configNotificationSubquery">Type de notification</label>
+            <select formControlName="notificationSubquery" class="form-control" id="configNotificationSubquery">
+              @for (notifSub of notifSubs; track notifSub) {
+              <option [value]="notifSub">{{ notifSub }}</option>
+              }
+            </select>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group label-floating">
+            <label class="control-label" for="configMobileNotif">Notification Mobile</label>
+            <input type="checkbox" formControlName="mobileNotif" id="configMobileNotif">
+          </div>
+        </div>
 
-</div>
-<div class="row">
-  <div class="col-md-6">
-    <div class="form-group label-floating">
-      <label class="control-label" for="configIdCompteServer">ID Compte Serveur</label>
-      <input type="number" class="form-control" formControlName="idCompteServer" id="configIdCompteServer">
-    </div>
-  </div>
-</div>
-<button type="button" class="btn btn-success btn-sm pull-right" (click)="saveChange()"><i class="fa fa-check"></i>
-sauvegarder les
-modifications</button>
+      </div>
+      <div class="row">
+        <!-- ID Compte Serveur removed -->
+      </div>
+      <button type="button" class="btn btn-success btn-sm pull-right" (click)="saveChange()"><i class="fa fa-check"></i>
+        sauvegarder les
+        modifications</button>
 
-<div class="row">
-  <div class="col-md-12">
-    <table class="table table-condensed table-bordered">
-      <thead>
-        <tr>
-          <th class="danger" colspan="6" style="text-align:center;font-weight: bold;">Compte
-          serveur associé</th>
-        </tr>
-        <tr style="background: linear-gradient(60deg, #ef5350, #e53935); color:white;">
-          <th>Id</th>
-          <th>Pseudo</th>
-          <th>IP address</th>
-          <th>Créé à</th>
-          <th>Expiré le</th>
-          <th>Configurations</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>{{serverAccount.idCompteClientServer}}</td>
-          <td>{{serverAccount.pseudo}}</td>
-          <td>{{serverAccount.ipAdresse}}</td>
-          <td>{{serverAccount.date_creation | date:'dd-MM-yyyy'}}</td>
-          <td>{{serverAccount.date_Expiration | date:'dd-MM-yyyy'}}
-            @if (serverAccount.during) {
-              <span class="label label-success">Active</span>
-            }
-            @if (serverAccount.expired) {
-              <span class="label label-danger">Expiré</span>
-            }
-          </td>
-          <td>
-            <!--<span class="label label-warning btn clear change" [tooltip]="tooltipup" tooltipPlacement="left" data-backdrop="false" data-toggle="modal"
+      <div class="row">
+        <div class="col-md-12">
+          <table class="table table-condensed table-bordered">
+            <thead>
+              <tr>
+                <th class="danger text-center-bold" colspan="6">Compte
+                  serveur associé</th>
+              </tr>
+              <tr class="table-header-gradient">
+                <th>Id</th>
+                <th>Pseudo</th>
+                <th>IP address</th>
+                <th>Créé à</th>
+                <th>Expiré le</th>
+                <th>Configurations</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{{serverAccount.idCompteClientServer}}</td>
+                <td>{{serverAccount.pseudo}}</td>
+                <td>{{serverAccount.ipAdresse}}</td>
+                <td>{{serverAccount.date_creation | date:'dd-MM-yyyy'}}</td>
+                <td>{{serverAccount.date_Expiration | date:'dd-MM-yyyy'}}
+                  @if (serverAccount.during) {
+                  <span class="label label-success">Active</span>
+                  }
+                  @if (serverAccount.expired) {
+                  <span class="label label-danger">Expiré</span>
+                  }
+                </td>
+                <td>
+                  <!--<span class="label label-warning btn clear change" [tooltip]="tooltipup" tooltipPlacement="left" data-backdrop="false" data-toggle="modal"
             data-target="#Modalupdateserver">
             <i class="glyphicon glyphicon-refresh"></i> change</span>-->
-            <button type="button" class="labell label-success btn"
-              (click)="prepareDB(serverAccount.idCompteClientServer)">
-              <i class="fa fa-database"></i> préparer BDD</button>
-              <button type="button" class="labelle label-primary btn"
-                (click)="showDevises(serverAccount.idCompteClientServer)">
-                <i class="fa fa-mobile"></i> Boitiers</button>
-              </td>
-            </tr>
+                  <button type="button" class="labell label-success btn"
+                    (click)="prepareDB(serverAccount.idCompteClientServer)">
+                    <i class="fa fa-database"></i> préparer BDD</button>
+                  <button type="button" class="labelle label-primary btn"
+                    (click)="showDevises(serverAccount.idCompteClientServer)">
+                    <i class="fa fa-mobile"></i> Boitiers</button>
+                </td>
+              </tr>
 
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
-    @if (boitiersClicked === true) {
+      @if (boitiersClicked === true) {
       <div class="row">
-        <div class="col-md-12 tableFixHead" style="margin-bottom: 20px;">
-          <div class="col-md-12" style="background-color: #f2dede; text-align: center;">
-            <span style="font-weight: bold;">Boitiers ({{boitiers.length}})</span>
+        <div class="col-md-12 tableFixHead margin-bottom-20">
+          <div class="col-md-12 bg-soft-red-center">
+            <span class="font-bold">Boitiers ({{boitiers.length}})</span>
             @if (getNumberOfBoitiersNotInstall() > 0) {
-              <span class="text-warning" style="font-weight: bold;">
-                {{getNumberOfBoitiersNotInstall()}} non
+            <span class="text-warning font-bold">
+              {{getNumberOfBoitiersNotInstall()}} non
               installé</span>
             }
           </div>
           <table class="table table-condensed table-hover table-bordered">
             <thead>
               <tr>
-                <th style="width: 2%;padding-top: 3px;"><input style="margin: 0" type="checkbox" name="checkbox"
-                [checked]="boitiers.length === numBoitiers.length" (click)="onCheckedAllBoitiers()"></th>
+                <th scope="col" class="text-center">
+                   <input type="checkbox" name="optionsCheckboxes" (change)="onCheckedAllBoitiers()"
+                    [checked]="boitiers.length == selectedBoitiersIds.length && boitiers.length > 0"
+                    title="Select all boitiers" placeholder="Select all">
+                </th>
                 <th>Numéro</th>
                 <th>Etat</th>
                 <th>Configurations</th>
               </tr>
             </thead>
             <tbody>
-              @for (boitier of boitiers; track boitier.numBoitier) {
-                <tr>
-                  <td><input style="margin: 0" type="checkbox" name="checkbox"
-                    [checked]="isCheckedBoitier(boitier.numBoitier)" (click)="onCheckedBoitier(boitier.numBoitier)">
-                  </td>
-                  <td>{{boitier.numBoitier}}</td>
-                  <td>
-                    @if (boitier.etatBoitier==='INSTALLED') {
-                      <span class="label label-success">Installé</span>
-                    } @else {
-                      <span class="label label-danger">Non installé</span>
-                    }
-                  </td>
-                  <td>
-                    @if (boitier.etatBoitier==='INSTALLED') {
-                      <button type="button" class="btn btn-success pull-right"
-                        style="padding: 0px 8px;font-size: 8px;margin: 1px 0px 0px 0px;" (click)="editBoitier(boitier)"
-                        data-toggle="modal" data-target="#ModalInit" data-backdrop="false">
-                        <i class="material-icons">
-                          settings
-                        </i> Configurer</button>
-                      } @else {
-                        <button type="button" class="btn btn-success pull-right"
-                          (click)="perpareDBForSingleDevice(boitier.numBoitier)">
-                          <i class="material-icons">
-                            build
-                          </i> Preparer BDD</button>
-                        }
-                      </td>
-                    </tr>
+              @for (boitier of boitiers; track boitier.idBoitier) {
+              <tr>
+                <td>
+                   <input type="checkbox" name="optionsCheckboxes" (change)="onCheckedBoitier(boitier.numBoitier)"
+                    [checked]="isCheckedBoitier(boitier.numBoitier)" title="Select boitier" placeholder="Select">
+                </td>
+                <td>{{boitier.numBoitier}}</td>
+                <td>
+                  @if (boitier.etatBoitier==='INSTALLED') {
+                  <span class="label label-success">Installé</span>
+                  } @else {
+                  <span class="label label-danger">Non installé</span>
                   }
-                </tbody>
-              </table>
-            </div>
-          </div>
-        }
-        <div class="clearfix"></div>
+                </td>
+                <td>
+                  @if (boitier.etatBoitier==='INSTALLED') {
+                   <button type="button" class="btn btn-success pull-right config-btn" (click)="editBoitier(boitier)">
+                    <i class="material-icons">
+                      settings
+                    </i> Configurer</button>
+                  } @else {
+                  <button type="button" class="btn btn-success pull-right"
+                    (click)="prepareDBForSingleDevice(boitier.idBoitier)">
+                    <i class="material-icons">
+                      build
+                    </i> Preparer BDD</button>
+                  }
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
       </div>
+      }
+      <div class="clearfix"></div>
     </div>
   </div>
+</div>
 
 
-  <!--start modal update server account of web account-->
+<!--start modal update server account of web account-->
 
-  <div id="Modalupdateserver" class="modal fade" role="dialog">
-    <div class="modal-dialog modal-sm">
-      <div [formGroup]="mainConfigForm">
-        <!-- Modal content-->
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Change Server Account for
-              <span class="label label-info">{{compteWeb.login}}</span>
-            </h4>
-          </div>
-          <div class="modal-body">
-            <div class="row">
-              <div class="col-md-3"></div>
-              <div class="col-md-6">
-                <div class="form-group label-floating">
-                  <div class="input-group input-append date">
-                    <label class="control-label" for="serverAccount">Server Account</label>
-                    <select class="form-control" name="server" required id="serverAccount">
-                      @for (server of serverAccounts; track server.idCompteClientServer) {
-                        <option [value]="server.idCompteClientServer">{{server.pseudo}} </option>
-                      }
-                    </select>
-                  </div>
+<div id="Modalupdateserver" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-sm">
+    <div [formGroup]="mainConfigForm">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Change Server Account for
+            <span class="label label-info">{{compteWeb.login}}</span>
+          </h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+              <div class="form-group label-floating">
+                <div class="input-group input-append date">
+                  <label class="control-label" for="serverAccount">Server Account</label>
+                  <select class="form-control" name="server" required id="serverAccount">
+                    @for (server of serverAccounts; track server.idCompteClientServer) {
+                    <option [value]="server.idCompteClientServer">{{server.pseudo}} </option>
+                    }
+                  </select>
                 </div>
               </div>
-              <div class="col-md-3"></div>
             </div>
-
+            <div class="col-md-3"></div>
           </div>
-          <!--<div class="modal-footer">
+
+        </div>
+        <!--<div class="modal-footer">
           <button type="button" class="btn btn-warning" [hidden]="!ChangeServerForm.form.valid"
           (click)="ChangeServerAccount()" data-dismiss="modal">update</button>
           <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -310,108 +307,106 @@ modifications</button>
 <!--end modal update compte web-->
 
 <!-- Modal INITIALIZE DATABASE-->
-<div class="modal fade" id="ModalInit" role="dialog" style="z-index: 9">
-  <div class="modal-dialog" style="width: 900px; margin-top: 0;">
+@if (showConfigModal) {
+<div class="modal-backdrop fade-in modal-backdrop-custom"
+  (click)="closeConfigModal()"></div>
+<div class="modal fade-in modal-custom" id="ModalConfig" role="dialog">
+  <div class="modal-dialog modal-dialog-custom">
     <!-- Modal content-->
     <div class="modal-content">
 
       <form [formGroup]="recalculateForm">
         <div class="modal-header">
-          <button type="button" class="close" style="margin-top: 5px;margin-right: 5px; color: white; font-size: 20px;"
-          data-dismiss="modal">&times;</button>
-          <div style="background-color: #e73f3b; color: white;">
+          <button type="button" class="close modal-dialog-small-margin"
+            (click)="closeConfigModal()">&times;</button>
+          <div class="header-accent-red">
             <h4 class="title">Recalcule du boitier : {{selectedBoitierId}}</h4>
           </div>
         </div>
         <div class="modal-body">
 
-          @if (numBoitiers.length > 0) {
-            <div class="row" style="margin-top: 0">
-              <div class="col-md-12" style="padding-bottom: 10px; padding-top: 10px; border-bottom: 1px solid #d2d2d2;">
-                <div style="font-weight: bold">Appliquer aux : </div>
-                <div style="overflow-x: auto;">
-                  @for (numBoitier of numBoitiers; track numBoitier) {
-                    <span class="label label-info" style="margin-left: 5px;">{{numBoitier}}</span>
-                  }
-                </div>
+          @if (selectedBoitiersIds.length > 0) {
+          <div class="row margin-top-0">
+            <div class="col-md-12 p-10-border-btm">
+              <div class="font-bold">Appliquer aux : </div>
+              <div class="overflow-x-auto">
+                @for (idBoitier of selectedBoitiersIds; track idBoitier) {
+                <span class="label label-info margin-left-5">{{idBoitier}}</span>
+                }
               </div>
             </div>
+          </div>
           }
-          <div class="row" style="margin-top: 0">
+          <div class="row margin-top-0">
             <div class="col-md-6">
               <div class="form-group label-floating">
 
                 @if (dateBoolean) {
-                  <div class="input-group input-append date">
-                    <input type="text" class="form-control" bsDatepicker formControlName="datestart" [maxDate]="maxDate"
-                      [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY, HH:mm' }" placement="bottom" placeholder="Date de début"
-                      autocomplete="off">
-                    </div>
-                  }
+                <div class="input-group input-append date">
+                  <input type="text" class="form-control" bsDatepicker formControlName="datestart" [maxDate]="maxDate"
+                    [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY, HH:mm' }" placement="bottom" placeholder="Date de début"
+                    autocomplete="off">
                 </div>
+                }
               </div>
-              <div class="col-md-6">
-                <div class="form-group label-floating">
-                  <label class="control-label" for="typeRecalcule">Type de recalcule</label>
-                  <select formControlName="typeRecalcule" class="form-control" id="typeRecalcule">
-                    <option>recalcule trajet</option>
-                    <option>recalcule boitier</option>
-                    <option>recalcule carburant</option>
-                    <option>recalcule alert</option>
-                    <option>recalcule Temps reel</option>
-                  </select>
-                </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group label-floating">
+                <label class="control-label" for="typeRecalcule">Type de recalcule</label>
+                <select formControlName="typeRecalcule" class="form-control" id="typeRecalcule">
+                  <option>recalcule trajet</option>
+                  <option>recalcule boitier</option>
+                  <option>recalcule carburant</option>
+                  <option>recalcule alert</option>
+                  <option>recalcule Temps reel</option>
+                </select>
               </div>
             </div>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-success btn-sm" [disabled]="recalculateForm.invalid"
-              (click)="recalculate()">
-              @if (!loadingRecalculate) {
-                <i class="fa fa-retweet"></i>
-              }
-              @if (loadingRecalculate) {
-                <i class="fa fa-spinner fa-spin"></i>
-              }
-              Recalculer
-            </button>
-          </div>
-        </form>
-        <div class="modal-header">
-          <span class="modal-title">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success btn-sm" [disabled]="recalculateForm.invalid"
+            (click)="recalculate()">
+            @if (!loadingRecalculate) {
+            <i class="fa fa-retweet"></i>
+            }
             @if (loadingRecalculate) {
-              <i class="fa fa-spinner fa-spin"></i>
+            <i class="fa fa-spinner fa-spin"></i>
             }
+            Recalculer
+          </button>
+        </div>
+      </form>
+      <div class="modal-header">
+        <span class="modal-title">
+          @if (loadingRecalculate) {
+          <i class="fa fa-spinner fa-spin"></i>
+          }
           Notifications</span>
-          @if (notifications.length > 0 && !loadingRecalculate) {
-            <span style="font-weight: bold; font-size: 12px;">
-              @if (getNumberOfNotificationErrors() > 0) {
-                <span class="text-danger"><i class="fa fa-exclamation-circle"></i> {{getNumberOfNotificationErrors()}} erreurs
-              trouvé</span>
-            }
-            @if (getNumberOfNotificationErrors() === 0) {
-              <span class="text-success"><i class="fa fa-check"></i> bien recalculé</span>
-            }
-          </span>
+        @if (notifications.length > 0 && !loadingRecalculate) {
+        <span class="font-size-12-bold">
+          @if (getNumberOfNotificationErrors() > 0) {
+          <span class="text-danger"><i class="fa fa-exclamation-circle"></i> {{getNumberOfNotificationErrors()}} erreurs
+            trouvé</span>
+          }
+          @if (getNumberOfNotificationErrors() === 0) {
+          <span class="text-success"><i class="fa fa-check"></i> bien recalculé</span>
+          }
+        </span>
         }
       </div>
       <div class="modal-body">
-        <div style="text-align:center; margin-top: 0px;;">
-          <h6 style="color: rgb(0, 0, 0);
-                                width: 850px;
-                                height: 150px;
-                                text-align: justify;
-                                border: 1px solid black;
-                                overflow: auto;">
+        <div class="text-center-nomargin">
+          <h6 class="notification-box">
             @for (notification of notifications; track $index) {
-              <span [ngClass]="{'text-danger': !notification.status}">
-                @if (notification.status) {
-                  <i class="fa fa-check-circle text-success"></i>
-                } @else {
-                  <i class="fa fa-exclamation-circle"></i>
-                }
-                {{$index + 1}}__{{notification.value}}
-              </span>
+            <span [ngClass]="{'text-danger': !notification.status}">
+              @if (notification.status) {
+              <i class="fa fa-check-circle text-success"></i>
+              } @else {
+              <i class="fa fa-exclamation-circle"></i>
+              }
+              {{$index + 1}}__{{notification.value}}
+            </span>
             }
           </h6>
 
@@ -426,32 +421,32 @@ modifications</button>
                 <div class="row">
                   <div class="col-md-6">
                     <span>ignition</span>
-                    <input class="pull-right" type="checkbox" formControlName="useIgnition" />
+                    <input class="pull-right" type="checkbox" formControlName="useIgnition" title="Ignition" placeholder="Ignition" />
                   </div>
                   <div class="col-md-6">
                     <span>fuel</span>
-                    <input class="pull-right" type="checkbox" formControlName="useFuel" />
+                    <input class="pull-right" type="checkbox" formControlName="useFuel" title="Fuel" placeholder="Fuel" />
                   </div>
                   <div class="col-md-6">
                     <span>temp</span>
-                    <input class="pull-right" type="checkbox" formControlName="useTemp" />
+                    <input class="pull-right" type="checkbox" formControlName="useTemp" title="Temp" placeholder="Temp" />
                   </div>
                   <div class="col-md-6">
                     <span>fms</span>
-                    <input class="pull-right" type="checkbox" formControlName="useFms" />
+                    <input class="pull-right" type="checkbox" formControlName="useFms" title="FMS" placeholder="FMS" />
                   </div>
 
                   <div class="col-md-6">
                     <span>j1708</span>
-                    <input class="pull-right" type="checkbox" formControlName="useJ1708" />
+                    <input class="pull-right" type="checkbox" formControlName="useJ1708" title="J1708" placeholder="J1708" />
                   </div>
                   <div class="col-md-6">
                     <span>id driver</span>
-                    <input class="pull-right" type="checkbox" formControlName="useIdDriver" />
+                    <input class="pull-right" type="checkbox" formControlName="useIdDriver" title="Driver ID" placeholder="Driver ID" />
                   </div>
                   <div class="col-md-6">
                     <span>stop</span>
-                    <input class="pull-right" type="checkbox" formControlName="useStop" />
+                    <input class="pull-right" type="checkbox" formControlName="useStop" title="Stop" placeholder="Stop" />
                   </div>
                 </div>
               </div>
@@ -464,7 +459,7 @@ modifications</button>
                 <span class="modal-title">Configurations de base de données</span>
               </div>
               <div class="modal-body">
-                <div class="row" style="margin-top: 0">
+                <div class="row margin-top-0">
                   <div class="col-md-6">
                     <div class="form-group label-floating">
                       <label class="control-label" for="pathMinSec">Path Minimun (sec)</label>
@@ -500,7 +495,7 @@ modifications</button>
                     </div>
                   </div>
                 </div>
-                <div class="row" style="margin-top: 0">
+                <div class="row margin-top-0">
                   <div class="col-md-4">
                     <div class="form-group label-floating">
                       <label class="control-label" for="pauseMinSec">Pause Minimun (sec)</label>
@@ -564,70 +559,59 @@ modifications</button>
                 <span>SIM</span>
               </div>
               <div class="col-md-6">
-                <input class="pull-right" type="number" name="useIgnition" />
-              </div>
-              <div class="col-m6-2">
-                <button type="button" class="btn btn-success btn-sm pull-left" [disabled]="deviceOptForm.invalid"
-                  (click)="editDeviceOptionConfig()">
-                  @if (!loadingEditDeviceOption) {
-                    <i class="fa fa-check"></i>
-                  }
-                  @if (loadingEditDeviceOption) {
-                    <i class="fa fa-spinner fa-spin"></i>
-                  }
-                Modifier les options</button>
+                <input class="pull-right" type="number" readonly [value]="selectedBoitierId" title="Boitier ID" placeholder="Boitier ID" />
               </div>
             </div>
           </div>
         </div>
 
-        <div class="row" style="margin-top: 0">
+        <div class="row margin-top-0">
           <div class="col-md-4">
             <button type="button" class="btn btn-success btn-sm pull-left" [disabled]="deviceOptForm.invalid"
               (click)="editDeviceOptionConfig()">
               @if (!loadingEditDeviceOption) {
-                <i class="fa fa-check"></i>
+              <i class="fa fa-check"></i>
               }
               @if (loadingEditDeviceOption) {
-                <i class="fa fa-spinner fa-spin"></i>
+              <i class="fa fa-spinner fa-spin"></i>
               }
-            Modifier les options</button>
+              Modifier les options</button>
           </div>
           <div class="col-md-2">
             <button type="button" class="btn btn-success btn-sm pull-right" (click)="resetOdometre()">
               @if (!loadingResetOdometre) {
-                <i class="fa fa-check"></i>
+              <i class="fa fa-check"></i>
               }
               @if (loadingResetOdometre) {
-                <i class="fa fa-spinner fa-spin"></i>
+              <i class="fa fa-spinner fa-spin"></i>
               }
               Reset Kilometrage
             </button>
           </div>
           <div class="col-md-6">
-            <button type="button" class="btn btn-default btn-sm pull-right" data-dismiss="modal"><i
-            class="fa fa-times"></i> Annuler</button>
+            <button type="button" class="btn btn-default btn-sm pull-right" (click)="closeConfigModal()"><i
+                class="fa fa-times"></i> Annuler</button>
             <button type="button" class="btn btn-success btn-sm pull-right" [disabled]="pathConfigForm.invalid"
               (click)="editPathConfig()">
               @if (!loadingEditPathConfig) {
-                <i class="fa fa-check"></i>
+              <i class="fa fa-check"></i>
               }
               @if (loadingEditPathConfig) {
-                <i class="fa fa-spinner fa-spin"></i>
+              <i class="fa fa-spinner fa-spin"></i>
               }
-            Initialiser</button>
+              Initialiser</button>
           </div>
         </div>
 
 
         <!-- device setting config-->
-        <div class="row" style="margin-top: 0">
+        <div class="row margin-top-0">
           <div class="col-md-3" [formGroup]="deviceSettingForm">
             <div class="form-group label-floating">
               <label class="control-label" for="rawstreamId">Rawstream Id</label>
               <select class="form-control" formControlName="idIpAdresse" id="rawstreamId">
                 @for (ip of ipAddresses; track ip.idIpAdresse) {
-                  <option [value]="ip.idIpAdresse">{{ip.label}}</option>
+                <option [ngValue]="ip.idIpAdresse">{{ip.label}}</option>
                 }
               </select>
             </div>
@@ -638,36 +622,35 @@ modifications</button>
               <input type="number" class="form-control" formControlName="streamId" id="streamId">
             </div>
           </div>
-          <form class="navbar-form navbar-right" role="search" style="margin:0;" [formGroup]="imeiSearchForm">
+          <form class="navbar-form navbar-right navbar-form-nomargin" role="search" [formGroup]="imeiSearchForm">
             <div class="form-group is-empty">
               <input type="text" class="form-control" formControlName="imei" placeholder="Rechercher Imei..." />
               <span class="material-input"></span>
             </div>
-            <button type="submit" class="btn btn-white btn-sm" title="Rechercher"
-              style="margin: 0px; padding: 1px 5px; margin: 0px 0px 0px 0px;"
-              (click)="getSearchDeviceIemi(imeiSearchForm.get('imei')?.value)"><i class="fa fa-search"
-            style="font-size: 14px"></i>
-          Rechercher Imei</button>
-        </form>
-      </div>
-      <!-- end device setting config-->
-
-      <div class="row" style="margin-top: 0">
-        <div class="col-md-6">
-          <button type="button" class="btn btn-success btn-sm pull-right" (click)="editDeviceSetting()">
-            @if (!loadingDeviceSetting) {
-              <i class="fa fa-check"></i>
-            }
-            @if (loadingDeviceSetting) {
-              <i class="fa fa-spinner fa-spin"></i>
-            }
-          Modifier les paramétres boitier</button>
+            <button type="submit" class="btn btn-white btn-sm imei-search-button" title="Rechercher"
+              (click)="getSearchDeviceIemi(imeiSearchForm.get('imei')?.value)"><i class="fa fa-search font-size-14"></i>
+              Rechercher Imei</button>
+          </form>
         </div>
+        <!-- end device setting config-->
+
+        <div class="row margin-top-0">
+          <div class="col-md-6">
+            <button type="button" class="btn btn-success btn-sm pull-right" (click)="editDeviceSetting()">
+              @if (!loadingDeviceSetting) {
+              <i class="fa fa-check"></i>
+              }
+              @if (loadingDeviceSetting) {
+              <i class="fa fa-spinner fa-spin"></i>
+              }
+              Modifier les paramétres boitier</button>
+          </div>
+        </div>
+
       </div>
 
     </div>
 
   </div>
-
 </div>
-</div>
+}
