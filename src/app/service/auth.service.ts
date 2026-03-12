@@ -18,11 +18,7 @@ export class AuthService {
     currentUser: AdministratorCompte | null = null;
 
     authentificate(login: string, password: string): Observable<any> {
-        const loginRequest = {
-            username: login,
-            password: password
-        };
-        return this.http.post<any>(`${environment.apiBaseUrl}authenticate`, loginRequest);
+        return this.http.post<any>(`${environment.apiBaseUrl}authenticate?username=${encodeURIComponent(login)}&password=${encodeURIComponent(password)}`, {});
     }
 
     saveSession(authResponse: any) {

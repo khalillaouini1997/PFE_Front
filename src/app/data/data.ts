@@ -31,6 +31,8 @@ export class Boitier {
 
   // Real-time fields (transient/runtime only)
   emplacement?: string;
+  latitude?: number;
+  longitude?: number;
   dateLastTrame?: number;
   vitesse?: number;
   gpsLastTrame?: number;
@@ -51,6 +53,8 @@ export interface BoitierRealTime {
   idBoitier: number;
   numBoitier: number;
   emplacement: string;
+  latitude: number;
+  longitude: number;
   dateLastTrame: number;
   vitesse: number;
   gpsLastTrame: number;

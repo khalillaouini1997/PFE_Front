@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
-import { Client, IMessage, StompConfig } from '@stomp/stompjs';
+import SockJS from 'sockjs-client';
+import { Client, IMessage } from '@stomp/stompjs';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
@@ -12,7 +13,7 @@ export class WebSocketService {
 
     constructor() {
         this.client = new Client({
-            brokerURL: this.getBrokerUrl(),
+            webSocketFactory: () => new SockJS(this.getSocketUrl()),
             connectHeaders: {},
             debug: (str) => {
                 console.log(new Date(), str);
@@ -35,12 +36,11 @@ export class WebSocketService {
         this.client.activate();
     }
 
-    private getBrokerUrl(): string {
+    private getSocketUrl(): string {
         const baseUrl = environment.apiBaseUrl;
-        // Convert http/https to ws/wss
-        const wsUrl = baseUrl.replace(/^http/, 'ws');
-        // Spring exposes the WebSocket endpoint at /socket/websocket when using SockJS
-        return `${wsUrl}socket/websocket`;
+        // SockJS expects the base HTTP/HTTPS URL
+        // Append 'socket' as per previous working configuration
+        return `${baseUrl}socket`;
     }
 
     private subscribeToNotifications() {
