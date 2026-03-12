@@ -44,11 +44,10 @@
                     </div>
                     <div class="panel-body">
                         <form class="form-inline" [formGroup]="addForm" (ngSubmit)="addBoitiers()">
-                            <div class="form-group label-floating">
-                                <label class="control-label">Number of Devices
-                                    <input type="number" min=1 class="form-control" name="nbrBoitiers"
-                                        formControlName="nbrBoitiers" required>
-                                </label>
+                            <div class="form-group" style="margin-right: 15px;">
+                                <label>Number of Devices</label>
+                                <input type="number" min="1" class="form-control" name="nbrBoitiers"
+                                    formControlName="nbrBoitiers" required>
                             </div>
 
                             <button type="submit" class="btn btn-warning" [disabled]="!addForm.valid"
@@ -100,13 +99,13 @@
                         <th>Id</th>
                         <th>Label</th>
                         <th>Device</th>
-                        <th>Emplacement</th>
+                        <th>Latitude</th>
+                        <th>Longitude</th>
                         <th>Last Trame</th>
                         <th>Vitesse</th>
                         <th>Stat</th>
                         <th>GPS Trame</th>
                         <th>GSM Trame</th>
-                        <th>Configurations</th>
                     </thead>
                     <tbody>
 
@@ -115,7 +114,8 @@
                             <td>{{boitier.idBoitier}}</td>
                             <td>{{boitier.label}}</td>
                             <td><span class="label label-info">{{boitier.numBoitier}}</span></td>
-                            <td>{{boitier.emplacement}} </td>
+                            <td>{{boitier.latitude}}</td>
+                            <td>{{boitier.longitude}}</td>
                             <td>{{boitier.dateLastTrame | date:'dd-MM-yyyy hh:mm'}}</td>
                             <td>{{boitier.vitesse}}</td>
                             <td>

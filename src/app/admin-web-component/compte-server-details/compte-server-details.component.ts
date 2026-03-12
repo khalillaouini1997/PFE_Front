@@ -123,6 +123,8 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
         } else if (arch.vitesse !== undefined) {
           // Fallback if needed, but BoitierRealTime should have it
         }
+        boitier.latitude = arch.latitude;
+        boitier.longitude = arch.longitude;
         boitier.vitesse = arch.vitesse;
         boitier.gpsLastTrame = arch.gpsLastTrame;
         boitier.gsmLastTrame = arch.gsmLastTrame;

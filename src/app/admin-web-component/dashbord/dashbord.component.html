@@ -3,37 +3,32 @@
         <div class="card-header" data-background-color="red">
 
             <div class="row">
-                <div class="col-sm-7">
+                <div class="col-sm-5">
                     <h4 class="title">Etat des boitiers</h4>
                 </div>
-                <div class="col-sm-4">
-
-                    <form role="search" style="margin-top:3px;">
-                        <div class="is-empty">
-                            <label class="control-label" for="compteserver" style="color:#fff1f3;">Comptes
-                                web
-                                <div [formGroup]="dashboardForm">
-                                    <select formControlName="compteWeb" class="formulaire" id="compteserver"
-                                        name="compteserver" (change)="getAllLastTramByCompteWeb()">
-                                        <option [ngValue]="null" disabled selected>Choisir un compte web</option>
-                                        @for (compte of comptesWeb; track compte.idCompteClientWeb) {
-                                        <option [ngValue]="compte">{{compte.login}}</option>
-                                        }
-                                    </select>
-                                </div>
-                            </label>
-
-                            <button type="submit" class="btn btn-white btn-sm" title="Rechercher"
-                                style="margin: 0px; padding: 3px 5px; margin: 0px 0px 0px 0px;"><i class="fa fa-search"
-                                    style="font-size: 14px"></i> Rechercher</button>
-                        </div>
-
+                <div class="col-sm-6">
+                    <form role="search" style="margin: 0; display: flex; align-items: center; gap: 10px;" [formGroup]="dashboardForm">
+                        <label class="control-label" for="compteserver" style="color:#fff1f3; margin: 0; white-space: nowrap;">
+                            Comptes web
+                        </label>
+                        <select formControlName="compteWeb" class="formcontrol form-control" id="compteserver"
+                            name="compteserver" (change)="getAllLastTramByCompteWeb()" style="margin: 0; min-width: 150px;">
+                            <option [ngValue]="null" disabled selected>Choisir un compte web</option>
+                            @for (compte of comptesWeb; track compte.idCompteClientWeb) {
+                            <option [ngValue]="compte">{{compte.login}}</option>
+                            }
+                        </select>
+                        <button type="submit" class="btn btn-white btn-sm" title="Rechercher"
+                            style="margin: 0; padding: 5px 10px; white-space: nowrap;">
+                            <i class="fa fa-search" style="font-size: 14px"></i> Rechercher
+                        </button>
                     </form>
                 </div>
                 <div class="col-sm-1">
-                    <button class="btn btn-white btn-sm pull-right" style="padding: 3px 5px; margin: 5px 0px 0px 0px;"
-                        title="Exporter" (click)="onExport()"><i class="fa fa-download" title="Exporter"
-                            style="font-size: 14px"></i> Exporter</button>
+                    <button class="btn btn-white btn-sm pull-right" style="padding: 5px 10px; margin: 0;"
+                        title="Exporter" (click)="onExport()">
+                        <i class="fa fa-download" title="Exporter" style="font-size: 14px"></i> Exporter
+                    </button>
                 </div>
             </div>
 

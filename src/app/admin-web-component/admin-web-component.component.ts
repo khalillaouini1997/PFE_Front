@@ -8,10 +8,10 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 @Component({
-    selector: 'app-admin-web-component',
-    imports: [CommonModule, RouterModule],
-    templateUrl: './admin-web-component.component.html',
-    styleUrls: ['./admin-web-component.component.css']
+  selector: 'app-admin-web-component',
+  imports: [CommonModule, RouterModule],
+  templateUrl: './admin-web-component.component.html',
+  styleUrls: ['./admin-web-component.component.css']
 })
 export class AdminWebComponentComponent implements OnInit {
 
@@ -54,7 +54,6 @@ export class AdminWebComponentComponent implements OnInit {
 
     this.webAccountService.getAllOptions().subscribe({
       next: (res) => {
-        // Options handled if needed
       }
     });
   }

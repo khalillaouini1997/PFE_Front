@@ -84,7 +84,7 @@ label {
 
 
 /* input colors ---- */
-// default
+/* default */
 .form-control:focus {
   ~ label {
     color: #03a9f4;
@@ -98,9 +98,7 @@ label {
 
 
 
-.form-control:valid ~ .control-label {
 
-}
 
 /* help-block */
 .form-group .help-block {
@@ -108,7 +106,7 @@ label {
 }
 
 .help-block {
-  color: #bdbdbd; // caption
+  color: #bdbdbd; /* caption */
   font-size: 12px;
   font-weight: 300;
 }
@@ -208,7 +206,7 @@ label {
 
 
 /*-- Checkbox --------------------------- */
-// fork from http://codepen.io/jasonmayes/pen/wxtFr
+/* fork from http://codepen.io/jasonmayes/pen/wxtFr */
 /* 
  * Core styles required for the checkboxes.
  * @author Jason Mayes 2014, www.jasonmayes.com
@@ -239,7 +237,6 @@ label {
   border: 1px solid #5a5a5a;
   color: #1d1d1d;
   cursor: pointer;
-  display: inline-block;
   float: left;
   height: 14px;
   margin: 0 14px 14px 1px;
@@ -266,13 +263,13 @@ label {
   transform: rotate(-45deg) scaleY(0.5);
 }
 
-// Checkbox colors
+/* Checkbox colors */
 .checkbox .chk-span.checked {
   border-left-color: #03a9f4;
   border-bottom-color: #03a9f4;
 }
 
-// focus state
+/* focus state */
 .checkbox input[type='checkbox']:focus ~ label {
   
   color: #03a9f4;
