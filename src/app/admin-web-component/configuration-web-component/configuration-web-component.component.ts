@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, inject } from '@angular/core';
+import { Component, ElementRef, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import {
   Boitier,
   CompteServer,
@@ -26,13 +26,14 @@ import { frLocale } from 'ngx-bootstrap/locale';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { NgMultiSelectDropDownModule, IDropdownSettings } from 'ng-multiselect-dropdown';
 defineLocale('fr', frLocale);
 
 @Component({
     selector: 'app-configuration-web-component',
     templateUrl: './configuration-web-component.component.html',
     styleUrls: ['./configuration-web-component.component.css'],
-    imports: [CommonModule, ReactiveFormsModule, BsDatepickerModule, NgSelectModule]
+    imports: [CommonModule, ReactiveFormsModule, BsDatepickerModule, NgSelectModule, NgMultiSelectDropDownModule]
 })
 export class ConfigurationWebComponentComponent implements OnInit {
 
@@ -54,6 +55,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
   private readonly webSocketService = inject(WebSocketService);
   private readonly fb = inject(FormBuilder);
   private readonly localeService = inject(BsLocaleService);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   ID_COMPTE: number = 0;
   compteWeb: any = {};
@@ -71,11 +73,13 @@ export class ConfigurationWebComponentComponent implements OnInit {
   loadingEditDeviceOption: boolean = false;
   loadingEditPathConfig: boolean = false;
   loadingResetOdometre: boolean = false;
-  numBoitiers: number[] = [];
+  selectedBoitiersIds: number[] = [];
   notifications: { value: string, status: boolean }[] = [];
   recalculeP: RecalculatePayload = new RecalculatePayload();
   vehiculeSetting: VehiculeSetting = new VehiculeSetting();
   ipAddresses: IpAddress[] = [];
+  dropdownSettings: IDropdownSettings = {};
+  showConfigModal: boolean = false;
 
   get date(): Date | null { return this.mainConfigForm.get('date_expiration')?.value; }
   get checked(): boolean { return this.mainConfigForm.get('mobileNotif')?.value; }
@@ -142,7 +146,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
     });
 
     this.deviceSettingForm = this.fb.group({
-      idIpAdresse: [''],
+      idIpAdresse: [null],
       streamId: [0]
     });
 
@@ -167,7 +171,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
 
           this.mainConfigForm.patchValue({
             login: _compteWeb.login,
-            password: '', // Password is not returned for security
+            password: _compteWeb.rawPassword,
             code_pays: _compteWeb.code_pays,
             date_expiration: new Date(_compteWeb.date_expiration),
             options: _compteWeb.options,
@@ -197,6 +201,15 @@ export class ConfigurationWebComponentComponent implements OnInit {
       });
     }
     this.getAllIps();
+    this.dropdownSettings = {
+      singleSelection: false,
+      idField: 'idOption',
+      textField: 'description',
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      itemsShowLimit: 3,
+      allowSearchFilter: true
+    };
   }
 
   getAllIps() {
@@ -222,8 +235,9 @@ export class ConfigurationWebComponentComponent implements OnInit {
     const updatedCompte = {
       ...this.compteWeb,
       ...formValue,
+      rawPassword: formValue.password,
       date_expiration: (formValue.date_expiration as Date).getTime(),
-      options: this.selected // Multi-select might still be using this.selected
+      options: formValue.options
     };
 
     this.webAccountService.updateWebAccount(this.ID_COMPTE, updatedCompte)
@@ -236,14 +250,14 @@ export class ConfigurationWebComponentComponent implements OnInit {
       )
       .subscribe();
 
-    this.webAccountService.addOptionsToWebAccount(this.ID_COMPTE, this.selected).subscribe();
+    this.webAccountService.addOptionsToWebAccount(this.ID_COMPTE, formValue.options).subscribe();
   }
 
   updateWebAccount() {
     if (this.date !== null) {
       this.compteWeb.date_expiration = this.date.getTime();
     }
-    this.compteWeb.options = this.selected;
+    this.compteWeb.options = this.mainConfigForm.value.options;
 
     this.webAccountService.updateWebAccount(this.compteWeb.idCompteClientWeb, this.compteWeb)
       .pipe(
@@ -271,7 +285,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
   editPathConfig() {
     if (this.pathConfigForm.invalid) return;
     this.loadingEditPathConfig = true;
-    const selectedBoitiersId = [...this.numBoitiers];
+    const selectedBoitiersId = [...this.selectedBoitiersIds];
     if (!this.isCheckedBoitier(this.selectedBoitierId)) {
       selectedBoitiersId.push(this.selectedBoitierId);
     }
@@ -296,7 +310,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
       .subscribe();
   }
 
-  perpareDBForSingleDevice(idBoitier: number) {
+  prepareDBForSingleDevice(idBoitier: number) {
     this.boitierService.prepareDBForSingleDevise(this.selectedServerId, idBoitier)
       .pipe(
         tap(() => {
@@ -313,7 +327,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
 
   updateBoitierState(idBoitier: number) {
     this.boitiers.forEach(boitier => {
-      if (boitier.numBoitier == idBoitier) {
+      if (boitier.idBoitier == idBoitier) {
         boitier.etatBoitier = "INSTALLED";
       }
     });
@@ -330,64 +344,104 @@ export class ConfigurationWebComponentComponent implements OnInit {
 
   showDevises(idServer: number) {
     this.selectedServerId = idServer;
-    this.boitierService.getAllCompteDevises(idServer).subscribe(boitiers => {
+    this.boitierService.getAllBoitierofIdcompte(idServer).subscribe(boitiers => {
       this.boitiers = boitiers;
       this.boitiersClicked = true;
     });
   }
 
   editBoitier(boitier: Boitier) {
-    this.selectedBoitierId = boitier.numBoitier;
+    this.selectedBoitierId = boitier.numBoitier; // Use numBoitier for config operations
     this.recalculateForm.reset({ datestart: new Date(), typeRecalcule: '' });
     this.notifications = [];
-    this.recalculeP.idBoitier = boitier.numBoitier;
-    this.getDeviceOptionConfig();
-    this.getPathConfig();
-    this.getDeviceSettings();
+    this.recalculeP.idBoitier = boitier.numBoitier; 
+    
+    this.getDeviceOptionConfig(boitier.numBoitier);
+    this.getPathConfig(boitier.numBoitier);
+    this.getDeviceSettings(boitier.numBoitier);
+    this.showConfigModal = true;
   }
 
-  getDeviceOptionConfig() {
-    this.boitierService.getDeviceOptionConfig(this.ID_COMPTE, this.selectedBoitierId)
+  closeConfigModal() {
+    this.showConfigModal = false;
+  }
+
+  getDeviceOptionConfig(numBoitier: number) {
+    this.boitierService.getDeviceOptionConfig(this.ID_COMPTE, numBoitier)
       .subscribe({
         next: (res) => {
-          if (res && res.length > 0) {
-            this.deviceOptForm.patchValue(res[0]);
+          console.log('Options Response:', res);
+          if (res) {
+            const data = Array.isArray(res) ? res[0] : res;
+            if (data) {
+              console.log('Patching Options with:', data);
+              this.deviceOptForm.patchValue({
+                useIgnition: !!data.useIgnition,
+                useFuel: !!data.useFuel,
+                useTemp: !!data.useTemp,
+                useFms: !!data.useFms,
+                useJ1708: !!data.useJ1708,
+                useIdDriver: !!data.useIdDriver,
+                useStop: !!data.useStop
+              });
+              this.cdr.detectChanges();
+            }
           }
         },
-        error: () => this.toastr.error("Erreur")
+        error: () => this.toastr.error("Erreur options")
       });
   }
 
-  getPathConfig() {
-    this.boitierService.getPathConfig(this.ID_COMPTE, this.selectedBoitierId)
+  getPathConfig(numBoitier: number) {
+    this.boitierService.getPathConfig(this.ID_COMPTE, numBoitier)
       .subscribe({
-        next: (res) => this.pathConfigForm.patchValue(res),
-        error: () => this.toastr.error("Erreur")
+        next: (res) => {
+          console.log('Path Config Response:', res);
+          if (res) {
+            const data = Array.isArray(res) ? res[0] : res;
+            if (data) {
+              console.log('Patching Path Config with:', data);
+              this.pathConfigForm.patchValue(data);
+              this.cdr.detectChanges();
+            }
+          }
+        },
+        error: () => this.toastr.error("Erreur path config")
       });
   }
 
-  getDeviceSettings() {
-    this.boitierService.getDeviceSettings(this.ID_COMPTE, this.selectedBoitierId)
+  getDeviceSettings(numBoitier: number) {
+    this.boitierService.getDeviceSettings(this.ID_COMPTE, numBoitier)
       .subscribe({
         next: (res) => {
-          if (res && res.length > 0) {
-            this.deviceSettingForm.patchValue(res[0]);
+          console.log('Settings Response:', res);
+          if (res) {
+            const data = Array.isArray(res) ? res[0] : res;
+            if (data) {
+              console.log('Patching Settings with:', data);
+              // Ensure numeric values for form fields to match select options
+              this.deviceSettingForm.patchValue({
+                idIpAdresse: data.idIpAdresse,
+                streamId: data.streamId
+              });
+              this.cdr.detectChanges();
+            }
           }
         },
-        error: () => this.toastr.error("Erreur")
+        error: () => this.toastr.error("Erreur settings")
       });
   }
 
   editDeviceOptionConfig() {
     this.loadingEditDeviceOption = true;
-    const selectedBoitiersId = [...this.numBoitiers];
+    const selectedBoitiersIds = [...this.selectedBoitiersIds];
     if (!this.isCheckedBoitier(this.selectedBoitierId)) {
-      selectedBoitiersId.push(this.selectedBoitierId);
+      selectedBoitiersIds.push(this.selectedBoitierId);
     }
 
     const deviceOpt = {
       ...this.deviceOptForm.value,
-      idBoitiers: selectedBoitiersId
+      idBoitiers: selectedBoitiersIds
     };
 
     this.boitierService.editDeviceOptionConfig(this.ID_COMPTE, deviceOpt)
@@ -409,7 +463,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
       this.loadingRecalculate = true;
       const recalculePayload = new RecalculatePayload();
       recalculePayload.recalculeStartDate = this.datestart?.getTime() ?? 0;
-      recalculePayload.idBoitiers = [...this.numBoitiers];
+      recalculePayload.idBoitiers = [...this.selectedBoitiersIds];
       if (!this.isCheckedBoitier(this.recalculeP.idBoitier)) {
         recalculePayload.idBoitiers.push(this.recalculeP.idBoitier);
       }
@@ -431,7 +485,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
       this.loadingRecalculate = true;
       const recalculePayload = new RecalculatePayload();
       recalculePayload.recalculeStartDate = this.datestart?.getTime() ?? 0;
-      recalculePayload.idBoitiers = [...this.numBoitiers];
+      recalculePayload.idBoitiers = [...this.selectedBoitiersIds];
       if (!this.isCheckedBoitier(this.recalculeP.idBoitier)) {
         recalculePayload.idBoitiers.push(this.recalculeP.idBoitier);
       }
@@ -453,7 +507,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
       this.loadingRecalculate = true;
       const recalculePayload = new RecalculatePayload();
       recalculePayload.recalculeStartDate = this.datestart?.getTime() ?? 0;
-      recalculePayload.idBoitiers = [...this.numBoitiers];
+      recalculePayload.idBoitiers = [...this.selectedBoitiersIds];
       if (!this.isCheckedBoitier(this.recalculeP.idBoitier)) {
         recalculePayload.idBoitiers.push(this.recalculeP.idBoitier);
       }
@@ -475,7 +529,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
       this.loadingRecalculate = true;
       const recalculePayload = new RecalculatePayload();
       recalculePayload.recalculeStartDate = this.datestart?.getTime() ?? 0;
-      recalculePayload.idBoitiers = [...this.numBoitiers];
+      recalculePayload.idBoitiers = [...this.selectedBoitiersIds];
       if (!this.isCheckedBoitier(this.recalculeP.idBoitier)) {
         recalculePayload.idBoitiers.push(this.recalculeP.idBoitier);
       }
@@ -496,7 +550,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
     if (confirm("Vous êtes sur de vouloir faire le recalcule ?")) {
       this.loadingRecalculate = true;
       const recalculePayload = new RecalculatePayload();
-      recalculePayload.idBoitiers = [...this.numBoitiers];
+      recalculePayload.idBoitiers = [...this.selectedBoitiersIds];
       if (!this.isCheckedBoitier(this.recalculeP.idBoitier)) {
         recalculePayload.idBoitiers.push(this.recalculeP.idBoitier);
       }
@@ -517,7 +571,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
     if (confirm("Vous êtes sur de vouloir faire le reset ?")) {
       this.loadingRecalculate = true;
       const recalculePayload = new RecalculatePayload();
-      recalculePayload.idBoitiers = [...this.numBoitiers];
+      recalculePayload.idBoitiers = [...this.selectedBoitiersIds];
       if (!this.isCheckedBoitier(this.selectedBoitierId)) {
         recalculePayload.idBoitiers.push(this.selectedBoitierId);
       }
@@ -549,32 +603,32 @@ export class ConfigurationWebComponentComponent implements OnInit {
   }
 
   onCheckedBoitier(numBoitier: number): void {
-    const index = this.numBoitiers.indexOf(numBoitier);
-    index == -1 ? this.numBoitiers.push(numBoitier) : this.numBoitiers.splice(index, 1);
+    const index = this.selectedBoitiersIds.indexOf(numBoitier);
+    index == -1 ? this.selectedBoitiersIds.push(numBoitier) : this.selectedBoitiersIds.splice(index, 1);
   }
 
   isCheckedBoitier(numBoitier: number): boolean {
-    return this.numBoitiers.indexOf(numBoitier) != -1;
+    return this.selectedBoitiersIds.indexOf(numBoitier) != -1;
   }
 
   onCheckedAllBoitiers(): void {
-    if (this.boitiers.length == this.numBoitiers.length) {
-      this.numBoitiers = [];
+    if (this.boitiers.length == this.selectedBoitiersIds.length) {
+      this.selectedBoitiersIds = [];
     } else {
-      this.numBoitiers = this.boitiers.map(b => b.numBoitier);
+      this.selectedBoitiersIds = this.boitiers.map(b => b.numBoitier);
     }
   }
 
   async editDeviceSetting() {
     this.loadingDeviceSetting = true;
-    const selectedBoitiersId = [...this.numBoitiers];
+    const selectedBoitiersIds = [...this.selectedBoitiersIds];
     if (!this.isCheckedBoitier(this.selectedBoitierId)) {
-      selectedBoitiersId.push(this.selectedBoitierId);
+      selectedBoitiersIds.push(this.selectedBoitierId);
     }
 
     const deviceSetting = {
       ...this.deviceSettingForm.value,
-      idBoitiers: selectedBoitiersId
+      idBoitiers: selectedBoitiersIds
     };
     if (!deviceSetting.streamId || deviceSetting.streamId == 0)
       deviceSetting.streamId = deviceSetting.idBoitiers[0];
@@ -604,11 +658,11 @@ export class ConfigurationWebComponentComponent implements OnInit {
 
   resetOdometre() {
     this.loadingResetOdometre = true;
-    const selectedBoitiersId = [...this.numBoitiers];
+    const selectedBoitiersIds = [...this.selectedBoitiersIds];
     if (!this.isCheckedBoitier(this.recalculeP.idBoitier)) {
-      selectedBoitiersId.push(this.recalculeP.idBoitier);
+      selectedBoitiersIds.push(this.recalculeP.idBoitier);
     }
-    this.vehiculeSetting.idBoitiers = selectedBoitiersId;
+    this.vehiculeSetting.idBoitiers = selectedBoitiersIds;
 
     this.boitierService.resetOdometre(this.ID_COMPTE, this.vehiculeSetting)
       .subscribe({
