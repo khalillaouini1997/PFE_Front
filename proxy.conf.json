@@ -1,0 +1,8 @@
+{
+  "/ws_webadmin": {
+    "target": "https://fleet.tn",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}

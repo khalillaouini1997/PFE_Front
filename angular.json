@@ -82,7 +82,8 @@
               "buildTarget": "web_admin:build:production"
             },
             "development": {
-              "buildTarget": "web_admin:build:development"
+              "buildTarget": "web_admin:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"
