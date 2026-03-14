@@ -1,156 +1,275 @@
-<div class="col-md-12">
-    <div class="card">
-        <div class="card-header" data-background-color="red">
-
-            <div class="row">
-                <div class="col-sm-5">
-                    <h4 class="title">Etat des boitiers</h4>
+<div class="main-panel">
+    <div class="dashboard-container">
+        <!-- Header Section -->
+        <div class="dashboard-header-card" *ngIf="!fullscreenMap">
+            <div class="header-row">
+                <div class="title-section">
+                    <h4>Dashboard</h4>
                 </div>
-                <div class="col-sm-6">
-                    <form role="search" style="margin: 0; display: flex; align-items: center; gap: 10px;" [formGroup]="dashboardForm">
-                        <label class="control-label" for="compteserver" style="color:#fff1f3; margin: 0; white-space: nowrap;">
-                            Comptes web
-                        </label>
-                        <select formControlName="compteWeb" class="formcontrol form-control" id="compteserver"
-                            name="compteserver" (change)="getAllLastTramByCompteWeb()" style="margin: 0; min-width: 150px;">
-                            <option [ngValue]="null" disabled selected>Choisir un compte web</option>
+                <div class="controls-section">
+                    <form [formGroup]="dashboardForm" class="search-form-v3">
+                        <label class="search-label-v3">Compte Client:</label>
+                        <select formControlName="compteWeb" class="custom-select" (change)="getAllLastTramByCompteWeb()"
+                            title="Sélectionner un compte client">
+                            <option [ngValue]="null" disabled selected>Choisir un compte</option>
                             @for (compte of comptesWeb; track compte.idCompteClientWeb) {
-                            <option [ngValue]="compte">{{compte.login}}</option>
+                                <option [ngValue]="compte">{{compte.login}}</option>
                             }
                         </select>
-                        <button type="submit" class="btn btn-white btn-sm" title="Rechercher"
-                            style="margin: 0; padding: 5px 10px; white-space: nowrap;">
-                            <i class="fa fa-search" style="font-size: 14px"></i> Rechercher
-                        </button>
                     </form>
-                </div>
-                <div class="col-sm-1">
-                    <button class="btn btn-white btn-sm pull-right" style="padding: 5px 10px; margin: 0;"
-                        title="Exporter" (click)="onExport()">
-                        <i class="fa fa-download" title="Exporter" style="font-size: 14px"></i> Exporter
+                    <button class="btn-secondary-v3" (click)="onExport()" [disabled]="realtimes.length === 0">
+                        <i class="fa fa-download"></i> Exporter Rapport
+                    </button>
+                    <button class="btn-primary-v3" (click)="getAllLastTramByCompteWeb()">
+                        <i class="fa fa-refresh"></i> Actualiser
                     </button>
                 </div>
             </div>
-
         </div>
-        <div class="table-responsive tableFixHead">
-            <table class="table table-bordered table-hover table-sm">
-                <thead>
-                    <tr>
-                        <th>Id boitier</th>
-                        <th>Matricule</th>
-                        <th>Etat</th>
-                        <th>latitude</th>
-                        <th>longitude</th>
-                        <th>Validité</th>
-                        <th>Vitesse</th>
-                        <th>Ignition</th>
-                        <th title="Signal GPS">GPS</th>
-                        <th title="Signal GSM">GSM</th>
-                        <th>Date GPS</th>
-                        <th>Date serveur</th>
-                        <th title="Dernière id">Id</th>
-                        <th title="Dernière id trajet">Id trajet</th>
-                        <th title="Dernière date option">Date option</th>
-                        <th title="Ignition(%)">Ignition</th>
-                        <th title="Non valide(%)">Non valide</th>
-                        <th title="Vittese(%)">Vittese</th>
-                        <th>HLR</th>
-                        <th>IMEI</th>
-                        <th>Version</th>
-                    </tr>
-                </thead>
-                <tbody style="font-size: 12px;">
 
-                    @if (loading) {
-                    <tr>
-                        <td style="text-align: center" colspan="23">
-                            <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
-                        </td>
-                    </tr>
-                    }
+        @if (loading) {
+            <div class="global-spinner">
+                <i class="fa fa-spinner fa-spin no-data-icon"></i>
+                <p>Mise à jour des données...</p>
+            </div>
+        }
 
-                    @for (tram of realtimes; track tram.deviceid) {
-                    <tr>
+        <div class="dashboard-content-wrapper" [class.content-loading]="loading" [hidden]="realtimes.length === 0">
+            <!-- KPI Section -->
+            <div class="kpi-row" *ngIf="!fullscreenMap">
+                <div class="kpi-card kpi-total">
+                    <div class="kpi-icon-wrapper"><i class="fa fa-hdd-o"></i></div>
+                    <div class="kpi-info">
+                        <span class="kpi-label">Total Boitiers</span>
+                        <h3 class="kpi-value">{{stats.total}}</h3>
+                    </div>
+                </div>
+                <div class="kpi-card kpi-valid">
+                    <div class="kpi-icon-wrapper"><i class="fa fa-check-circle"></i></div>
+                    <div class="kpi-info">
+                        <span class="kpi-label">Boitiers Valides</span>
+                        <h3 class="kpi-value">{{stats.valid}}</h3>
+                    </div>
+                </div>
+                <div class="kpi-card kpi-issue">
+                    <div class="kpi-icon-wrapper"><i class="fa fa-exclamation-triangle"></i></div>
+                    <div class="kpi-info">
+                        <span class="kpi-label">Problèmes Tech</span>
+                        <h3 class="kpi-value">{{stats.technicalIssue}}</h3>
+                    </div>
+                </div>
+                <div class="kpi-card kpi-moving">
+                    <div class="kpi-icon-wrapper"><i class="fa fa-truck"></i></div>
+                    <div class="kpi-info">
+                        <span class="kpi-label">En Mouvement</span>
+                        <h3 class="kpi-value">{{stats.moving}}</h3>
+                    </div>
+                </div>
+            </div>
 
-                        <td><span class="label label-info">{{tram.deviceid}}</span></td>
-                        <td>{{tram.matricule}}</td>
-                        <td>
-                            @if (tram.status === 'TECHNICAL_ISSUE') {
-                            <span class="label label-danger">{{tram.status}}</span>
-                            } @else if (tram.status === 'NON_VALID') {
-                            <span class="label label-warning">{{tram.status}}</span>
-                            } @else if (tram.status === 'VALID') {
-                            <span class="label label-success">{{tram.status}}</span>
+            <!-- Visualization Row -->
+            <div class="map-row" [class.solo-map]="fullscreenMap">
+                <div class="card-v3 map-card" [class.fullscreen-card]="fullscreenMap">
+                    <div class="card-header-v3">
+                        <h5 class="card-title-v3"><i class="fa fa-map-marker"></i> Suivi Géographique</h5>
+                        <button class="btn-icon-v3" (click)="openExternalMap()" title="Ouvrir dans un nouvel onglet" *ngIf="!fullscreenMap">
+                            <i class="fa fa-external-link"></i>
+                        </button>
+                    </div>
+                    <div class="map-container-wrapper" [class.fullscreen-map]="fullscreenMap">
+                        @defer (on viewport) {
+                            <div id="map" #mapContainer></div>
+                        } @placeholder {
+                            <div class="defer-placeholder map-placeholder">
+                                <i class="fa fa-map-o fa-2x map-icon-placeholder"></i> Chargement de la carte...
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="charts-grid" [hidden]="fullscreenMap">
+                <div class="card-v3 chart-card">
+                    <h5 class="card-title-v3"><i class="fa fa-pie-chart"></i> Distribution d'état</h5>
+                    <div class="chart-container-wrapper">
+                        @defer (on viewport) {
+                            <canvas #statusChart></canvas>
+                        } @placeholder {
+                            <div class="defer-placeholder chart-placeholder">Chargement du graphique...</div>
+                        }
+                    </div>
+                </div>
+                <div class="card-v3 chart-card">
+                    <h5 class="card-title-v3"><i class="fa fa-tachometer-alt"></i> Distribution des Vitesses</h5>
+                    <div class="chart-container-wrapper">
+                        @defer (on viewport) {
+                            <canvas #speedChartCanvas></canvas>
+                        } @placeholder {
+                            <div class="defer-placeholder chart-placeholder">Chargement du graphique...</div>
+                        }
+                    </div>
+                </div>
+                <div class="card-v3 chart-card">
+                    <h5 class="card-title-v3"><i class="fa fa-sim-card"></i> Opérateurs SIM (Puce)</h5>
+                    <div class="chart-container-wrapper">
+                        @defer (on viewport) {
+                            <canvas #puceChartCanvas></canvas>
+                        } @placeholder {
+                            <div class="defer-placeholder chart-placeholder">Chargement du graphique...</div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table Section -->
+            <div class="table-card" *ngIf="!fullscreenMap">
+                <h5 class="card-title-v3"><i class="fa fa-list"></i> Détails des Terminaux</h5>
+                <div class="table-responsive">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th (click)="toggleSort('deviceid')" class="sortable">
+                                    ID <i class="fa" [ngClass]="sortColumn === 'deviceid' ? (sortDirection === 'asc' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'"></i>
+                                </th>
+                                <th (click)="toggleSort('matricule')" class="sortable">
+                                    Matricule <i class="fa" [ngClass]="sortColumn === 'matricule' ? (sortDirection === 'asc' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'"></i>
+                                </th>
+                                <th (click)="toggleSort('status')" class="sortable">
+                                    État <i class="fa" [ngClass]="sortColumn === 'status' ? (sortDirection === 'asc' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'"></i>
+                                </th>
+                                <th>Coordonnées</th>
+                                <th (click)="toggleSort('speed')" class="sortable">
+                                    Vitesse <i class="fa" [ngClass]="sortColumn === 'speed' ? (sortDirection === 'asc' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'"></i>
+                                </th>
+                                <th (click)="toggleSort('ignition')" class="sortable">
+                                    Ignition <i class="fa" [ngClass]="sortColumn === 'ignition' ? (sortDirection === 'asc' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'"></i>
+                                </th>
+                                <th (click)="toggleSort('signal')" class="sortable">
+                                    GPS / GSM <i class="fa" [ngClass]="sortColumn === 'signal' ? (sortDirection === 'asc' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'"></i>
+                                </th>
+                                <th>Dernière Trame</th>
+                                <th>Identifiants</th>
+                            </tr>
+                            <tr class="filter-row">
+                                <td></td> <!-- Removed ID Filter -->
+                                <td><input type="text" [(ngModel)]="filterValues.matricule" (ngModelChange)="onFilterChange()" placeholder="Filtrer..." class="filter-input"></td>
+                                <td>
+                                    <select [(ngModel)]="filterValues.status" (ngModelChange)="onFilterChange()" class="filter-select" title="Filtrer par état">
+                                        <option value="ALL">Tous</option>
+                                        <option value="VALID">Valide</option>
+                                        <option value="TECHNICAL_ISSUE">Tech Issue</option>
+                                        <option value="NON_VALID">Non Valide</option>
+                                    </select>
+                                </td>
+                                <td></td>
+                                <td><input type="number" [(ngModel)]="filterValues.speed" (ngModelChange)="onFilterChange()" placeholder="Vitesse min..." class="filter-input"></td>
+                                <td>
+                                    <select [(ngModel)]="filterValues.ignition" (ngModelChange)="onFilterChange()" class="filter-select" title="Filtrer par ignition">
+                                        <option value="ALL">Tous</option>
+                                        <option value="ON">On</option>
+                                        <option value="OFF">Off</option>
+                                    </select>
+                                </td>
+                                <td></td> <!-- Removed Signal Filter -->
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (tram of paginatedRealtimes; track tram.deviceid) {
+                                <tr>
+                                    <td><span class="id-badge">{{tram.deviceid}}</span></td>
+                                    <td><strong>{{tram.matricule}}</strong></td>
+                                    <td>
+                                        <span class="status-badge" [ngClass]="{
+                                            'badge-success': tram.status === 'VALID',
+                                            'badge-danger': tram.status === 'TECHNICAL_ISSUE',
+                                            'badge-warning': tram.status === 'NON_VALID'
+                                        }">
+                                            <i class="fa" [ngClass]="{
+                                                'fa-check-circle': tram.status === 'VALID',
+                                                'fa-warning': tram.status === 'TECHNICAL_ISSUE',
+                                                'fa-clock-o': tram.status === 'NON_VALID'
+                                            }"></i>
+                                            {{tram.status}}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="ecriture">{{tram.latitude | number: '.4-4'}}</div>
+                                        <div class="ecriture">{{tram.longitude | number: '.4-4'}}</div>
+                                    </td>
+                                    <td>
+                                        <span [ngClass]="tram.speed > 0 ? 'text-moving' : ''">
+                                            {{tram.speed}} km/h
+                                        </span>
+                                    </td>
+                                    <td>
+                                        @if (tram.ignition) {
+                                            <span class="text-on"><i class="fa fa-flash"></i> On</span>
+                                        } @else {
+                                            <span class="text-off"><i class="fa fa-power-off"></i> Off</span>
+                                        }
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="signal-group">
+                                            <span><i class="fa fa-satellite"></i> {{tram.sat_in_view}}</span>
+                                            <span><i class="fa fa-signal"></i> {{tram.signal}}</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div [ngClass]="{'text-danger-custom': diffHours(tram.record_time) >= 24}">
+                                            {{tram.record_time | date:'dd/MM HH:mm'}}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="ecriture"><strong>IMEI:</strong> {{tram.imei}}</div>
+                                        <div class="ecriture"><strong>SIM:</strong> {{tram.numPuce}}</div>
+                                    </td>
+                                </tr>
                             }
-                        </td>
-                        <td>{{tram.latitude}}</td>
-                        <td>{{tram.longitude}}</td>
-                        <td>
-                            @if (tram.validity) {
-                            <span class="label label-success">Vrai</span>
-                            } @else {
-                            <span class="label label-danger">Faux</span>
-                            }
-                        </td>
-                        <td>{{tram.speed}}</td>
-                        <td>
-                            @if (!tram.ignition) {
-                            <span>Off</span>
-                            } @else {
-                            <span>On</span>
-                            }
-                        </td>
-                        <td>{{tram.sat_in_view}}</td>
-                        <td>{{tram.signal}}</td>
-                        <td>
-                            @if (diffHours(tram.record_time) >= 1 && diffHours(tram.record_time) < 24) { <span
-                                class="label label-warning">{{tram.record_time | date:'dd-MM-yyyy HH:mm:ss' }}</span>
-                                } @else if (diffHours(tram.record_time) >= 24) {
-                                <span class="label label-danger">{{tram.record_time | date:'dd-MM-yyyy HH:mm:ss'
-                                    }}</span>
-                                } @else {
-                                <span>{{tram.record_time | date:'dd-MM-yyyy HH:mm:ss' }}</span>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination Section -->
+                <div class="pagination-container" *ngIf="totalFilteredItems > 0">
+                    <div class="pagination-info">
+                        Affichage de {{(currentPage-1)*pageSize + 1}} à {{Math.min(currentPage*pageSize, totalFilteredItems)}} sur {{totalFilteredItems}} terminaux
+                    </div>
+                    <div class="pagination-controls">
+                        <div class="page-size-selector">
+                            <span>Lignes par page:</span>
+                            <select [(ngModel)]="pageSize" (change)="onPageSizeChange()" title="Lignes par page">
+                                @for (size of pageSizeOptions; track size) {
+                                    <option [value]="size">{{size}}</option>
                                 }
-                        </td>
-                        <td>{{tram.last_raw_time | date:'dd-MM-yyyy HH:mm:ss'}}</td>
-                        <td>{{tram.lastId}}</td>
-                        <td>
-                            @if ((tram.lastId - tram.lastIdRaw) >= 20) {
-                            <span class="label label-danger">{{tram.lastIdRaw}}</span>
-                            } @else {
-                            <span>{{tram.lastIdRaw}}</span>
+                            </select>
+                        </div>
+                        <div class="pagination-buttons">
+                            <button class="btn-page" [disabled]="currentPage === 1" (click)="prevPage()" title="Précédent">
+                                <i class="fa fa-chevron-left"></i>
+                            </button>
+                            
+                            @for (p of getPageNumbers(); track p) {
+                                <button class="btn-page" [class.active]="p === currentPage" (click)="setPage(p)">
+                                    {{p}}
+                                </button>
                             }
-                        </td>
-                        <td>{{tram.lastTime | date:'dd-MM-yyyy HH:mm:ss'}}</td>
-                        <td>
-                            @if (tram.ignitionStatistique === 0) {
-                            <span class="label label-danger">{{tram.ignitionStatistique | number: '.2-2'}} %</span>
-                            } @else {
-                            <span>{{tram.ignitionStatistique | number: '.2-2'}} %</span>
-                            }
-                        </td>
-                        <td>
-                            @if (tram.invalidityStatistique > 10) {
-                            <span class="label label-danger">{{tram.invalidityStatistique | number: '.2-2'}} %</span>
-                            } @else {
-                            <span>{{tram.invalidityStatistique | number: '.2-2'}} %</span>
-                            }
-                        </td>
-                        <td>
-                            @if (tram.speedStatistique === 0) {
-                            <span class="label label-danger">{{tram.speedStatistique | number: '.2-2'}} %</span>
-                            } @else {
-                            <span>{{tram.speedStatistique | number: '.2-2'}} %</span>
-                            }
-                        </td>
-                        <td>{{tram.numPuce}}</td>
-                        <td>{{tram.imei}}</td>
-                        <td>{{tram.version}}</td>
-                    </tr>
-                    }
-                </tbody>
-            </table>
+
+                            <button class="btn-page" [disabled]="currentPage === totalPages" (click)="nextPage()" title="Suivant">
+                                <i class="fa fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        @if (realtimes.length === 0 && !loading) {
+            <div class="no-data-info">
+                <i class="fa fa-folder-open-o no-data-icon"></i>
+                <p>Aucune donnée à afficher. Veuillez sélectionner un compte web.</p>
+            </div>
+        }
     </div>
-</div>
+</div>
