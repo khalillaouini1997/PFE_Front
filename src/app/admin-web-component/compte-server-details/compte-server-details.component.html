@@ -44,9 +44,9 @@
                     </div>
                     <div class="panel-body">
                         <form class="form-inline" [formGroup]="addForm" (ngSubmit)="addBoitiers()">
-                            <div class="form-group" style="margin-right: 15px;">
-                                <label>Number of Devices</label>
-                                <input type="number" min="1" class="form-control" name="nbrBoitiers"
+                            <div class="form-group margin-right-15">
+                                <label for="nbrBoitiers">Number of Devices</label>
+                                <input type="number" min="1" class="form-control" name="nbrBoitiers" id="nbrBoitiers"
                                     formControlName="nbrBoitiers" required>
                             </div>
 
@@ -72,14 +72,14 @@
 <div>
 
     <div class="col-md-12">
-        <form class="navbar-form navbar-right" role="search" style="margin:0;" [formGroup]="searchForm"
+        <form class="navbar-form navbar-right margin-0" role="search" [formGroup]="searchForm"
             (ngSubmit)="searchBoitiers()">
             <div class="form-group is-empty">
-                <input type="text" class="form-control" name="searchBoitier" formControlName="searchBoitier"
-                    placeholder="Search" style="margin:0;">
+                <input type="text" class="form-control margin-0" name="searchBoitier" formControlName="searchBoitier"
+                    placeholder="Search">
                 <span class="material-input"></span>
             </div>
-            <button type="submit" class="btn btn-white btn-round btn-just-icon" style="margin:0;">
+            <button type="submit" class="btn btn-white btn-round btn-just-icon margin-0">
                 <i class="material-icons">search</i>
                 <div class="ripple-container"></div>
             </button>
