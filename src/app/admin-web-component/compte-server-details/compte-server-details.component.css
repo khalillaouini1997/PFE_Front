@@ -9,4 +9,8 @@
 
 .margin-0 {
   margin: 0 !important;
-}
+}
+
+.location-text-premium {
+  max-width: 150px;
+}

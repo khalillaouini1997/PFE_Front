@@ -1,25 +1,30 @@
 <div class="main-panel p-4">
     <!-- Header Section -->
-    <div class="premium-card mb-4 header-gradient">
+    <div class="premium-card mb-4 header-gradient p-4">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
             <div class="title-section text-white">
                 <div class="d-flex align-items-center gap-3">
-                    <button type="button" class="btn btn-glass btn-sm rounded-circle" (click)="back()" title="Retour à la page précédente">
+                    <button type="button" class="btn btn-glass btn-sm rounded-circle" (click)="back()" title="Retour">
                         <i class="fa fa-arrow-left"></i>
                     </button>
                     <div>
                         <h2 class="m-0 fw-bold">Archives & Raw</h2>
-                        <span class="badge bg-success bg-opacity-25 text-white border border-white border-opacity-25 mt-1">Terminal: {{numBoitier()}}</span>
+                        <span class="badge bg-white bg-opacity-20 text-white border border-white border-opacity-10 mt-1">
+                            <i class="fa fa-microchip me-1"></i> Terminal: {{numBoitier()}}
+                        </span>
                     </div>
                 </div>
             </div>
             
             <div class="controls-section d-flex align-items-center gap-3" [formGroup]="archiveForm">
-                <div class="input-group input-group-sm limit-input-group">
-                    <span class="input-group-text bg-white border-0 opacity-75">Limite:</span>
-                    <input type="number" id="limit" class="form-control border-0" formControlName="limit" title="Nombre d'enregistrements à afficher" placeholder="Ex: 200">
+                <div class="input-group input-group-sm limit-input-group shadow-sm">
+                <div class="input-group input-group-sm limit-input-group shadow-sm">
+                    <span class="input-group-text bg-white bg-opacity-10 text-white border-0">Limite:</span>
+                    <input type="number" id="limit" class="form-control border-0 bg-white bg-opacity-10 text-white" 
+                        formControlName="limit" title="Limite" placeholder="200">
                 </div>
-                <button type="button" class="btn btn-white shadow-sm btn-refresh-archive" (click)="getArchives()" title="Rafraîchir les données">
+                </div>
+                <button type="button" class="btn btn-white shadow-sm fw-bold" (click)="getArchives()" title="Afficher">
                     <i class="fa fa-refresh me-2"></i> Afficher
                 </button>
             </div>
@@ -27,93 +32,99 @@
     </div>
 
     <!-- Main Content -->
-    <div class="premium-card p-0 overflow-hidden shadow-sm">
-        <tabset #staticTabs type="pills" class="custom-pills p-3 border-bottom">
-            <tab heading="Archive du Terminal" class="p-0">
-                <div class="table-responsive table-container-70vh">
-                    <table class="table-premium">
-                        <thead>
+    <div class="premium-card p-0 overflow-hidden shadow-sm bg-white">
+        <p-tabs value="0" styleClass="premium-tabview">
+            <p-tablist>
+                <p-tab value="0">Archive du Terminal</p-tab>
+                <p-tab value="1" (click)="getAllRaws()">Données Brutes (Raw)</p-tab>
+            </p-tablist>
+            <p-tabpanels>
+                <p-tabpanel value="0">
+                    <p-table [value]="archives()" [paginator]="true" [rows]="50" 
+                        [rowsPerPageOptions]="[50,100,200,500]"
+                        stateStorage="session" stateKey="archive-table-state"
+                        [reorderableColumns]="true" [resizableColumns]="true" columnResizeMode="expand"
+                        styleClass="p-datatable-sm p-datatable-gridlines premium-table-custom"
+                        responsiveLayout="scroll">
+                        <ng-template pTemplate="header">
                             <tr>
-                                <th>Date</th>
-                                <th>Trame</th>
-                                <th>Position</th>
-                                <th>Ignition</th>
-                                <th>Vitesse</th>
-                                <th>Temp</th>
-                                <th>G-Sensor (X,Y,Z)</th>
-                                <th>Moteur (RPM/Fuel)</th>
-                                <th>Système (Odo/Sat/Sig)</th>
-                                <th>Divers</th>
+                                <th pReorderableColumn pResizableColumn>Date</th>
+                                <th pReorderableColumn pResizableColumn>Trame</th>
+                                <th pReorderableColumn pResizableColumn>Coordonnées</th>
+                                <th pReorderableColumn pResizableColumn>Statut</th>
+                                <th pReorderableColumn pResizableColumn>Vitesse</th>
+                                <th pReorderableColumn pResizableColumn>Temp</th>
+                                <th pReorderableColumn pResizableColumn>G-Sensor</th>
+                                <th pReorderableColumn pResizableColumn>Moteur</th>
+                                <th pReorderableColumn pResizableColumn>Système</th>
+                                <th pReorderableColumn pResizableColumn>Divers</th>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @for (archive of archives(); track $index) {
-                                <tr>
-                                    <td class="small fw-medium">{{archive.date | date: 'dd/MM HH:mm:ss'}}</td>
-                                    <td><span class="badge rounded-pill bg-warning bg-opacity-10 text-dark border border-warning border-opacity-25">{{archive.trame_id}}</span></td>
-                                    <td>
-                                        <div class="small text-secondary">{{archive.latitude | number: '.4-4'}}</div>
-                                        <div class="small text-secondary">{{archive.longitude | number: '.4-4'}}</div>
-                                    </td>
-                                    <td>
-                                        @if (archive.ignition) {
-                                            <span class="badge bg-success bg-opacity-10 text-success rounded-pill fw-bold">ON</span>
-                                        } @else {
-                                            <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill fw-bold">OFF</span>
-                                        }
-                                    </td>
-                                    <td class="fw-bold" [class.text-success]="archive.speed > 0">{{archive.speed}} <small>km/h</small></td>
-                                    <td>{{archive.temp}}°C</td>
-                                    <td>
-                                        <div class="small opacity-75">X: {{archive.x}}</div>
-                                        <div class="small opacity-75">Y: {{archive.y}}</div>
-                                        <div class="small opacity-75">Z: {{archive.z}}</div>
-                                    </td>
-                                    <td>
-                                        <div class="small fw-medium">RPM: {{archive.rpm}}</div>
-                                        <div class="small text-info">Fuel: {{archive.fuel_rate}}</div>
-                                    </td>
-                                    <td class="small">
-                                        <div>Odo: {{archive.odo}} km</div>
-                                        <div class="d-flex gap-2">
-                                            <span><i class="fa fa-satellite text-primary"></i> {{archive.satInView}}</span>
-                                            <span><i class="fa fa-signal text-info"></i> {{archive.signal}}</span>
-                                        </div>
-                                    </td>
-                                    <td class="small">
-                                        <div>H: {{archive.heading}}°</div>
-                                        <div>C: {{archive.charger === 1 ? 'Connecté' : 'Déconnecté'}}</div>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </tab>
-            
-            <tab (select)="getAllRaws()" heading="Données Brutes (Raw)" class="p-0">
-                <div class="table-responsive table-container-70vh">
-                    <div class="p-3 bg-light bg-opacity-50 border-bottom">
-                        <span class="badge bg-primary">Total: {{rawData().count}}</span>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-archive>
+                            <tr class="align-middle">
+                                <td class="small fw-medium text-nowrap">{{archive.date | date: 'dd/MM HH:mm:ss'}}</td>
+                                <td><span class="badge bg-warning bg-opacity-10 text-dark border border-warning border-opacity-10">{{archive.trame_id}}</span></td>
+                                <td class="small">
+                                    <div class="text-secondary">{{archive.latitude | number: '.4-4'}}</div>
+                                    <div class="text-secondary">{{archive.longitude | number: '.4-4'}}</div>
+                                </td>
+                                <td>
+                                    <span class="badge rounded-pill px-3" [ngClass]="archive.ignition ? 'bg-success bg-opacity-10 text-success' : 'bg-danger bg-opacity-10 text-danger'">
+                                        {{archive.ignition ? 'ON' : 'OFF'}}
+                                    </span>
+                                </td>
+                                <td class="fw-bold" [class.text-success]="archive.speed > 0">{{archive.speed}} <small>km/h</small></td>
+                                <td>{{archive.temp}}°C</td>
+                                <td class="small text-secondary">
+                                    <div>X: {{archive.x}}</div>
+                                    <div>Y: {{archive.y}}</div>
+                                    <div>Z: {{archive.z}}</div>
+                                </td>
+                                <td class="small">
+                                    <div class="fw-medium">RPM: {{archive.rpm}}</div>
+                                    <div class="text-info">Fuel: {{archive.fuel_rate}}</div>
+                                </td>
+                                <td class="small">
+                                    <div>Odo: {{archive.odo}} km</div>
+                                    <div class="d-flex gap-2">
+                                        <span><i class="fa fa-satellite text-primary"></i> {{archive.satInView}}</span>
+                                        <span><i class="fa fa-signal text-info"></i> {{archive.signal}}</span>
+                                    </div>
+                                </td>
+                                <td class="small">
+                                    <div>H: {{archive.heading}}°</div>
+                                    <div><i class="fa fa-plug me-1" [ngClass]="archive.charger === 1 ? 'text-success' : 'text-danger'"></i> {{archive.charger === 1 ? 'OK' : 'KO'}}</div>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </p-tabpanel>
+                
+                <p-tabpanel value="1">
+                    <div class="p-3 bg-light bg-opacity-50 border-bottom d-flex align-items-center gap-3">
+                        <span class="badge bg-primary px-3 rounded-pill shadow-sm">Total: {{rawData().count}}</span>
+                        <button class="btn btn-sm btn-outline-primary border-0" (click)="getAllRaws()"><i class="fa fa-refresh me-1"></i> Recharger Brutes</button>
                     </div>
-                    <table class="table-premium table-bordered">
-                        <thead>
+                    <p-table [value]="rawData().raws" [paginator]="true" [rows]="50"
+                        stateStorage="session" stateKey="raw-archive-table-state"
+                        [reorderableColumns]="true" [resizableColumns]="true" columnResizeMode="expand"
+                        styleClass="p-datatable-sm p-datatable-gridlines premium-table-custom"
+                        responsiveLayout="scroll">
+                        <ng-template pTemplate="header">
                             <tr>
-                                <th class="col-id-small">ID</th>
-                                <th>GPRMC / Trame Raw</th>
+                                <th style="width: 100px" pReorderableColumn pResizableColumn>ID</th>
+                                <th pReorderableColumn pResizableColumn>GPRMC / Trame Raw</th>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @for (raw of rawData().raws; track raw.idTram) {
-                                <tr>
-                                    <td class="fw-bold">{{raw.idTram}}</td>
-                                    <td><code class="text-primary bg-light p-1 rounded">{{raw.gprmc}}</code></td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </tab>
-        </tabset>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-raw>
+                            <tr>
+                                <td class="fw-bold">{{raw.idTram}}</td>
+                                <td><code class="text-primary bg-light p-1 rounded opacity-75">{{raw.gprmc}}</code></td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </p-tabpanel>
+            </p-tabpanels>
+        </p-tabs>
     </div>
 </div>

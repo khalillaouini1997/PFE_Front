@@ -23,3 +23,7 @@
 .col-agent {
     width: 40%;
 }
+
+.agent-text-trunc {
+    max-width: 400px;
+}

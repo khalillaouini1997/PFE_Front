@@ -130,139 +130,100 @@
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <!-- Table Section -->
+                       <!-- Table Section (Ignite UI Grid) -->
             <div class="row g-4 mt-2">
                 <div class="col-12">
                     <div class="premium-card overflow-hidden p-0" *ngIf="!fullscreenMap()">
                         <div class="p-4 d-flex justify-content-between align-items-center border-bottom bg-light bg-opacity-10">
                             <h5 class="m-0 fw-bold"><i class="fa fa-list me-2 text-primary"></i> Détails des Terminaux</h5>
                         </div>
-                        <div class="table-responsive p-3">
-                            <table class="table-premium">
-                                <thead>
+                        <div class="p-3">
+                            <p-table #dt [value]="realtimes()" [paginator]="true" [rows]="10" 
+                                [globalFilterFields]="['deviceid', 'matricule', 'status']"
+                                responsiveLayout="scroll" [rowsPerPageOptions]="[10,20,50]"
+                                styleClass="p-datatable-sm p-datatable-gridlines premium-table-custom">
+                                
+                                <ng-template pTemplate="header">
                                     <tr>
-                                        <th (click)="toggleSort('deviceid')" class="cursor-pointer">
-                                            ID <i class="fa ms-1" [ngClass]="sortColumn() === 'deviceid' ? (sortDirection() === 'asc' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'"></i>
-                                        </th>
-                                        <th (click)="toggleSort('matricule')" class="cursor-pointer">
-                                            Matricule <i class="fa ms-1" [ngClass]="sortColumn() === 'matricule' ? (sortDirection() === 'asc' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'"></i>
-                                        </th>
-                                        <th (click)="toggleSort('status')" class="cursor-pointer">
-                                            État <i class="fa ms-1" [ngClass]="sortColumn() === 'status' ? (sortDirection() === 'asc' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'"></i>
-                                        </th>
+                                        <th pSortableColumn="deviceid" style="width:100px">ID <p-sortIcon field="deviceid"></p-sortIcon></th>
+                                        <th pSortableColumn="matricule">Matricule <p-sortIcon field="matricule"></p-sortIcon></th>
+                                        <th pSortableColumn="status">État <p-sortIcon field="status"></p-sortIcon></th>
                                         <th>Coordonnées</th>
-                                        <th (click)="toggleSort('speed')" class="cursor-pointer">
-                                            Vitesse <i class="fa ms-1" [ngClass]="sortColumn() === 'speed' ? (sortDirection() === 'asc' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'"></i>
-                                        </th>
-                                        <th (click)="toggleSort('ignition')" class="cursor-pointer">
-                                            Ignition <i class="fa ms-1" [ngClass]="sortColumn() === 'ignition' ? (sortDirection() === 'asc' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'"></i>
-                                        </th>
-                                        <th (click)="toggleSort('signal')" class="cursor-pointer">
-                                            GPS/GSM <i class="fa ms-1" [ngClass]="sortColumn() === 'signal' ? (sortDirection() === 'asc' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'"></i>
-                                        </th>
-                                        <th>Trame</th>
+                                        <th pSortableColumn="speed">Vitesse <p-sortIcon field="speed"></p-sortIcon></th>
+                                        <th pSortableColumn="ignition">Ignition <p-sortIcon field="ignition"></p-sortIcon></th>
+                                        <th>GPS/GSM</th>
+                                        <th pSortableColumn="record_time">Trame <p-sortIcon field="record_time"></p-sortIcon></th>
                                         <th>Détails</th>
                                     </tr>
-                                     <tr class="bg-light bg-opacity-50">
-                                        <td></td>
-                                        <td><input type="text" [ngModel]="filterMatricule()" (ngModelChange)="filterMatricule.set($event); onFilterChange()" placeholder="Filtrer..." class="form-control form-control-sm border-0 shadow-none bg-transparent" title="Filtrer par matricule"></td>
-                                        <td>
-                                            <select [ngModel]="filterStatus()" (ngModelChange)="filterStatus.set($event); onFilterChange()" class="form-select form-select-sm border-0 shadow-none bg-transparent" title="Filtrer par état">
-                                                <option value="ALL">Tous</option>
-                                                <option value="VALID">Valide</option>
-                                                <option value="TECHNICAL_ISSUE">Issue</option>
-                                                <option value="NON_VALID">Non Valide</option>
-                                            </select>
-                                        </td>
-                                        <td></td>
-                                        <td><input type="number" [ngModel]="filterSpeed()" (ngModelChange)="filterSpeed.set($event); onFilterChange()" placeholder="Km/h min" class="form-control form-control-sm border-0 shadow-none bg-transparent" title="Filtrer par vitesse"></td>
-                                        <td>
-                                            <select [ngModel]="filterIgnition()" (ngModelChange)="filterIgnition.set($event); onFilterChange()" class="form-select form-select-sm border-0 shadow-none bg-transparent" title="Filtrer par ignition">
-                                                <option value="ALL">Tous</option>
-                                                <option value="ON">On</option>
-                                                <option value="OFF">Off</option>
-                                            </select>
-                                        </td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                    <tr>
+                                        <th></th>
+                                        <th><p-columnFilter type="text" field="matricule" display="menu"></p-columnFilter></th>
+                                        <th><p-columnFilter type="text" field="status" display="menu"></p-columnFilter></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    @for (tram of paginatedRealtimes(); track tram.deviceid) {
-                                        <tr class="align-middle">
-                                            <td><span class="badge rounded-pill bg-primary bg-opacity-10 text-primary">{{tram.deviceid}}</span></td>
-                                            <td><strong>{{tram.matricule}}</strong></td>
-                                            <td>
-                                                <span class="badge rounded-pill d-inline-flex align-items-center gap-1" [ngClass]="{
-                                                    'bg-success text-white': tram.status === 'VALID',
-                                                    'bg-danger text-white': tram.status === 'TECHNICAL_ISSUE',
-                                                    'bg-warning text-dark': tram.status === 'NON_VALID'
-                                                }">
-                                                    <i class="fa small" [ngClass]="{
-                                                        'fa-check-circle': tram.status === 'VALID',
-                                                        'fa-warning': tram.status === 'TECHNICAL_ISSUE',
-                                                        'fa-clock-o': tram.status === 'NON_VALID'
-                                                    }"></i>
-                                                    {{tram.status}}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <div class="small text-secondary">{{tram.latitude | number: '.4-4'}}</div>
-                                                <div class="small text-secondary">{{tram.longitude | number: '.4-4'}}</div>
-                                            </td>
-                                            <td>
-                                                <span [ngClass]="tram.speed > 0 ? 'text-success fw-bold' : 'text-secondary'">
-                                                    {{tram.speed}} km/h
-                                                </span>
-                                            </td>
-                                            <td>
-                                                @if (tram.ignition) {
-                                                    <span class="text-warning"><i class="fa fa-flash me-1"></i>On</span>
-                                                } @else {
-                                                    <span class="text-secondary"><i class="fa fa-power-off me-1"></i>Off</span>
-                                                }
-                                            </td>
-                                            <td>
-                                                <div class="d-flex flex-column small text-center">
-                                                    <span><i class="fa fa-satellite me-1 text-primary shadow-sm"></i> {{tram.sat_in_view}}</span>
-                                                    <span><i class="fa fa-signal me-1 text-info shadow-sm"></i> {{tram.signal}}</span>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div [ngClass]="{'text-danger': diffHours(tram.record_time) >= 24}" class="small">
-                                                    {{tram.record_time | date:'dd/MM HH:mm'}}
-                                                </div>
-                                            </td>
-                                            <td class="small">
-                                                <div><strong>IMEI:</strong> {{tram.imei}}</div>
-                                                <div><strong>SIM:</strong> {{tram.numPuce}}</div>
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
+                                </ng-template>
 
-                        <!-- Pagination Section -->
-                        <div class="p-4 bg-light bg-opacity-25 d-flex justify-content-between align-items-center flex-wrap gap-3" *ngIf="totalFilteredItems() > 0">
-                            <div class="small text-secondary fw-medium">
-                                Showing <strong>{{(currentPage()-1)*pageSize() + 1}}</strong> to <strong>{{Math.min(currentPage()*pageSize(), totalFilteredItems())}}</strong> of <strong>{{totalFilteredItems()}}</strong>
-                            </div>
-                            <div class="d-flex align-items-center gap-4 flex-wrap">
-                                <div class="d-flex align-items-center gap-2">
-                                    <span class="small text-secondary">Show:</span>
-                                    <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" class="form-select form-select-sm border-0 shadow-sm dash-pagesize-select" title="Lignes par page">
-                                        @for (size of pageSizeOptions; track size) {
-                                            <option [value]="size">{{size}}</option>
-                                        }
-                                    </select>
-                                    <nav aria-label="Page navigation" class="m-0">
-                                        <ul class="pagination pagination-sm m-0 gap-1 border-0"><li class="page-item" [class.disabled]="currentPage() === 1"><button class="page-link rounded border-0 shadow-sm" (click)="prevPage()" title="Précédent"><i class="fa fa-chevron-left"></i></button></li><li *ngFor="let p of getPageNumbers()" class="page-item" [class.active]="p === currentPage()"><button class="page-link rounded border-0 shadow-sm px-3" (click)="setPage(p)">{{p}}</button></li><li class="page-item" [class.disabled]="currentPage() === totalPages()"><button class="page-link rounded border-0 shadow-sm" (click)="nextPage()" title="Suivant"><i class="fa fa-chevron-right"></i></button></li></ul>
-                                    </nav>
-                            </div>
+                                <ng-template pTemplate="body" let-data>
+                                    <tr>
+                                        <td>
+                                            <span class="badge rounded-pill bg-primary bg-opacity-10 text-primary">{{data.deviceid}}</span>
+                                        </td>
+                                        <td>{{data.matricule}}</td>
+                                        <td>
+                                            <span class="badge rounded-pill d-inline-flex align-items-center gap-1" [ngClass]="{
+                                                'bg-success text-white': data.status === 'VALID',
+                                                'bg-danger text-white': data.status === 'TECHNICAL_ISSUE',
+                                                'bg-warning text-dark': data.status === 'NON_VALID'
+                                            }">
+                                                <i class="fa small" [ngClass]="{
+                                                    'fa-check-circle': data.status === 'VALID',
+                                                    'fa-warning': data.status === 'TECHNICAL_ISSUE',
+                                                    'fa-clock-o': data.status === 'NON_VALID'
+                                                }"></i>
+                                                {{data.status}}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="small text-secondary">{{data.latitude | number: '.4-4'}}</div>
+                                            <div class="small text-secondary">{{data.longitude | number: '.4-4'}}</div>
+                                        </td>
+                                        <td>
+                                            <span [ngClass]="data.speed > 0 ? 'text-success fw-bold' : 'text-secondary'">
+                                                {{data.speed}} km/h
+                                            </span>
+                                        </td>
+                                        <td>
+                                            @if (data.ignition) {
+                                                <span class="text-warning"><i class="fa fa-flash me-1"></i>On</span>
+                                            } @else {
+                                                <span class="text-secondary"><i class="fa fa-power-off me-1"></i>Off</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <div class="d-flex flex-column small">
+                                                <span><i class="fa fa-satellite me-1 text-primary"></i> {{data.sat_in_view}}</span>
+                                                <span><i class="fa fa-signal me-1 text-info"></i> {{data.signal}}</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div [ngClass]="{'text-danger': diffHours(data.record_time) >= 24}" class="small">
+                                                {{data.record_time | date:'dd/MM HH:mm'}}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="small">
+                                                <div><strong>IMEI:</strong> {{data.imei}}</div>
+                                                <div><strong>SIM:</strong> {{data.numPuce}}</div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
                         </div>
                     </div>
                 </div>

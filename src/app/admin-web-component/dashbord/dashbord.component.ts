@@ -10,6 +10,12 @@ import { saveAs as importedSaveAs } from 'file-saver';
 // MarkerCluster extends the global L object, so we must use declare instead of import
 declare const L: any;
 import { Chart, registerables } from 'chart.js';
+import { TableModule } from 'primeng/table';
+import { BadgeModule } from 'primeng/badge';
+import { ButtonModule } from 'primeng/button';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
+import { InputTextModule } from 'primeng/inputtext';
 
 Chart.register(...registerables);
 
@@ -18,32 +24,30 @@ Chart.register(...registerables);
     standalone: true,
     templateUrl: './dashbord.component.html',
     styleUrls: ['./dashbord.component.css'],
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule, DecimalPipe, DatePipe]
+    imports: [
+      CommonModule,
+      FormsModule,
+      ReactiveFormsModule,
+      RouterModule,
+      DecimalPipe,
+      DatePipe,
+      TableModule,
+      BadgeModule,
+      ButtonModule,
+      IconFieldModule,
+      InputIconModule,
+      InputTextModule
+    ]
 })
 export class DashbordComponent implements OnInit, OnDestroy {
   protected readonly Math = Math;
 
+  // Dashboard data
   comptesWeb = signal<CompteClientWebInfoDTO[]>([]);
   realtimes = signal<Tram[]>([]);
   loading = signal<boolean>(false);
   dashboardForm!: FormGroup;
-
-  // UI State
   fullscreenMap = signal<boolean>(false);
-  sortColumn = signal<string>('');
-  sortDirection = signal<'asc' | 'desc'>('asc');
-  
-  // Individual Filter Signals
-  filterMatricule = signal<string>('');
-  filterStatus = signal<string>('ALL');
-  filterSpeed = signal<string>('');
-  filterIgnition = signal<string>('ALL');
-
-
-  // Pagination
-  currentPage = signal<number>(1);
-  pageSize = signal<number>(10);
-  pageSizeOptions: number[] = [5, 10, 20, 50];
 
   // KPI Data
   stats = signal({
@@ -97,108 +101,6 @@ export class DashbordComponent implements OnInit, OnDestroy {
       });
     }
   }
-
-  filteredRealtimes = computed(() => {
-    let data = [...this.realtimes()];
-    
-    const matricule = this.filterMatricule().toLowerCase();
-    const status = this.filterStatus();
-    const speed = this.filterSpeed();
-    const ignition = this.filterIgnition();
-
-    // Filtering
-    if (matricule) {
-      data = data.filter(item => item.matricule?.toLowerCase().includes(matricule));
-    }
-    if (status !== 'ALL') {
-      data = data.filter(item => item.status === status);
-    }
-    if (speed) {
-      const numSpeed = parseFloat(speed);
-      if (!isNaN(numSpeed)) {
-        data = data.filter(item => item.speed >= numSpeed);
-      }
-    }
-    if (ignition !== 'ALL') {
-      const expected = ignition === 'ON';
-      data = data.filter(item => item.ignition === expected);
-    }
-
-
-    // Sorting
-    const sortBy = this.sortColumn();
-    const direction = this.sortDirection();
-    if (sortBy) {
-      data.sort((a, b) => {
-        const valA = (a as any)[sortBy];
-        const valB = (b as any)[sortBy];
-        
-        if (valA < valB) return direction === 'asc' ? -1 : 1;
-        if (valA > valB) return direction === 'asc' ? 1 : -1;
-        return 0;
-      });
-    }
-
-    return data;
-  });
-
-  paginatedRealtimes = computed(() => {
-    const data = this.filteredRealtimes();
-    const startIndex = (this.currentPage() - 1) * this.pageSize();
-    return data.slice(startIndex, startIndex + this.pageSize());
-  });
-
-  totalPages = computed(() => {
-    return Math.ceil(this.filteredRealtimes().length / this.pageSize());
-  });
-
-  totalFilteredItems = computed(() => {
-    return this.filteredRealtimes().length;
-  });
-
-  onFilterChange() {
-    this.currentPage.set(1);
-  }
-
-  setPage(page: number) {
-    if (page >= 1 && page <= this.totalPages()) {
-      this.currentPage.set(page);
-    }
-  }
-
-  nextPage() {
-    if (this.currentPage() < this.totalPages()) {
-      this.currentPage.update(p => p + 1);
-    }
-  }
-
-  prevPage() {
-    if (this.currentPage() > 1) {
-      this.currentPage.update(p => p - 1);
-    }
-  }
-
-  onPageSizeChange() {
-    this.currentPage.set(1);
-  }
-
-  getPageNumbers(): number[] {
-    const total = this.totalPages();
-    if (total <= 7) {
-      return Array.from({ length: total }, (_, i) => i + 1);
-    }
-    return Array.from({ length: total }, (_, i) => i + 1);
-  }
-
-  toggleSort(column: string) {
-    if (this.sortColumn() === column) {
-      this.sortDirection.update(d => d === 'asc' ? 'desc' : 'asc');
-    } else {
-      this.sortColumn.set(column);
-      this.sortDirection.set('asc');
-    }
-  }
-
 
   openExternalMap() {
     const urlTree = this.router.createUrlTree(['/adminWeb/dashboard'], { queryParams: { fullscreenMap: 'true' } });

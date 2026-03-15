@@ -1,6 +1,6 @@
 <div class="main-panel p-4">
     <!-- Header Section -->
-    <div class="premium-card mb-4 header-gradient shadow-sm">
+    <div class="premium-card mb-4 header-gradient shadow-sm p-4">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
             <div class="title-section text-white">
                 <h2 class="m-0 fw-bold">Gestion des Adresses IP</h2>
@@ -10,14 +10,15 @@
             <div class="controls-section d-flex align-items-center gap-3">
                 <form class="d-flex align-items-center" [formGroup]="searchForm" (ngSubmit)="searchIpAddress()">
                     <div class="input-group shadow-sm search-group">
-                        <input type="text" class="form-control border-0 px-3 search-input" formControlName="keyWord" placeholder="Rechercher par label..." title="Terme de recherche">
-                        <button class="btn btn-white border-0 btn-search" type="submit" title="Lancer la recherche">
+                        <input type="text" class="form-control border-0 px-3 search-input bg-white bg-opacity-10 text-white" 
+                            formControlName="keyWord" placeholder="Rechercher par label..." title="Terme de recherche">
+                        <button class="btn btn-glass border-0" type="submit" title="Lancer la recherche">
                             <i class="fa fa-search"></i>
                         </button>
                     </div>
                 </form>
                 <button class="btn btn-glass btn-sm rounded-circle" routerLink="/adminWeb/addIp" title="Nouvelle IP">
-                    <i class="fa fa-plus text-white"></i>
+                    <i class="fa fa-plus"></i>
                 </button>
             </div>
         </div>
@@ -25,109 +26,103 @@
 
     <!-- Table Section -->
     <div class="premium-card p-0 overflow-hidden shadow-sm">
-        <div class="table-responsive table-container-70vh">
-            <table class="table-premium">
-                <thead>
-                    <tr>
-                        <th class="col-id-mini">ID</th>
-                        <th>Label / Usage</th>
-                        <th>Adresse IP / Valeur</th>
-                        <th>Identifiants DB</th>
-                        <th>Nom de Base</th>
-                        <th>Type Conn.</th>
-                        <th>Endpoint / URL</th>
-                        <th class="text-end">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (IpAddres of ips; track IpAddres.idIpAdresse) {
-                        <tr class="align-middle border-bottom border-light">
-                            <td><span class="badge bg-light text-dark small">{{IpAddres.idIpAdresse}}</span></td>
-                            <td class="fw-bold">{{IpAddres.label}}</td>
-                            <td><code>{{IpAddres.value}}</code></td>
-                            <td>
-                                <div class="small fw-medium">{{IpAddres.jdbcUser}}</div>
-                                <div class="small text-secondary opacity-50">*******</div>
-                            </td>
-                            <td><span class="badge bg-primary bg-opacity-10 text-primary">{{IpAddres.dbName}}</span></td>
-                            <td><span class="badge bg-info bg-opacity-10 text-info">{{IpAddres.typeConnection}}</span></td>
-                            <td><div class="small text-truncate col-endpoint-url" title="{{IpAddres.url}}">{{IpAddres.url}}</div></td>
-                            <td class="text-end">
-                                <div class="btn-group gap-2">
-                                    <button class="btn btn-sm btn-outline-warning border-0 p-2" (click)="onSelect(IpAddres)" 
-                                        data-toggle="modal" data-target="#Modalupdate" title="Modifier">
-                                        <i class="fa fa-edit"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    }
-                    @if (ips.length === 0) {
-                        <tr>
-                            <td colspan="8" class="text-center py-5 text-secondary">
-                                <i class="fa fa-network-wired fa-3x opacity-25 mb-2"></i>
-                                <p>Aucune adresse IP trouvée</p>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+        <p-table [value]="ips" [lazy]="true" (onLazyLoad)="pageChanged($event)" 
+            [paginator]="true" [rows]="itemsPerPage" [totalRecords]="bigTotalItems" 
+            [rowsPerPageOptions]="[10,15,30,50]"
+            styleClass="p-datatable-sm p-datatable-gridlines premium-table-custom"
+            responsiveLayout="scroll">
+            
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 80px">ID</th>
+                    <th>Label / Usage</th>
+                    <th>Adresse IP / Valeur</th>
+                    <th>Identifiants DB</th>
+                    <th>Nom de Base</th>
+                    <th>Type Conn.</th>
+                    <th>Endpoint / URL</th>
+                    <th class="text-end" style="width: 100px">Actions</th>
+                </tr>
+            </ng-template>
 
-        <!-- Pagination Footer -->
-        <div class="p-4 bg-light bg-opacity-25 d-flex justify-content-center border-top">
-            <pagination [totalItems]="bigTotalItems" [(ngModel)]="bigCurrentPage" [maxSize]="maxSize"
-                class="premium-pagination shadow-sm" [boundaryLinks]="true" [rotate]="false" [itemsPerPage]="itemsPerPage"
-                (pageChanged)="pageChanged($event)" previousText="‹" nextText="›" firstText="«" lastText="»"></pagination>
-        </div>
+            <ng-template pTemplate="body" let-IpAddres>
+                <tr class="align-middle border-bottom border-light">
+                    <td><span class="badge bg-light text-dark small">{{IpAddres.idIpAdresse}}</span></td>
+                    <td class="fw-bold">{{IpAddres.label}}</td>
+                    <td><code>{{IpAddres.value}}</code></td>
+                    <td>
+                        <div class="small fw-medium">{{IpAddres.jdbcUser}}</div>
+                        <div class="small text-secondary opacity-50">*******</div>
+                    </td>
+                    <td><span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-10">{{IpAddres.dbName}}</span></td>
+                    <td><span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-10">{{IpAddres.typeConnection}}</span></td>
+                    <td><div class="small text-truncate col-endpoint-url" title="{{IpAddres.url}}">{{IpAddres.url}}</div></td>
+                    <td class="text-end">
+                        <button class="btn btn-sm btn-outline-warning border-0 p-2" (click)="onSelect(IpAddres)" 
+                            data-bs-toggle="modal" data-bs-target="#Modalupdate" title="Modifier">
+                            <i class="fa fa-edit fs-5"></i>
+                        </button>
+                    </td>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="8" class="text-center py-5 text-secondary">
+                        <i class="fa fa-network-wired fa-3x opacity-25 mb-2"></i>
+                        <p>Aucune adresse IP trouvée</p>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
     </div>
 </div>
 
 <!-- Modernized Update IP Modal -->
 <div id="Modalupdate" class="modal fade" role="dialog" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content modal-content-rounded">
+        <div class="modal-content modal-content-premium">
             <div class="modal-header header-gradient text-white border-0 p-4">
                 <h5 class="modal-title fw-bold m-0"><i class="fa fa-network-wired me-2"></i> Mise à jour IP</h5>
-                <button type="button" class="btn-close btn-close-white" data-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             
             <form [formGroup]="updateIpForm" (ngSubmit)="updateIpAdress()">
                 <div class="modal-body p-4 bg-light bg-opacity-50">
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <div class="form-floating">
-                                <input type="text" formControlName="label" class="form-control" placeholder="Label">
+                            <div class="form-floating shadow-sm">
+                                <input type="text" formControlName="label" class="form-control border-0" placeholder="Label">
                                 <label>Libellé / Nom</label>
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="form-floating">
-                                <input type="text" formControlName="value" class="form-control" placeholder="IP">
+                            <div class="form-floating shadow-sm">
+                                <input type="text" formControlName="value" class="form-control border-0" placeholder="IP">
                                 <label>Adresse IP (Value)</label>
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="form-floating">
-                                <input type="text" formControlName="jdbcUser" class="form-control" placeholder="User">
+                            <div class="form-floating shadow-sm">
+                                <input type="text" formControlName="jdbcUser" class="form-control border-0" placeholder="User">
                                 <label>Pseudo JDBC</label>
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="form-floating">
-                                <input type="password" formControlName="jdbcPass" class="form-control" placeholder="Pass">
+                            <div class="form-floating shadow-sm">
+                                <input type="password" formControlName="jdbcPass" class="form-control border-0" placeholder="Pass">
                                 <label>Mot de passe JDBC</label>
                             </div>
                         </div>
                         <div class="col-md-8">
-                            <div class="form-floating">
-                                <input type="text" formControlName="url" class="form-control" placeholder="URL">
+                            <div class="form-floating shadow-sm">
+                                <input type="text" formControlName="url" class="form-control border-0" placeholder="URL">
                                 <label>URL de connexion</label>
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <div class="form-floating">
-                                <select formControlName="typeConnection" class="form-select" title="Type de connexion">
+                            <div class="form-floating shadow-sm">
+                                <select formControlName="typeConnection" class="form-select border-0" title="Type de connexion">
                                     @for (type of typeConnection; track type.type) {
                                         <option [value]="type.type">{{type.type}}</option>
                                     }
@@ -136,8 +131,8 @@
                             </div>
                         </div>
                         <div class="col-md-12">
-                            <div class="form-floating">
-                                <input type="text" formControlName="dbName" class="form-control" placeholder="DB">
+                            <div class="form-floating shadow-sm">
+                                <input type="text" formControlName="dbName" class="form-control border-0" placeholder="DB">
                                 <label>Nom de la Base de Données</label>
                             </div>
                         </div>
@@ -145,8 +140,8 @@
                 </div>
                 
                 <div class="modal-footer p-3 bg-white border-0">
-                    <button type="button" class="btn btn-light px-4" data-dismiss="modal">Annuler</button>
-                    <button type="submit" class="btn btn-warning px-5 fw-bold" [disabled]="updateIpForm.invalid" data-dismiss="modal">
+                    <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-warning px-5 fw-bold" [disabled]="updateIpForm.invalid" data-bs-dismiss="modal">
                         Enregistrer
                     </button>
                 </div>

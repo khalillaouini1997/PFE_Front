@@ -25,87 +25,76 @@
 
     <!-- Table Section -->
     <div class="premium-card p-0 overflow-hidden shadow-sm">
-        <div class="table-responsive table-container-70vh">
-            <table class="table-premium">
-                <thead>
-                    <tr>
-                        <th class="col-id-web">ID</th>
-                        <th>Client / Login</th>
-                        <th>Identifiants</th>
-                        <th>Statut Validité</th>
-                        <th>Coordonnées</th>
-                        <th>Région</th>
-                        <th class="text-end">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (loading) {
-                        <tr>
-                            <td colspan="7" class="text-center py-5">
-                                <div class="spinner-border text-primary" role="status">
-                                    <span class="visually-hidden">Chargement...</span>
-                                </div>
-                            </td>
-                        </tr>
-                    }
+        <p-table [value]="comptesWeb" [lazy]="true" (onLazyLoad)="pageChanged($event)" 
+            [paginator]="true" [rows]="itemsPerPage" [totalRecords]="bigTotalItems" 
+            [rowsPerPageOptions]="[10,15,30,50,60]"
+            [loading]="loading"
+            stateStorage="session" stateKey="comptes-web-state"
+            [reorderableColumns]="true" [resizableColumns]="true" columnResizeMode="expand"
+            styleClass="p-datatable-sm p-datatable-gridlines premium-table-custom"
+            responsiveLayout="scroll">
+            
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 70px" pReorderableColumn pResizableColumn>Id</th>
+                    <th pReorderableColumn pResizableColumn>Login</th>
+                    <th pReorderableColumn pResizableColumn>Mot de passe</th>
+                    <th pReorderableColumn pResizableColumn>Créé à</th>
+                    <th pReorderableColumn pResizableColumn>Expiré le</th>
+                    <th pReorderableColumn pResizableColumn>Nom Prenom</th>
+                    <th pReorderableColumn pResizableColumn>Téléphone</th>
+                    <th pReorderableColumn pResizableColumn>Région</th>
+                    <th pReorderableColumn pResizableColumn>Type Client</th>
+                    <th pReorderableColumn pResizableColumn>Red E / j</th>
+                    <th pReorderableColumn pResizableColumn>Red C / m</th>
+                    <th pReorderableColumn pResizableColumn>Red E / m</th>
+                    <th pReorderableColumn pResizableColumn>Red sim / m</th>
+                    <th class="text-end" style="width: 100px">Actions</th>
+                </tr>
+            </ng-template>
 
-                    @for (compteWeb of comptesWeb; track compteWeb.idCompteClientWeb) {
-                        <tr class="align-middle">
-                            <td><span class="badge bg-light text-dark">{{compteWeb.idCompteClientWeb}}</span></td>
-                            <td>
-                                <div class="fw-bold">{{compteWeb.firstname}} {{compteWeb.lastname}}</div>
-                                <div class="small text-primary">{{compteWeb.login}}</div>
-                            </td>
-                            <td>
-                                <div class="small text-secondary">Pass: <code>{{compteWeb.rawPassword}}</code></div>
-                                <div class="small opacity-50">Créé le {{compteWeb.date_creation | date:'dd/MM/yy'}}</div>
-                            </td>
-                            <td>
-                                <div class="small mb-1">Exp: {{compteWeb.date_expiration | date:'dd/MM/yyyy' }}</div>
-                                @if (compteWeb.during) {
-                                    <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3">Actif</span>
-                                }
-                                @if (compteWeb.expired) {
-                                    <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill px-3">Expiré</span>
-                                }
-                            </td>
-                            <td>
-                                <div class="small"><i class="fa fa-phone me-1 opacity-50"></i> {{compteWeb.telephone}}</div>
-                                <div class="small text-truncate admin-username-truncate" title="{{compteWeb.administratorCompte.username}}"><i class="fa fa-user-tie me-1 opacity-50"></i> {{compteWeb.administratorCompte.username}}</div>
-                            </td>
-                            <td><span class="badge bg-info bg-opacity-10 text-info">{{compteWeb.area}}</span></td>
-                            <td class="text-end">
-                                <div class="btn-group gap-2">
-                                    <button class="btn btn-sm btn-outline-primary border-0 p-2" 
-                                        [routerLink]="['/adminWeb/configurations',compteWeb.idCompteClientWeb]" title="Configurer">
-                                        <i class="fa fa-cog"></i>
-                                    </button>
-                                    <button class="btn btn-sm btn-outline-danger border-0 p-2" 
-                                        (click)="onSelect(compteWeb);deleteWebAccount();" title="Supprimer">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    }
-                    
-                    @if (!loading && comptesWeb.length === 0) {
-                        <tr>
-                            <td colspan="7" class="text-center py-5 text-secondary">
-                                <i class="fa fa-globe fa-3x opacity-25 mb-2"></i>
-                                <p>Aucun compte web trouvé</p>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+            <ng-template pTemplate="body" let-compteWeb>
+                <tr class="align-middle">
+                    <td><span class="badge bg-light text-dark">{{compteWeb.idCompteClientWeb}}</span></td>
+                    <td class="fw-bold text-primary">{{compteWeb.login}}</td>
+                    <td><code>{{compteWeb.rawPassword}}</code></td>
+                    <td><span class="small opacity-75">{{compteWeb.date_creation | date:'dd/MM/yyyy'}}</span></td>
+                    <td>
+                        <span class="small" [class.text-danger]="compteWeb.expired" [class.text-success]="compteWeb.during">
+                            {{compteWeb.date_expiration | date:'dd/MM/yyyy'}}
+                        </span>
+                    </td>
+                    <td>{{compteWeb.firstname}} {{compteWeb.lastname}}</td>
+                    <td class="small">{{compteWeb.telephone}}</td>
+                    <td><span class="badge bg-info bg-opacity-10 text-info">{{compteWeb.area}}</span></td>
+                    <td class="small">{{compteWeb.administratorCompte?.username}}</td>
+                    <td class="text-center">{{compteWeb.deviceFeeByDay}}</td>
+                    <td class="text-center">{{compteWeb.accountFeeByMonth}}</td>
+                    <td class="text-center">{{compteWeb.deviceFeePerMonth}}</td>
+                    <td class="text-center">{{compteWeb.simCardFeePerMonth}}</td>
+                    <td class="text-end">
+                        <div class="btn-group gap-1">
+                            <button class="btn btn-sm btn-outline-primary border-0 p-1" 
+                                [routerLink]="['/adminWeb/configurations',compteWeb.idCompteClientWeb]" title="Configurer">
+                                <i class="fa fa-cog"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger border-0 p-1" 
+                                (click)="onSelect(compteWeb);deleteWebAccount();" title="Supprimer">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
 
-        <!-- Pagination Footer -->
-        <div class="p-4 bg-light bg-opacity-25 d-flex justify-content-center border-top">
-            <pagination [hidden]="loading" [totalItems]="bigTotalItems" [(ngModel)]="bigCurrentPage" [maxSize]="maxSize"
-                class="premium-pagination shadow-sm" [boundaryLinks]="true" [rotate]="false" [itemsPerPage]="itemsPerPage"
-                (pageChanged)="pageChanged($event)" previousText="‹" nextText="›" firstText="«" lastText="»"></pagination>
-        </div>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="14" class="text-center py-5 text-secondary">
+                        <i class="fa fa-globe fa-3x opacity-25 mb-2"></i>
+                        <p>Aucun compte web trouvé</p>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
     </div>
 </div>

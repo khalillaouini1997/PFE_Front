@@ -4,18 +4,16 @@ import { IpAddress } from 'src/app/data/data';
 import { IpAddressService } from 'src/app/service/ip-address.service';
 import { catchError } from "rxjs/operators";
 import { of } from "rxjs";
-
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { PaginationModule } from 'ngx-bootstrap/pagination';
-
 import { CommonModule } from '@angular/common';
+import { TableModule } from 'primeng/table';
 
 @Component({
-    selector: 'app-ip-adresse',
-    standalone: true,
-    templateUrl: './ip-adresse.component.html',
-    styleUrls: ['./ip-adresse.component.css'],
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, PaginationModule]
+  selector: 'app-ip-adresse',
+  standalone: true,
+  templateUrl: './ip-adresse.component.html',
+  styleUrls: ['./ip-adresse.component.css'],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TableModule]
 })
 export class IpAdresseComponent implements OnInit {
 
@@ -112,7 +110,10 @@ export class IpAdresseComponent implements OnInit {
   }
 
   public pageChanged(event: any): void {
-    this.bigCurrentPage = event.page;
-    this.getAllIpAddresse(this.searchForm.get('keyWord')?.value, this.bigCurrentPage - 1, this.itemsPerPage);
+    if (event.first !== undefined && event.rows !== undefined) {
+      this.bigCurrentPage = (event.first / event.rows) + 1;
+      this.itemsPerPage = event.rows;
+      this.getAllIpAddresse(this.searchForm.get('keyWord')?.value, this.bigCurrentPage - 1, this.itemsPerPage);
+    }
   }
 }

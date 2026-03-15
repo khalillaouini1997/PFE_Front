@@ -6,15 +6,15 @@ import { BoitierService } from "../../service/boitier.service";
 import { AuthService } from "../../service/auth.service";
 import { ToastrService } from "ngx-toastr";
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DatePipe } from '@angular/common';
-import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { TableModule } from 'primeng/table';
+import { CommonModule, DatePipe, DecimalPipe, NgClass } from '@angular/common';
 
 @Component({
     selector: 'app-compte-server-details',
     standalone: true,
     templateUrl: './compte-server-details.component.html',
     styleUrls: ['./compte-server-details.component.css'],
-    imports: [FormsModule, ReactiveFormsModule, PaginationModule, DatePipe]
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, TableModule, DatePipe, DecimalPipe, NgClass]
 })
 export class CompteServerDetailsComponent implements OnInit, OnDestroy {
   addForm!: FormGroup;
@@ -138,8 +138,11 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
   }
 
   public pageChanged(event: any): void {
-    this.bigCurrentPage = event.page;
-    this.loadBoitierList();
+    if (event.first !== undefined && event.rows !== undefined) {
+      this.bigCurrentPage = (event.first / event.rows) + 1;
+      this.itemsPerPage = event.rows;
+      this.loadBoitierList();
+    }
   }
 
   searchBoitiers() {

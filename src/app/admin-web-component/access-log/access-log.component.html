@@ -1,6 +1,6 @@
 <div class="main-panel p-4">
     <!-- Header Section -->
-    <div class="premium-card mb-4 header-gradient shadow-sm">
+    <div class="premium-card mb-4 header-gradient shadow-sm p-4">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
             <div class="title-section text-white">
                 <h2 class="m-0 fw-bold">Journal d'Accès</h2>
@@ -9,9 +9,10 @@
             
             <div class="controls-section d-flex align-items-center gap-3">
                 <form class="d-flex align-items-center" [formGroup]="searchForm" (ngSubmit)="searchAccess()">
-                    <div class="input-group shadow-sm search-group">
-                        <input type="text" class="form-control border-0 px-3 search-input" formControlName="keyWord" placeholder="Rechercher par login...">
-                        <button class="btn btn-white border-0 btn-search" type="submit" title="Lancer la recherche">
+                    <div class="input-group shadow-sm search-group-premium">
+                        <input type="text" class="form-control border-0 px-3 search-input-premium bg-white bg-opacity-10 text-white" 
+                            formControlName="keyWord" placeholder="Rechercher par login..." title="Rechercher par login">
+                        <button class="btn btn-glass border-0" type="submit" title="Lancer la recherche">
                             <i class="fa fa-search"></i>
                         </button>
                     </div>
@@ -22,56 +23,44 @@
 
     <!-- Table Section -->
     <div class="premium-card p-0 overflow-hidden shadow-sm">
-        <div class="table-responsive log-table-container">
-            <table class="table-premium">
-                <thead>
-                    <tr>
-                        <th class="col-user">Utilisateur Access</th>
-                        <th class="col-date">Date & Heure</th>
-                        <th class="col-ip">Adresse IP</th>
-                        <th class="col-agent">Navigateur / Agent</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (loading) {
-                        <tr>
-                            <td colspan="4" class="text-center py-5">
-                                <div class="spinner-border text-primary" role="status">
-                                    <span class="visually-hidden">Chargement...</span>
-                                </div>
-                            </td>
-                        </tr>
-                    }
+        <p-table [value]="accessLogs" [lazy]="true" (onLazyLoad)="pageChanged($event)" 
+            [paginator]="true" [rows]="itemsPerPage" [totalRecords]="bigTotalItems" 
+            [rowsPerPageOptions]="[10,15,30,50]"
+            [loading]="loading"
+            stateStorage="session" stateKey="access-logs-state"
+            [reorderableColumns]="true" [resizableColumns]="true" columnResizeMode="expand"
+            styleClass="p-datatable-sm p-datatable-gridlines premium-table-custom"
+            responsiveLayout="scroll">
+            
+            <ng-template pTemplate="header">
+                <tr>
+                    <th class="col-user" pReorderableColumn pResizableColumn>Utilisateur Access</th>
+                    <th class="col-date" pReorderableColumn pResizableColumn>Date & Heure</th>
+                    <th class="col-ip" pReorderableColumn pResizableColumn>Adresse IP</th>
+                    <th class="col-agent" pReorderableColumn pResizableColumn>Navigateur / Agent</th>
+                </tr>
+            </ng-template>
 
-                    @for (access of accessLogs; track access.timestamp) {
-                        <tr class="align-middle border-bottom border-light">
-                            <td class="fw-bold text-primary">{{access.login}}</td>
-                            <td>
-                                <div class="fw-medium text-dark">{{access.date | date:'dd MMM yyyy'}}</div>
-                                <div class="small text-secondary">{{access.date | date:'HH:mm:ss'}}</div>
-                            </td>
-                            <td><span class="badge bg-light text-dark border">{{access.ipAddress}}</span></td>
-                            <td><small class="text-secondary font-monospace">{{access.agent}}</small></td>
-                        </tr>
-                    }
-                    
-                    @if (!loading && accessLogs.length === 0) {
-                        <tr>
-                            <td colspan="4" class="text-center py-5 text-secondary">
-                                <i class="fa fa-history fa-3x opacity-25 mb-2"></i>
-                                <p>Aucun journal d'accès trouvé</p>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+            <ng-template pTemplate="body" let-access>
+                <tr class="align-middle border-bottom border-light">
+                    <td class="fw-bold text-primary">{{access.login}}</td>
+                    <td>
+                        <div class="fw-bold text-dark">{{access.date | date:'dd MMM yyyy'}}</div>
+                        <div class="small text-secondary">{{access.date | date:'HH:mm:ss'}}</div>
+                    </td>
+                    <td><span class="badge bg-light text-dark fw-bold border">{{access.ipAddress}}</span></td>
+                    <td><small class="text-secondary font-monospace d-block text-truncate agent-text-trunc" title="{{access.agent}}">{{access.agent}}</small></td>
+                </tr>
+            </ng-template>
 
-        <!-- Pagination Footer -->
-        <div class="p-4 bg-light bg-opacity-25 d-flex justify-content-center border-top">
-            <pagination [hidden]="loading" [totalItems]="bigTotalItems" [(ngModel)]="bigCurrentPage" [maxSize]="maxSize"
-                class="premium-pagination shadow-sm" [boundaryLinks]="true" [rotate]="false" [itemsPerPage]="itemsPerPage"
-                (pageChanged)="pageChanged($event)" previousText="‹" nextText="›" firstText="«" lastText="»"></pagination>
-        </div>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="4" class="text-center py-5 text-secondary">
+                        <i class="fa fa-history fa-3x opacity-25 mb-2"></i>
+                        <p>Aucun journal d'accès trouvé</p>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
     </div>
 </div>

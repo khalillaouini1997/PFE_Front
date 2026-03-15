@@ -7,14 +7,16 @@ import { AuthService } from 'src/app/service/auth.service';
 import { finalize } from "rxjs";
 import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
-import { PaginationModule } from 'ngx-bootstrap/pagination';
+
+
+import { TableModule } from 'primeng/table';
 
 @Component({
-    selector: 'app-compte-admin',
-    standalone: true,
-    templateUrl: './compte-admin.component.html',
-    styleUrls: ['./compte-admin.component.css'],
-    imports: [FormsModule, ReactiveFormsModule, PaginationModule, CommonModule]
+  selector: 'app-compte-admin',
+  standalone: true,
+  templateUrl: './compte-admin.component.html',
+  styleUrls: ['./compte-admin.component.css'],
+  imports: [FormsModule, ReactiveFormsModule, TableModule, CommonModule]
 })
 export class CompteAdminComponent implements OnInit {
   public maxSize: number = 5;
@@ -72,7 +74,10 @@ export class CompteAdminComponent implements OnInit {
   }
 
   public pageChanged(event: any): void {
-    this.bigCurrentPage = event.page;
-    this.getAllAdminComptes(this.searchForm.get('keyWord')?.value, this.bigCurrentPage - 1, this.itemsPerPage);
+    if (event.first !== undefined && event.rows !== undefined) {
+      this.bigCurrentPage = (event.first / event.rows) + 1;
+      this.itemsPerPage = event.rows;
+      this.getAllAdminComptes(this.searchForm.get('keyWord')?.value, this.bigCurrentPage - 1, this.itemsPerPage);
+    }
   }
 }

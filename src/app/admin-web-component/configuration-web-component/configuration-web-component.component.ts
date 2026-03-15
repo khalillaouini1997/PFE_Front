@@ -29,12 +29,14 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { NgMultiSelectDropDownModule, IDropdownSettings } from 'ng-multiselect-dropdown';
 defineLocale('fr', frLocale);
 
+import { TableModule } from 'primeng/table';
+
 @Component({
     selector: 'app-configuration-web-component',
     standalone: true,
     templateUrl: './configuration-web-component.component.html',
     styleUrls: ['./configuration-web-component.component.css'],
-    imports: [CommonModule, ReactiveFormsModule, BsDatepickerModule, NgSelectModule, NgMultiSelectDropDownModule]
+    imports: [CommonModule, ReactiveFormsModule, BsDatepickerModule, NgSelectModule, NgMultiSelectDropDownModule, TableModule, DatePipe]
 })
 export class ConfigurationWebComponentComponent implements OnInit {
 

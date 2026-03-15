@@ -1,99 +1,90 @@
-<div class="col-md-12">
-  <div class="card">
-    <div class="card-header" data-background-color="red">
-
-
-      <div class="row">
-        <div class="col-sm-9">
-          <h4 class="title">Les interventions :</h4>
-        </div>
-        <div class="col-sm-3">
-          <form [formGroup]="vehiculeForm" role="search" style="margin-top:3px;">
-            <div class="is-empty">
-              <span class="control-label" for="compteserver" style="color:#fff1f3;">Etat</span>
-              <select formControlName="selectedState" class="formulaire" name="type" (change)='onSelectState()'>
-                @for (state of states; track state.name) {
-                <option [value]="state.name">{{state.label}}</option>
-                }
-              </select>
+<div class="main-panel p-4">
+    <div class="premium-card mb-4 header-gradient shadow-sm p-4">
+        <div class="row align-items-center">
+            <div class="col-sm-8">
+                <h4 class="title text-white m-0 fw-bold"><i class="fa fa-wrench me-2"></i> Les interventions</h4>
+                <p class="m-0 text-white-50 small opacity-75">Suivi et gestion des interventions techniques</p>
             </div>
-          </form>
+            <div class="col-sm-4">
+                <form [formGroup]="vehiculeForm" class="d-flex align-items-center gap-2 justify-content-end">
+                    <span class="text-white small opacity-75 fw-bold">ÉTAT:</span>
+                    <select formControlName="selectedState" class="form-select form-select-sm border-0 shadow-sm w-auto bg-white bg-opacity-10 text-white" (change)='onSelectState()' title="Filtrer par état">
+                        @for (state of states; track state.name) {
+                            <option [value]="state.name" class="text-dark">{{state.label}}</option>
+                        }
+                    </select>
+                </form>
+            </div>
         </div>
-      </div>
-
     </div>
-    <div class="table-responsive tableFixHead">
-      <table class="table table-bordered table-hover table-sm">
-        <thead>
-          <tr>
-            <th>Boitier </th>
-            <th>Matricule</th>
-            <th>Marque</th>
-            <th>Chauffeur</th>
-            <th>Technicien</th>
-            <th>Ajouté le</th>
-            <th>Traité </th>
-            <th>Traité le</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody style="font-size: 12px;">
 
-          @if (loading) {
-          <tr>
-            <td style="text-align: center" colspan="9">
-              <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
-            </td>
-          </tr>
-          }
+    <div class="premium-card p-0 overflow-hidden shadow-sm">
+        <p-table [value]="vehiculeInfosFiltered" [lazy]="true" (onLazyLoad)="pageChanged($event)" 
+            [paginator]="true" [rows]="itemsPerPage" [totalRecords]="bigTotalItems" 
+            [loading]="loading" [rowsPerPageOptions]="[10,20,30,50]"
+            styleClass="p-datatable-sm p-datatable-gridlines premium-table-custom"
+            responsiveLayout="scroll">
+            
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 120px">Boitier</th>
+                    <th>Matricule</th>
+                    <th>Détails Véhicule</th>
+                    <th>Personnel</th>
+                    <th>Dates</th>
+                    <th>Statut</th>
+                    <th class="text-end" style="width: 100px">Action</th>
+                </tr>
+            </ng-template>
 
-          @for (vehiculeInfo of vehiculeInfosFiltered; track vehiculeInfo.deviceId) {
-          <tr>
-            <td>{{vehiculeInfo.deviceId}}</td>
-            <td>{{vehiculeInfo.matricule}}</td>
-            <td>{{vehiculeInfo.mark}} </td>
-            <td>
-              {{vehiculeInfo.driver}}
-            </td>
-            <td>
-              {{vehiculeInfo.technician}}
-            </td>
-            <td>
-              {{vehiculeInfo.createdAt | date:'dd-MM-yyyy'}}
-            </td>
-            <td>
-              @if (vehiculeInfo.verified) {
-              <span class="label label-success">
-                Traité
-              </span>
-              } @else {
-              <span data-toggle="tooltip" class="label label-danger">
-                non traité
-              </span>
-              }
-            </td>
-            <td>
-              {{vehiculeInfo.verifiedAt | date:'dd-MM-yyyy'}}
-            </td>
-            <td>
-              <button class="btn btn-info btn-xs" style="padding: 0px 8px;font-size: 8px;margin: 1px 0px 0px 0px;"
-                [tooltip]="'Modifier'" Placement="top" (click)='updateIntervention(vehiculeInfo)'> <i class="fa fa-edit"
-                  aria-hidden="true"></i>
-              </button>
-            </td>
+            <ng-template pTemplate="body" let-vehiculeInfo>
+                <tr class="align-middle">
+                    <td><span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-10">{{vehiculeInfo.deviceId}}</span></td>
+                    <td><div class="fw-bold">{{vehiculeInfo.matricule}}</div></td>
+                    <td>
+                        <div class="small">
+                            <div><i class="fa fa-car me-1 opacity-50"></i> {{vehiculeInfo.mark}}</div>
+                            <div class="text-secondary">{{vehiculeInfo.model}}</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="small">
+                            <div title="Chauffeur"><i class="fa fa-user me-1 opacity-50"></i> {{vehiculeInfo.driver}}</div>
+                            <div title="Technicien" class="text-info"><i class="fa fa-tools me-1 opacity-50"></i> {{vehiculeInfo.technician}}</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="small">
+                            <div>Ajout: {{vehiculeInfo.createdAt | date:'dd/MM/yyyy'}}</div>
+                            @if (vehiculeInfo.verifiedAt) {
+                                <div class="text-success opacity-75">Traité: {{vehiculeInfo.verifiedAt | date:'dd/MM/yyyy'}}</div>
+                            }
+                        </div>
+                    </td>
+                    <td>
+                        @if (vehiculeInfo.verified) {
+                            <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3">Traité</span>
+                        } @else {
+                            <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill px-3">En attente</span>
+                        }
+                    </td>
+                    <td class="text-end">
+                        <button class="btn btn-sm btn-outline-info border-0 p-2" 
+                            (click)='updateIntervention(vehiculeInfo)' title="Marquer comme traité">
+                            <i class="fa fa-check-circle fs-5"></i>
+                        </button>
+                    </td>
+                </tr>
+            </ng-template>
 
-          </tr>
-          }
-        </tbody>
-      </table>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="7" class="text-center py-5 text-secondary">
+                        <i class="fa fa-check-square fa-3x opacity-25 mb-2"></i>
+                        <p>Aucune intervention trouvée</p>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
     </div>
-  </div>
-</div>
-<div>
-</div>
-<div class="col-md-12 text-center">
-  <pagination [hidden]="loading" [totalItems]="bigTotalItems" [(ngModel)]="bigCurrentPage" [maxSize]="maxSize"
-    class="pagination-sm" [boundaryLinks]="true" [rotate]="false" [itemsPerPage]="itemsPerPage"
-    (pageChanged)="pageChanged($event)" previousText="Précédent" nextText="Suivant" firstText="Premier"
-    lastText="Dernier"></pagination>
 </div>

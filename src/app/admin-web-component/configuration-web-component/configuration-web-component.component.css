@@ -159,6 +159,11 @@ table>thead>tr>th,
   vertical-align: middle;
 }
 
+.notification-scroll {
+    max-height: 150px;
+    overflow-y: auto;
+}
+
 
 .title {
   margin-top: 0px;

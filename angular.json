@@ -32,6 +32,7 @@
             ],
             "styles": [
               "src/styles.scss",
+              "node_modules/primeicons/primeicons.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/assets/css/yaozl.css",
               "src/assets/css/style.css",

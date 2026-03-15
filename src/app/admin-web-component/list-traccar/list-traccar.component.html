@@ -1,55 +1,55 @@
-<div class="col-md-12">
-  <div class="card">
-    <div class="card-header" data-background-color="red">
-      <div class="row">
-        <div class="col-sm-8">
-          <h4 class="title">Liste des Trracars</h4>
-        </div>
-        <div class="col-sm-4">
-          <form class="navbar-form navbar-right" role="search" style="margin:0;" [formGroup]="searchForm"
-            (ngSubmit)="searchWebAccount()">
-            <div class="form-group is-empty">
-              <input type="text" class="form-control" formControlName="keyWord" placeholder="Rechercher..."
-                style="margin:0;color:white;">
-              <span class="material-input"></span>
+<div class="main-panel p-4">
+    <div class="premium-card mb-4 header-gradient shadow-sm p-4">
+        <div class="row align-items-center">
+            <div class="col-sm-6">
+                <h4 class="title text-white m-0 fw-bold"><i class="fa fa-server me-2"></i> Liste des Trracars</h4>
+                <p class="m-0 text-white-50 small opacity-75">Gestion des instances Traccar</p>
             </div>
-            <button type="submit" class="btn btn-white btn-sm" title="Rechercher"
-              style="margin: 0px; padding: 1px 5px; margin: 0px 0px 0px 0px;"><i class="fa fa-search"
-                style="font-size: 14px"></i>
-              Rechercher</button>
-          </form>
+            <div class="col-sm-6">
+                <form [formGroup]="searchForm" (ngSubmit)="searchWebAccount()" class="d-flex justify-content-end gap-2">
+                    <div class="input-group input-group-sm w-auto">
+                        <input type="text" class="form-control border-0 shadow-sm px-3 bg-white bg-opacity-10 text-white search-input-fancy" 
+                            formControlName="keyWord" placeholder="Rechercher...">
+                        <button class="btn btn-glass px-3 border-0" type="submit" title="Rechercher">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
-      </div>
     </div>
 
-    <div class="table-responsive tableFixHead">
-      <table class="table table-bordered table-hover table-sm">
-        <thead>
-          <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Imei</th>
-          </tr>
-        </thead>
-        <tbody style="font-size: 12px;">
+    <div class="premium-card p-0 overflow-hidden shadow-sm">
+        <p-table [value]="traccarDtos" [paginator]="true" [rows]="15" 
+            [globalFilterFields]="['name', 'imei']"
+            [rowsPerPageOptions]="[10,15,30,50]"
+            styleClass="p-datatable-sm p-datatable-gridlines premium-table-custom"
+            responsiveLayout="scroll">
+            
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="id" style="width: 100px">ID <p-sortIcon field="id"></p-sortIcon></th>
+                    <th pSortableColumn="name">Nom <p-sortIcon field="name"></p-sortIcon></th>
+                    <th pSortableColumn="imei">IMEI <p-sortIcon field="imei"></p-sortIcon></th>
+                </tr>
+            </ng-template>
 
-          @if (loading) {
-          <tr>
-            <td style="text-align: center" colspan="7">
-              <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
-            </td>
-          </tr>
-          }
+            <ng-template pTemplate="body" let-trac>
+                <tr class="align-middle">
+                    <td><span class="badge bg-light text-dark">{{trac.id}}</span></td>
+                    <td class="fw-bold">{{trac.name}}</td>
+                    <td><code>{{trac.imei}}</code></td>
+                </tr>
+            </ng-template>
 
-          @for (trac of traccarDtos; track trac.id) {
-          <tr class="cl">
-            <td>{{trac.id}}</td>
-            <td>{{trac.name}}</td>
-            <td>{{trac.imei}}</td>
-          </tr>
-          }
-        </tbody>
-      </table>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="3" class="text-center py-5 text-secondary">
+                        <i class="fa fa-search fa-3x opacity-25 mb-2"></i>
+                        <p>Aucun Traccar trouvé</p>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
     </div>
-  </div>
 </div>

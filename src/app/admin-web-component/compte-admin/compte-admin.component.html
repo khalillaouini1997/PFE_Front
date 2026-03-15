@@ -1,6 +1,6 @@
 <div class="main-panel p-4">
     <!-- Header Section -->
-    <div class="premium-card mb-4 header-gradient shadow-sm">
+    <div class="premium-card mb-4 header-gradient shadow-sm p-4">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
             <div class="title-section text-white">
                 <h2 class="m-0 fw-bold">Comptes Administrateurs</h2>
@@ -9,15 +9,16 @@
             
             <div class="controls-section d-flex align-items-center gap-3">
                 <form class="d-flex align-items-center" [formGroup]="searchForm" (ngSubmit)="searchWebAccount()">
-                    <div class="input-group shadow-sm search-group">
-                        <input type="text" class="form-control border-0 px-3 search-input" formControlName="keyWord" placeholder="Rechercher un admin...">
-                        <button class="btn btn-white border-0 btn-search" type="submit" title="Lancer la recherche">
+                    <div class="input-group shadow-sm search-container-premium">
+                        <input type="text" class="form-control border-0 px-3 search-input-premium bg-white bg-opacity-10 text-white" 
+                            formControlName="keyWord" placeholder="Rechercher un admin..." title="Rechercher un admin">
+                        <button class="btn btn-glass border-0" type="submit" title="Lancer la recherche">
                             <i class="fa fa-search"></i>
                         </button>
                     </div>
                 </form>
                 <button class="btn btn-glass btn-sm rounded-circle" routerLink="/adminWeb/addAdminCompte" title="Ajouter un administrateur">
-                    <i class="fa fa-plus text-white"></i>
+                    <i class="fa fa-plus"></i>
                 </button>
             </div>
         </div>
@@ -25,93 +26,81 @@
 
     <!-- Table Section -->
     <div class="premium-card p-0 overflow-hidden shadow-sm">
-        <div class="table-responsive table-container-70vh">
-            <table class="table-premium">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Utilisateur</th>
-                        <th>Mot de passe</th>
-                        <th>Dernier Boitier</th>
-                        <th>Rôle</th>
-                        <th>ID Traccar</th>
-                        <th>Notifications (FCM)</th>
-                        <th>Support Mail</th>
-                        <th class="text-end">Coûts & Frais</th>
-                        <th class="text-end">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (loading) {
-                        <tr>
-                            <td colspan="10" class="text-center py-5">
-                                <div class="spinner-border text-primary" role="status">
-                                    <span class="visually-hidden">Chargement...</span>
-                                </div>
-                            </td>
-                        </tr>
-                    }
+        <p-table [value]="adminComptes" [lazy]="true" (onLazyLoad)="pageChanged($event)" 
+            [paginator]="true" [rows]="itemsPerPage" [totalRecords]="bigTotalItems" 
+            [rowsPerPageOptions]="[10,15,30,50]"
+            [loading]="loading"
+            stateStorage="session" stateKey="admin-comptes-state"
+            [reorderableColumns]="true" [resizableColumns]="true" columnResizeMode="expand"
+            styleClass="p-datatable-sm p-datatable-gridlines premium-table-custom"
+            responsiveLayout="scroll">
+            
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 80px" pReorderableColumn pResizableColumn>ID</th>
+                    <th pReorderableColumn pResizableColumn>Utilisateur</th>
+                    <th pReorderableColumn pResizableColumn>Mot de passe</th>
+                    <th pReorderableColumn pResizableColumn>Dernier Boitier</th>
+                    <th pReorderableColumn pResizableColumn>Rôle</th>
+                    <th pReorderableColumn pResizableColumn>ID Traccar</th>
+                    <th pReorderableColumn pResizableColumn>Notifications (FCM)</th>
+                    <th pReorderableColumn pResizableColumn>Support Mail</th>
+                    <th class="text-end" style="width: 150px" pReorderableColumn pResizableColumn>Coûts & Frais</th>
+                    <th class="text-end" style="width: 100px">Actions</th>
+                </tr>
+            </ng-template>
 
-                    @for (adminCompte of adminComptes; track adminCompte.idAdministratorCompte) {
-                        <tr class="align-middle">
-                            <td><span class="badge bg-light text-dark">{{adminCompte.idAdministratorCompte}}</span></td>
-                            <td class="fw-bold">{{adminCompte.username}}</td>
-                            <td><code class="small">{{adminCompte.password}}</code></td>
-                            <td><span class="badge bg-primary bg-opacity-10 text-primary">{{adminCompte.numLastBoitierAvailable}}</span></td>
-                            <td>
-                                <span class="badge rounded-pill px-3" [ngClass]="{
-                                    'bg-danger bg-opacity-10 text-danger': adminCompte.role === 'GLOBALADMIN',
-                                    'bg-info bg-opacity-10 text-info': adminCompte.role === 'AGENT',
-                                    'bg-secondary bg-opacity-10 text-secondary': !adminCompte.role.includes('ADMIN')
-                                }">
-                                    {{adminCompte.role}}
-                                </span>
-                            </td>
-                            <td>{{adminCompte.idTraccar || '—'}}</td>
-                            <td class="small">
-                                @if (adminCompte.useFcm) {
-                                    <div class="text-success"><i class="fa fa-check-circle me-1"></i> Fcm Active</div>
-                                    <div class="opacity-50">Prf: {{adminCompte.fcmPrefix}}</div>
-                                } @else {
-                                    <div class="text-secondary opacity-50"><i class="fa fa-minus-circle me-1"></i> Off</div>
-                                }
-                            </td>
-                            <td class="small">{{adminCompte.mailSupport || '—'}}</td>
-                            <td class="text-end small">
-                                <div>Cost: <strong>{{adminCompte.deviceCostByDay}}</strong>/j</div>
-                                <div>Free: <strong>{{adminCompte.accountFreePerMonth}}</strong>/m</div>
-                                <div>Fee: <strong>{{adminCompte.transctionFee}}</strong>%</div>
-                            </td>
-                            <td class="text-end">
-                                <div class="btn-group gap-1">
-                                    <button class="btn btn-sm btn-outline-primary border-0" title="Modifier">
-                                        <i class="fa fa-edit"></i>
-                                    </button>
-                                    <button class="btn btn-sm btn-outline-danger border-0" title="Supprimer">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    }
-                    
-                    @if (!loading && adminComptes.length === 0) {
-                        <tr>
-                            <td colspan="10" class="text-center py-5 text-secondary">
-                                <i class="fa fa-users fa-3x opacity-25 mb-2"></i>
-                                <p>Aucun compte administrateur trouvé</p>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+            <ng-template pTemplate="body" let-adminCompte>
+                <tr class="align-middle">
+                    <td><span class="badge bg-light text-dark fw-bold border">{{adminCompte.idAdministratorCompte}}</span></td>
+                    <td class="fw-bold text-primary">{{adminCompte.username}}</td>
+                    <td><code class="small">{{adminCompte.password}}</code></td>
+                    <td><span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-10">{{adminCompte.numLastBoitierAvailable}}</span></td>
+                    <td>
+                        <span class="badge rounded-pill px-3" [ngClass]="{
+                            'bg-danger bg-opacity-10 text-danger border border-danger border-opacity-10': adminCompte.role === 'GLOBALADMIN',
+                            'bg-info bg-opacity-10 text-info border border-info border-opacity-10': adminCompte.role === 'AGENT',
+                            'bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-10': !adminCompte.role.includes('ADMIN')
+                        }">
+                            {{adminCompte.role}}
+                        </span>
+                    </td>
+                    <td>{{adminCompte.idTraccar || '—'}}</td>
+                    <td class="small">
+                        @if (adminCompte.useFcm) {
+                            <div class="text-success fw-bold"><i class="fa fa-check-circle me-1"></i> Fcm Active</div>
+                            <div class="opacity-50">Prf: {{adminCompte.fcmPrefix}}</div>
+                        } @else {
+                            <div class="text-secondary opacity-50"><i class="fa fa-minus-circle me-1"></i> Off</div>
+                        }
+                    </td>
+                    <td class="small">{{adminCompte.mailSupport || '—'}}</td>
+                    <td class="text-end small">
+                        <div>Cost: <strong class="text-dark">{{adminCompte.deviceCostByDay}}</strong>/j</div>
+                        <div>Free: <strong class="text-dark">{{adminCompte.accountFreePerMonth}}</strong>/m</div>
+                        <div>Fee: <strong class="text-dark">{{adminCompte.transctionFee}}</strong>%</div>
+                    </td>
+                    <td class="text-end">
+                        <div class="btn-group gap-2">
+                            <button class="btn btn-sm btn-outline-warning border-0 p-2" title="Modifier">
+                                <i class="fa fa-edit fs-5"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger border-0 p-2" title="Supprimer">
+                                <i class="fa fa-trash fs-5"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
 
-        <!-- Pagination Footer -->
-        <div class="p-4 bg-light bg-opacity-25 d-flex justify-content-center border-top">
-            <pagination [hidden]="loading" [totalItems]="bigTotalItems" [(ngModel)]="bigCurrentPage" [maxSize]="maxSize"
-                class="premium-pagination shadow-sm" [boundaryLinks]="true" [rotate]="false" [itemsPerPage]="itemsPerPage"
-                (pageChanged)="pageChanged($event)" previousText="‹" nextText="›" firstText="«" lastText="»"></pagination>
-        </div>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="10" class="text-center py-5 text-secondary">
+                        <i class="fa fa-users fa-3x opacity-25 mb-2"></i>
+                        <p>Aucun compte administrateur trouvé</p>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
     </div>
 </div>

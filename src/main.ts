@@ -9,7 +9,9 @@ import { provideRouter } from '@angular/router'; // Removed withHashLocation if 
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { providePrimeNG } from 'primeng/config';
+import Aura from '@primeng/themes/aura';
+
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
@@ -27,7 +29,6 @@ bootstrapApplication(AppComponent, {
     provideRouter(routes), // Hash location was false in original config
     importProvidersFrom(
       FormsModule,
-      PaginationModule,
       BsDatepickerModule.forRoot(),
       TooltipModule.forRoot(),
       NgOptimizedImage,
@@ -37,7 +38,16 @@ bootstrapApplication(AppComponent, {
       NgMultiSelectDropDownModule.forRoot()
     ),
     provideHttpClient(withInterceptors([authInterceptor])),
-    provideAnimations()
+    provideAnimations(),
+    providePrimeNG({
+        theme: {
+            preset: Aura,
+            options: {
+                darkModeSelector: 'none'
+            }
+        },
+        ripple: true
+    })
   ]
 })
   .catch(err => console.error(err));

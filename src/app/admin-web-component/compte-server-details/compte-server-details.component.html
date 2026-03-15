@@ -96,67 +96,92 @@
                 </div>
             </form>
         </div>
+        
+        <p-table [value]="boitiers" [lazy]="true" (onLazyLoad)="pageChanged($event)" 
+            [paginator]="true" [rows]="itemsPerPage" [totalRecords]="bigTotalItems" 
+            [rowsPerPageOptions]="[10,15,30,50]"
+            styleClass="p-datatable-sm p-datatable-gridlines premium-table-custom"
+            responsiveLayout="scroll">
+            
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 100px">Statut</th>
+                    <th>Terminal</th>
+                    <th>Étiquette</th>
+                    <th>Coordonnées</th>
+                    <th>Vitesse</th>
+                    <th>Dernière Trame</th>
+                    <th class="text-end" style="width: 150px">Actions</th>
+                </tr>
+            </ng-template>
 
-        <div class="table-responsive table-container-60vh">
-            <table class="table-premium">
-                <thead>
-                    <tr>
-                        <th class="col-id-boitier">ID</th>
-                        <th>Identifiant Logiciel (Label)</th>
-                        <th>ID Matériel (Device)</th>
-                        <th>Dernière Trame (GPS)</th>
-                        <th>Coordonnées (Lat/Lon)</th>
-                        <th>Vitesse</th>
-                        <th>État</th>
-                        <th class="text-end">Trame Brute</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (boitier of boitiers; track boitier.idBoitier) {
-                        <tr class="align-middle border-bottom border-light">
-                            <td><span class="badge bg-light text-dark small">{{boitier.idBoitier}}</span></td>
-                            <td class="fw-bold">{{boitier.label}}</td>
-                            <td><span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 rounded-pill px-3">{{boitier.numBoitier}}</span></td>
-                            <td class="small">{{boitier.dateLastTrame | date:'dd/MM/yyyy HH:mm'}}</td>
-                            <td class="small font-monospace text-secondary">
-                                <div class="text-nowrap">{{boitier.latitude || '—'}}</div>
-                                <div class="text-nowrap">{{boitier.longitude || '—'}}</div>
-                            </td>
-                            <td><span class="badge bg-dark rounded-pill">{{boitier.vitesse}} <small>km/h</small></span></td>
-                            <td>
-                                @if (boitier.stat) {
-                                    <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-3"><i class="fa fa-check me-1"></i> Installé</span>
-                                } @else {
-                                    <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 rounded-pill px-3"><i class="fa fa-times me-1"></i> Libre</span>
-                                }
-                            </td>
-                            <td class="text-end">
-                                <div class="small opacity-50 text-nowrap" title="GPS Trame">G: {{boitier.gpsLastTrame || '—'}}</div>
-                                <div class="small opacity-50 text-nowrap" title="GSM Trame">S: {{boitier.gsmLastTrame || '—'}}</div>
-                            </td>
-                        </tr>
-                    }
-                    @if (boitiers.length === 0) {
-                        <tr>
-                            <td colspan="8" class="text-center py-5 text-secondary">
-                                <i class="fa fa-microchip fa-3x opacity-25 mb-2"></i>
-                                <p>Aucun terminal trouvé</p>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+            <ng-template pTemplate="body" let-boitier>
+                <tr class="align-middle">
+                    <td>
+                        <div class="form-check form-switch d-flex justify-content-center">
+                            <input class="form-check-input custom-switch-lg" type="checkbox" role="switch" 
+                                [(ngModel)]="boitier.stat" 
+                                [disabled]="boitier.etatBoitier === 'INSTALLED'"
+                                (change)="changeBoitierStatus(boitier)"
+                                title="Changer le statut">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="fw-bold text-primary">{{boitier.numBoitier}}</div>
+                        <div class="small text-secondary">{{boitier.typeTerminal}}</div>
+                    </td>
+                    <td>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="badge bg-light text-dark">{{boitier.label || 'Sans étiquette'}}</span>
+                        </div>
+                    </td>
+                    <td>
+                        @if (boitier.latitude && boitier.longitude) {
+                            <div class="small">
+                                <div class="text-truncate location-text-premium" title="{{boitier.emplacement}}">
+                                    <i class="fa fa-map-marker text-danger me-1"></i> {{boitier.emplacement || 'Localisation...'}}
+                                </div>
+                                <div class="text-secondary opacity-75">{{boitier.latitude | number:'.4-4'}}, {{boitier.longitude | number:'.4-4'}}</div>
+                            </div>
+                        } @else {
+                            <span class="text-secondary small italic">Aucun signal</span>
+                        }
+                    </td>
+                    <td>
+                        <span [ngClass]="boitier.vitesse > 0 ? 'text-success fw-bold' : 'text-secondary text-opacity-25'">
+                            {{boitier.vitesse || 0}} km/h
+                        </span>
+                    </td>
+                    <td>
+                        <div class="small">
+                            <div [ngClass]="{'text-danger': (boitier.dateLastTrame | date:'ddMMyy') !== ( 'now' | date:'ddMMyy' )}">
+                                {{boitier.dateLastTrame | date:'dd/MM HH:mm:ss'}}
+                            </div>
+                            <div class="d-flex gap-2 mt-1 opacity-75">
+                                <span title="GPS"><i class="fa fa-satellite" [ngClass]="boitier.gpsLastTrame ? 'text-primary' : 'text-secondary'"></i></span>
+                                <span title="GSM"><i class="fa fa-signal" [ngClass]="boitier.gsmLastTrame ? 'text-info' : 'text-secondary'"></i></span>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-end">
+                        <button class="btn btn-sm btn-outline-primary border-0" 
+                            data-bs-toggle="modal" data-bs-target="#ModalupdateBoitier"
+                            (click)="onSelect(boitier)">
+                            <i class="fa fa-edit me-1"></i> Étiqueter
+                        </button>
+                    </td>
+                </tr>
+            </ng-template>
 
-        <!-- Pagination Footer -->
-        <div class="p-4 bg-light bg-opacity-25 border-top" [formGroup]="paginationForm">
-            <div class="d-flex justify-content-center">
-                <pagination [totalItems]="bigTotalItems" formControlName="bigCurrentPage" [maxSize]="maxSize"
-                    class="premium-pagination shadow-sm" [boundaryLinks]="true" [rotate]="false" [itemsPerPage]="itemsPerPage"
-                    (pageChanged)="pageChanged($event)" previousText="‹" nextText="›" firstText="«" lastText="»">
-                </pagination>
-            </div>
-        </div>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="7" class="text-center py-5 text-secondary">
+                        <i class="fa fa-microchip fa-3x opacity-25 mb-2"></i>
+                        <p>Aucun terminal trouvé</p>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
     </div>
 </div>
 
@@ -166,7 +191,7 @@
         <div class="modal-content modal-content-premium">
             <div class="modal-header header-gradient text-white border-0 p-4">
                 <h5 class="modal-title fw-bold m-0"><i class="fa fa-edit me-2"></i> Modifier le Terminal</h5>
-                <button type="button" class="btn-close btn-close-white" data-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             
             <form [formGroup]="updateForm">
@@ -179,8 +204,8 @@
                 </div>
                 
                 <div class="modal-footer p-3 bg-white border-0">
-                    <button type="button" class="btn btn-light px-4" data-dismiss="modal">Annuler</button>
-                    <button type="button" class="btn btn-warning px-5 fw-bold" (click)="updateBoitier()" [disabled]="!updateForm.valid" data-dismiss="modal">
+                    <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-warning px-5 fw-bold" (click)="updateBoitier()" [disabled]="!updateForm.valid" data-bs-dismiss="modal">
                         Mettre à jour
                     </button>
                 </div>

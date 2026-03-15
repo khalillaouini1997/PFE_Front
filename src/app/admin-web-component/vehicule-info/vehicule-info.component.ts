@@ -6,14 +6,16 @@ import { VehiculeService } from "../../service/vehicule.service";
 import { finalize } from "rxjs";
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
-import { PaginationModule } from 'ngx-bootstrap/pagination';
+
+
+import { TableModule } from 'primeng/table';
 
 @Component({
-    selector: 'app-vehicule-info',
-    standalone: true,
-    templateUrl: './vehicule-info.component.html',
-    styleUrls: ['./vehicule-info.component.css'],
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, TooltipModule, PaginationModule]
+  selector: 'app-vehicule-info',
+  standalone: true,
+  templateUrl: './vehicule-info.component.html',
+  styleUrls: ['./vehicule-info.component.css'],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TableModule, DatePipe]
 })
 export class VehiculeInfoComponent implements OnInit {
 
@@ -65,8 +67,11 @@ export class VehiculeInfoComponent implements OnInit {
   }
 
   public pageChanged(event: any): void {
-    this.bigCurrentPage = event.page;
-    this.getVehiculeInfo(this.bigCurrentPage - 1, this.itemsPerPage);
+    if (event.first !== undefined && event.rows !== undefined) {
+      this.bigCurrentPage = (event.first / event.rows) + 1;
+      this.itemsPerPage = event.rows;
+      this.getVehiculeInfo(this.bigCurrentPage - 1, this.itemsPerPage);
+    }
   }
 
   updateIntervention(vehiculeInfo: InterventionInfo) {

@@ -1,4 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
 @import 'leaflet/dist/leaflet.css';
 @import 'leaflet.markercluster/dist/MarkerCluster.css';
 @import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
@@ -10,7 +12,7 @@
   --primary-light: #818cf8;
   --secondary: #a855f7;
   --accent: #ec4899;
-  
+
   /* Semantic Colors */
   --success: #10b981;
   --warning: #f59e0b;
@@ -22,7 +24,7 @@
   --surface: rgba(255, 255, 255, 0.8);
   --glass-bg: rgba(255, 255, 255, 0.7);
   --glass-border: rgba(255, 255, 255, 0.3);
-  
+
   /* Modern Shadows */
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
@@ -37,12 +39,13 @@
 }
 
 body {
-    font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-    min-height: 100vh;
-    color: #1e293b;
-    margin: 0;
-    -webkit-font-smoothing: antialiased;
+  font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  min-height: 100vh;
+  color: #1e293b;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  font-size: 1rem;
 }
 
 /* Glassmorphism Utilities */
@@ -72,41 +75,89 @@ body {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0 0.5rem;
-  
+
   thead th {
     background: transparent;
     border: none;
     color: #64748b;
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     padding: 1rem;
+    border-right: 1px solid rgba(0, 0, 0, 0.05);
+
+    &:last-child {
+      border-right: none;
+    }
   }
-  
+
   tbody tr {
     background: white;
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-sm);
     transition: all 0.2s ease;
-    
+
     td {
       padding: 1rem;
       border: none;
-      &:first-child { border-radius: var(--radius-md) 0 0 var(--radius-md); }
-      &:last-child { border-radius: 0 var(--radius-md) var(--radius-md) 0; }
+      font-size: 0.95rem;
+      border-right: 1px solid rgba(0, 0, 0, 0.05);
+
+      &:first-child {
+        border-radius: var(--radius-md) 0 0 var(--radius-md);
+      }
+
+      &:last-child {
+        border-radius: 0 var(--radius-md) var(--radius-md) 0;
+        border-right: none;
+      }
     }
-    
+
     &:hover {
       background: #f1f5f9;
-      transform: scale(1.01);
+      transform: scale(1.005);
     }
   }
+}
+
+/* PrimeNG Table Premium Customization */
+.premium-table-custom.p-datatable {
+    .p-datatable-thead > tr > th {
+        background: rgba(248, 250, 252, 0.7) !important;
+        color: #64748b !important;
+        font-size: 1.1rem !important;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border-bottom: 2px solid var(--primary-light);
+    }
+
+    .p-datatable-tbody > tr {
+        background: white !important;
+        color: #1e293b !important;
+        transition: all 0.2s ease;
+        
+        &:hover {
+            background: #f1f5f9 !important;
+        }
+
+        > td {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            padding: 1rem;
+            font-size: 1.15rem !important;
+        }
+    }
+
+    .p-paginator {
+        background: white !important;
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        padding: 0.75rem;
+    }
 }
 
 .table-fixed-header {
   max-height: 600px;
   overflow-y: auto;
-  
+
   thead {
     position: sticky;
     top: 0;
@@ -133,18 +184,26 @@ body {
   background: #94a3b8;
 }
 
-/* Animated Gradient Background for Headers */
+/* Premium Animated Gradient Background for Headers */
 .header-gradient {
   background: linear-gradient(-45deg, #6366f1, #a855f7, #ec4899, #3b82f6);
   background-size: 400% 400%;
-  animation: gradient 15s ease infinite;
-  color: white;
+  animation: premium-gradient 15s ease infinite;
+  color: white !important;
+  border-bottom: none;
 }
 
-@keyframes gradient {
+@keyframes premium-gradient {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
+}
+
+.header-gradient h2, 
+.header-gradient p,
+.header-gradient .text-white,
+.header-gradient .text-white-50 {
+    color: white !important;
 }
 
 /* Premium Buttons */
@@ -155,6 +214,7 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.4);
   color: white;
   transition: all 0.2s;
+
   &:hover {
     background: rgba(255, 255, 255, 0.3);
     border-color: rgba(255, 255, 255, 0.6);
@@ -168,6 +228,7 @@ body {
   border: none;
   font-weight: 600;
   transition: all 0.2s;
+
   &:hover {
     background: var(--bg-main);
     transform: translateY(-2px);
@@ -179,13 +240,16 @@ body {
 .premium-pagination {
   .page-item {
     margin: 0 2px;
+
     .page-link {
       border: none;
       border-radius: 8px;
       color: var(--primary);
       padding: 0.5rem 0.75rem;
       transition: all 0.2s;
-      &.active, &:hover {
+
+      &.active,
+      &:hover {
         background: var(--primary);
         color: white;
       }
@@ -199,8 +263,13 @@ body {
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .fade-in {
@@ -208,12 +277,19 @@ body {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Form Styles */
-.form-floating > .form-control {
+.form-floating>.form-control {
   height: calc(3.5rem + 2px);
   padding: 1rem 0.75rem;
   border: 1px solid #e2e8f0;
@@ -221,14 +297,14 @@ body {
   background: #f8fafc;
 }
 
-.form-floating > label {
+.form-floating>label {
   padding: 1rem 0.75rem;
   transition: all 0.2s ease;
   color: #64748b;
 }
 
-.form-floating > .form-control:focus ~ label,
-.form-floating > .form-control:not(:placeholder-shown) ~ label {
+.form-floating>.form-control:focus~label,
+.form-floating>.form-control:not(:placeholder-shown)~label {
   transform: scale(0.8) translateY(-1.1rem) translateX(0.15rem);
   color: var(--primary);
   opacity: 1;
@@ -237,29 +313,29 @@ body {
   height: auto;
 }
 
-.form-floating > .form-control:focus,
-.form-floating > .form-control:not(:placeholder-shown) {
+.form-floating>.form-control:focus,
+.form-floating>.form-control:not(:placeholder-shown) {
   padding-top: 1.625rem;
   padding-bottom: 0.625rem;
   background: white;
   border-color: var(--primary-light);
 }
 
-.form-select:focus, .form-control:focus {
+.form-select:focus,
+.form-control:focus {
   box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
 }
 
 .scale-125 {
-    transform: scale(1.25);
+  transform: scale(1.25);
 }
 
 /* Override legacy material-dashboard.css .main-panel rules */
 .main-panel {
-    width: 100% !important;
-    float: none !important;
-    position: relative;
-    min-height: 0;
-    overflow: visible;
-    transform: none !important;
+  width: 100% !important;
+  float: none !important;
+  position: relative;
+  min-height: 0;
+  overflow: visible;
+  transform: none !important;
 }
-

@@ -7,16 +7,17 @@ import { CompteServerService } from "../../service/compte-server.service";
 import { IpAddressService } from "../../service/ip-address.service";
 import { AuthService } from "../../service/auth.service";
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { CommonModule } from '@angular/common';
+
+import { TableModule } from 'primeng/table';
 
 @Component({
   selector: 'app-comptes-server-component',
   standalone: true,
   templateUrl: './comptes-server-component.component.html',
   styleUrls: ['./comptes-server-component.component.css'],
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, PaginationModule, BsDatepickerModule]
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, TableModule, BsDatepickerModule]
 })
 export class ComptesServerComponentComponent implements OnInit {
   private readonly cdr = inject(ChangeDetectorRef);
@@ -73,8 +74,11 @@ export class ComptesServerComponentComponent implements OnInit {
   }
 
   public pageChanged(event: any): void {
-    this.bigCurrentPage = event.page;
-    this.getAllcompteServer(this.searchForm.get('keyWord')?.value || "", this.bigCurrentPage - 1, this.itemsPerPage);
+    if (event.first !== undefined && event.rows !== undefined) {
+      this.bigCurrentPage = (event.first / event.rows) + 1;
+      this.itemsPerPage = event.rows;
+      this.getAllcompteServer(this.searchForm.get('keyWord')?.value || "", this.bigCurrentPage - 1, this.itemsPerPage);
+    }
   }
 
   getAllcompteServer(keyWord: string, page: number, size: number) {

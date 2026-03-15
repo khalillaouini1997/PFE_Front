@@ -45,7 +45,7 @@
     min-height: 300px;
 }
 
-/* Table overrides */
+/* Table specific overrides handled by styles.scss */
 .cursor-pointer {
     cursor: pointer;
 }
@@ -110,6 +110,3 @@
     color: var(--primary);
 }
 
-.dash-pagesize-select {
-    width: auto;
-}

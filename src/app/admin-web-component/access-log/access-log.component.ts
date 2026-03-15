@@ -1,19 +1,19 @@
 import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule, DatePipe } from '@angular/common';
 import { AccessLog } from 'src/app/data/data';
 import { AccessLogService } from 'src/app/service/access-log.service';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
-import { DatePipe } from '@angular/common';
-import { PaginationModule } from 'ngx-bootstrap/pagination';
-import { AdminAccountService } from 'src/app/service/admin-account.service'; // Assuming this service exists
-import { AuthService } from 'src/app/service/auth.service'; // Assuming this service exists
-import { Router } from '@angular/router'; // Assuming this is needed for router
+import { AdminAccountService } from 'src/app/service/admin-account.service';
+import { AuthService } from 'src/app/service/auth.service';
+import { Router } from '@angular/router';
+import { TableModule } from 'primeng/table';
 
 @Component({
     selector: 'app-access-log',
     standalone: true,
     templateUrl: './access-log.component.html',
     styleUrls: ['./access-log.component.css'],
-    imports: [FormsModule, ReactiveFormsModule, PaginationModule, DatePipe]
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, TableModule, DatePipe]
 })
 export class AccessLogComponent implements OnInit {
 
@@ -22,7 +22,6 @@ export class AccessLogComponent implements OnInit {
   public maxSize: number = 5;
   public bigTotalItems: number = 0;
   public bigCurrentPage: number = 1;
-  public numPages: number = 0;
   itemsPerPage = 10;
   searchForm!: FormGroup;
 
@@ -34,7 +33,6 @@ export class AccessLogComponent implements OnInit {
 
   ngOnInit() {
     this.initForms();
-    // Assuming authService and router are correctly imported and used
     if (!this.authService.isAuthenticated()) {
       this.router.navigate(['/error']);
     } else {
@@ -49,8 +47,11 @@ export class AccessLogComponent implements OnInit {
   }
 
   public pageChanged(event: any): void {
-    this.bigCurrentPage = event.page;
-    this.getAllAccessLogs(this.searchForm.get('keyWord')?.value || "", this.bigCurrentPage - 1, this.itemsPerPage);
+    if (event.first !== undefined && event.rows !== undefined) {
+      this.bigCurrentPage = (event.first / event.rows) + 1;
+      this.itemsPerPage = event.rows;
+      this.getAllAccessLogs(this.searchForm.get('keyWord')?.value || "", this.bigCurrentPage - 1, this.itemsPerPage);
+    }
   }
 
   getAllAccessLogs(keyWord: string, page: number, size: number) {
@@ -59,7 +60,7 @@ export class AccessLogComponent implements OnInit {
     this.accessLogService.getAllAccessLog(keyWord, page, size).subscribe({
       next: (_accessLogs) => {
         this.loading = false;
-        this.accessLogs = _accessLogs.content as AccessLog[]; // Fixed type casting
+        this.accessLogs = _accessLogs.content as AccessLog[];
         this.bigTotalItems = _accessLogs.totalElements;
       },
       error: () => {
@@ -68,7 +69,7 @@ export class AccessLogComponent implements OnInit {
     });
   }
 
-  searchAccess() { // Renamed from searchWebAccount to match original intent
+  searchAccess() {
     this.bigCurrentPage = 1;
     this.getAllAccessLogs(this.searchForm.get('keyWord')?.value || "", this.bigCurrentPage - 1, this.itemsPerPage);
   }

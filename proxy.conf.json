@@ -1,6 +1,6 @@
 {
   "/ws_webadmin": {
-    "target": "https://fleet.tn",
+    "target": "https://gps.fleet.tn",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"

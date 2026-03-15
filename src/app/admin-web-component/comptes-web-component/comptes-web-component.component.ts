@@ -8,14 +8,16 @@ import { AuthService } from 'src/app/service/auth.service';
 import { WebAccountService } from 'src/app/service/web-account.service';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { DatePipe } from '@angular/common';
-import { PaginationModule } from 'ngx-bootstrap/pagination';
+
+
+import { TableModule } from 'primeng/table';
 
 @Component({
-    selector: 'app-comptes-web-component',
-    standalone: true,
-    templateUrl: './comptes-web-component.component.html',
-    styleUrls: ['./comptes-web-component.component.css'],
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, PaginationModule, DatePipe]
+  selector: 'app-comptes-web-component',
+  standalone: true,
+  templateUrl: './comptes-web-component.component.html',
+  styleUrls: ['./comptes-web-component.component.css'],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, TableModule, DatePipe]
 })
 export class ComptesWebComponentComponent implements OnInit {
   private readonly cdr = inject(ChangeDetectorRef);
@@ -55,8 +57,11 @@ export class ComptesWebComponentComponent implements OnInit {
   }
 
   public pageChanged(event: any): void {
-    this.bigCurrentPage = event.page;
-    this.getAllWebAccount(this.searchForm.get('keyWord')?.value, this.bigCurrentPage - 1, this.itemsPerPage);
+    if (event.first !== undefined && event.rows !== undefined) {
+      this.bigCurrentPage = (event.first / event.rows) + 1;
+      this.itemsPerPage = event.rows;
+      this.getAllWebAccount(this.searchForm.get('keyWord')?.value, this.bigCurrentPage - 1, this.itemsPerPage);
+    }
   }
 
   getAllWebAccount(keyWord: string, page: number, size: number) {

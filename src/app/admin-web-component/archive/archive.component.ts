@@ -1,21 +1,20 @@
-import { CommonModule, Location } from '@angular/common';
-import { Component, OnInit, viewChild, signal } from '@angular/core';
+import { CommonModule, DatePipe, DecimalPipe, Location, NgClass } from '@angular/common';
+import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { TabsetComponent, TabsModule } from "ngx-bootstrap/tabs";
 import { Archive, raws } from "../../data/data";
 import { BoitierService } from "../../service/boitier.service";
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
-
+import { TableModule } from 'primeng/table';
+import { TabsModule } from 'primeng/tabs';
 
 @Component({
-    selector: 'app-archive',
-    standalone: true,
-    templateUrl: './archive.component.html',
-    styleUrls: ['./archive.component.css'],
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, TabsModule]
+  selector: 'app-archive',
+  standalone: true,
+  templateUrl: './archive.component.html',
+  styleUrls: ['./archive.component.css'],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TableModule, TabsModule, DatePipe, DecimalPipe, NgClass]
 })
 export class ArchiveComponent implements OnInit {
-  staticTabs = viewChild<TabsetComponent>('staticTabs');
   archives = signal<Archive[]>([]);
   rawData = signal<raws>(new raws());
   numBoitier = signal<number>(0);
@@ -37,17 +36,9 @@ export class ArchiveComponent implements OnInit {
     });
   }
 
-  //=====================================
-  //     Go back to the previous page
-  //=====================================
-
   back() {
     this._location.back();
   }
-
-  //=====================================
-  //     Get all device's raw
-  //=====================================
 
   getAllRaws() {
     const limit = this.archiveForm.get('limit')?.value || 200;
@@ -59,10 +50,6 @@ export class ArchiveComponent implements OnInit {
     });
   }
 
-  //=====================================
-  // Get archive of device form database
-  //
-  //=====================================
   getArchives() {
     const limit = this.archiveForm.get('limit')?.value || 200;
     this.boitierService.getArchiveOfBoitier(this.numBoitier(), limit).subscribe(_archives => {
