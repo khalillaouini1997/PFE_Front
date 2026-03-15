@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, inject, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, ElementRef, signal, viewChild, computed } from '@angular/core';
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
 import { Router, RouterModule, ActivatedRoute } from "@angular/router";
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
@@ -19,37 +19,38 @@ Chart.register(...registerables);
     styleUrls: ['./dashbord.component.css'],
     imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule, DecimalPipe, DatePipe]
 })
-export class DashbordComponent implements OnInit, AfterViewInit, OnDestroy {
+export class DashbordComponent implements OnInit, OnDestroy {
   protected readonly Math = Math;
 
-  comptesWeb: CompteClientWebInfoDTO[] = [];
-  realtimes: Tram[] = [];
-  loading: boolean = false;
+  comptesWeb = signal<CompteClientWebInfoDTO[]>([]);
+  realtimes = signal<Tram[]>([]);
+  loading = signal<boolean>(false);
   dashboardForm!: FormGroup;
 
   // UI State
-  fullscreenMap: boolean = false;
-  sortColumn: string = '';
-  sortDirection: 'asc' | 'desc' = 'asc';
-  filterValues: any = {
-    matricule: '',
-    status: 'ALL',
-    speed: '',
-    ignition: 'ALL'
-  };
+  fullscreenMap = signal<boolean>(false);
+  sortColumn = signal<string>('');
+  sortDirection = signal<'asc' | 'desc'>('asc');
+  
+  // Individual Filter Signals
+  filterMatricule = signal<string>('');
+  filterStatus = signal<string>('ALL');
+  filterSpeed = signal<string>('');
+  filterIgnition = signal<string>('ALL');
+
 
   // Pagination
-  currentPage: number = 1;
-  pageSize: number = 10;
+  currentPage = signal<number>(1);
+  pageSize = signal<number>(10);
   pageSizeOptions: number[] = [5, 10, 20, 50];
 
   // KPI Data
-  stats = {
+  stats = signal({
     total: 0,
     valid: 0,
     technicalIssue: 0,
     moving: 0
-  };
+  });
 
   private map?: any;
   private markerClusterGroup?: any;
@@ -57,32 +58,11 @@ export class DashbordComponent implements OnInit, AfterViewInit, OnDestroy {
   private speedChart?: Chart;
   private puceChart?: Chart;
   
-  @ViewChild('statusChart') set statusChartCanvasRef(el: ElementRef) {
-    this.statusChartCanvas = el;
-    if (el && this.realtimes.length > 0) this.updateStateChart();
-  }
-  statusChartCanvas!: ElementRef;
+  statusChartCanvas = viewChild<ElementRef>('statusChart');
+  speedChartCanvas = viewChild<ElementRef>('speedChartCanvas');
+  puceChartCanvas = viewChild<ElementRef>('puceChartCanvas');
+  mapContainer = viewChild<ElementRef>('mapContainer');
 
-  @ViewChild('speedChartCanvas') set speedChartCanvasRef(el: ElementRef) {
-    this.speedChartCanvas = el;
-    if (el && this.realtimes.length > 0) this.updateSpeedChart();
-  }
-  speedChartCanvas!: ElementRef;
-
-  @ViewChild('puceChartCanvas') set puceChartCanvasRef(el: ElementRef) {
-    this.puceChartCanvas = el;
-    if (el && this.realtimes.length > 0) this.updatePuceChart();
-  }
-  puceChartCanvas!: ElementRef;
-
-  @ViewChild('mapContainer') set mapContainerRef(el: ElementRef) {
-    this.mapContainer = el;
-    if (el && this.realtimes.length > 0) {
-        this.initMap();
-        this.updateMarkers();
-    }
-  }
-  mapContainer!: ElementRef;
 
   private readonly authService = inject(AuthService);
   private readonly webAccountService = inject(WebAccountService);
@@ -95,7 +75,7 @@ export class DashbordComponent implements OnInit, AfterViewInit, OnDestroy {
     
     // Check for fullscreen map mode
     this.route.queryParams.subscribe(params => {
-      this.fullscreenMap = params['fullscreenMap'] === 'true';
+      this.fullscreenMap.set(params['fullscreenMap'] === 'true');
     });
 
     if (localStorage.getItem("isReloading") === "true") {
@@ -107,121 +87,112 @@ export class DashbordComponent implements OnInit, AfterViewInit, OnDestroy {
       this.router.navigate(['/error']);
     } else {
       this.webAccountService.getAllCompteClientWeb().subscribe(res => {
-        this.comptesWeb = res;
-        
-        // If in fullscreen mode, we might want to auto-select a default or keep previous
+        this.comptesWeb.set(res);
       });
     }
   }
 
-  get filteredRealtimes(): Tram[] {
-    let data = [...this.realtimes];
+  filteredRealtimes = computed(() => {
+    let data = [...this.realtimes()];
+    
+    const matricule = this.filterMatricule().toLowerCase();
+    const status = this.filterStatus();
+    const speed = this.filterSpeed();
+    const ignition = this.filterIgnition();
 
     // Filtering
-    Object.keys(this.filterValues).forEach(key => {
-      const val = this.filterValues[key];
-      if (!val || val === 'ALL') return;
+    if (matricule) {
+      data = data.filter(item => item.matricule?.toLowerCase().includes(matricule));
+    }
+    if (status !== 'ALL') {
+      data = data.filter(item => item.status === status);
+    }
+    if (speed) {
+      const numSpeed = parseFloat(speed);
+      if (!isNaN(numSpeed)) {
+        data = data.filter(item => item.speed >= numSpeed);
+      }
+    }
+    if (ignition !== 'ALL') {
+      const expected = ignition === 'ON';
+      data = data.filter(item => item.ignition === expected);
+    }
 
-      // When filtering, we usually want to reset to the first page
-      // However, doing it inside the getter is tricky as it's a side effect.
-      // We will handle resetting explicitly in the HTML/template bindings if needed,
-      // or just accept that the slice might be empty if we are on a high page.
-      // Better: Reset page if filters change. 
-      // I'll add a helper for filter change.
-
-      data = data.filter(item => {
-        if (key === 'status') {
-          return item.status === val;
-        }
-        if (key === 'ignition') {
-          const expected = val === 'ON';
-          return item.ignition === expected;
-        }
-        if (key === 'speed') {
-          const numSpeed = parseFloat(val);
-          if (isNaN(numSpeed)) return true;
-          // Filter vehicles going at least the specified speed
-          return item.speed >= numSpeed;
-        }
-        if (key === 'matricule') {
-          return item.matricule?.toLowerCase().includes(val.toLowerCase());
-        }
-        return true;
-      });
-    });
 
     // Sorting
-    if (this.sortColumn) {
+    const sortBy = this.sortColumn();
+    const direction = this.sortDirection();
+    if (sortBy) {
       data.sort((a, b) => {
-        const valA = (a as any)[this.sortColumn];
-        const valB = (b as any)[this.sortColumn];
+        const valA = (a as any)[sortBy];
+        const valB = (b as any)[sortBy];
         
-        if (valA < valB) return this.sortDirection === 'asc' ? -1 : 1;
-        if (valA > valB) return this.sortDirection === 'asc' ? 1 : -1;
+        if (valA < valB) return direction === 'asc' ? -1 : 1;
+        if (valA > valB) return direction === 'asc' ? 1 : -1;
         return 0;
       });
     }
 
     return data;
-  }
+  });
 
-  get paginatedRealtimes(): Tram[] {
-    const data = this.filteredRealtimes;
-    const startIndex = (this.currentPage - 1) * this.pageSize;
-    return data.slice(startIndex, startIndex + this.pageSize);
-  }
+  paginatedRealtimes = computed(() => {
+    const data = this.filteredRealtimes();
+    const startIndex = (this.currentPage() - 1) * this.pageSize();
+    return data.slice(startIndex, startIndex + this.pageSize());
+  });
 
-  get totalPages(): number {
-    return Math.ceil(this.filteredRealtimes.length / this.pageSize);
-  }
+  totalPages = computed(() => {
+    return Math.ceil(this.filteredRealtimes().length / this.pageSize());
+  });
 
-  get totalFilteredItems(): number {
-    return this.filteredRealtimes.length;
-  }
+  totalFilteredItems = computed(() => {
+    return this.filteredRealtimes().length;
+  });
 
   onFilterChange() {
-    this.currentPage = 1;
+    this.currentPage.set(1);
   }
 
   setPage(page: number) {
-    if (page >= 1 && page <= this.totalPages) {
-      this.currentPage = page;
+    if (page >= 1 && page <= this.totalPages()) {
+      this.currentPage.set(page);
     }
   }
 
   nextPage() {
-    if (this.currentPage < this.totalPages) {
-      this.currentPage++;
+    if (this.currentPage() < this.totalPages()) {
+      this.currentPage.update(p => p + 1);
     }
   }
 
   prevPage() {
-    if (this.currentPage > 1) {
-      this.currentPage--;
+    if (this.currentPage() > 1) {
+      this.currentPage.update(p => p - 1);
     }
   }
 
   onPageSizeChange() {
-    this.currentPage = 1;
+    this.currentPage.set(1);
   }
 
   getPageNumbers(): number[] {
-    const total = this.totalPages;
+    const total = this.totalPages();
     if (total <= 7) {
       return Array.from({ length: total }, (_, i) => i + 1);
     }
-    // Simple logic for ellipses could go here, but let's keep it simple for now
     return Array.from({ length: total }, (_, i) => i + 1);
   }
 
   toggleSort(column: string) {
-    if (this.sortColumn === column) {
-      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    if (this.sortColumn() === column) {
+      this.sortDirection.update(d => d === 'asc' ? 'desc' : 'asc');
     } else {
-      this.sortColumn = column;
-      this.sortDirection = 'asc';
+      this.sortColumn.set(column);
+      this.sortDirection.set('asc');
     }
   }
+
 
   openExternalMap() {
     const urlTree = this.router.createUrlTree(['/adminWeb/dashboard'], { queryParams: { fullscreenMap: 'true' } });
@@ -230,9 +201,7 @@ export class DashbordComponent implements OnInit, AfterViewInit, OnDestroy {
     window.open(fullUrl, '_blank');
   }
 
-  ngAfterViewInit() {
-    // We can't initMap here because it's wrapped in *ngIf="realtimes.length > 0"
-  }
+
 
   ngOnDestroy() {
     if (this.map) {
@@ -261,10 +230,11 @@ export class DashbordComponent implements OnInit, AfterViewInit, OnDestroy {
   private initMap() {
     if (this.map) return; // Prevent double init
     
-    if (!this.mapContainer) return;
+    const container = this.mapContainer();
+    if (!container) return;
 
     // Center on Tunisia
-    this.map = L.map(this.mapContainer.nativeElement).setView([33.8869, 9.5375], 6); 
+    this.map = L.map(container.nativeElement).setView([33.8869, 9.5375], 6); 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap contributors'
     }).addTo(this.map);
@@ -272,6 +242,7 @@ export class DashbordComponent implements OnInit, AfterViewInit, OnDestroy {
     this.markerClusterGroup = (L as any).markerClusterGroup();
     this.map.addLayer(this.markerClusterGroup!);
   }
+
 
   // Map of deviceId -> car style for consistent random assignment
   private deviceIconMap = new Map<number, string>();
@@ -314,7 +285,7 @@ export class DashbordComponent implements OnInit, AfterViewInit, OnDestroy {
 
     const bounds: any[] = [];
 
-    this.realtimes.forEach(tram => {
+    this.realtimes().forEach(tram => {
       if (tram.latitude && tram.longitude) {
         const marker = L.marker([tram.latitude, tram.longitude], {
           icon: this.getCarIcon(tram)
@@ -341,10 +312,13 @@ export class DashbordComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private updateStats() {
-    this.stats.total = this.realtimes.length;
-    this.stats.valid = this.realtimes.filter(t => t.status === 'VALID').length;
-    this.stats.technicalIssue = this.realtimes.filter(t => t.status === 'TECHNICAL_ISSUE').length;
-    this.stats.moving = this.realtimes.filter(t => t.speed > 0).length;
+    const data = this.realtimes();
+    this.stats.set({
+      total: data.length,
+      valid: data.filter(t => t.status === 'VALID').length,
+      technicalIssue: data.filter(t => t.status === 'TECHNICAL_ISSUE').length,
+      moving: data.filter(t => t.speed > 0).length
+    });
 
     this.updateChart();
   }
@@ -356,14 +330,16 @@ export class DashbordComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private updateStateChart() {
-    if (!this.statusChartCanvas) return;
+    const canvas = this.statusChartCanvas();
+    if (!canvas) return;
+    const stats = this.stats();
     const data = {
       labels: ['Valide', 'Problème Tech', 'Non Valide'],
       datasets: [{
         data: [
-          this.stats.valid,
-          this.stats.technicalIssue,
-          this.realtimes.filter(t => t.status === 'NON_VALID').length
+          stats.valid,
+          stats.technicalIssue,
+          this.realtimes().filter(t => t.status === 'NON_VALID').length
         ],
         backgroundColor: ['#05cd99', '#ee5d50', '#ffb800'],
         hoverOffset: 4
@@ -374,7 +350,7 @@ export class DashbordComponent implements OnInit, AfterViewInit, OnDestroy {
       this.stateChart.data = data;
       this.stateChart.update();
     } else {
-      this.stateChart = new Chart(this.statusChartCanvas.nativeElement, {
+      this.stateChart = new Chart(canvas.nativeElement, {
         type: 'doughnut',
         data: data,
         options: {
@@ -387,12 +363,14 @@ export class DashbordComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private updateSpeedChart() {
-    if (!this.speedChartCanvas) return;
+    const canvas = this.speedChartCanvas();
+    if (!canvas) return;
+    const realtimes = this.realtimes();
     const bands = {
-      '0 km/h': this.realtimes.filter(t => t.speed === 0).length,
-      '1-30 km/h': this.realtimes.filter(t => t.speed > 0 && t.speed <= 30).length,
-      '31-60 km/h': this.realtimes.filter(t => t.speed > 30 && t.speed <= 60).length,
-      '61+ km/h': this.realtimes.filter(t => t.speed > 60).length
+      '0 km/h': realtimes.filter(t => t.speed === 0).length,
+      '1-30 km/h': realtimes.filter(t => t.speed > 0 && t.speed <= 30).length,
+      '31-60 km/h': realtimes.filter(t => t.speed > 30 && t.speed <= 60).length,
+      '61+ km/h': realtimes.filter(t => t.speed > 60).length
     };
 
     const data = {
@@ -409,7 +387,7 @@ export class DashbordComponent implements OnInit, AfterViewInit, OnDestroy {
       this.speedChart.data = data;
       this.speedChart.update();
     } else {
-      this.speedChart = new Chart(this.speedChartCanvas.nativeElement, {
+      this.speedChart = new Chart(canvas.nativeElement, {
         type: 'bar',
         data: data,
         options: {
@@ -423,13 +401,15 @@ export class DashbordComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private updatePuceChart() {
-    if (!this.puceChartCanvas) return;
+    const canvas = this.puceChartCanvas();
+    if (!canvas) return;
     
+    const realtimes = this.realtimes();
     const counts = {
-      'Orange Tunisie': this.realtimes.filter(t => t.numPuce?.startsWith('8921601')).length,
-      'Tunisie Telecom': this.realtimes.filter(t => t.numPuce?.startsWith('8921602')).length,
-      'Ooredoo Tunisie': this.realtimes.filter(t => t.numPuce?.startsWith('8921603')).length,
-      'Unknown': this.realtimes.filter(t => {
+      'Orange Tunisie': realtimes.filter(t => t.numPuce?.startsWith('8921601')).length,
+      'Tunisie Telecom': realtimes.filter(t => t.numPuce?.startsWith('8921602')).length,
+      'Ooredoo Tunisie': realtimes.filter(t => t.numPuce?.startsWith('8921603')).length,
+      'Unknown': realtimes.filter(t => {
         const p = t.numPuce || '';
         return !p.startsWith('8921601') && !p.startsWith('8921602') && !p.startsWith('8921603');
       }).length
@@ -448,7 +428,7 @@ export class DashbordComponent implements OnInit, AfterViewInit, OnDestroy {
       this.puceChart.data = data;
       this.puceChart.update();
     } else {
-      this.puceChart = new Chart(this.puceChartCanvas.nativeElement, {
+      this.puceChart = new Chart(canvas.nativeElement, {
         type: 'pie',
         data: data,
         options: {
@@ -469,10 +449,10 @@ export class DashbordComponent implements OnInit, AfterViewInit, OnDestroy {
     const selectedCompte = this.dashboardForm.get('compteWeb')?.value;
     if (!selectedCompte || !selectedCompte.idCompteClientWeb) return;
 
-    this.loading = true;
+    this.loading.set(true);
     this.webAccountService.getAllLastTram(selectedCompte.idCompteClientWeb).subscribe(res => {
-      this.realtimes = res as any;
-      this.loading = false;
+      this.realtimes.set(res as any);
+      this.loading.set(false);
       
       // Use a slight delay to ensure DOM is ready and elements have size
       setTimeout(() => {
@@ -488,11 +468,12 @@ export class DashbordComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onExport() {
-    if (this.realtimes.length <= 0) return;
+    if (this.realtimes().length <= 0) return;
 
-    this.webAccountService.exportLastTram(this.realtimes as any)
+    this.webAccountService.exportLastTram(this.realtimes() as any)
       .subscribe(blob => {
         importedSaveAs(blob, 'Repport d\'état des boitiers.xlsx');
       });
   }
+
 }

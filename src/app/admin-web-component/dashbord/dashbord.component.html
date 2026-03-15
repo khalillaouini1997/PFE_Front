@@ -1,23 +1,23 @@
 <div class="main-panel">
     <div class="dashboard-container">
         <!-- Header Section -->
-        <div class="dashboard-header-card" *ngIf="!fullscreenMap">
+        <div class="dashboard-header-card" *ngIf="!fullscreenMap()">
             <div class="header-row">
                 <div class="title-section">
                     <h4>Dashboard</h4>
                 </div>
                 <div class="controls-section">
                     <form [formGroup]="dashboardForm" class="search-form-v3">
-                        <label class="search-label-v3">Compte Client:</label>
-                        <select formControlName="compteWeb" class="custom-select" (change)="getAllLastTramByCompteWeb()"
+                        <label class="search-label-v3" for="compteWebSelect">Compte Client:</label>
+                        <select formControlName="compteWeb" id="compteWebSelect" class="custom-select" (change)="getAllLastTramByCompteWeb()"
                             title="Sélectionner un compte client">
                             <option [ngValue]="null" disabled selected>Choisir un compte</option>
-                            @for (compte of comptesWeb; track compte.idCompteClientWeb) {
+                             @for (compte of comptesWeb(); track compte.idCompteClientWeb) {
                                 <option [ngValue]="compte">{{compte.login}}</option>
                             }
                         </select>
                     </form>
-                    <button class="btn-secondary-v3" (click)="onExport()" [disabled]="realtimes.length === 0">
+                     <button class="btn-secondary-v3" (click)="onExport()" [disabled]="realtimes().length === 0">
                         <i class="fa fa-download"></i> Exporter Rapport
                     </button>
                     <button class="btn-primary-v3" (click)="getAllLastTramByCompteWeb()">
@@ -27,56 +27,56 @@
             </div>
         </div>
 
-        @if (loading) {
+        @if (loading()) {
             <div class="global-spinner">
                 <i class="fa fa-spinner fa-spin no-data-icon"></i>
                 <p>Mise à jour des données...</p>
             </div>
         }
 
-        <div class="dashboard-content-wrapper" [class.content-loading]="loading" [hidden]="realtimes.length === 0">
+        <div class="dashboard-content-wrapper" [class.content-loading]="loading()" [hidden]="realtimes().length === 0">
             <!-- KPI Section -->
-            <div class="kpi-row" *ngIf="!fullscreenMap">
+            <div class="kpi-row" *ngIf="!fullscreenMap()">
                 <div class="kpi-card kpi-total">
                     <div class="kpi-icon-wrapper"><i class="fa fa-hdd-o"></i></div>
                     <div class="kpi-info">
                         <span class="kpi-label">Total Boitiers</span>
-                        <h3 class="kpi-value">{{stats.total}}</h3>
+                        <h3 class="kpi-value">{{stats().total}}</h3>
                     </div>
                 </div>
                 <div class="kpi-card kpi-valid">
                     <div class="kpi-icon-wrapper"><i class="fa fa-check-circle"></i></div>
                     <div class="kpi-info">
                         <span class="kpi-label">Boitiers Valides</span>
-                        <h3 class="kpi-value">{{stats.valid}}</h3>
+                        <h3 class="kpi-value">{{stats().valid}}</h3>
                     </div>
                 </div>
                 <div class="kpi-card kpi-issue">
                     <div class="kpi-icon-wrapper"><i class="fa fa-exclamation-triangle"></i></div>
                     <div class="kpi-info">
                         <span class="kpi-label">Problèmes Tech</span>
-                        <h3 class="kpi-value">{{stats.technicalIssue}}</h3>
+                        <h3 class="kpi-value">{{stats().technicalIssue}}</h3>
                     </div>
                 </div>
                 <div class="kpi-card kpi-moving">
                     <div class="kpi-icon-wrapper"><i class="fa fa-truck"></i></div>
                     <div class="kpi-info">
                         <span class="kpi-label">En Mouvement</span>
-                        <h3 class="kpi-value">{{stats.moving}}</h3>
+                        <h3 class="kpi-value">{{stats().moving}}</h3>
                     </div>
                 </div>
             </div>
 
             <!-- Visualization Row -->
-            <div class="map-row" [class.solo-map]="fullscreenMap">
-                <div class="card-v3 map-card" [class.fullscreen-card]="fullscreenMap">
+            <div class="map-row" [class.solo-map]="fullscreenMap()">
+                <div class="card-v3 map-card" [class.fullscreen-card]="fullscreenMap()">
                     <div class="card-header-v3">
                         <h5 class="card-title-v3"><i class="fa fa-map-marker"></i> Suivi Géographique</h5>
-                        <button class="btn-icon-v3" (click)="openExternalMap()" title="Ouvrir dans un nouvel onglet" *ngIf="!fullscreenMap">
+                        <button class="btn-icon-v3" (click)="openExternalMap()" title="Ouvrir dans un nouvel onglet" *ngIf="!fullscreenMap()">
                             <i class="fa fa-external-link"></i>
                         </button>
                     </div>
-                    <div class="map-container-wrapper" [class.fullscreen-map]="fullscreenMap">
+                    <div class="map-container-wrapper" [class.fullscreen-map]="fullscreenMap()">
                         @defer (on viewport) {
                             <div id="map" #mapContainer></div>
                         } @placeholder {
@@ -88,7 +88,7 @@
                 </div>
             </div>
 
-            <div class="charts-grid" [hidden]="fullscreenMap">
+            <div class="charts-grid" [hidden]="fullscreenMap()">
                 <div class="card-v3 chart-card">
                     <h5 class="card-title-v3"><i class="fa fa-pie-chart"></i> Distribution d'état</h5>
                     <div class="chart-container-wrapper">
@@ -129,32 +129,32 @@
                         <thead>
                             <tr>
                                 <th (click)="toggleSort('deviceid')" class="sortable">
-                                    ID <i class="fa" [ngClass]="sortColumn === 'deviceid' ? (sortDirection === 'asc' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'"></i>
+                                    ID <i class="fa" [ngClass]="sortColumn() === 'deviceid' ? (sortDirection() === 'asc' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'"></i>
                                 </th>
                                 <th (click)="toggleSort('matricule')" class="sortable">
-                                    Matricule <i class="fa" [ngClass]="sortColumn === 'matricule' ? (sortDirection === 'asc' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'"></i>
+                                    Matricule <i class="fa" [ngClass]="sortColumn() === 'matricule' ? (sortDirection() === 'asc' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'"></i>
                                 </th>
                                 <th (click)="toggleSort('status')" class="sortable">
-                                    État <i class="fa" [ngClass]="sortColumn === 'status' ? (sortDirection === 'asc' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'"></i>
+                                    État <i class="fa" [ngClass]="sortColumn() === 'status' ? (sortDirection() === 'asc' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'"></i>
                                 </th>
                                 <th>Coordonnées</th>
                                 <th (click)="toggleSort('speed')" class="sortable">
-                                    Vitesse <i class="fa" [ngClass]="sortColumn === 'speed' ? (sortDirection === 'asc' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'"></i>
+                                    Vitesse <i class="fa" [ngClass]="sortColumn() === 'speed' ? (sortDirection() === 'asc' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'"></i>
                                 </th>
                                 <th (click)="toggleSort('ignition')" class="sortable">
-                                    Ignition <i class="fa" [ngClass]="sortColumn === 'ignition' ? (sortDirection === 'asc' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'"></i>
+                                    Ignition <i class="fa" [ngClass]="sortColumn() === 'ignition' ? (sortDirection() === 'asc' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'"></i>
                                 </th>
                                 <th (click)="toggleSort('signal')" class="sortable">
-                                    GPS / GSM <i class="fa" [ngClass]="sortColumn === 'signal' ? (sortDirection === 'asc' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'"></i>
+                                    GPS / GSM <i class="fa" [ngClass]="sortColumn() === 'signal' ? (sortDirection() === 'asc' ? 'fa-sort-asc' : 'fa-sort-desc') : 'fa-sort'"></i>
                                 </th>
                                 <th>Dernière Trame</th>
                                 <th>Identifiants</th>
                             </tr>
-                            <tr class="filter-row">
+                             <tr class="filter-row">
                                 <td></td> <!-- Removed ID Filter -->
-                                <td><input type="text" [(ngModel)]="filterValues.matricule" (ngModelChange)="onFilterChange()" placeholder="Filtrer..." class="filter-input"></td>
+                                <td><input type="text" [ngModel]="filterMatricule()" (ngModelChange)="filterMatricule.set($event); onFilterChange()" placeholder="Filtrer..." class="filter-input"></td>
                                 <td>
-                                    <select [(ngModel)]="filterValues.status" (ngModelChange)="onFilterChange()" class="filter-select" title="Filtrer par état">
+                                    <select [ngModel]="filterStatus()" (ngModelChange)="filterStatus.set($event); onFilterChange()" class="filter-select" title="Filtrer par état">
                                         <option value="ALL">Tous</option>
                                         <option value="VALID">Valide</option>
                                         <option value="TECHNICAL_ISSUE">Tech Issue</option>
@@ -162,9 +162,9 @@
                                     </select>
                                 </td>
                                 <td></td>
-                                <td><input type="number" [(ngModel)]="filterValues.speed" (ngModelChange)="onFilterChange()" placeholder="Vitesse min..." class="filter-input"></td>
+                                <td><input type="number" [ngModel]="filterSpeed()" (ngModelChange)="filterSpeed.set($event); onFilterChange()" placeholder="Vitesse min..." class="filter-input"></td>
                                 <td>
-                                    <select [(ngModel)]="filterValues.ignition" (ngModelChange)="onFilterChange()" class="filter-select" title="Filtrer par ignition">
+                                    <select [ngModel]="filterIgnition()" (ngModelChange)="filterIgnition.set($event); onFilterChange()" class="filter-select" title="Filtrer par ignition">
                                         <option value="ALL">Tous</option>
                                         <option value="ON">On</option>
                                         <option value="OFF">Off</option>
@@ -176,7 +176,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @for (tram of paginatedRealtimes; track tram.deviceid) {
+                            @for (tram of paginatedRealtimes(); track tram.deviceid) {
                                 <tr>
                                     <td><span class="id-badge">{{tram.deviceid}}</span></td>
                                     <td><strong>{{tram.matricule}}</strong></td>
@@ -232,31 +232,31 @@
                 </div>
 
                 <!-- Pagination Section -->
-                <div class="pagination-container" *ngIf="totalFilteredItems > 0">
+                <div class="pagination-container" *ngIf="totalFilteredItems() > 0">
                     <div class="pagination-info">
-                        Affichage de {{(currentPage-1)*pageSize + 1}} à {{Math.min(currentPage*pageSize, totalFilteredItems)}} sur {{totalFilteredItems}} terminaux
+                        Affichage de {{(currentPage()-1)*pageSize() + 1}} à {{Math.min(currentPage()*pageSize(), totalFilteredItems())}} sur {{totalFilteredItems()}} terminaux
                     </div>
                     <div class="pagination-controls">
                         <div class="page-size-selector">
                             <span>Lignes par page:</span>
-                            <select [(ngModel)]="pageSize" (change)="onPageSizeChange()" title="Lignes par page">
+                            <select [ngModel]="pageSize()" (ngModelChange)="pageSize.set($event); onPageSizeChange()" title="Lignes par page">
                                 @for (size of pageSizeOptions; track size) {
                                     <option [value]="size">{{size}}</option>
                                 }
                             </select>
                         </div>
                         <div class="pagination-buttons">
-                            <button class="btn-page" [disabled]="currentPage === 1" (click)="prevPage()" title="Précédent">
+                            <button class="btn-page" [disabled]="currentPage() === 1" (click)="prevPage()" title="Précédent">
                                 <i class="fa fa-chevron-left"></i>
                             </button>
                             
                             @for (p of getPageNumbers(); track p) {
-                                <button class="btn-page" [class.active]="p === currentPage" (click)="setPage(p)">
+                                <button class="btn-page" [class.active]="p === currentPage()" (click)="setPage(p)">
                                     {{p}}
                                 </button>
                             }
 
-                            <button class="btn-page" [disabled]="currentPage === totalPages" (click)="nextPage()" title="Suivant">
+                            <button class="btn-page" [disabled]="currentPage() === totalPages()" (click)="nextPage()" title="Suivant">
                                 <i class="fa fa-chevron-right"></i>
                             </button>
                         </div>
@@ -265,7 +265,7 @@
             </div>
         </div>
 
-        @if (realtimes.length === 0 && !loading) {
+        @if (realtimes().length === 0 && !loading()) {
             <div class="no-data-info">
                 <i class="fa fa-folder-open-o no-data-icon"></i>
                 <p>Aucune donnée à afficher. Veuillez sélectionner un compte web.</p>
