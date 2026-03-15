@@ -1,5 +1,5 @@
 import { Router } from '@angular/router';
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CompteServer, CompteWeb, IpAddress } from 'src/app/data/data';
 import { WebAccountService } from "../../service/web-account.service";
 import { AuthService } from "../../service/auth.service";
@@ -19,12 +19,13 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 export class AddCompteWebComponentComponent implements OnInit {
 
   webForm!: FormGroup;
-  serverAccounts: CompteServer[] = [];
-  codesPays: any[] = [];
-  ipAddresses: IpAddress[] = [];
+  serverAccounts = signal<CompteServer[]>([]);
+  codesPays = signal<any[]>([]);
+  ipAddresses = signal<IpAddress[]>([]);
   regions = ['Tunis', 'Sfax', 'Sousse'];
   notifSubs = ['date_sub(NOW(), INTERVAL 6 hour)', 'date_sub(NOW(), INTERVAL 1 DAY)', 'date_sub(NOW(), INTERVAL 2 DAY)'];
-  checked: boolean = false;
+  checked = signal<boolean>(false);
+
 
   private readonly router = inject(Router);
   private readonly toastr = inject(ToastrService);
@@ -67,14 +68,15 @@ export class AddCompteWebComponentComponent implements OnInit {
     }
 
     this.compteServerService.getAllServerAccountForForm().subscribe(res => {
-      this.serverAccounts = res.content;
+      this.serverAccounts.set(res.content);
     });
 
-    this.codesPays = this.webAccountService.codesPays;
+    this.codesPays.set(this.webAccountService.codesPays);
     this.ipAddressService.getAllIps().subscribe(res => {
-      this.ipAddresses = res;
+      this.ipAddresses.set(res);
     });
   }
+
 
   addCompteWeb() {
     if (this.webForm.invalid) {
@@ -89,10 +91,11 @@ export class AddCompteWebComponentComponent implements OnInit {
     };
 
     const idCompteServer = formValue.idCompte;
-    const selectedServer = this.serverAccounts.find(s => s.idCompteClientServer == idCompteServer);
+    const selectedServer = this.serverAccounts().find(s => s.idCompteClientServer == idCompteServer);
     if (selectedServer) {
       compteWeb.compteClientServer = selectedServer;
     }
+
 
     this.webAccountService.addCompteWeb(compteWeb).subscribe({
       next: (_compteWeb) => {

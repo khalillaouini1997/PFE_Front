@@ -1,7 +1,7 @@
 <div class="col-md-12" [formGroup]="mainConfigForm">
   <div class="card">
     <div class="card-header" data-background-color="red">
-      <h4 class="title">Configurer l'identifiant du compte web : {{compteWeb.idCompteClientWeb}}</h4>
+      <h4 class="title">Configurer l'identifiant du compte web : {{compteWeb().idCompteClientWeb}}</h4>
     </div>
     <div class="card-content card-content-padding">
       <div class="row margin-top-0">
@@ -24,7 +24,7 @@
           <div class="form-group label-floating">
             <label class="control-label" for="configCodePays">Code Pays</label>
             <select formControlName="code_pays" class="form-control" id="configCodePays">
-              @for (codePays of codesPays; track codePays.value) {
+              @for (codePays of codesPays(); track codePays.value) {
               <option [value]="codePays.value">
                 {{codePays.key}} (+{{codePays.value}}) </option>
               }
@@ -66,8 +66,8 @@
         <div class="col-md-6">
           <div class="form-group margin-top-25">
             <label class="options-title" for="configOptions">Options</label>
-            <ng-multiselect-dropdown [placeholder]="'Sélectionner des options'" [settings]="dropdownSettings"
-              [data]="options" formControlName="options" id="configOptions">
+            <ng-multiselect-dropdown [placeholder]="'Sélectionner des options'" [settings]="dropdownSettings()"
+              [data]="options()" formControlName="options" id="configOptions">
             </ng-multiselect-dropdown>
           </div>
         </div>
@@ -167,15 +167,15 @@
             </thead>
             <tbody>
               <tr>
-                <td>{{serverAccount.idCompteClientServer}}</td>
-                <td>{{serverAccount.pseudo}}</td>
-                <td>{{serverAccount.ipAdresse}}</td>
-                <td>{{serverAccount.date_creation | date:'dd-MM-yyyy'}}</td>
-                <td>{{serverAccount.date_Expiration | date:'dd-MM-yyyy'}}
-                  @if (serverAccount.during) {
+                <td>{{serverAccount().idCompteClientServer}}</td>
+                <td>{{serverAccount().pseudo}}</td>
+                <td>{{serverAccount().ipAdresse}}</td>
+                <td>{{serverAccount().date_creation | date:'dd-MM-yyyy'}}</td>
+                <td>{{serverAccount().date_Expiration | date:'dd-MM-yyyy'}}
+                  @if (serverAccount().during) {
                   <span class="label label-success">Active</span>
                   }
-                  @if (serverAccount.expired) {
+                  @if (serverAccount().expired) {
                   <span class="label label-danger">Expiré</span>
                   }
                 </td>
@@ -184,10 +184,10 @@
             data-target="#Modalupdateserver">
             <i class="glyphicon glyphicon-refresh"></i> change</span>-->
                   <button type="button" class="labell label-success btn"
-                    (click)="prepareDB(serverAccount.idCompteClientServer)">
+                    (click)="prepareDB(serverAccount().idCompteClientServer)">
                     <i class="fa fa-database"></i> préparer BDD</button>
                   <button type="button" class="labelle label-primary btn"
-                    (click)="showDevises(serverAccount.idCompteClientServer)">
+                    (click)="showDevises(serverAccount().idCompteClientServer)">
                     <i class="fa fa-mobile"></i> Boitiers</button>
                 </td>
               </tr>
@@ -196,11 +196,11 @@
           </table>
         </div>
       </div>
-      @if (boitiersClicked === true) {
+      @if (boitiersClicked() === true) {
       <div class="row">
         <div class="col-md-12 tableFixHead margin-bottom-20">
           <div class="col-md-12 bg-soft-red-center">
-            <span class="font-bold">Boitiers ({{boitiers.length}})</span>
+            <span class="font-bold">Boitiers ({{boitiers().length}})</span>
             @if (getNumberOfBoitiersNotInstall() > 0) {
             <span class="text-warning font-bold">
               {{getNumberOfBoitiersNotInstall()}} non
@@ -212,7 +212,7 @@
               <tr>
                 <th scope="col" class="text-center">
                    <input type="checkbox" name="optionsCheckboxes" (change)="onCheckedAllBoitiers()"
-                    [checked]="boitiers.length == selectedBoitiersIds.length && boitiers.length > 0"
+                    [checked]="boitiers.length === selectedBoitiersIds.length && boitiers.length > 0"
                     title="Select all boitiers" placeholder="Select all">
                 </th>
                 <th>Numéro</th>
@@ -221,7 +221,7 @@
               </tr>
             </thead>
             <tbody>
-              @for (boitier of boitiers; track boitier.idBoitier) {
+              @for (boitier of boitiers(); track boitier.idBoitier) {
               <tr>
                 <td>
                    <input type="checkbox" name="optionsCheckboxes" (change)="onCheckedBoitier(boitier.numBoitier)"
@@ -272,7 +272,7 @@
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
           <h4 class="modal-title">Change Server Account for
-            <span class="label label-info">{{compteWeb.login}}</span>
+            <span class="label label-info">{{compteWeb().login}}</span>
           </h4>
         </div>
         <div class="modal-body">
@@ -283,7 +283,7 @@
                 <div class="input-group input-append date">
                   <label class="control-label" for="serverAccount">Server Account</label>
                   <select class="form-control" name="server" required id="serverAccount">
-                    @for (server of serverAccounts; track server.idCompteClientServer) {
+                    @for (server of serverAccounts(); track server.idCompteClientServer) {
                     <option [value]="server.idCompteClientServer">{{server.pseudo}} </option>
                     }
                   </select>
@@ -307,9 +307,9 @@
 <!--end modal update compte web-->
 
 <!-- Modal INITIALIZE DATABASE-->
-@if (showConfigModal) {
+@if (showConfigModal()) {
 <div class="modal-backdrop fade-in modal-backdrop-custom"
-  (click)="closeConfigModal()"></div>
+  (click)="closeConfigModal()" (keydown.enter)="closeConfigModal()" tabindex="0" role="button" aria-label="Close configuration modal"></div>
 <div class="modal fade-in modal-custom" id="ModalConfig" role="dialog">
   <div class="modal-dialog modal-dialog-custom">
     <!-- Modal content-->
@@ -320,17 +320,17 @@
           <button type="button" class="close modal-dialog-small-margin"
             (click)="closeConfigModal()">&times;</button>
           <div class="header-accent-red">
-            <h4 class="title">Recalcule du boitier : {{selectedBoitierId}}</h4>
+            <h4 class="title">Recalcule du boitier : {{selectedBoitierId()}}</h4>
           </div>
         </div>
         <div class="modal-body">
 
-          @if (selectedBoitiersIds.length > 0) {
+          @if (selectedBoitiersIds().length > 0) {
           <div class="row margin-top-0">
             <div class="col-md-12 p-10-border-btm">
               <div class="font-bold">Appliquer aux : </div>
               <div class="overflow-x-auto">
-                @for (idBoitier of selectedBoitiersIds; track idBoitier) {
+                @for (idBoitier of selectedBoitiersIds(); track idBoitier) {
                 <span class="label label-info margin-left-5">{{idBoitier}}</span>
                 }
               </div>
@@ -367,10 +367,10 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-success btn-sm" [disabled]="recalculateForm.invalid"
             (click)="recalculate()">
-            @if (!loadingRecalculate) {
+            @if (!loadingRecalculate()) {
             <i class="fa fa-retweet"></i>
             }
-            @if (loadingRecalculate) {
+            @if (loadingRecalculate()) {
             <i class="fa fa-spinner fa-spin"></i>
             }
             Recalculer
@@ -379,11 +379,11 @@
       </form>
       <div class="modal-header">
         <span class="modal-title">
-          @if (loadingRecalculate) {
+          @if (loadingRecalculate()) {
           <i class="fa fa-spinner fa-spin"></i>
           }
           Notifications</span>
-        @if (notifications.length > 0 && !loadingRecalculate) {
+        @if (notifications().length > 0 && !loadingRecalculate()) {
         <span class="font-size-12-bold">
           @if (getNumberOfNotificationErrors() > 0) {
           <span class="text-danger"><i class="fa fa-exclamation-circle"></i> {{getNumberOfNotificationErrors()}} erreurs
@@ -398,7 +398,7 @@
       <div class="modal-body">
         <div class="text-center-nomargin">
           <h6 class="notification-box">
-            @for (notification of notifications; track $index) {
+            @for (notification of notifications(); track $index) {
             <span [ngClass]="{'text-danger': !notification.status}">
               @if (notification.status) {
               <i class="fa fa-check-circle text-success"></i>
@@ -559,7 +559,7 @@
                 <span>SIM</span>
               </div>
               <div class="col-md-6">
-                <input class="pull-right" type="number" readonly [value]="selectedBoitierId" title="Boitier ID" placeholder="Boitier ID" />
+                <input class="pull-right" type="number" readonly [value]="selectedBoitierId()" title="Boitier ID" placeholder="Boitier ID" />
               </div>
             </div>
           </div>
@@ -569,20 +569,20 @@
           <div class="col-md-4">
             <button type="button" class="btn btn-success btn-sm pull-left" [disabled]="deviceOptForm.invalid"
               (click)="editDeviceOptionConfig()">
-              @if (!loadingEditDeviceOption) {
+              @if (!loadingEditDeviceOption()) {
               <i class="fa fa-check"></i>
               }
-              @if (loadingEditDeviceOption) {
+              @if (loadingEditDeviceOption()) {
               <i class="fa fa-spinner fa-spin"></i>
               }
               Modifier les options</button>
           </div>
           <div class="col-md-2">
             <button type="button" class="btn btn-success btn-sm pull-right" (click)="resetOdometre()">
-              @if (!loadingResetOdometre) {
+              @if (!loadingResetOdometre()) {
               <i class="fa fa-check"></i>
               }
-              @if (loadingResetOdometre) {
+              @if (loadingResetOdometre()) {
               <i class="fa fa-spinner fa-spin"></i>
               }
               Reset Kilometrage
@@ -593,10 +593,10 @@
                 class="fa fa-times"></i> Annuler</button>
             <button type="button" class="btn btn-success btn-sm pull-right" [disabled]="pathConfigForm.invalid"
               (click)="editPathConfig()">
-              @if (!loadingEditPathConfig) {
+              @if (!loadingEditPathConfig()) {
               <i class="fa fa-check"></i>
               }
-              @if (loadingEditPathConfig) {
+              @if (loadingEditPathConfig()) {
               <i class="fa fa-spinner fa-spin"></i>
               }
               Initialiser</button>
@@ -610,7 +610,7 @@
             <div class="form-group label-floating">
               <label class="control-label" for="rawstreamId">Rawstream Id</label>
               <select class="form-control" formControlName="idIpAdresse" id="rawstreamId">
-                @for (ip of ipAddresses; track ip.idIpAdresse) {
+                @for (ip of ipAddresses(); track ip.idIpAdresse) {
                 <option [ngValue]="ip.idIpAdresse">{{ip.label}}</option>
                 }
               </select>
@@ -637,10 +637,10 @@
         <div class="row margin-top-0">
           <div class="col-md-6">
             <button type="button" class="btn btn-success btn-sm pull-right" (click)="editDeviceSetting()">
-              @if (!loadingDeviceSetting) {
+              @if (!loadingDeviceSetting()) {
               <i class="fa fa-check"></i>
               }
-              @if (loadingDeviceSetting) {
+              @if (loadingDeviceSetting()) {
               <i class="fa fa-spinner fa-spin"></i>
               }
               Modifier les paramétres boitier</button>

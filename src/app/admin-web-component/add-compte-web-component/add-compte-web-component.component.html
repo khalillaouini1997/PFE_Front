@@ -32,7 +32,7 @@
                   <div class="form-group label-floating">
                     <label class="control-label" for="code_pays">Code Pays</label>
                     <select formControlName="code_pays" class="form-control" id="code_pays">
-                      @for (codePays of codesPays; track codePays.value) {
+                      @for (codePays of codesPays(); track codePays.value) {
                       <option [value]="codePays.value">
                         {{codePays.key}} (+{{codePays.value}}) </option>
                       }
@@ -55,7 +55,7 @@
                     <div class="input-group input-append date">
                       <label class="control-label" for="idCompte">Compte serveur</label>
                       <select formControlName="idCompte" class="form-control" id="idCompte">
-                        @for (server of serverAccounts; track server.idCompteClientServer) {
+                        @for (server of serverAccounts(); track server.idCompteClientServer) {
                         <option [value]="server.idCompteClientServer"> {{server.pseudo}} </option>
                         }
                       </select>
@@ -66,7 +66,7 @@
                   <div class="form-group label-floating">
                     <label class="control-label" for="adresseIP">IP Adresse</label>
                     <select formControlName="ipAdresse" id="adresseIP" class="form-control">
-                      @for (ip of ipAddresses; track ip.value) {
+                      @for (ip of ipAddresses(); track ip.value) {
                       <option [ngValue]="ip.value">{{ip.label}}
                       </option>
                       }

@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, inject, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import {
   Boitier,
   CompteServer,
@@ -55,40 +55,41 @@ export class ConfigurationWebComponentComponent implements OnInit {
   private readonly webSocketService = inject(WebSocketService);
   private readonly fb = inject(FormBuilder);
   private readonly localeService = inject(BsLocaleService);
-  private readonly cdr = inject(ChangeDetectorRef);
 
-  ID_COMPTE: number = 0;
-  compteWeb: any = {};
-  serverAccount: CompteServer = new CompteServer();
-  serverAccounts: CompteServer[] = [];
-  public selected: any[] = [];
-  codesPays: { key: string; value: string; }[] = [];
-  options: Option[] = [];
-  boitiers: any[] = [];
-  boitiersClicked = false;
-  selectedBoitierId: number = 0;
-  selectedServerId: number = 0;
-  loadingDeviceSetting: boolean = false;
-  loadingRecalculate: boolean = false;
-  loadingEditDeviceOption: boolean = false;
-  loadingEditPathConfig: boolean = false;
-  loadingResetOdometre: boolean = false;
-  selectedBoitiersIds: number[] = [];
-  notifications: { value: string, status: boolean }[] = [];
-  recalculeP: RecalculatePayload = new RecalculatePayload();
-  vehiculeSetting: VehiculeSetting = new VehiculeSetting();
-  ipAddresses: IpAddress[] = [];
-  dropdownSettings: IDropdownSettings = {};
-  showConfigModal: boolean = false;
+  ID_COMPTE = signal<number>(0);
+  compteWeb = signal<any>({});
+  serverAccount = signal<CompteServer>(new CompteServer());
+  serverAccounts = signal<CompteServer[]>([]);
+  selected = signal<any[]>([]);
+  codesPays = signal<{ key: string; value: string; }[]>([]);
+  options = signal<Option[]>([]);
+  boitiers = signal<any[]>([]);
+  boitiersClicked = signal<boolean>(false);
+  selectedBoitierId = signal<number>(0);
+  selectedServerId = signal<number>(0);
+  loadingDeviceSetting = signal<boolean>(false);
+  loadingRecalculate = signal<boolean>(false);
+  loadingEditDeviceOption = signal<boolean>(false);
+  loadingEditPathConfig = signal<boolean>(false);
+  loadingResetOdometre = signal<boolean>(false);
+  selectedBoitiersIds = signal<number[]>([]);
+  notifications = signal<{ value: string, status: boolean }[]>([]);
+  recalculeP = signal<RecalculatePayload>(new RecalculatePayload());
+  vehiculeSetting = signal<VehiculeSetting>(new VehiculeSetting());
+  ipAddresses = signal<IpAddress[]>([]);
+  dropdownSettings = signal<IDropdownSettings>({});
+  showConfigModal = signal<boolean>(false);
 
-  get date(): Date | null { return this.mainConfigForm.get('date_expiration')?.value; }
-  get checked(): boolean { return this.mainConfigForm.get('mobileNotif')?.value; }
-  get datestart(): Date | null { return this.recalculateForm.get('datestart')?.value; }
-  get typeRecalcule(): string { return this.recalculateForm.get('typeRecalcule')?.value; }
-  get deviceSetting(): any { return this.deviceSettingForm.value; }
-  get imei(): string { return this.imeiSearchForm.get('imei')?.value; }
-  get deviceOpt(): any { return this.deviceOptForm.value; }
-  get pathConfig(): any { return this.pathConfigForm.value; }
+
+  date = computed(() => this.mainConfigForm.get('date_expiration')?.value as Date | null);
+  checked = computed(() => !!this.mainConfigForm.get('mobileNotif')?.value);
+  datestart = computed(() => this.recalculateForm.get('datestart')?.value as Date | null);
+  typeRecalcule = computed(() => this.recalculateForm.get('typeRecalcule')?.value as string);
+  deviceSetting = computed(() => this.deviceSettingForm.value);
+  imei = computed(() => this.imeiSearchForm.get('imei')?.value as string);
+  deviceOpt = computed(() => this.deviceOptForm.value);
+  pathConfig = computed(() => this.pathConfigForm.value);
+
 
   regions = ['Tunis', 'Sfax', 'Sousse'];
   notifSubs = ['date_sub(NOW(), INTERVAL 6 hour)', 'date_sub(NOW(), INTERVAL 1 DAY)', 'date_sub(NOW(), INTERVAL 2 DAY)'];
@@ -98,11 +99,12 @@ export class ConfigurationWebComponentComponent implements OnInit {
 
 
   constructor() {
-    this.notifications = [];
+    this.notifications.set([]);
     this.webSocketService.getNotifications().subscribe(_ => { });
     this.localeService.use('fr');
     this.initForms();
   }
+
 
   initForms() {
     this.mainConfigForm = this.fb.group({
@@ -160,14 +162,14 @@ export class ConfigurationWebComponentComponent implements OnInit {
       this.router.navigate(['/error']);
     } else {
       this.route.params.subscribe((params: Params) => {
-        this.ID_COMPTE = (+params['idCompteClientWeb']);
-        this.webAccountService.getWebAccountById(this.ID_COMPTE).subscribe(async (_compteWeb: any) => {
+        this.ID_COMPTE.set(+params['idCompteClientWeb']);
+        this.webAccountService.getWebAccountById(this.ID_COMPTE()).subscribe(async (_compteWeb: any) => {
           this.webAccountService.getAllOptions().subscribe(opts => {
-            this.options = opts;
+            this.options.set(opts);
           });
-          this.compteWeb = _compteWeb;
-          this.serverAccount = _compteWeb.compteClientServer;
-          this.selected = _compteWeb.options;
+          this.compteWeb.set(_compteWeb);
+          this.serverAccount.set(_compteWeb.compteClientServer);
+          this.selected.set(_compteWeb.options);
 
           this.mainConfigForm.patchValue({
             login: _compteWeb.login,
@@ -183,25 +185,24 @@ export class ConfigurationWebComponentComponent implements OnInit {
             area: _compteWeb.area,
             notificationSubquery: _compteWeb.notificationSubquery,
             mobileNotif: _compteWeb.mobileNotif,
-            idCompteServer: _compteWeb.compteClientServer?.idCompteClientServer // Map server ID
+            idCompteServer: _compteWeb.compteClientServer?.idCompteClientServer
           });
 
-          if (new Date().getTime() < this.serverAccount.date_Expiration) {
-            this.serverAccount.expired = false;
-            this.serverAccount.during = true;
+          const currentServer = this.serverAccount();
+          if (new Date().getTime() < currentServer.date_Expiration) {
+            this.serverAccount.update(s => ({ ...s, expired: false, during: true }));
           } else {
-            this.serverAccount.expired = true;
-            this.serverAccount.during = false;
+            this.serverAccount.update(s => ({ ...s, expired: true, during: false }));
           }
         });
       });
-      this.codesPays = this.webAccountService.codesPays;
+      this.codesPays.set(this.webAccountService.codesPays);
       this.compteServerService.getAllServerAccountForForm().subscribe(res => {
-        this.serverAccounts = res.content;
+        this.serverAccounts.set(res.content);
       });
     }
     this.getAllIps();
-    this.dropdownSettings = {
+    this.dropdownSettings.set({
       singleSelection: false,
       idField: 'idOption',
       textField: 'description',
@@ -209,21 +210,21 @@ export class ConfigurationWebComponentComponent implements OnInit {
       unSelectAllText: 'UnSelect All',
       itemsShowLimit: 3,
       allowSearchFilter: true
-    };
-  }
-
-  getAllIps() {
-    this.ipAddressService.getAllIps().subscribe(res => {
-      this.ipAddresses = res;
     });
   }
 
-  remove(item: any) {
-    const index = this.selected.indexOf(item);
-    if (index !== -1) {
-      this.selected.splice(index, 1);
-    }
+
+  getAllIps() {
+    this.ipAddressService.getAllIps().subscribe(res => {
+      this.ipAddresses.set(res);
+    });
   }
+
+
+  remove(item: any) {
+    this.selected.update(arr => arr.filter(i => i !== item));
+  }
+
 
 
   saveChange() {
@@ -233,14 +234,14 @@ export class ConfigurationWebComponentComponent implements OnInit {
     }
     const formValue = this.mainConfigForm.value;
     const updatedCompte = {
-      ...this.compteWeb,
+      ...this.compteWeb(),
       ...formValue,
       rawPassword: formValue.password,
       date_expiration: (formValue.date_expiration as Date).getTime(),
       options: formValue.options
     };
 
-    this.webAccountService.updateWebAccount(this.ID_COMPTE, updatedCompte)
+    this.webAccountService.updateWebAccount(this.ID_COMPTE(), updatedCompte)
       .pipe(
         tap(() => this.toastr.success('Web account updated', 'Success!')),
         catchError(() => {
@@ -250,16 +251,18 @@ export class ConfigurationWebComponentComponent implements OnInit {
       )
       .subscribe();
 
-    this.webAccountService.addOptionsToWebAccount(this.ID_COMPTE, formValue.options).subscribe();
+    this.webAccountService.addOptionsToWebAccount(this.ID_COMPTE(), formValue.options).subscribe();
   }
 
   updateWebAccount() {
-    if (this.date !== null) {
-      this.compteWeb.date_expiration = this.date.getTime();
+    const expirationDate = this.date();
+    if (expirationDate !== null) {
+      this.compteWeb.update(c => ({ ...c, date_expiration: expirationDate.getTime() }));
     }
-    this.compteWeb.options = this.mainConfigForm.value.options;
+    this.compteWeb.update(c => ({ ...c, options: this.mainConfigForm.value.options }));
 
-    this.webAccountService.updateWebAccount(this.compteWeb.idCompteClientWeb, this.compteWeb)
+    const currentCompte = this.compteWeb();
+    this.webAccountService.updateWebAccount(currentCompte.idCompteClientWeb, currentCompte)
       .pipe(
         tap(() => this.toastr.success('Web account updated', 'Success!')),
         catchError(() => {
@@ -269,25 +272,31 @@ export class ConfigurationWebComponentComponent implements OnInit {
       )
       .subscribe(updatedCompteWeb => {
         if (updatedCompteWeb) {
-          this.compteWeb = updatedCompteWeb;
+          this.compteWeb.set(updatedCompteWeb);
         }
       });
   }
 
+  numNotificationErrors = computed(() => this.notifications().filter(n => !n.status).length);
+
   getNumberOfNotificationErrors(): number {
-    return this.notifications.filter(n => !n.status).length;
+    return this.numNotificationErrors();
   }
 
+
+  numBoitierNotInstall = computed(() => this.boitiers().filter(b => b.etatBoitier === 'NOT_INSTALLED').length);
+
   getNumberOfBoitiersNotInstall(): number {
-    return this.boitiers.filter(b => b.etatBoitier === 'NOT_INSTALLED').length;
+    return this.numBoitierNotInstall();
   }
+
 
   editPathConfig() {
     if (this.pathConfigForm.invalid) return;
-    this.loadingEditPathConfig = true;
-    const selectedBoitiersId = [...this.selectedBoitiersIds];
-    if (!this.isCheckedBoitier(this.selectedBoitierId)) {
-      selectedBoitiersId.push(this.selectedBoitierId);
+    this.loadingEditPathConfig.set(true);
+    const selectedBoitiersId = [...this.selectedBoitiersIds()];
+    if (!this.isCheckedBoitier(this.selectedBoitierId())) {
+      selectedBoitiersId.push(this.selectedBoitierId());
     }
 
     const pathConfigPayload: PathConfigPayload = {
@@ -295,14 +304,14 @@ export class ConfigurationWebComponentComponent implements OnInit {
       boitiersId: selectedBoitiersId
     };
 
-    this.boitierService.editPathConfig(this.selectedServerId, pathConfigPayload)
+    this.boitierService.editPathConfig(this.selectedServerId(), pathConfigPayload)
       .pipe(
         tap(() => {
-          this.loadingEditPathConfig = false;
+          this.loadingEditPathConfig.set(false);
           this.toastr.success("Configuration de boîtier enregistrée");
         }),
         catchError(error => {
-          this.loadingEditPathConfig = false;
+          this.loadingEditPathConfig.set(false);
           this.toastr.error("Modification erronée", 'Erreur!');
           throw error;
         })
@@ -311,7 +320,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
   }
 
   prepareDBForSingleDevice(idBoitier: number) {
-    this.boitierService.prepareDBForSingleDevise(this.selectedServerId, idBoitier)
+    this.boitierService.prepareDBForSingleDevise(this.selectedServerId(), idBoitier)
       .pipe(
         tap(() => {
           this.toastr.success("Bases de donnees preparee pour le boitier " + idBoitier, 'Reussi!');
@@ -326,12 +335,14 @@ export class ConfigurationWebComponentComponent implements OnInit {
   }
 
   updateBoitierState(idBoitier: number) {
-    this.boitiers.forEach(boitier => {
+    this.boitiers.update(arr => arr.map(boitier => {
       if (boitier.idBoitier == idBoitier) {
-        boitier.etatBoitier = "INSTALLED";
+        return { ...boitier, etatBoitier: "INSTALLED" };
       }
-    });
+      return boitier;
+    }));
   }
+
 
   prepareDB(idServer: number) {
     this.boitierService.prepareDBForAllDevises(idServer).subscribe({
@@ -343,38 +354,38 @@ export class ConfigurationWebComponentComponent implements OnInit {
   }
 
   showDevises(idServer: number) {
-    this.selectedServerId = idServer;
+    this.selectedServerId.set(idServer);
     this.boitierService.getAllBoitierofIdcompte(idServer).subscribe(boitiers => {
-      this.boitiers = boitiers;
-      this.boitiersClicked = true;
+      this.boitiers.set(boitiers);
+      this.boitiersClicked.set(true);
     });
   }
 
+
   editBoitier(boitier: Boitier) {
-    this.selectedBoitierId = boitier.numBoitier; // Use numBoitier for config operations
+    this.selectedBoitierId.set(boitier.numBoitier); // Use numBoitier for config operations
     this.recalculateForm.reset({ datestart: new Date(), typeRecalcule: '' });
-    this.notifications = [];
-    this.recalculeP.idBoitier = boitier.numBoitier; 
+    this.notifications.set([]);
+    this.recalculeP.update(p => ({ ...p, idBoitier: boitier.numBoitier })); 
     
     this.getDeviceOptionConfig(boitier.numBoitier);
     this.getPathConfig(boitier.numBoitier);
     this.getDeviceSettings(boitier.numBoitier);
-    this.showConfigModal = true;
+    this.showConfigModal.set(true);
   }
 
   closeConfigModal() {
-    this.showConfigModal = false;
+    this.showConfigModal.set(false);
   }
 
+
   getDeviceOptionConfig(numBoitier: number) {
-    this.boitierService.getDeviceOptionConfig(this.ID_COMPTE, numBoitier)
+    this.boitierService.getDeviceOptionConfig(this.ID_COMPTE(), numBoitier)
       .subscribe({
         next: (res) => {
-          console.log('Options Response:', res);
           if (res) {
             const data = Array.isArray(res) ? res[0] : res;
             if (data) {
-              console.log('Patching Options with:', data);
               this.deviceOptForm.patchValue({
                 useIgnition: !!data.useIgnition,
                 useFuel: !!data.useFuel,
@@ -384,7 +395,6 @@ export class ConfigurationWebComponentComponent implements OnInit {
                 useIdDriver: !!data.useIdDriver,
                 useStop: !!data.useStop
               });
-              this.cdr.detectChanges();
             }
           }
         },
@@ -392,17 +402,15 @@ export class ConfigurationWebComponentComponent implements OnInit {
       });
   }
 
+
   getPathConfig(numBoitier: number) {
-    this.boitierService.getPathConfig(this.ID_COMPTE, numBoitier)
+    this.boitierService.getPathConfig(this.ID_COMPTE(), numBoitier)
       .subscribe({
         next: (res) => {
-          console.log('Path Config Response:', res);
           if (res) {
             const data = Array.isArray(res) ? res[0] : res;
             if (data) {
-              console.log('Patching Path Config with:', data);
               this.pathConfigForm.patchValue(data);
-              this.cdr.detectChanges();
             }
           }
         },
@@ -410,21 +418,18 @@ export class ConfigurationWebComponentComponent implements OnInit {
       });
   }
 
+
   getDeviceSettings(numBoitier: number) {
-    this.boitierService.getDeviceSettings(this.ID_COMPTE, numBoitier)
+    this.boitierService.getDeviceSettings(this.ID_COMPTE(), numBoitier)
       .subscribe({
         next: (res) => {
-          console.log('Settings Response:', res);
           if (res) {
             const data = Array.isArray(res) ? res[0] : res;
             if (data) {
-              console.log('Patching Settings with:', data);
-              // Ensure numeric values for form fields to match select options
               this.deviceSettingForm.patchValue({
                 idIpAdresse: data.idIpAdresse,
                 streamId: data.streamId
               });
-              this.cdr.detectChanges();
             }
           }
         },
@@ -432,160 +437,167 @@ export class ConfigurationWebComponentComponent implements OnInit {
       });
   }
 
+
   editDeviceOptionConfig() {
-    this.loadingEditDeviceOption = true;
-    const selectedBoitiersIds = [...this.selectedBoitiersIds];
-    if (!this.isCheckedBoitier(this.selectedBoitierId)) {
-      selectedBoitiersIds.push(this.selectedBoitierId);
+    this.loadingEditDeviceOption.set(true);
+    const selectedBoitiersIdList = [...this.selectedBoitiersIds()];
+    if (!this.isCheckedBoitier(this.selectedBoitierId())) {
+      selectedBoitiersIdList.push(this.selectedBoitierId());
     }
 
-    const deviceOpt = {
+    const deviceOptPayload = {
       ...this.deviceOptForm.value,
-      idBoitiers: selectedBoitiersIds
+      idBoitiers: selectedBoitiersIdList
     };
 
-    this.boitierService.editDeviceOptionConfig(this.ID_COMPTE, deviceOpt)
+    this.boitierService.editDeviceOptionConfig(this.ID_COMPTE(), deviceOptPayload)
       .subscribe({
         next: () => {
-          this.loadingEditDeviceOption = false;
+          this.loadingEditDeviceOption.set(false);
           this.toastr.success('Options updated');
         },
         error: () => {
-          this.loadingEditDeviceOption = false;
+          this.loadingEditDeviceOption.set(false);
           this.toastr.error("Erreur de mise à jour", 'Erreur');
         }
       });
   }
 
+
   recalculeFuel() {
-    this.notifications = [];
+    this.notifications.set([]);
     if (confirm("Vous êtes sur de vouloir faire le recalcule ?")) {
-      this.loadingRecalculate = true;
+      this.loadingRecalculate.set(true);
       const recalculePayload = new RecalculatePayload();
-      recalculePayload.recalculeStartDate = this.datestart?.getTime() ?? 0;
-      recalculePayload.idBoitiers = [...this.selectedBoitiersIds];
-      if (!this.isCheckedBoitier(this.recalculeP.idBoitier)) {
-        recalculePayload.idBoitiers.push(this.recalculeP.idBoitier);
+      recalculePayload.recalculeStartDate = this.datestart()?.getTime() ?? 0;
+      recalculePayload.idBoitiers = [...this.selectedBoitiersIds()];
+      if (!this.isCheckedBoitier(this.recalculeP().idBoitier)) {
+        recalculePayload.idBoitiers.push(this.recalculeP().idBoitier);
       }
 
-      this.boitierService.recalculeFuel(this.ID_COMPTE, recalculePayload)
+      this.boitierService.recalculeFuel(this.ID_COMPTE(), recalculePayload)
         .subscribe({
-          next: () => this.loadingRecalculate = false,
+          next: () => this.loadingRecalculate.set(false),
           error: (error) => {
-            this.loadingRecalculate = false;
-            this.notifications.push({ value: error, status: false });
+            this.loadingRecalculate.set(false);
+            this.notifications.update(n => [...n, { value: error, status: false }]);
           }
         });
     }
   }
+
 
   recalculeHistorique() {
-    this.notifications = [];
+    this.notifications.set([]);
     if (confirm("Vous êtes sur de vouloir faire le recalcule ?")) {
-      this.loadingRecalculate = true;
+      this.loadingRecalculate.set(true);
       const recalculePayload = new RecalculatePayload();
-      recalculePayload.recalculeStartDate = this.datestart?.getTime() ?? 0;
-      recalculePayload.idBoitiers = [...this.selectedBoitiersIds];
-      if (!this.isCheckedBoitier(this.recalculeP.idBoitier)) {
-        recalculePayload.idBoitiers.push(this.recalculeP.idBoitier);
+      recalculePayload.recalculeStartDate = this.datestart()?.getTime() ?? 0;
+      recalculePayload.idBoitiers = [...this.selectedBoitiersIds()];
+      if (!this.isCheckedBoitier(this.recalculeP().idBoitier)) {
+        recalculePayload.idBoitiers.push(this.recalculeP().idBoitier);
       }
 
-      this.boitierService.recalculeHistorique(this.ID_COMPTE, recalculePayload)
+      this.boitierService.recalculeHistorique(this.ID_COMPTE(), recalculePayload)
         .subscribe({
-          next: () => this.loadingRecalculate = false,
+          next: () => this.loadingRecalculate.set(false),
           error: (error) => {
-            this.loadingRecalculate = false;
-            this.notifications.push({ value: error, status: false });
+            this.loadingRecalculate.set(false);
+            this.notifications.update(n => [...n, { value: error, status: false }]);
           }
         });
     }
   }
+
 
   public recalculeAlert() {
-    this.notifications = [];
+    this.notifications.set([]);
     if (confirm("Vous êtes sur de vouloir faire le recalcule ?")) {
-      this.loadingRecalculate = true;
+      this.loadingRecalculate.set(true);
       const recalculePayload = new RecalculatePayload();
-      recalculePayload.recalculeStartDate = this.datestart?.getTime() ?? 0;
-      recalculePayload.idBoitiers = [...this.selectedBoitiersIds];
-      if (!this.isCheckedBoitier(this.recalculeP.idBoitier)) {
-        recalculePayload.idBoitiers.push(this.recalculeP.idBoitier);
+      recalculePayload.recalculeStartDate = this.datestart()?.getTime() ?? 0;
+      recalculePayload.idBoitiers = [...this.selectedBoitiersIds()];
+      if (!this.isCheckedBoitier(this.recalculeP().idBoitier)) {
+        recalculePayload.idBoitiers.push(this.recalculeP().idBoitier);
       }
 
-      this.boitierService.recalculeAlert(this.ID_COMPTE, recalculePayload)
+      this.boitierService.recalculeAlert(this.ID_COMPTE(), recalculePayload)
         .subscribe({
-          next: () => this.loadingRecalculate = false,
+          next: () => this.loadingRecalculate.set(false),
           error: (error) => {
-            this.loadingRecalculate = false;
-            this.notifications.push({ value: error, status: false });
+            this.loadingRecalculate.set(false);
+            this.notifications.update(n => [...n, { value: error, status: false }]);
           }
         });
     }
   }
 
+
   recalculePaths() {
-    this.notifications = [];
+    this.notifications.set([]);
     if (confirm("Vous êtes sur de vouloir faire le recalcule ?")) {
-      this.loadingRecalculate = true;
+      this.loadingRecalculate.set(true);
       const recalculePayload = new RecalculatePayload();
-      recalculePayload.recalculeStartDate = this.datestart?.getTime() ?? 0;
-      recalculePayload.idBoitiers = [...this.selectedBoitiersIds];
-      if (!this.isCheckedBoitier(this.recalculeP.idBoitier)) {
-        recalculePayload.idBoitiers.push(this.recalculeP.idBoitier);
+      recalculePayload.recalculeStartDate = this.datestart()?.getTime() ?? 0;
+      recalculePayload.idBoitiers = [...this.selectedBoitiersIds()];
+      if (!this.isCheckedBoitier(this.recalculeP().idBoitier)) {
+        recalculePayload.idBoitiers.push(this.recalculeP().idBoitier);
       }
 
-      this.boitierService.recalculePaths(this.ID_COMPTE, recalculePayload)
+      this.boitierService.recalculePaths(this.ID_COMPTE(), recalculePayload)
         .subscribe({
-          next: () => this.loadingRecalculate = false,
+          next: () => this.loadingRecalculate.set(false),
           error: (error) => {
-            this.loadingRecalculate = false;
-            this.notifications.push({ value: error, status: false });
+            this.loadingRecalculate.set(false);
+            this.notifications.update(n => [...n, { value: error, status: false }]);
           }
         });
     }
   }
 
   recalculeBoitier() {
-    this.notifications = [];
+    this.notifications.set([]);
     if (confirm("Vous êtes sur de vouloir faire le recalcule ?")) {
-      this.loadingRecalculate = true;
+      this.loadingRecalculate.set(true);
       const recalculePayload = new RecalculatePayload();
-      recalculePayload.idBoitiers = [...this.selectedBoitiersIds];
-      if (!this.isCheckedBoitier(this.recalculeP.idBoitier)) {
-        recalculePayload.idBoitiers.push(this.recalculeP.idBoitier);
+      recalculePayload.idBoitiers = [...this.selectedBoitiersIds()];
+      if (!this.isCheckedBoitier(this.recalculeP().idBoitier)) {
+        recalculePayload.idBoitiers.push(this.recalculeP().idBoitier);
       }
 
-      this.boitierService.recalculeBoitier(this.ID_COMPTE, recalculePayload)
+      this.boitierService.recalculeBoitier(this.ID_COMPTE(), recalculePayload)
         .subscribe({
-          next: () => this.loadingRecalculate = false,
+          next: () => this.loadingRecalculate.set(false),
           error: (error) => {
-            this.loadingRecalculate = false;
-            this.notifications.push({ value: error, status: false });
+            this.loadingRecalculate.set(false);
+            this.notifications.update(n => [...n, { value: error, status: false }]);
           }
         });
     }
   }
+
 
   resetRT() {
-    this.notifications = [];
+    this.notifications.set([]);
     if (confirm("Vous êtes sur de vouloir faire le reset ?")) {
-      this.loadingRecalculate = true;
+      this.loadingRecalculate.set(true);
       const recalculePayload = new RecalculatePayload();
-      recalculePayload.idBoitiers = [...this.selectedBoitiersIds];
-      if (!this.isCheckedBoitier(this.selectedBoitierId)) {
-        recalculePayload.idBoitiers.push(this.selectedBoitierId);
+      recalculePayload.idBoitiers = [...this.selectedBoitiersIds()];
+      if (!this.isCheckedBoitier(this.selectedBoitierId())) {
+        recalculePayload.idBoitiers.push(this.selectedBoitierId());
       }
 
-      this.boitierService.resetRT(this.ID_COMPTE, recalculePayload)
+      this.boitierService.resetRT(this.ID_COMPTE(), recalculePayload)
         .subscribe({
-          next: () => this.loadingRecalculate = false,
+          next: () => this.loadingRecalculate.set(false),
           error: (error) => {
-            this.loadingRecalculate = false;
-            this.notifications.push({ value: error, status: false });
+            this.loadingRecalculate.set(false);
+            this.notifications.update(n => [...n, { value: error, status: false }]);
           }
         });
     }
   }
+
 
   recalculate() {
     const type = this.recalculateForm.get('typeRecalcule')?.value;
@@ -603,52 +615,59 @@ export class ConfigurationWebComponentComponent implements OnInit {
   }
 
   onCheckedBoitier(numBoitier: number): void {
-    const index = this.selectedBoitiersIds.indexOf(numBoitier);
-    index == -1 ? this.selectedBoitiersIds.push(numBoitier) : this.selectedBoitiersIds.splice(index, 1);
-  }
-
-  isCheckedBoitier(numBoitier: number): boolean {
-    return this.selectedBoitiersIds.indexOf(numBoitier) != -1;
-  }
-
-  onCheckedAllBoitiers(): void {
-    if (this.boitiers.length == this.selectedBoitiersIds.length) {
-      this.selectedBoitiersIds = [];
+    const index = this.selectedBoitiersIds().indexOf(numBoitier);
+    if (index === -1) {
+      this.selectedBoitiersIds.update(arr => [...arr, numBoitier]);
     } else {
-      this.selectedBoitiersIds = this.boitiers.map(b => b.numBoitier);
+      this.selectedBoitiersIds.update(arr => arr.filter(id => id !== numBoitier));
     }
   }
 
+  isCheckedBoitier(numBoitier: number): boolean {
+    return this.selectedBoitiersIds().indexOf(numBoitier) != -1;
+  }
+
+
+  onCheckedAllBoitiers(): void {
+    if (this.boitiers().length == this.selectedBoitiersIds().length) {
+      this.selectedBoitiersIds.set([]);
+    } else {
+      this.selectedBoitiersIds.set(this.boitiers().map(b => b.numBoitier));
+    }
+  }
+
+
   async editDeviceSetting() {
-    this.loadingDeviceSetting = true;
-    const selectedBoitiersIds = [...this.selectedBoitiersIds];
-    if (!this.isCheckedBoitier(this.selectedBoitierId)) {
-      selectedBoitiersIds.push(this.selectedBoitierId);
+    this.loadingDeviceSetting.set(true);
+    const selectedBoitiersIdList = [...this.selectedBoitiersIds()];
+    if (!this.isCheckedBoitier(this.selectedBoitierId())) {
+      selectedBoitiersIdList.push(this.selectedBoitierId());
     }
 
     const deviceSetting = {
       ...this.deviceSettingForm.value,
-      idBoitiers: selectedBoitiersIds
+      idBoitiers: selectedBoitiersIdList
     };
     if (!deviceSetting.streamId || deviceSetting.streamId == 0)
       deviceSetting.streamId = deviceSetting.idBoitiers[0];
 
-    this.boitierService.editDeviceSetting(this.ID_COMPTE, deviceSetting).subscribe({
+    this.boitierService.editDeviceSetting(this.ID_COMPTE(), deviceSetting).subscribe({
       next: () => {
-        this.showDevises(this.serverAccount.idCompteClientServer);
-        this.loadingDeviceSetting = false;
+        this.showDevises(this.serverAccount().idCompteClientServer);
+        this.loadingDeviceSetting.set(false);
         this.toastr.success('Paramètres boitier mis à jour');
       },
       error: () => {
-        this.loadingDeviceSetting = false;
+        this.loadingDeviceSetting.set(false);
         this.toastr.error("Erreur de mise à jour", 'Erreur');
       }
     });
   }
 
+
   getSearchDeviceIemi(imei: string) {
     const idIpAdresse = this.deviceSettingForm.get('idIpAdresse')?.value;
-    const url = this.ipAddresses.find(ip => ip.idIpAdresse == idIpAdresse)?.urlGetId;
+    const url = this.ipAddresses().find(ip => ip.idIpAdresse == idIpAdresse)?.urlGetId;
     if (url) {
       this.boitierService.getDeviceIdImei(url, parseInt(imei)).subscribe(res => {
         this.deviceSettingForm.patchValue({ streamId: res.id });
@@ -656,25 +675,27 @@ export class ConfigurationWebComponentComponent implements OnInit {
     }
   }
 
-  resetOdometre() {
-    this.loadingResetOdometre = true;
-    const selectedBoitiersIds = [...this.selectedBoitiersIds];
-    if (!this.isCheckedBoitier(this.recalculeP.idBoitier)) {
-      selectedBoitiersIds.push(this.recalculeP.idBoitier);
-    }
-    this.vehiculeSetting.idBoitiers = selectedBoitiersIds;
 
-    this.boitierService.resetOdometre(this.ID_COMPTE, this.vehiculeSetting)
+  resetOdometre() {
+    this.loadingResetOdometre.set(true);
+    const selectedBoitiersIdList = [...this.selectedBoitiersIds()];
+    if (!this.isCheckedBoitier(this.recalculeP().idBoitier)) {
+      selectedBoitiersIdList.push(this.recalculeP().idBoitier);
+    }
+    this.vehiculeSetting.update(s => ({ ...s, idBoitiers: selectedBoitiersIdList }));
+
+    this.boitierService.resetOdometre(this.ID_COMPTE(), this.vehiculeSetting())
       .subscribe({
         next: () => {
-          this.showDevises(this.serverAccount.idCompteClientServer);
-          this.loadingResetOdometre = false;
+          this.showDevises(this.serverAccount().idCompteClientServer);
+          this.loadingResetOdometre.set(false);
           this.toastr.success('Odometer reset success');
         },
         error: () => {
-          this.loadingResetOdometre = false;
+          this.loadingResetOdometre.set(false);
           this.toastr.error("Erreur de mise à jour", 'Erreur');
         }
       });
   }
+
 }
