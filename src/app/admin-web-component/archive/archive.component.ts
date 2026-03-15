@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, viewChild, signal } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { TabsetComponent, TabsModule } from "ngx-bootstrap/tabs";
 import { Archive, raws } from "../../data/data";
@@ -14,10 +14,10 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angul
     imports: [FormsModule, ReactiveFormsModule, TabsModule]
 })
 export class ArchiveComponent implements OnInit {
-  @ViewChild('staticTabs') staticTabs: TabsetComponent;
-  archives: Archive[] = [];
-  raws: raws = new raws();
-  numBoitier: number;
+  staticTabs = viewChild<TabsetComponent>('staticTabs');
+  archives = signal<Archive[]>([]);
+  rawData = signal<raws>(new raws());
+  numBoitier = signal<number>(0);
   archiveForm!: FormGroup;
 
   constructor(private _location: Location, private route: ActivatedRoute, private boitierService: BoitierService, private router: Router, private fb: FormBuilder) { }
@@ -25,7 +25,7 @@ export class ArchiveComponent implements OnInit {
   ngOnInit(): void {
     this.initForms();
     this.route.params.subscribe((params: Params) => {
-      this.numBoitier = (+params['numBoitier']);
+      this.numBoitier.set(+params['numBoitier']);
     });
     this.getArchives();
   }
@@ -50,9 +50,11 @@ export class ArchiveComponent implements OnInit {
 
   getAllRaws() {
     const limit = this.archiveForm.get('limit')?.value || 200;
-    this.boitierService.getRaws(this.numBoitier, limit).subscribe((_raws: any) => {
-      this.raws.raws = _raws.raws;
-      this.raws.count = _raws.count;
+    this.boitierService.getRaws(this.numBoitier(), limit).subscribe((_raws: any) => {
+      const updatedRaws = new raws();
+      updatedRaws.raws = _raws.raws;
+      updatedRaws.count = _raws.count;
+      this.rawData.set(updatedRaws);
     });
   }
 
@@ -62,12 +64,13 @@ export class ArchiveComponent implements OnInit {
   //=====================================
   getArchives() {
     const limit = this.archiveForm.get('limit')?.value || 200;
-    this.boitierService.getArchiveOfBoitier(this.numBoitier, limit).subscribe(_archives => {
-      this.archives = _archives as any;
-      for (let i = 0; i < this.archives.length; i++) {
-        this.archives[i].latitude = (+this.archives[i].latitude.toFixed(5));
-        this.archives[i].longitude = (+this.archives[i].longitude.toFixed(5));
-      }
+    this.boitierService.getArchiveOfBoitier(this.numBoitier(), limit).subscribe(_archives => {
+      const archs = (_archives as any[]).map(a => ({
+        ...a,
+        latitude: +a.latitude.toFixed(5),
+        longitude: +a.longitude.toFixed(5)
+      }));
+      this.archives.set(archs);
     });
   }
 }

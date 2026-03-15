@@ -6,9 +6,9 @@
                     <h4 class="title">Demandes clients</h4>
                 </div>
                 <div class="col-sm-3">
-                    <form role="search" style="margin-top:3px;">
+                    <form role="search" class="search-form-header">
                         <div class="is-empty">
-                            <label class="control-label" for="type" style="color:#fff1f3;">Etat
+                            <label class="control-label label-etat" for="type">Etat
                                 <select class="formulaire" formControlName="type" name="type" id="type">
                                     @for (type of types; track type.name) {
                                     <option [value]="type.name">{{type.label}}</option>
@@ -20,19 +20,18 @@
                     </form>
                 </div>
                 <div class="col-sm-3">
-                    <form role="search" style="margin-top:3px;">
+                    <form role="search" class="search-form-header">
                         <div class="is-empty">
-                            <label class="control-label" for="compteserver" style="color:#fff1f3;">Client
+                            <label class="control-label label-etat" for="compteserver">Client
                                 <select class="formulaire" formControlName="compteWebId" name="compteserver"
                                     id="compteserver">
-                                    @for (CompteWeb of comptesWeb; track CompteWeb.idCompteClientWeb) {
+                                    @for (CompteWeb of comptesWeb(); track CompteWeb.idCompteClientWeb) {
                                     <option [value]="CompteWeb.idCompteClientWeb">{{CompteWeb.login}}</option>
                                     }
                                 </select>
                             </label>
-                            <button type="submit" class="btn btn-white btn-sm" title="Rechercher"
-                                style="margin: 0px; padding: 1px 5px; margin: 0px 0px 0px 0px;"
-                                (click)="onSearchClient()"><i class="fa fa-search" style="font-size: 14px"></i>
+                            <button type="submit" class="btn btn-white btn-sm btn-search-client" title="Rechercher"
+                                (click)="onSearchClient()"><i class="fa fa-search search-icon"></i>
                                 Rechercher</button>
                         </div>
                     </form>
@@ -56,15 +55,15 @@
                 </thead>
                 <tbody>
 
-                    @if (loading) {
+                    @if (loading()) {
                     <tr>
-                        <td style="text-align: center" colspan="8">
+                        <td class="loading-cell" colspan="8">
                             <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
                         </td>
                     </tr>
                     }
 
-                    @for (intervention of interventionsFilter; track $index) {
+                    @for (intervention of interventionsFilter(); track $index) {
                     <tr>
                         <td>{{intervention.createdAt | date:'dd-MM-yyyy'}}</td>
                         <td>{{intervention.request}}</td>
@@ -100,9 +99,8 @@
                         <td>{{intervention.submitAt | date:'dd-MM-yyyy'}}</td>
                         <td>{{intervention.response}}</td>
                         <td>
-                            <button class="btn btn-info btn-xs"
-                                style="padding: 0px 8px;font-size: 8px;margin: 1px 0px 0px 0px;"
-                                (click)="openUpdateModal(intervention)" [tooltip]="'Modifier'" tooltipPlacement="top"
+                            <button class="btn btn-info btn-xs btn-modify-intervention"
+                                (click)="openUpdateModal(intervention)" title="Modifier" [tooltip]="'Modifier'" tooltipPlacement="top"
                                 data-toggle="modal" data-target="#ModalInit">
                                 <i class="fa fa-edit" aria-hidden="true"></i></button>
                         </td>
@@ -119,7 +117,7 @@
 <ng-template #template class="modal-dialog">
     <div class="modal-header">
         <h4 class="modal-title pull-left">Traitement de la demance</h4>
-        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef?.hide()">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
@@ -127,7 +125,7 @@
     </div>
 </ng-template>
 <div class="modal fade" id="ModalInit" role="dialog">
-    <div class="modal-dialog" style="    width: 900px;">
+    <div class="modal-dialog">
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">

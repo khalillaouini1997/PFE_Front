@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnInit, viewChild, signal, inject } from '@angular/core';
 import { BsModalRef, ModalDirective } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { CompteWeb, Intervention } from 'src/app/data/data';
@@ -6,13 +6,13 @@ import { WebAccountService } from "../../service/web-account.service";
 import { InterventionService } from "../../service/intervention.service";
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DatePipe } from '@angular/common';
+import { DatePipe, CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-help',
     templateUrl: './help.component.html',
     styleUrls: ['./help.component.css'],
-    imports: [FormsModule, ReactiveFormsModule, DatePipe, TooltipModule]
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, DatePipe, TooltipModule]
 })
 export class HelpComponent implements OnInit {
 
@@ -20,21 +20,21 @@ export class HelpComponent implements OnInit {
   updateForm!: FormGroup;
 
   date: Date = new Date();
-  @ViewChild('addEditModal') addEditModal: ModalDirective;
-  modalRef: BsModalRef;
-  selectedType: string | null = null;
+  addEditModal = viewChild<ModalDirective>('addEditModal');
+  modalRef?: BsModalRef;
+  selectedType = signal<string | null>(null);
   types = [
     { name: 'REQUEST', label: 'Demande d\'intervention' },
     { name: 'INPROGRESS', label: 'En cours de traitement' },
     { name: 'CARRYOUT', label: 'Intervention effectuée' },
     { name: 'REJECTED', label: 'Intervention annulée' }
   ];
-  comptesWeb: CompteWeb[] = [];
+  comptesWeb = signal<CompteWeb[]>([]);
   selectedCompteWebId: number | null = null;
-  interventions: Intervention[] = [];
-  interventionsFilter: Intervention[] = [];
+  interventions = signal<Intervention[]>([]);
+  interventionsFilter = signal<Intervention[]>([]);
   currentIntervention = new Intervention();
-  loading: boolean = false;
+  loading = signal<boolean>(false);
 
   private readonly webAccountService = inject(WebAccountService);
   private readonly interventionService = inject(InterventionService);
@@ -58,7 +58,7 @@ export class HelpComponent implements OnInit {
     });
 
     this.searchForm.get('type')?.valueChanges.subscribe(val => {
-      this.selectedType = val;
+      this.selectedType.set(val);
       this.onSelectState();
     });
   }
@@ -66,7 +66,7 @@ export class HelpComponent implements OnInit {
   public loadClient() {
     this.webAccountService.getAllCompteClientWeb().subscribe({
       next: (res: any) => {
-        this.comptesWeb = res;
+        this.comptesWeb.set(res);
       }
     });
   }
@@ -75,19 +75,19 @@ export class HelpComponent implements OnInit {
     this.selectedCompteWebId = this.searchForm.get('compteWebId')?.value;
     if (this.selectedCompteWebId === null) return;
 
-    this.loading = true;
-    this.interventionsFilter = [];
-    this.interventions = [];
-    this.selectedType = null;
+    this.loading.set(true);
+    this.interventionsFilter.set([]);
+    this.interventions.set([]);
+    this.selectedType.set(null);
     this.searchForm.get('type')?.setValue(null, { emitEvent: false });
     this.interventionService.getIntervention(this.selectedCompteWebId).subscribe({
       next: (res: any) => {
-        this.interventions = res;
-        this.interventionsFilter = res;
-        this.loading = false;
+        this.interventions.set(res);
+        this.interventionsFilter.set(res);
+        this.loading.set(false);
       },
       error: () => {
-        this.loading = false;
+        this.loading.set(false);
         this.toastr.error("Failed to load interventions");
       }
     });
@@ -118,7 +118,12 @@ export class HelpComponent implements OnInit {
   }
 
   onSelectState() {
-    this.interventionsFilter = this.interventions.filter(inter => inter.type === this.selectedType);
+    const type = this.selectedType();
+    if (type) {
+      this.interventionsFilter.set(this.interventions().filter(inter => inter.type === type));
+    } else {
+      this.interventionsFilter.set(this.interventions());
+    }
   }
 
   openUpdateModal(intervention: Intervention) {

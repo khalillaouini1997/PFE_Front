@@ -21,3 +21,23 @@ th {
 .ecriture {
   font-size: 12px;
 }
+
+.page-title {
+  margin: 0;
+}
+
+.navbar-right-container {
+  margin: 0;
+}
+
+.limit-input {
+  margin: 0 !important;
+}
+
+.thead-small {
+  font-size: 12px;
+}
+
+.td-small {
+  font-size: 12px;
+}

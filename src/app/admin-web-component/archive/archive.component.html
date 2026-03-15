@@ -1,11 +1,10 @@
-<h3 style="margin:0;">Archive and Raw of Device
+<h3 class="page-title">Archive and Raw of Device
   <button class="btn btn-default" (click)="back()">back</button>
-  <span class="label label-success">{{numBoitier}}</span>
-  <div class="navbar-form navbar-right" style="margin:0;">
+  <span class="label label-success">{{numBoitier()}}</span>
+  <div class="navbar-form navbar-right navbar-right-container">
     <div class="form-group is-empty" [formGroup]="archiveForm">
       <label class="control-label" for="limit">Nbr:
-        <input type="number" id="limit" class="form-control" formControlName="limit" placeholder="Limit"
-          style="margin:0;">
+        <input type="number" id="limit" class="form-control limit-input" formControlName="limit" placeholder="Limit">
         <span class="material-input"></span>
       </label>
     </div>
@@ -19,7 +18,7 @@
     <div class="card-content table-responsive">
 
       <table class="table table-hover table-striped">
-        <thead style="font-size: 12px;">
+        <thead class="thead-small">
           <th>Date</th>
           <th>Trame</th>
           <th>Latitude</th>
@@ -40,9 +39,9 @@
           <th>Charger</th>
         </thead>
         <tbody>
-          @for (archive of archives; track $index) {
+          @for (archive of archives(); track $index) {
           <tr>
-            <td style="font-size: 12px;">{{archive.date}}</td>
+            <td class="td-small">{{archive.date}}</td>
 
             <td><span class="label label-warning">{{archive.trame_id}}</span></td>
 
@@ -101,9 +100,9 @@
         </thead>
         <tbody>
           <tr>
-            <td colspan="2">$count: {{raws.count}}</td>
+            <td colspan="2">$count: {{rawData().count}}</td>
           </tr>
-          @for (raw of raws.raws; track raw.idTram) {
+          @for (raw of rawData().raws; track raw.idTram) {
           <tr>
             <td>{{raw.idTram}}</td>
             <td class="table table-bordered table-condensed ecriture">{{raw.gprmc}}</td>
