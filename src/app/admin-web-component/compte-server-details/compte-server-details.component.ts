@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Boitier, BoitierRealTime, CompteServer } from 'src/app/data/data';
 import { CompteServerService } from "../../service/compte-server.service";
@@ -49,6 +49,7 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
   private readonly authService = inject(AuthService);
   private readonly toastr = inject(ToastrService);
   private readonly fb = inject(FormBuilder);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   ngOnInit() {
     this.initForms();
@@ -99,6 +100,7 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
       this.intervalFrom = res.intervaleStart;
       this.intervalTo = res.intervaleEnd;
       this.BOITIER_NOT_INSTALLED = res.intervaleEnd - res.intervaleStart + 1;
+      this.cdr.markForCheck();
     });
   }
 
@@ -112,6 +114,7 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
       this.bigTotalItems = res.totalElements;
       this.BOITIER_INSTALLED = res.totalElements;
       this.refreshBoitierArchives();
+      this.cdr.markForCheck();
     });
   }
 
@@ -129,6 +132,7 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
         boitier.vitesse = arch.vitesse;
         boitier.gpsLastTrame = arch.gpsLastTrame;
         boitier.gsmLastTrame = arch.gsmLastTrame;
+        this.cdr.markForCheck();
       });
     });
   }
@@ -160,8 +164,12 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
           this.boitiers[index] = { ...this.boitiers[index], label: res.label };
         }
         this.toastr.success(' Device updated ', 'Success!');
+        this.cdr.markForCheck();
       },
-      error: () => this.toastr.error('There is a mistake', 'Error!')
+      error: () => {
+        this.toastr.error('There is a mistake', 'Error!');
+        this.cdr.markForCheck();
+      }
     });
   }
 
@@ -183,11 +191,13 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
         this.loadBoitierList();
         this.toastr.success(nbrBoitiersToAdd + ' devices added', 'Success!');
         this.addForm.reset({ nbrBoitiers: 0 });
+        this.cdr.markForCheck();
       },
       error: (err) => {
         this.mode = true;
         this.messageError = err.error?.message || "An error occurred";
         this.toastr.error('There is a mistake', 'Error!');
+        this.cdr.markForCheck();
       }
     });
   }
@@ -202,6 +212,7 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
       this.compteServerService.extendIntervalOfBoitiers(this.ID_COMPTE).subscribe(res => {
         this.BOITIER_NOT_INSTALLED = res.intervaleEnd - res.intervaleStart + 1;
         this.toastr.success('interval extended', 'Success!');
+        this.cdr.markForCheck();
       });
     }
   }
@@ -216,8 +227,12 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
           this.boitiers[index].stat = true;
         }
         this.toastr.success(' Device is Installed now ', 'Success!');
+        this.cdr.markForCheck();
       },
-      error: () => this.toastr.error('Table of this server does not exist', 'Error!')
+      error: () => {
+        this.toastr.error('Table of this server does not exist', 'Error!');
+        this.cdr.markForCheck();
+      }
     });
   }
 }
