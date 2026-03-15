@@ -1,69 +1,90 @@
-<div class="content">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-8 center">
+<div class="main-panel p-4">
+    <!-- Header Section -->
+    <div class="premium-card mb-4 header-gradient shadow-sm">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div class="title-section text-white">
+                <h2 class="m-0 fw-bold">Recalcul des Données</h2>
+                <p class="m-0 text-white-50 opacity-75">Réinitialisation des statistiques pour {{compteWeb.login}} / Device #{{recalculeP.idBoitier}}</p>
+            </div>
+            <button class="btn btn-glass btn-sm rounded-circle" [routerLink]="['/adminWeb/configurations', compteWeb.idCompteClientWeb]" title="Retour">
+                <i class="fa fa-arrow-left text-white"></i>
+            </button>
+        </div>
+    </div>
 
-        <div class="card">
-          <div class="card-header" data-background-color="red">
-            <h4 class="title">recalcule of {{compteWeb.login}} for boitier number {{recalculeP.idBoitier}} </h4>
-          </div>
-          <div class="card-content">
-            <form [formGroup]="recalculForm">
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="form-group label-floating">
-                    <div class="input-group input-append date">
-                      <!-- Replace my-date-picker with input element and bsDatepicker directive -->
-                      <input type="text" class="form-control" placeholder="date of the start"
-                        formControlName="datestart" bsDatepicker [bsConfig]="{ containerClass: 'theme-red' }" required>
-                      <span class="input-group-addon add-on"></span>
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="premium-card shadow-sm p-4">
+                <form [formGroup]="recalculForm">
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-6">
+                            <div class="form-floating shadow-sm">
+                                <input type="text" class="form-control border-0" placeholder="Date de début"
+                                    formControlName="datestart" bsDatepicker [bsConfig]="{ containerClass: 'theme-red' }" id="dtStart">
+                                <label for="dtStart">Date de début du recalcul</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating shadow-sm">
+                                <select formControlName="typeRecalcule" class="form-select border-0" id="typeRec" title="Type de recalcul">
+                                    <option>recalcule historique</option>
+                                    <option>recalcule carburant</option>
+                                    <option>recalcule alert</option>
+                                    <option>recalcule boitier</option>
+                                </select>
+                                <label for="typeRec">Type de Recalcul</label>
+                            </div>
+                        </div>
                     </div>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-group label-floating">
-                    <label class="control-label">Type Recalcule
-                      <select formControlName="typeRecalcule" class="form-control" name="typeRecalcule" required>
-                        <option>recalcule historique</option>
-                        <option>recalcule carburant</option>
-                        <option>recalcule alert</option>
-                        <option>recalcule boitier</option>
-                      </select>
-                    </label>
-                  </div>
-                </div>
-              </div>
-              <button type="button" class="btn btn-danger pull-right" [disabled]="!recalculForm.valid"
-                (click)="recalcule()" [tooltip]="tooltipup" tooltipPlacement="top" data-toggle="modal"
-                data-target="#Modalupdate" data-backdrop="false">recalcule</button>
-              <div class="clearfix"></div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div id="Modalupdate" class="modal fade" role="dialog">
-      <div class="modal-dialog">
 
-        <div class="modal-content">
-          <div class="modal-header">
-            <div class="alert alert-warning" role="alert">
-              <h1>Notifications: {{recalculForm.get('typeRecalcule')?.value}}</h1>
+                    <div class="alert alert-info border-0 shadow-sm bg-primary bg-opacity-10 text-primary p-4 mb-4 recalcul-note">
+                        <h6 class="fw-bold"><i class="fa fa-info-circle me-2"></i> Note Importante</h6>
+                        <p class="small mb-0">Le recalcul des données peut prendre plusieurs minutes selon l'intervalle sélectionné. Veuillez ne pas fermer cette page pendant l'opération.</p>
+                    </div>
+
+                    <div class="d-flex justify-content-end">
+                        <button type="button" class="btn btn-danger px-5 py-2 fw-bold shadow-sm btn-launch-recalcul" [disabled]="!recalculForm.valid"
+                            (click)="recalcule()" data-toggle="modal" data-target="#Modalupdate">
+                            <i class="fa fa-sync-alt me-2"></i> Lancer le Recalcul
+                        </button>
+                    </div>
+                </form>
             </div>
-            <div style="text-align:center; margin-top: 100px;">
-              <h6
-                style="color: rgb(0, 0, 0); width: 600px; height: 150px; text-align: justify; border: 1px solid black; overflow: auto;">
-                @for (notificatio of notifications; track $index) {
-                <span>{{$index + 1}}__{{notificatio | lowercase}} <br /></span>
-                }
-              </h6>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal" (click)="reinitialisation()">OK</button>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
+
+    <!-- Notification Modal (Modernized) -->
+    <div id="Modalupdate" class="modal fade" role="dialog" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content modal-content-rounded">
+                <div class="modal-header bg-warning py-4 border-0">
+                    <div class="w-100 text-center">
+                        <i class="fa fa-bell fa-2x text-white mb-2"></i>
+                        <h4 class="modal-title fw-bold text-white m-0">Journal des Notifications</h4>
+                    </div>
+                </div>
+                <div class="modal-body p-4 bg-white">
+                    <h6 class="fw-bold text-dark mb-3">Opération: <span class="text-primary">{{recalculForm.get('typeRecalcule')?.value}}</span></h6>
+                    <div class="notification-log p-3 border rounded-3 bg-light overflow-auto notification-scroll">
+                        @for (notificatio of notifications; track $index) {
+                            <div class="small py-2 border-bottom border-secondary border-opacity-10">
+                                <span class="text-primary fw-bold me-2">{{$index + 1}}.</span> {{notificatio | lowercase}}
+                            </div>
+                        }
+                        @if (notifications.length === 0) {
+                            <div class="text-center py-5 opacity-25">
+                                <i class="fa fa-spinner fa-spin fa-2x"></i>
+                                <p class="mt-2">Attente des résultats...</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="modal-footer border-0 p-3 bg-light">
+                    <button type="button" class="btn btn-dark w-100 fw-bold btn-understand" data-dismiss="modal" (click)="reinitialisation()">
+                        C'est compris
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

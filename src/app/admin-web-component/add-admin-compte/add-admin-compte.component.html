@@ -1,110 +1,116 @@
-<!--created by CHAIMA TABOUBI-->
-
-<div class="container-fluid">
-  @if (mode) {
-  <div class="alert alert-danger" role="alert">
-    {{messageError}}
-  </div>
-  }
-  <div class="row">
-    <div class="center">
-      <div class="card">
-        <div class="card-header" data-background-color="blue">
-          <h4 class="title">Add Admin Account</h4>
-          <p class="category">Complete this Form</p>
+<div class="main-panel p-4">
+    <!-- Header Section -->
+    <div class="premium-card mb-4 header-gradient shadow-sm">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div class="title-section text-white">
+                <h2 class="m-0 fw-bold">Ajouter un Administrateur</h2>
+                <p class="m-0 text-white-50 opacity-75">Créer un nouveau compte avec privilèges spécifiques</p>
+            </div>
+            <button class="btn btn-glass btn-sm rounded-circle" routerLink="/adminWeb/adminCompte" title="Retour à la liste">
+                <i class="fa fa-arrow-left text-white"></i>
+            </button>
         </div>
-        <div class="card-content">
-          <form [formGroup]="adminForm">
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group label-floating">
-                  <label class="control-label" for="username">username</label>
-                  <input type="text" class="form-control" formControlName="username" id="username">
-                </div>
-              </div>
-
-              <div class="col-md-6">
-                <div class="form-group label-floating">
-                  <label class="control-label" for="password">Password</label>
-                  <input type="text" class="form-control" formControlName="password" id="password">
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group label-floating">
-                  <label class="control-label" for="role">Role</label>
-                  <select formControlName="role" class="form-control" id="role">
-                    @for (r of roles; track r) {
-                    <option [value]="r">{{ r }}</option>
-                    }
-                  </select>
-                </div>
-              </div>
-
-              <div class="col-md-6">
-                <div class="form-group label-floating">
-                  <label class="control-label" for="idTraccar">Id Traccar</label>
-                  <input type="number" class="form-control" formControlName="idTraccar" id="idTraccar">
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group label-floating">
-                  <label class="control-label" for="useFcm">Use Fcm</label>
-                  <input type="checkbox" formControlName="useFcm" id="useFcm">
-                </div>
-              </div>
-
-              <div class="col-md-6">
-                <div class="form-group label-floating">
-                  <label class="control-label" for="fcmPrefix">Fcm Prefix</label>
-                  <input type="text" class="form-control" formControlName="fcmPrefix" id="fcmPrefix">
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group label-floating">
-                  <label class="control-label" for="mailSupport">Mail Support</label>
-                  <input type="text" class="form-control" formControlName="mailSupport" id="mailSupport">
-                </div>
-              </div>
-
-              <div class="col-md-6">
-                <div class="form-group label-floating">
-                  <label class="control-label" for="deviceCostByDay">Device Cost By Day</label>
-                  <input type="text" class="form-control" formControlName="deviceCostByDay" id="deviceCostByDay">
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group label-floating">
-                  <label class="control-label" for="accountFreePerMonth">AccountFreePerMonth</label>
-                  <input type="number" class="form-control" formControlName="accountFreePerMonth"
-                    id="accountFreePerMonth">
-                </div>
-              </div>
-
-              <div class="col-md-6">
-                <div class="form-group label-floating">
-                  <label class="control-label" for="transctionFee">Transction Fee</label>
-                  <input type="text" class="form-control" formControlName="transctionFee" id="transctionFee">
-                </div>
-              </div>
-            </div>
-
-            <button type="button" class="btn btn-danger pull-right" [disabled]="adminForm.invalid"
-              (click)="addAdminCompte()">Enregistrer le admin compte</button>
-            <div class="clearfix"></div>
-          </form>
-        </div>
-      </div>
     </div>
-  </div>
+
+    @if (mode) {
+        <div class="alert alert-danger border-0 shadow-sm mb-4 fade-in" role="alert">
+            <i class="fa fa-exclamation-circle me-2"></i> {{messageError}}
+        </div>
+    }
+
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="premium-card shadow-sm">
+                <form [formGroup]="adminForm" class="p-2">
+                    <h5 class="fw-bold mb-4 border-bottom pb-2"><i class="fa fa-id-card me-2 text-primary"></i> Identifiants & Rôle</h5>
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" formControlName="username" id="username" placeholder="Username">
+                                <label for="username">Nom d'utilisateur</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" formControlName="password" id="password" placeholder="Password">
+                                <label for="password">Mot de passe</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <select formControlName="role" class="form-select border-0 bg-light" id="role" title="Rôle assigné">
+                                    @for (r of roles; track r) {
+                                        <option [value]="r">{{ r }}</option>
+                                    }
+                                </select>
+                                <label for="role">Rôle assigné</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input type="number" class="form-control" formControlName="idTraccar" id="idTraccar" placeholder="Traccar ID">
+                                <label for="idTraccar">ID Traccar (Optionnel)</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h5 class="fw-bold mt-4 mb-4 border-bottom pb-2"><i class="fa fa-bell me-2 text-primary"></i> Notifications & Support</h5>
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="premium-card bg-light border-0 shadow-none d-flex align-items-center justify-content-between p-3 mb-3">
+                                <label class="fw-medium mb-0" for="useFcm">Activer Notifications Push (FCM)</label>
+                                <div class="form-check form-switch p-0">
+                                    <input class="form-check-input ms-0 scale-125" type="checkbox" formControlName="useFcm" id="useFcm">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" formControlName="fcmPrefix" id="fcmPrefix" placeholder="FCM Prefix">
+                                <label for="fcmPrefix">Préfixe FCM</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-floating mb-3">
+                                <input type="email" class="form-control" formControlName="mailSupport" id="mailSupport" placeholder="Mail Support">
+                                <label for="mailSupport">Email de Support</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h5 class="fw-bold mt-4 mb-4 border-bottom pb-2"><i class="fa fa-money-bill-wave me-2 text-primary"></i> Paramètres Financiers</h5>
+                    
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" formControlName="deviceCostByDay" id="deviceCostByDay" placeholder="Cost">
+                                <label for="deviceCostByDay">Coût par Boitier / Jour</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <input type="number" class="form-control" formControlName="accountFreePerMonth" id="accountFreePerMonth" placeholder="Free Month">
+                                <label for="accountFreePerMonth">Comptes Gratuits / Mois</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" formControlName="transctionFee" id="transctionFee" placeholder="Fee">
+                                <label for="transctionFee">Frais de Transaction (%)</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pt-3 d-flex justify-content-end gap-3">
+                        <button type="button" class="btn btn-light px-4 btn-cancel-premium" routerLink="/adminWeb/adminCompte">Annuler</button>
+                        <button type="button" class="btn btn-primary px-5 fw-bold btn-save-premium" [disabled]="adminForm.invalid" (click)="addAdminCompte()">
+                           <i class="fa fa-save me-2"></i> Enregistrer l'Administrateur
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>

@@ -1,34 +1,17 @@
-.cl {
-  cursor: pointer;
+.search-group {
+    border-radius: 12px;
+    overflow: hidden;
 }
 
-.form-group {
-  padding-bottom: 0px;
-  margin: 0px 0 0 0;
+.search-input {
+    min-width: 250px;
 }
 
-.title {
-  margin-top: 0px;
-  margin-bottom: 0px;
-  margin-left: 24px;
-  padding-top: 2px;
+.btn-search {
+    background: white;
+    color: var(--primary);
 }
 
-.card .card-header {
-  border-radius: 3px;
-  padding: 0px 15px 0px 20px;
-}
-
-.card {
-  margin: 32px 0 0 0;
-}
-
-.tableFixHead2 table>thead>tr>th,
-.table>tbody>tr>th,
-.table>tfoot>tr>th,
-.table>thead>tr>td,
-.table>tbody>tr>td,
-.table>tfoot>tr>td {
-  padding: 0px 8px;
-  vertical-align: middle;
+.table-container-70vh {
+    max-height: 70vh;
 }

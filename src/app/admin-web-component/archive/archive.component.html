@@ -1,115 +1,119 @@
-<h3 class="page-title">Archive and Raw of Device
-  <button class="btn btn-default" (click)="back()">back</button>
-  <span class="label label-success">{{numBoitier()}}</span>
-  <div class="navbar-form navbar-right navbar-right-container">
-    <div class="form-group is-empty" [formGroup]="archiveForm">
-      <label class="control-label" for="limit">Nbr:
-        <input type="number" id="limit" class="form-control limit-input" formControlName="limit" placeholder="Limit">
-        <span class="material-input"></span>
-      </label>
+<div class="main-panel p-4">
+    <!-- Header Section -->
+    <div class="premium-card mb-4 header-gradient">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div class="title-section text-white">
+                <div class="d-flex align-items-center gap-3">
+                    <button type="button" class="btn btn-glass btn-sm rounded-circle" (click)="back()" title="Retour à la page précédente">
+                        <i class="fa fa-arrow-left"></i>
+                    </button>
+                    <div>
+                        <h2 class="m-0 fw-bold">Archives & Raw</h2>
+                        <span class="badge bg-success bg-opacity-25 text-white border border-white border-opacity-25 mt-1">Terminal: {{numBoitier()}}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="controls-section d-flex align-items-center gap-3" [formGroup]="archiveForm">
+                <div class="input-group input-group-sm limit-input-group">
+                    <span class="input-group-text bg-white border-0 opacity-75">Limite:</span>
+                    <input type="number" id="limit" class="form-control border-0" formControlName="limit" title="Nombre d'enregistrements à afficher" placeholder="Ex: 200">
+                </div>
+                <button type="button" class="btn btn-white shadow-sm btn-refresh-archive" (click)="getArchives()" title="Rafraîchir les données">
+                    <i class="fa fa-refresh me-2"></i> Afficher
+                </button>
+            </div>
+        </div>
     </div>
-    <button type="button" class="btn btn-success" (click)="getArchives()">Afficher</button>
-  </div>
-</h3>
 
-
-<tabset #staticTabs>
-  <tab heading="Archive of Device">
-    <div class="card-content table-responsive">
-
-      <table class="table table-hover table-striped">
-        <thead class="thead-small">
-          <th>Date</th>
-          <th>Trame</th>
-          <th>Latitude</th>
-          <th>Longitude</th>
-          <th>Speed</th>
-          <th>temp</th>
-          <th>X</th>
-          <th>Y</th>
-          <th>Z</th>
-          <th>Ignition</th>
-          <th>RPM</th>
-          <th>Fuel Rate</th>
-          <th>Tfu</th>
-          <th>Odometre</th>
-          <th>satInView</th>
-          <th>Signal</th>
-          <th>Heading</th>
-          <th>Charger</th>
-        </thead>
-        <tbody>
-          @for (archive of archives(); track $index) {
-          <tr>
-            <td class="td-small">{{archive.date}}</td>
-
-            <td><span class="label label-warning">{{archive.trame_id}}</span></td>
-
-            <td>{{archive.latitude}}</td>
-
-            <td>{{archive.longitude}}</td>
-            <td>
-              @if (archive.ignition) {
-              <span class="label label-success">On</span>
-              } @else {
-              <span class="label label-danger">Off</span>
-              }
-            </td>
-            <td>{{archive.speed}}</td>
-
-            <td>{{archive.temp}}</td>
-            s
-            <td>{{archive.x}}</td>
-
-            <td>{{archive.y}}</td>
-
-            <td>{{archive.z}}</td>
-
-
-
-            <td>{{archive.rpm}}</td>
-
-            <td>{{archive.fuel_rate}}</td>
-
-            <td>{{archive.tfu}}</td>
-
-            <td>{{archive.odo}}</td>
-
-            <td>{{archive.satInView}}</td>
-
-            <td>{{archive.signal}}</td>
-
-            <td>{{archive.heading}}</td>
-
-            <td>{{archive.charger}}</td>
-
-          </tr>
-          }
-        </tbody>
-      </table>
+    <!-- Main Content -->
+    <div class="premium-card p-0 overflow-hidden shadow-sm">
+        <tabset #staticTabs type="pills" class="custom-pills p-3 border-bottom">
+            <tab heading="Archive du Terminal" class="p-0">
+                <div class="table-responsive table-container-70vh">
+                    <table class="table-premium">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Trame</th>
+                                <th>Position</th>
+                                <th>Ignition</th>
+                                <th>Vitesse</th>
+                                <th>Temp</th>
+                                <th>G-Sensor (X,Y,Z)</th>
+                                <th>Moteur (RPM/Fuel)</th>
+                                <th>Système (Odo/Sat/Sig)</th>
+                                <th>Divers</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (archive of archives(); track $index) {
+                                <tr>
+                                    <td class="small fw-medium">{{archive.date | date: 'dd/MM HH:mm:ss'}}</td>
+                                    <td><span class="badge rounded-pill bg-warning bg-opacity-10 text-dark border border-warning border-opacity-25">{{archive.trame_id}}</span></td>
+                                    <td>
+                                        <div class="small text-secondary">{{archive.latitude | number: '.4-4'}}</div>
+                                        <div class="small text-secondary">{{archive.longitude | number: '.4-4'}}</div>
+                                    </td>
+                                    <td>
+                                        @if (archive.ignition) {
+                                            <span class="badge bg-success bg-opacity-10 text-success rounded-pill fw-bold">ON</span>
+                                        } @else {
+                                            <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill fw-bold">OFF</span>
+                                        }
+                                    </td>
+                                    <td class="fw-bold" [class.text-success]="archive.speed > 0">{{archive.speed}} <small>km/h</small></td>
+                                    <td>{{archive.temp}}°C</td>
+                                    <td>
+                                        <div class="small opacity-75">X: {{archive.x}}</div>
+                                        <div class="small opacity-75">Y: {{archive.y}}</div>
+                                        <div class="small opacity-75">Z: {{archive.z}}</div>
+                                    </td>
+                                    <td>
+                                        <div class="small fw-medium">RPM: {{archive.rpm}}</div>
+                                        <div class="small text-info">Fuel: {{archive.fuel_rate}}</div>
+                                    </td>
+                                    <td class="small">
+                                        <div>Odo: {{archive.odo}} km</div>
+                                        <div class="d-flex gap-2">
+                                            <span><i class="fa fa-satellite text-primary"></i> {{archive.satInView}}</span>
+                                            <span><i class="fa fa-signal text-info"></i> {{archive.signal}}</span>
+                                        </div>
+                                    </td>
+                                    <td class="small">
+                                        <div>H: {{archive.heading}}°</div>
+                                        <div>C: {{archive.charger === 1 ? 'Connecté' : 'Déconnecté'}}</div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </tab>
+            
+            <tab (select)="getAllRaws()" heading="Données Brutes (Raw)" class="p-0">
+                <div class="table-responsive table-container-70vh">
+                    <div class="p-3 bg-light bg-opacity-50 border-bottom">
+                        <span class="badge bg-primary">Total: {{rawData().count}}</span>
+                    </div>
+                    <table class="table-premium table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="col-id-small">ID</th>
+                                <th>GPRMC / Trame Raw</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (raw of rawData().raws; track raw.idTram) {
+                                <tr>
+                                    <td class="fw-bold">{{raw.idTram}}</td>
+                                    <td><code class="text-primary bg-light p-1 rounded">{{raw.gprmc}}</code></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </tab>
+        </tabset>
     </div>
-  </tab>
-  <tab (select)="getAllRaws()" heading="Raw of Device">
-    <div class="card-content table-responsive">
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>GPRMC</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td colspan="2">$count: {{rawData().count}}</td>
-          </tr>
-          @for (raw of rawData().raws; track raw.idTram) {
-          <tr>
-            <td>{{raw.idTram}}</td>
-            <td class="table table-bordered table-condensed ecriture">{{raw.gprmc}}</td>
-          </tr>
-          }
-        </tbody>
-      </table>
-    </div>
-  </tab>
-</tabset>
+</div>

@@ -1,4 +1,4 @@
-import { Location } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component, OnInit, viewChild, signal } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { TabsetComponent, TabsModule } from "ngx-bootstrap/tabs";
@@ -9,9 +9,10 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angul
 
 @Component({
     selector: 'app-archive',
+    standalone: true,
     templateUrl: './archive.component.html',
     styleUrls: ['./archive.component.css'],
-    imports: [FormsModule, ReactiveFormsModule, TabsModule]
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, TabsModule]
 })
 export class ArchiveComponent implements OnInit {
   staticTabs = viewChild<TabsetComponent>('staticTabs');

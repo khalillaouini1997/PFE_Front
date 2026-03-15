@@ -1,79 +1,28 @@
-.intervention{
-    margin-top: 3%;
-}
- 
-.bg-orange{
-    background-color: rgb(255,165,0);
-}
-.bg-blue{
-    background-color:rgb(30,144,255)
-}
-.bg-green{
-    background-color: rgb(34,139,34);
-}
-.bg-red{
-    background-color: rgb(255,0,0);
-}
-.modal-content .modal-header{
-    margin-top:0px;
-    width:800px;
-}
-.ng-template{
-    width: 800px !important;
-}
-.modal-dialog {
-    width: 900px !important;
-    margin: 30px !important;
+.filter-select-small {
+    min-width: 150px;
 }
 
-.formulaire{
-    background-color: rgb(255, 241, 243);
-    color: rgb(0, 0, 0);
+.filter-select-medium {
+    min-width: 200px;
+}
+
+.btn-search-white {
     border-radius: 10px;
-    padding-bottom: 0px;
-    padding-top: 0px;
-    padding-left: 0px;
-   }
+    background: white;
+    color: var(--primary);
+}
 
-   .card .card-header{
-    border-radius: 3px;
-    padding: 0px 15px 0px 20px;
-  }
-  
-  .card {
-    margin: 32px 0 0 0;
-  }
-  
-  .tableFixHead table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
-    padding: 0px 8px;
-    vertical-align: middle;
-  }
-  
-  .search-form-header {
-    margin-top: 3px;
-  }
-  
-  .label-etat {
-    color: #fff1f3;
-  }
-  
-  .btn-search-client {
-    margin: 0px !important;
-    padding: 1px 5px !important;
-  }
-  
-  .search-icon {
-    font-size: 14px;
-  }
-  
-  .loading-cell {
-    text-align: center;
-  }
-  
-  .btn-modify-intervention {
-    padding: 0px 8px !important;
-    font-size: 8px !important;
-    margin: 1px 0px 0px 0px !important;
-  }
+.table-container-70vh {
+    max-height: 70vh;
+}
 
-  
+.modal-content-rounded {
+    border: 0;
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.h-150px {
+    height: 150px !important;
+}

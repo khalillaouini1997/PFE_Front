@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angul
 
 @Component({
     selector: 'app-list-traccar',
+    standalone: true,
     templateUrl: './list-traccar.component.html',
     styleUrls: ['./list-traccar.component.css'],
     imports: [FormsModule, ReactiveFormsModule]

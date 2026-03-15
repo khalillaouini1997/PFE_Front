@@ -1,131 +1,98 @@
-<!--created by CHAIMA TABOUBI-->
-
 <div class="wrapper">
-
     <input type="checkbox" id="btnControl" />
-    <!--<label class="btn" for="btnControl">-->
     <label class="nav-toggle-btn" for="btnControl">
         <span class="sr-only">Toggle navigation</span>
         <span></span>
-        <span></span>
-        <span></span>
     </label>
-    <!--</label>-->
 
-    <nav>
-
-        <!-- start side bar-->
-        <div class="sidebar" data-color="red" data-image="./assets/img/sidebar-1.jpg">
-            @if (owner==='TRACI') {
-            <div class="logo">
-                <img alt="Traci" Src="http://traci.tn/images/logo_traci.png"
-                    style="display: block;margin-left: auto;margin-right: auto;" width="20%" height="20%">
-            </div>
-            } @else if (owner==='TDS') {
-            <div class="logo">
-                <img alt="tds" Src="http://fleet.tn/images/logotds.png"
-                    style="display: block;margin-left: auto;margin-right: auto;" width="50%" height="30%">
-            </div>
-            } @else if (owner==='SLAMA') {
-            <div class="logo">
-                <img alt="tds" Src="http://fleet.tn/images/logotds.png"
-                    style="display: block;margin-left: auto;margin-right: auto;" width="50%" height="30%">
-            </div>
-            } @else if (owner==='FINEK') {
-            <div class="logo">
-                <img alt="finek" Src="https://finek.com.tn/images/loginfinek.png"
-                    style="display: block;margin-left: auto;margin-right: auto;" width="50%" height="30%">
-            </div>
-            }
-
-            <div class="sidebar-wrapper">
-                <ul class="nav">
-                    <li [ngClass]="{'active': isActiveDashBoard}">
-                        <a routerLink="/adminWeb/dashboard" routerLinkActive="active"
-                            (click)="isActiveDashBoard = true; isActiveAddAdminCompte= false; isActiveAdminCompte = false; isActiveServerForm = false;isActiveForm = false;isActiveListServer = false;isActiveListWeb = false;isActiveRequest=false;isActiveIntervention=false;isActiveAccessLog = false;isActiveTraccar =false;">
-                            <i class="material-icons">dashboard</i>
-                            <p>Tableau de bord
-                                @if (notificationCount > 0) {
-                                <span class="badge bg-danger">{{notificationCount}}</span>
-                                }
-                            </p>
-                        </a>
-                    </li>
-
-                    @if (isAgentAdmin()) {
-                    <li [ngClass]="{'active': isActiveAddAdminCompte}">
-                        <a routerLink="/adminWeb/addAdminCompte" routerLinkActive="active"
-                            (click)="isActiveAddAdminCompte= true; isActiveAdminCompte = false; isActiveDashBoard = false;isActiveServerForm = false;isActiveForm = false;isActiveListServer = false;isActiveListWeb = false;isActiveRequest=false;isActiveIntervention=false;isActiveAccessLog = false;isActiveTraccar =false;">
-                            <i class="material-icons">input</i>
-                            <p>Ajouter Comptes Admin </p>
-                        </a>
-                    </li>
+    <aside class="sidebar" [class.collapsed]="isCollapsed()">
+        <div class="sidebar-wrapper">
+            <div class="logo-section d-flex align-items-center justify-content-between px-2">
+                <div class="logo" [class.d-none]="isCollapsed()">
+                    @if (owner==='TRACI') {
+                        <img alt="Traci" Src="http://traci.tn/images/logo_traci.png" class="mx-auto d-block w-50 h-auto opacity-75">
+                    } @else if (owner==='TDS' || owner==='SLAMA') {
+                        <img alt="tds" Src="http://fleet.tn/images/logotds.png" class="mx-auto d-block w-75 h-auto">
+                    } @else if (owner==='FINEK') {
+                        <img alt="finek" Src="https://finek.com.tn/images/loginfinek.png" class="mx-auto d-block w-75 h-auto">
                     }
-
-                    @if (isAgentAdmin()) {
-                    <li [ngClass]="{'active': isActiveAdminCompte}">
-                        <a routerLink="/adminWeb/adminCompte" routerLinkActive="active"
-                            (click)="isActiveAdminCompte = true;isActiveAddAdminCompte =false; isActiveDashBoard = false;isActiveServerForm = false;isActiveForm = false;isActiveListServer = false;isActiveListWeb = false;isActiveRequest=false;isActiveIntervention=false;isActiveAccessLog = false;isActiveTraccar =false;">
-                            <i class="material-icons">input</i>
-                            <p>Listes Comptes Admin </p>
-                        </a>
-                    </li>
-                    }
-                    <li [ngClass]="{'active': isActiveServerForm}">
-                        <a routerLink="/adminWeb/addCompteServer" routerLinkActive="active"
-                            (click)="isActiveDashBoard = false;isActiveAdminCompte=false ;isActiveAddAdminCompte =false; isActiveServerForm = true;isActiveForm = false;isActiveListServer = false;isActiveListWeb = false;isActiveRequest=false;isActiveIntervention=false;isActiveAccessLog = false;isActiveTraccar =false;">
-                            <i class="material-icons">input</i>
-                            <p>Ajouter compte serveur</p>
-                        </a>
-                    </li>
-                    <li [ngClass]="{'active': isActiveListServer}">
-                        <a routerLink="/adminWeb/listServers" routerLinkActive="active"
-                            (click)="isActiveDashBoard = false;isActiveAdminCompte=false ;isActiveAddAdminCompte =false;isActiveServerForm = false;isActiveForm = false;isActiveListServer = true;isActiveListWeb = false;isActiveRequest=false;isActiveIntervention=false;isActiveAccessLog = false;isActiveTraccar =false;">
-                            <i class="material-icons">content_paste</i>
-                            <p>Liste comptes serveur</p>
-                        </a>
-                    </li>
-                    <li [ngClass]="{'active': isActiveForm}">
-                        <a routerLink="/adminWeb/addCompteWeb" routerLinkActive="active"
-                            (click)="isActiveDashBoard = false;isActiveAdminCompte=false ;isActiveAddAdminCompte =false;isActiveServerForm = false;isActiveForm = true;isActiveListServer = false;isActiveListWeb = false;isActiveRequest=false;isActiveIntervention=false;isActiveAccessLog = false;isActiveTraccar =false;">
-                            <i class="material-icons">input</i>
-                            <p>Ajouter compte web</p>
-                        </a>
-                    </li>
-                    <li [ngClass]="{'active': isActiveListWeb}">
-                        <a routerLink="/adminWeb/listWebs" routerLinkActive="active"
-                            (click)="isActiveDashBoard = false;isActiveAdminCompte=false ;isActiveAddAdminCompte =false;isActiveServerForm = false;isActiveForm = false;isActiveListServer = false;isActiveListWeb = true;isActiveRequest=false;isActiveIntervention=false;isActiveAccessLog = false;isActiveTraccar =false;">
-                            <i class="material-icons">library_books</i>
-                            <p>Liste comptes web</p>
-                        </a>
-                    </li>
-                    <li [ngClass]="{'active': isActiveAccessLog}">
-                        <a routerLink="/adminWeb/accessLog" routerLinkActive="active"
-                            (click)="isActiveDashBoard = false;isActiveAdminCompte=false ;isActiveAddAdminCompte =false;isActiveServerForm = false;isActiveForm = false;isActiveListServer = false;isActiveListWeb = false;isActiveRequest=false;isActiveIntervention=false;isActiveAccessLog = true;isActiveTraccar =false;">
-                            <i class="material-icons">library_books</i>
-                            <p>Liste journal d'accès</p>
-                        </a>
-                    </li>
-                    <li [ngClass]="{'active': isActiveTraccar}">
-                        <a routerLink="/adminWeb/traccar" routerLinkActive="active"
-                            (click)="isActiveTraccar =true; isActiveAdminCompte=false ;isActiveAddAdminCompte =false;isActiveDashBoard = false;isActiveServerForm = false;isActiveForm = false;isActiveListServer = false;isActiveListWeb = false;isActiveRequest=false;isActiveIntervention=false;isActiveAccessLog = false;">
-                            <i class="material-icons">library_books</i>
-                            <p>Liste Traccar</p>
-                        </a>
-                    </li>
-
-                    <li>
-                        <a (click)="logout()" href="#">
-                            <i class="material-icons">exit_to_app</i>
-                            <p>Déconnecter</p>
-                        </a>
-                    </li>
-                </ul>
+                </div>
+                <button class="toggle-sidebar-btn desktop-only" (click)="toggleSidebar()" type="button">
+                    <i class="material-icons">{{ isCollapsed() ? 'menu' : 'menu_open' }}</i>
+                </button>
             </div>
+
+            <ul class="nav">
+                <li class="nav-section-title">Général</li>
+                <li [class.active]="isActiveDashBoard">
+                    <a routerLink="/adminWeb/dashboard" (click)="setMenu('dashboard')" [title]="isCollapsed() ? 'Tableau de bord' : ''">
+                        <i class="material-icons">dashboard</i>
+                        <p>Tableau de bord @if (notificationCount > 0) {<span class="badge rounded-pill bg-danger ms-2">{{notificationCount}}</span>}</p>
+                    </a>
+                </li>
+                <li [class.active]="isActiveTraccar">
+                    <a routerLink="/adminWeb/traccar" (click)="setMenu('traccar')" [title]="isCollapsed() ? 'Suivi Traccar' : ''">
+                        <i class="material-icons">room</i>
+                        <p>Suivi Traccar</p>
+                    </a>
+                </li>
+                
+                <li class="nav-section-title">Gestion</li>
+                <li *ngIf="isAgentAdmin()" [class.active]="isActiveAddAdminCompte">
+                    <a routerLink="/adminWeb/addAdminCompte" (click)="setMenu('addAdmin')" [title]="isCollapsed() ? 'Ajouter Admin' : ''">
+                        <i class="material-icons">person_add_alt</i>
+                        <p>Ajouter Admin</p>
+                    </a>
+                </li>
+                <li *ngIf="isAgentAdmin()" [class.active]="isActiveAdminCompte">
+                    <a routerLink="/adminWeb/adminCompte" (click)="setMenu('listAdmin')" [title]="isCollapsed() ? 'Liste Admins' : ''">
+                        <i class="material-icons">group</i>
+                        <p>Liste Admins</p>
+                    </a>
+                </li>
+                <li [class.active]="isActiveServerForm">
+                    <a routerLink="/adminWeb/addCompteServer" (click)="setMenu('addServer')" [title]="isCollapsed() ? 'Ajouter Serveur' : ''">
+                        <i class="material-icons">dns</i>
+                        <p>Ajouter Serveur</p>
+                    </a>
+                </li>
+                <li [class.active]="isActiveListServer">
+                    <a routerLink="/adminWeb/listServers" (click)="setMenu('listServer')" [title]="isCollapsed() ? 'Liste Serveurs' : ''">
+                        <i class="material-icons">storage</i>
+                        <p>Liste Serveurs</p>
+                    </a>
+                </li>
+                <li [class.active]="isActiveForm">
+                    <a routerLink="/adminWeb/addCompteWeb" (click)="setMenu('addWeb')" [title]="isCollapsed() ? 'Ajouter Web' : ''">
+                        <i class="material-icons">web</i>
+                        <p>Ajouter Web</p>
+                    </a>
+                </li>
+                <li [class.active]="isActiveListWeb">
+                    <a routerLink="/adminWeb/listWebs" (click)="setMenu('listWeb')" [title]="isCollapsed() ? 'Liste Web' : ''">
+                        <i class="material-icons">language</i>
+                        <p>Liste Web</p>
+                    </a>
+                </li>
+
+                <li class="nav-section-title">Système</li>
+                <li [class.active]="isActiveAccessLog">
+                    <a routerLink="/adminWeb/accessLog" (click)="setMenu('logs')" [title]="isCollapsed() ? 'Journal d\'accès' : ''">
+                        <i class="material-icons">history</i>
+                        <p>Journal d'accès</p>
+                    </a>
+                </li>
+                <li class="logout-item">
+                    <a (click)="logout()" class="text-danger opacity-75" [title]="isCollapsed() ? 'Déconnecter' : ''">
+                        <i class="material-icons">power_settings_new</i>
+                        <p>Déconnecter</p>
+                    </a>
+                </li>
+            </ul>
         </div>
-        <!-- end side bar-->
-    </nav>
-    <div class="content">
+    </aside>
+
+    <main class="content" [class.collapsed]="isCollapsed()">
         <router-outlet></router-outlet>
-    </div>
+    </main>
 </div>

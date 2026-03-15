@@ -6,15 +6,18 @@ import { WebAccountService } from '../service/web-account.service';
 import { WebSocketService } from '../service/web-socket.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { signal } from '@angular/core';
 
 @Component({
   selector: 'app-admin-web-component',
+  standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './admin-web-component.component.html',
   styleUrls: ['./admin-web-component.component.css']
 })
 export class AdminWebComponentComponent implements OnInit {
 
+  isCollapsed = signal(false);
   isActiveDashBoard: boolean = true;
   isActiveServerForm: boolean = false;
   isActiveForm: boolean = false;
@@ -89,5 +92,21 @@ export class AdminWebComponentComponent implements OnInit {
 
   isGlobalAdminDesc(): boolean {
     return this.authService.hasRole('GLOBALADMINDESC');
+  }
+
+  toggleSidebar() {
+    this.isCollapsed.update(v => !v);
+  }
+
+  setMenu(menu: string) {
+    this.isActiveDashBoard = menu === 'dashboard';
+    this.isActiveAddAdminCompte = menu === 'addAdmin';
+    this.isActiveAdminCompte = menu === 'listAdmin';
+    this.isActiveServerForm = menu === 'addServer';
+    this.isActiveListServer = menu === 'listServer';
+    this.isActiveForm = menu === 'addWeb';
+    this.isActiveListWeb = menu === 'listWeb';
+    this.isActiveAccessLog = menu === 'logs';
+    this.isActiveTraccar = menu === 'traccar';
   }
 }

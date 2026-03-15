@@ -1,11 +1,32 @@
+.recalcul-note {
+    border-radius: 15px;
+}
+
+.btn-launch-recalcul {
+    border-radius: 12px;
+}
+
+.modal-content-rounded {
+    border: 0;
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.notification-scroll {
+    height: 250px;
+}
+
+.btn-understand {
+    border-radius: 12px;
+}
+
 .center {
   float: none;
   margin-left: auto;
   margin-right: auto;
   margin-top: 80px;
 }
-
-
 
 .card [data-background-color] {
   color: #FFFFFF;

@@ -8,3 +8,10 @@
   color: rgba(0,0,0, 0.87);
   background: #fff;
 }
+.btn-cancel-premium {
+    border-radius: 12px;
+}
+
+.btn-save-premium {
+    border-radius: 12px;
+}

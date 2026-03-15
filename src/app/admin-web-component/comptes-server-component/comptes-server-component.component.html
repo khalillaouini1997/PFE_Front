@@ -1,132 +1,159 @@
-@if (mode) {
-<div class="alert alert-danger" role="alert">
-  {{messageError}}
-</div>
-}
-
-<form class="navbar-form navbar-right" role="search" style="margin:0;" [formGroup]="searchForm"
-  (ngSubmit)="searchAccount()">
-  <div class="form-group is-empty">
-    <input type="text" class="form-control" formControlName="keyWord" placeholder="Search" style="margin:0;">
-    <span class="material-input"></span>
-  </div>
-  <button type="submit" class="btn btn-white btn-round btn-just-icon" style="margin:0;">
-    <i class="material-icons">search</i>
-    <div class="ripple-container"></div>
-  </button>
-</form>
-
-<div class="col-md-12">
-  <div class="card">
-    <div class="card-header" data-background-color="blue">
-      <h4 class="title">List of Server Account</h4>
-    </div>
-    <div class="card-content table-responsive">
-      <table class="table">
-        <thead class="text-primary">
-          <th>Id</th>
-          <th>Pseudo</th>
-          <th>IP Address</th>
-          <th>Configurations</th>
-        </thead>
-        <tbody>
-          @for (compteServer of comptesServer; track compteServer.idCompteClientServer) {
-          <tr>
-            <td>{{compteServer.idCompteClientServer}}</td>
-            <td>{{compteServer.pseudo}}</td>
-            <td>{{compteServer.ipAdresse}} </td>
-            <td>
-              <button class="btn btn-warning btn-xs" (click)="onSelect(compteServer)" data-toggle="modal"
-                data-target="#Modalupdate" data-backdrop="false">
-                <i class="material-icons md-24">build</i>
-              </button>
-
-              <button class="btn btn-info btn-xs"
-                [routerLink]="['/adminWeb/compteDetails', compteServer.idCompteClientServer]">
-                <i class="material-icons md-24">list</i>
-              </button>
-            </td>
-          </tr>
-          }
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
-<div class="col-md-6 text-center">
-  <pagination [hidden]="loading" [totalItems]="bigTotalItems" [(ngModel)]="bigCurrentPage" [maxSize]="maxSize"
-    class="pagination-sm" [boundaryLinks]="true" [rotate]="false" [itemsPerPage]="itemsPerPage"
-    (pageChanged)="pageChanged($event)" previousText="Previous" nextText="Next" firstText="First" lastText="Last">
-  </pagination>
-</div>
-
-<!-- Start modal update compte server -->
-<div id="Modalupdate" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <form [formGroup]="updateServerForm" (ngSubmit)="updateCompteServer()">
-      <!-- Modal content -->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Update server account {{updateServerForm.get('pseudo')?.value}}</h4>
+<div class="main-panel p-4">
+    <!-- Header Section -->
+    <div class="premium-card mb-4 header-gradient shadow-sm p-4">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div class="title-section text-white">
+                <h2 class="m-0 fw-bold">Liste des Serveurs</h2>
+                <p class="m-0 text-white-50 opacity-75">Gestion des instances et configurations backend</p>
+            </div>
+            
+            <div class="controls-section d-flex align-items-center gap-3">
+                <form class="d-flex align-items-center" [formGroup]="searchForm" (ngSubmit)="searchAccount()">
+                    <div class="input-group shadow-sm search-container-premium">
+                        <input type="text" class="form-control border-0 px-3 search-input-premium" formControlName="keyWord" placeholder="Rechercher par pseudo..." title="Rechercher par pseudo">
+                        <button class="btn btn-white border-0 search-btn-premium" type="submit" title="Lancer la recherche">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </form>
+                <button class="btn btn-glass btn-sm rounded-circle" routerLink="/adminWeb/addCompteServer" title="Nouveau Serveur">
+                    <i class="fa fa-plus text-white"></i>
+                </button>
+            </div>
         </div>
-        <div class="modal-body">
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group label-floating">
-                <label class="control-label">Pseudo
-                  <input type="text" class="form-control" formControlName="pseudo">
-                </label>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group label-floating">
-                <label class="control-label">Login
-                  <input type="text" class="form-control" formControlName="login">
-                </label>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group label-floating">
-                <label class="control-label">Password
-                  <input type="text" class="form-control" formControlName="password">
-                </label>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group label-floating">
-                <label class="control-label">IP Address
-                  <select formControlName="idIpAdresse" id="adresse" class="form-control">
-                    @for (ip of ips; track ip.idIpAdresse) {
-                    <option [value]="ip.idIpAdresse">{{ ip.label }}</option>
+    </div>
+
+    @if (mode) {
+        <div class="alert alert-danger border-0 shadow-sm mb-4 fade-in" role="alert">
+            <i class="fa fa-exclamation-circle me-2"></i> {{messageError}}
+        </div>
+    }
+
+    <!-- Table Section -->
+    <div class="premium-card p-0 overflow-hidden shadow-sm">
+        <div class="table-responsive table-container-70vh">
+            <table class="table-premium">
+                <thead>
+                    <tr>
+                        <th class="col-id-server">ID</th>
+                        <th>Pseudo du Serveur</th>
+                        <th>Adresse IP / Endpoint</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (loading) {
+                        <tr>
+                            <td colspan="4" class="text-center py-5">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Chargement...</span>
+                                </div>
+                            </td>
+                        </tr>
                     }
-                  </select>
-                </label>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group label-floating">
-                <div class="input-group input-append date">
-                  <input type="text" class="form-control" bsDatepicker [(ngModel)]="dt"
-                    [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }" [ngModelOptions]="{standalone: true}" name="date"
-                    placement="bottom" placeholder="Date expiration" required autocomplete="off">
-                </div>
-              </div>
-            </div>
-          </div>
+
+                    @for (compteServer of comptesServer; track compteServer.idCompteClientServer) {
+                        <tr class="align-middle">
+                            <td><span class="badge bg-light text-dark">{{compteServer.idCompteClientServer}}</span></td>
+                            <td class="fw-bold text-primary">{{compteServer.pseudo}}</td>
+                            <td><code>{{compteServer.ipAdresse || 'Non configurée'}}</code></td>
+                            <td class="text-end">
+                                <div class="btn-group gap-2">
+                                    <button class="btn btn-sm btn-outline-warning border-0 p-2" (click)="onSelect(compteServer)" 
+                                        data-toggle="modal" data-target="#Modalupdate" title="Modifier">
+                                        <i class="fa fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-info border-0 p-2" 
+                                        [routerLink]="['/adminWeb/compteDetails', compteServer.idCompteClientServer]" title="Détails">
+                                        <i class="fa fa-list-ul"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    
+                    @if (!loading && comptesServer.length === 0) {
+                        <tr>
+                            <td colspan="4" class="text-center py-5 text-secondary">
+                                <i class="fa fa-server fa-3x opacity-25 mb-2"></i>
+                                <p>Aucun compte serveur trouvé</p>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-warning" [disabled]="updateServerForm.invalid"
-            data-dismiss="modal">Update</button>
-          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+
+        <!-- Pagination Footer -->
+        <div class="p-4 bg-light bg-opacity-25 d-flex justify-content-center border-top">
+            <pagination [hidden]="loading" [totalItems]="bigTotalItems" [(ngModel)]="bigCurrentPage" [maxSize]="maxSize"
+                class="premium-pagination shadow-sm" [boundaryLinks]="true" [rotate]="false" [itemsPerPage]="itemsPerPage"
+                (pageChanged)="pageChanged($event)" previousText="‹" nextText="›" firstText="«" lastText="»"></pagination>
         </div>
-      </div>
-    </form>
-  </div>
+    </div>
 </div>
-<!-- End modal update compte server -->
+
+<!-- Modernized Update Modal -->
+<div id="Modalupdate" class="modal fade" role="dialog" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content modal-content-premium">
+            <div class="modal-header header-gradient text-white border-0 p-4">
+                <div>
+                    <h4 class="modal-title fw-bold m-0">Mise à jour Serveur</h4>
+                    <p class="m-0 small text-white-50 opacity-75">{{updateServerForm.get('pseudo')?.value}}</p>
+                </div>
+                <button type="button" class="btn-close btn-close-white" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <form [formGroup]="updateServerForm" (ngSubmit)="updateCompteServer()">
+                <div class="modal-body p-4 bg-light bg-opacity-50">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="form-floating shadow-sm">
+                                <input type="text" class="form-control border-0" formControlName="pseudo" placeholder="Pseudo">
+                                <label>Pseudo</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating shadow-sm">
+                                <input type="text" class="form-control border-0" formControlName="login" placeholder="Login">
+                                <label>Login</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating shadow-sm">
+                                <input type="text" class="form-control border-0" formControlName="password" placeholder="Password">
+                                <label>Mot de passe</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating shadow-sm">
+                                <select formControlName="idIpAdresse" class="form-select border-0" title="Adresse IP">
+                                    @for (ip of ips; track ip.idIpAdresse) {
+                                        <option [value]="ip.idIpAdresse">{{ ip.label }}</option>
+                                    }
+                                </select>
+                                <label>Adresse IP</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-floating shadow-sm">
+                                <input type="text" class="form-control border-0" bsDatepicker [(ngModel)]="dt"
+                                    [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }" [ngModelOptions]="{standalone: true}"
+                                    placement="bottom" placeholder="Date d'expiration" id="dtExp">
+                                <label for="dtExp">Date d'expiration</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-footer p-3 bg-white border-0">
+                    <button type="button" class="btn btn-light px-4" data-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-warning px-5 fw-bold" [disabled]="updateServerForm.invalid" data-dismiss="modal">
+                        Enregistrer les modifications
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

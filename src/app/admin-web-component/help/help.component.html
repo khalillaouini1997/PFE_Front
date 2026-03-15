@@ -1,185 +1,152 @@
-<div class="col-md-12">
-    <div class="card">
-        <div class="card-header" data-background-color="red">
-            <div class="row" [formGroup]="searchForm">
-                <div class="col-sm-6">
-                    <h4 class="title">Demandes clients</h4>
-                </div>
-                <div class="col-sm-3">
-                    <form role="search" class="search-form-header">
-                        <div class="is-empty">
-                            <label class="control-label label-etat" for="type">Etat
-                                <select class="formulaire" formControlName="type" name="type" id="type">
-                                    @for (type of types; track type.name) {
-                                    <option [value]="type.name">{{type.label}}</option>
-                                    }
-                                    <option hidden [value]="'null'"></option>
-                                </select>
-                            </label>
-                        </div>
-                    </form>
-                </div>
-                <div class="col-sm-3">
-                    <form role="search" class="search-form-header">
-                        <div class="is-empty">
-                            <label class="control-label label-etat" for="compteserver">Client
-                                <select class="formulaire" formControlName="compteWebId" name="compteserver"
-                                    id="compteserver">
-                                    @for (CompteWeb of comptesWeb(); track CompteWeb.idCompteClientWeb) {
-                                    <option [value]="CompteWeb.idCompteClientWeb">{{CompteWeb.login}}</option>
-                                    }
-                                </select>
-                            </label>
-                            <button type="submit" class="btn btn-white btn-sm btn-search-client" title="Rechercher"
-                                (click)="onSearchClient()"><i class="fa fa-search search-icon"></i>
-                                Rechercher</button>
-                        </div>
-                    </form>
-                </div>
+<div class="main-panel p-4">
+    <!-- Header Section -->
+    <div class="premium-card mb-4 header-gradient shadow-sm">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3" [formGroup]="searchForm">
+            <div class="title-section text-white">
+                <h2 class="m-0 fw-bold">Demandes Clients</h2>
+                <p class="m-0 text-white-50 opacity-75">Gestion des tickets et interventions</p>
             </div>
-
+            
+            <div class="controls-section d-flex align-items-center gap-3 flex-wrap">
+                <div class="form-floating filter-select-small">
+                    <select class="form-select border-0 bg-white bg-opacity-10 text-white" formControlName="type" id="typeFilter">
+                        @for (type of types; track type.name) {
+                            <option [value]="type.name">{{type.label}}</option>
+                        }
+                        <option hidden [value]="'null'"></option>
+                    </select>
+                    <label for="typeFilter" class="text-white-50">État</label>
+                </div>
+                
+                <div class="form-floating filter-select-medium">
+                    <select class="form-select border-0 bg-white bg-opacity-10 text-white" formControlName="compteWebId" id="clientFilter">
+                        @for (CompteWeb of comptesWeb(); track CompteWeb.idCompteClientWeb) {
+                            <option [value]="CompteWeb.idCompteClientWeb">{{CompteWeb.login}}</option>
+                        }
+                    </select>
+                    <label for="clientFilter" class="text-white-50">Client</label>
+                </div>
+                
+                <button type="button" class="btn btn-white shadow-sm btn-search-white" (click)="onSearchClient()">
+                    <i class="fa fa-search me-2"></i> Rechercher
+                </button>
+            </div>
         </div>
-        <div class="table-responsive tableFixHead">
-            <table class="table table-bordered table-hover table-sm">
+    </div>
+
+    <!-- Table Content -->
+    <div class="premium-card p-0 overflow-hidden shadow-sm">
+        <div class="table-responsive table-container-70vh">
+            <table class="table-premium">
                 <thead>
                     <tr>
-                        <th>Crée le </th>
-                        <th>Demande</th>
+                        <th>Créé le</th>
+                        <th>Type de Demande</th>
                         <th>Détails</th>
                         <th>Priorité</th>
-                        <th>Etat</th>
-                        <th>Traité le </th>
-                        <th>Réponse </th>
-                        <th></th>
+                        <th>État Actuel</th>
+                        <th>Traité le</th>
+                        <th>Réponse</th>
+                        <th class="text-end">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-
                     @if (loading()) {
-                    <tr>
-                        <td class="loading-cell" colspan="8">
-                            <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
-                        </td>
-                    </tr>
+                        <tr>
+                            <td colspan="8" class="text-center py-5">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Chargement...</span>
+                                </div>
+                            </td>
+                        </tr>
                     }
 
-                    @for (intervention of interventionsFilter(); track $index) {
-                    <tr>
-                        <td>{{intervention.createdAt | date:'dd-MM-yyyy'}}</td>
-                        <td>{{intervention.request}}</td>
-                        <td>{{intervention.content}} </td>
-                        <td>
-                            @if (intervention?.priority === 0) {
-                            <span>Faible</span>
-                            } @else if (intervention?.priority === 1) {
-                            <span>Moyen</span>
-                            } @else if (intervention?.priority === 2) {
-                            <span>Urgent</span>
-                            }
-                        </td>
-                        <td>
-                            @if (intervention.type === 'REQUEST') {
-                            <span data-toggle="tooltip" class="badge bg-orange">
-                                Demande d'intervention
-                            </span>
-                            } @else if (intervention.type === 'INPROGRESS') {
-                            <span data-toggle="tooltip" class="badge bg-blue">
-                                En cours de traitement
-                            </span>
-                            } @else if (intervention.type === 'CARRYOUT') {
-                            <span data-toggle="tooltip" class="badge bg-green">
-                                Intervention effectuée
-                            </span>
-                            } @else if (intervention.type === 'REJECTED') {
-                            <span data-toggle="tooltip" class="badge bg-red">
-                                Intervention annulée
-                            </span>
-                            }
-                        </td>
-                        <td>{{intervention.submitAt | date:'dd-MM-yyyy'}}</td>
-                        <td>{{intervention.response}}</td>
-                        <td>
-                            <button class="btn btn-info btn-xs btn-modify-intervention"
-                                (click)="openUpdateModal(intervention)" title="Modifier" [tooltip]="'Modifier'" tooltipPlacement="top"
-                                data-toggle="modal" data-target="#ModalInit">
-                                <i class="fa fa-edit" aria-hidden="true"></i></button>
-                        </td>
-                    </tr>
+                    @for (intervention of interventionsFilter(); track intervention.id) {
+                        <tr class="align-middle border-bottom border-light">
+                            <td class="small fw-medium text-secondary">{{intervention.createdAt | date:'dd MMM yyyy'}}</td>
+                            <td><span class="badge bg-light text-dark border">{{intervention.request}}</span></td>
+                            <td class="small">{{intervention.content}}</td>
+                            <td>
+                                @if (intervention?.priority === 0) {
+                                    <span class="badge bg-info bg-opacity-10 text-info rounded-pill px-3">Faible</span>
+                                } @else if (intervention?.priority === 1) {
+                                    <span class="badge bg-warning bg-opacity-10 text-warning-emphasis rounded-pill px-3">Moyen</span>
+                                } @else if (intervention?.priority === 2) {
+                                    <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill px-3">Urgent</span>
+                                }
+                            </td>
+                            <td>
+                                @if (intervention.type === 'REQUEST') {
+                                    <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 rounded-pill px-3">Intervention</span>
+                                } @else if (intervention.type === 'INPROGRESS') {
+                                    <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 rounded-pill px-3">En cours</span>
+                                } @else if (intervention.type === 'CARRYOUT') {
+                                    <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-3">Effectuée</span>
+                                } @else if (intervention.type === 'REJECTED') {
+                                    <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 rounded-pill px-3">Annulée</span>
+                                }
+                            </td>
+                            <td class="small text-secondary">{{intervention.submitAt | date:'dd MMM yyyy'}}</td>
+                            <td class="small font-italic">{{intervention.response || '—'}}</td>
+                            <td class="text-end">
+                                <button class="btn btn-sm btn-outline-primary rounded-circle p-2" (click)="openUpdateModal(intervention)" title="Modifier">
+                                    <i class="fa fa-edit"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                    
+                    @if (!loading() && interventionsFilter().length === 0) {
+                        <tr>
+                            <td colspan="8" class="text-center py-5">
+                                <i class="fa fa-inbox fa-3x opacity-25 mb-2"></i>
+                                <p class="text-secondary m-0">Aucune demande trouvée</p>
+                            </td>
+                        </tr>
                     }
                 </tbody>
             </table>
         </div>
     </div>
 </div>
-<div>
 
-</div>
-<ng-template #template class="modal-dialog">
-    <div class="modal-header">
-        <h4 class="modal-title pull-left">Traitement de la demance</h4>
-        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef?.hide()">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-    </div>
-</ng-template>
-<div class="modal fade" id="ModalInit" role="dialog">
-    <div class="modal-dialog">
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Modifier la demande selectionnée :
-                </h4>
+<!-- Modernized Update Modal -->
+<div class="modal fade" id="ModalInit" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-content-rounded">
+            <div class="modal-header header-gradient text-white border-0 p-4">
+                <h5 class="modal-title fw-bold m-0">Mise à jour de la demande</h5>
+                <button type="button" class="btn-close btn-close-white" data-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form [formGroup]="updateForm" class="form-horizontal">
-                <div class="box-body">
-                    <div class="form-group ">
-                        <label class="col-sm-2 control-label" for="typeUpdate">Date de traitement :</label>
-                        <div class="col-md-4">
-                            <div class="form-group ">
-                                <div class="col-sm-12">
-                                    <!--<my-date-picker name="mydate" [options]="myDatePickerOptions" placeholder="date Expiration"
-                                        [(ngModel)]="date" required></my-date-picker>-->
-                                </div>
+            
+            <form [formGroup]="updateForm">
+                <div class="modal-body p-4 bg-light bg-opacity-50">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <div class="form-floating">
+                                <select formControlName="type" id="statusUpdate" class="form-select border-0 bg-white">
+                                    @for (type of types; track type.name) {
+                                        <option [value]="type.name">{{type.label}}</option>
+                                    }
+                                </select>
+                                <label for="statusUpdate">Nouvel État</label>
                             </div>
                         </div>
-                        <label class="col-sm-2 control-label" for="typeUpdate">Etat
-                            <div class="col-lg-4 col-md-4">
-                                <div class="form-group ">
-                                    <div class="col-sm-12">
-                                        <select formControlName="type" name="type" id="typeUpdate" class="form-control"
-                                            required>
-                                            @for (type of types; track type.name) {
-                                            <option [value]='type.name'>{{type.label}}</option>
-                                            }
-                                        </select>
-                                    </div>
-                                </div>
+                        
+                        <div class="col-12">
+                            <div class="form-floating">
+                                <textarea formControlName="response" id="responseUpdate" class="form-control border-0 bg-white h-150px" placeholder="Détails"></textarea>
+                                <label for="responseUpdate">Réponse / Action effectuée</label>
                             </div>
-                        </label>
-                    </div>
-                    <div class="form-group ">
-                        <label class="col-sm-2 control-label" for="response">Reponse
-                            <div class="col-lg-10 col-md-10">
-                                <div class="form-group ">
-                                    <div class="col-sm-12">
-                                        <textarea formControlName="response" id="response" rows="12" name="response"
-                                            type="text" maxlength="1000" placeholder="Détails"
-                                            class="form-control"></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        </label>
+                        </div>
                     </div>
                 </div>
-                <div class="box-footer">
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-                        <button type="button" class="btn btn-warning" [hidden]="!updateForm.valid"
-                            (click)="updateIntervention()" data-dismiss="modal">Enregistrer</button>
-                    </div>
+                
+                <div class="modal-footer p-3 bg-white border-0">
+                    <button type="button" class="btn btn-light px-4" data-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-warning px-4 fw-bold" [disabled]="updateForm.invalid" (click)="updateIntervention()" data-dismiss="modal">
+                        Enregistrer les modifications
+                    </button>
                 </div>
             </form>
         </div>

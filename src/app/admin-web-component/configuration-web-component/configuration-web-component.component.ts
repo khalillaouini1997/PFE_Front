@@ -31,6 +31,7 @@ defineLocale('fr', frLocale);
 
 @Component({
     selector: 'app-configuration-web-component',
+    standalone: true,
     templateUrl: './configuration-web-component.component.html',
     styleUrls: ['./configuration-web-component.component.css'],
     imports: [CommonModule, ReactiveFormsModule, BsDatepickerModule, NgSelectModule, NgMultiSelectDropDownModule]

@@ -10,6 +10,7 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 @Component({
     selector: 'app-vehicule-info',
+    standalone: true,
     templateUrl: './vehicule-info.component.html',
     styleUrls: ['./vehicule-info.component.css'],
     imports: [CommonModule, FormsModule, ReactiveFormsModule, TooltipModule, PaginationModule]

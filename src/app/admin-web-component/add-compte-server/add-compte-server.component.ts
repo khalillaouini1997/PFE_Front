@@ -16,6 +16,7 @@ defineLocale('fr', frLocale);
 
 @Component({
     selector: 'app-add-compte-server',
+    standalone: true,
     templateUrl: './add-compte-server.component.html',
     styleUrls: ['./add-compte-server.component.css'],
     imports: [ReactiveFormsModule, BsDatepickerModule]

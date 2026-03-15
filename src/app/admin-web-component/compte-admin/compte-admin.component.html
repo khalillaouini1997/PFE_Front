@@ -1,90 +1,117 @@
-<!--created by CHAIMA TABOUBI-->
-<div class="col-md-12">
-  <div class="card">
-    <div class="card-header" data-background-color="green">
-      <div class="row">
-        <div class="col-sm-8">
-          <h4 class="title">Liste des comptes Web</h4>
-        </div>
-        <div class="col-sm-4">
-          <form class="navbar-form navbar-right" role="search" style="margin:0;" [formGroup]="searchForm"
-            (ngSubmit)="searchWebAccount()">
-            <div class="form-group is-empty">
-              <input type="text" class="form-control" formControlName="keyWord" placeholder="Search"
-                style="margin:0;color:black;">
-              <span class="material-input"></span>
+<div class="main-panel p-4">
+    <!-- Header Section -->
+    <div class="premium-card mb-4 header-gradient shadow-sm">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div class="title-section text-white">
+                <h2 class="m-0 fw-bold">Comptes Administrateurs</h2>
+                <p class="m-0 text-white-50 opacity-75">Gérer les accès de haut niveau et les permissions</p>
             </div>
-            <button type="submit" class="btn btn-white btn-round btn-just-icon" style="margin:0;">
-              <i class="material-icons">search</i>
-              <div class="ripple-container"></div>
-            </button>
-          </form>
+            
+            <div class="controls-section d-flex align-items-center gap-3">
+                <form class="d-flex align-items-center" [formGroup]="searchForm" (ngSubmit)="searchWebAccount()">
+                    <div class="input-group shadow-sm search-group">
+                        <input type="text" class="form-control border-0 px-3 search-input" formControlName="keyWord" placeholder="Rechercher un admin...">
+                        <button class="btn btn-white border-0 btn-search" type="submit" title="Lancer la recherche">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </form>
+                <button class="btn btn-glass btn-sm rounded-circle" routerLink="/adminWeb/addAdminCompte" title="Ajouter un administrateur">
+                    <i class="fa fa-plus text-white"></i>
+                </button>
+            </div>
         </div>
-      </div>
     </div>
 
-    <div class="table-responsive tableFixHead2">
-      <table class="table table-bordered table-hover table-sm">
-        <thead>
-          <tr>
-            <th>Id</th>
-            <th>Username</th>
-            <th>Password</th>
-            <th>Last Boitier</th>
-            <th>Role</th>
-            <th>Id Traccar</th>
-            <th>Use fcm</th>
-            <th>Use prefix</th>
-            <th>Mail Support</th>
-            <th>DeviceCostByDay</th>
-            <th>AccountFreePerMonth</th>
-            <th>TransctionFee</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody style="font-size: 12px;">
+    <!-- Table Section -->
+    <div class="premium-card p-0 overflow-hidden shadow-sm">
+        <div class="table-responsive table-container-70vh">
+            <table class="table-premium">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Utilisateur</th>
+                        <th>Mot de passe</th>
+                        <th>Dernier Boitier</th>
+                        <th>Rôle</th>
+                        <th>ID Traccar</th>
+                        <th>Notifications (FCM)</th>
+                        <th>Support Mail</th>
+                        <th class="text-end">Coûts & Frais</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (loading) {
+                        <tr>
+                            <td colspan="10" class="text-center py-5">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Chargement...</span>
+                                </div>
+                            </td>
+                        </tr>
+                    }
 
-          @if (loading) {
-          <tr>
-            <td style="text-align: center" colspan="7">
-              <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
-            </td>
-          </tr>
-          }
+                    @for (adminCompte of adminComptes; track adminCompte.idAdministratorCompte) {
+                        <tr class="align-middle">
+                            <td><span class="badge bg-light text-dark">{{adminCompte.idAdministratorCompte}}</span></td>
+                            <td class="fw-bold">{{adminCompte.username}}</td>
+                            <td><code class="small">{{adminCompte.password}}</code></td>
+                            <td><span class="badge bg-primary bg-opacity-10 text-primary">{{adminCompte.numLastBoitierAvailable}}</span></td>
+                            <td>
+                                <span class="badge rounded-pill px-3" [ngClass]="{
+                                    'bg-danger bg-opacity-10 text-danger': adminCompte.role === 'GLOBALADMIN',
+                                    'bg-info bg-opacity-10 text-info': adminCompte.role === 'AGENT',
+                                    'bg-secondary bg-opacity-10 text-secondary': !adminCompte.role.includes('ADMIN')
+                                }">
+                                    {{adminCompte.role}}
+                                </span>
+                            </td>
+                            <td>{{adminCompte.idTraccar || '—'}}</td>
+                            <td class="small">
+                                @if (adminCompte.useFcm) {
+                                    <div class="text-success"><i class="fa fa-check-circle me-1"></i> Fcm Active</div>
+                                    <div class="opacity-50">Prf: {{adminCompte.fcmPrefix}}</div>
+                                } @else {
+                                    <div class="text-secondary opacity-50"><i class="fa fa-minus-circle me-1"></i> Off</div>
+                                }
+                            </td>
+                            <td class="small">{{adminCompte.mailSupport || '—'}}</td>
+                            <td class="text-end small">
+                                <div>Cost: <strong>{{adminCompte.deviceCostByDay}}</strong>/j</div>
+                                <div>Free: <strong>{{adminCompte.accountFreePerMonth}}</strong>/m</div>
+                                <div>Fee: <strong>{{adminCompte.transctionFee}}</strong>%</div>
+                            </td>
+                            <td class="text-end">
+                                <div class="btn-group gap-1">
+                                    <button class="btn btn-sm btn-outline-primary border-0" title="Modifier">
+                                        <i class="fa fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger border-0" title="Supprimer">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    
+                    @if (!loading && adminComptes.length === 0) {
+                        <tr>
+                            <td colspan="10" class="text-center py-5 text-secondary">
+                                <i class="fa fa-users fa-3x opacity-25 mb-2"></i>
+                                <p>Aucun compte administrateur trouvé</p>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
 
-          @for (adminCompte of adminComptes; track adminCompte.idAdministratorCompte) {
-          <tr>
-            <td>{{adminCompte.idAdministratorCompte}}</td>
-            <td>{{adminCompte.username}}</td>
-            <td>{{adminCompte.password}}</td>
-            <td>{{adminCompte.numLastBoitierAvailable}}</td>
-            <td>{{adminCompte.role}}</td>
-            <td>{{adminCompte.idTraccar}} </td>
-            <td>{{adminCompte.useFcm}} </td>
-            <td>{{adminCompte.fcmPrefix}} </td>
-            <td>{{adminCompte.mailSupport}} </td>
-            <td>{{adminCompte.deviceCostByDay}} </td>
-            <td>{{adminCompte.accountFreePerMonth}} </td>
-            <td>{{adminCompte.transctionFee}} </td>
-            <td>
-              <!-- <button class="btn btn-info btn-xs" style="padding: 0px 8px;font-size: 8px;margin: 1px 0px 0px 0px;"
-                  [routerLink]="['/adminWeb/configurations',compteWeb.idCompteClientWeb]" data-backdrop="false">
-                  <i class="material-icons md-24" title="Configurer le compte Web">account_box</i></button>
-
-                <button class="btn btn-danger btn-xs" style="padding: 0px 8px;font-size: 8px;margin: 1px 0px 0px 0px;"
-                  (click)="onSelect(compteWeb);deleteWebAccount();">
-                  <i class="material-icons md-24" title=" Supprimer le compte Web">delete_forever</i></button>-->
-            </td>
-          </tr>
-          }
-        </tbody>
-      </table>
+        <!-- Pagination Footer -->
+        <div class="p-4 bg-light bg-opacity-25 d-flex justify-content-center border-top">
+            <pagination [hidden]="loading" [totalItems]="bigTotalItems" [(ngModel)]="bigCurrentPage" [maxSize]="maxSize"
+                class="premium-pagination shadow-sm" [boundaryLinks]="true" [rotate]="false" [itemsPerPage]="itemsPerPage"
+                (pageChanged)="pageChanged($event)" previousText="‹" nextText="›" firstText="«" lastText="»"></pagination>
+        </div>
     </div>
-  </div>
-</div>
-<div class="col-md-12 text-center">
-  <pagination [hidden]="loading" [totalItems]="bigTotalItems" [(ngModel)]="bigCurrentPage" [maxSize]="maxSize"
-    class="pagination-sm" [boundaryLinks]="true" [rotate]="false" [itemsPerPage]="itemsPerPage"
-    (pageChanged)="pageChanged($event)" previousText="Précédent" nextText="Suivant" firstText="Premier"
-    lastText="Dernier"></pagination>
 </div>

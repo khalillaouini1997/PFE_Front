@@ -10,11 +10,14 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { LowerCasePipe } from '@angular/common';
 import { WebSocketService } from 'src/app/service/web-socket.service';
 
+import { RouterModule } from "@angular/router";
+
 @Component({
     selector: 'app-recalcul-web',
+    standalone: true,
     templateUrl: './recalcul-web.component.html',
     styleUrls: ['./recalcul-web.component.css'],
-    imports: [FormsModule, ReactiveFormsModule, BsDatepickerModule, TooltipModule, LowerCasePipe]
+    imports: [FormsModule, ReactiveFormsModule, BsDatepickerModule, TooltipModule, LowerCasePipe, RouterModule]
 })
 export class RecalculWebComponent implements OnInit {
 

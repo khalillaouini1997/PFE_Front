@@ -1,5 +1,5 @@
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { saveAs as importedSaveAs } from 'file-saver';
 import { ToastrService } from 'ngx-toastr';
 import { CompteServer, IpAddress } from 'src/app/data/data';
@@ -9,14 +9,17 @@ import { AuthService } from "../../service/auth.service";
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { CommonModule } from '@angular/common';
 
 @Component({
-    selector: 'app-comptes-server-component',
-    templateUrl: './comptes-server-component.component.html',
-    styleUrls: ['./comptes-server-component.component.css'],
-    imports: [FormsModule, ReactiveFormsModule, RouterLink, PaginationModule, BsDatepickerModule]
+  selector: 'app-comptes-server-component',
+  standalone: true,
+  templateUrl: './comptes-server-component.component.html',
+  styleUrls: ['./comptes-server-component.component.css'],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, PaginationModule, BsDatepickerModule]
 })
 export class ComptesServerComponentComponent implements OnInit {
+  private readonly cdr = inject(ChangeDetectorRef);
 
   keyWord: string = "";
   public maxSize: number = 5;
@@ -51,6 +54,7 @@ export class ComptesServerComponentComponent implements OnInit {
     this.getAllcompteServer(this.searchForm.get('keyWord')?.value || "", this.bigCurrentPage - 1, this.itemsPerPage);
     this.ipAddressService.getAllIps().subscribe(res => {
       this.ips = res;
+      this.cdr.markForCheck();
     });
   }
 
@@ -76,6 +80,7 @@ export class ComptesServerComponentComponent implements OnInit {
   getAllcompteServer(keyWord: string, page: number, size: number) {
     this.loading = true;
     this.comptesServer = [];
+    this.cdr.markForCheck();
     this.compteServerService.getAllServerAccount(keyWord, page, size).subscribe({
       next: (_comptesServer) => {
         this.comptesServer = _comptesServer.content as any;
@@ -86,9 +91,11 @@ export class ComptesServerComponentComponent implements OnInit {
         });
         this.bigTotalItems = _comptesServer.totalElements;
         this.loading = false;
+        this.cdr.markForCheck();
       },
       error: () => {
         this.loading = false;
+        this.cdr.markForCheck();
       }
     });
   }

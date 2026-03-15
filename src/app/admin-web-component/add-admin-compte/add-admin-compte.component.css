@@ -1,0 +1,11 @@
+.btn-cancel-premium {
+    border-radius: 12px;
+}
+
+.btn-save-premium {
+    border-radius: 12px;
+}
+
+.scale-125 {
+    transform: scale(1.25);
+}

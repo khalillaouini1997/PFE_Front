@@ -1,4 +1,5 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CompteWeb } from 'src/app/data/data';
@@ -11,11 +12,13 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 @Component({
     selector: 'app-comptes-web-component',
+    standalone: true,
     templateUrl: './comptes-web-component.component.html',
     styleUrls: ['./comptes-web-component.component.css'],
-    imports: [FormsModule, ReactiveFormsModule, RouterLink, PaginationModule, DatePipe]
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, PaginationModule, DatePipe]
 })
 export class ComptesWebComponentComponent implements OnInit {
+  private readonly cdr = inject(ChangeDetectorRef);
   itemsPerPage = 30;
   public bigTotalItems: number = 0;
   public bigCurrentPage: number = 1;
@@ -59,6 +62,7 @@ export class ComptesWebComponentComponent implements OnInit {
   getAllWebAccount(keyWord: string, page: number, size: number) {
     this.loading = true;
     this.comptesWeb = [];
+    this.cdr.markForCheck();
     this.webAccountService.getAllWebAccountByKeyWord(keyWord, page, size).subscribe({
       next: (_comptesWeb) => {
         this.loading = false;
@@ -74,10 +78,12 @@ export class ComptesWebComponentComponent implements OnInit {
           }
         }
         this.bigTotalItems = _comptesWeb.totalElements;
+        this.cdr.markForCheck();
       },
       error: (err) => {
         this.loading = false;
         this.toastr.error('Error loading web accounts', 'Error');
+        this.cdr.markForCheck();
       }
     });
   }
@@ -89,8 +95,10 @@ export class ComptesWebComponentComponent implements OnInit {
   searchWebAccount() {
     this.loading = true;
     this.bigCurrentPage = 1;
+    this.cdr.markForCheck();
     this.getAllWebAccount(this.searchForm.get('keyWord')?.value, this.bigCurrentPage - 1, this.itemsPerPage);
     this.loading = false;
+    this.cdr.markForCheck();
   }
 
   onSelect(compteWeb: CompteWeb) {
@@ -103,6 +111,7 @@ export class ComptesWebComponentComponent implements OnInit {
       date: { year: dateDecop.getFullYear(), month: dateDecop.getUTCMonth() + 1, day: dateDecop.getUTCDate() },
       jsdate: dateDecop
     };
+    this.cdr.markForCheck();
   }
 
   deleteWebAccount() {
@@ -114,10 +123,12 @@ export class ComptesWebComponentComponent implements OnInit {
           this.toastr.success(' Account was deleted ', 'Success!');
           if (indexCompte > -1) {
             this.comptesWeb.splice(indexCompte, 1);
+            this.cdr.markForCheck();
           }
         },
         error: () => {
           this.toastr.error(' Account was not deleted ', 'Error!');
+          this.cdr.markForCheck();
         }
       });
     }

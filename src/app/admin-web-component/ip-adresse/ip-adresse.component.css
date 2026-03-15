@@ -1,0 +1,35 @@
+.search-group {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.search-input {
+    min-width: 250px;
+}
+
+.btn-search {
+    background: white;
+    color: var(--primary);
+}
+
+.table-container-70vh {
+    max-height: 70vh;
+}
+.col-endpoint-url {
+    max-width: 150px;
+}
+
+.col-id-mini {
+    width: 60px;
+}
+
+.col-url-trunc {
+    max-width: 150px;
+}
+
+.modal-content-rounded {
+    border: 0;
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+    border-radius: 20px;
+    overflow: hidden;
+}

@@ -11,6 +11,7 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 @Component({
     selector: 'app-compte-server-details',
+    standalone: true,
     templateUrl: './compte-server-details.component.html',
     styleUrls: ['./compte-server-details.component.css'],
     imports: [FormsModule, ReactiveFormsModule, PaginationModule, DatePipe]

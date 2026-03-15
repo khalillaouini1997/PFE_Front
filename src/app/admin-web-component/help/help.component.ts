@@ -10,6 +10,7 @@ import { DatePipe, CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-help',
+    standalone: true,
     templateUrl: './help.component.html',
     styleUrls: ['./help.component.css'],
     imports: [CommonModule, FormsModule, ReactiveFormsModule, DatePipe, TooltipModule]

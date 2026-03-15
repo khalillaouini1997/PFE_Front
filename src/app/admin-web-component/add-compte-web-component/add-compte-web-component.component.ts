@@ -12,6 +12,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 @Component({
     selector: 'app-add-compte-web-component',
+    standalone: true,
     templateUrl: './add-compte-web-component.component.html',
     styleUrls: ['./add-compte-web-component.component.css'],
     imports: [ReactiveFormsModule, BsDatepickerModule]

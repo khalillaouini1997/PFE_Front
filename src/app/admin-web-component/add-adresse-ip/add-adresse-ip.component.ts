@@ -7,6 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'app-add-adresse-ip',
+    standalone: true,
     templateUrl: './add-adresse-ip.component.html',
     styleUrls: ['./add-adresse-ip.component.css'],
     imports: [ReactiveFormsModule]

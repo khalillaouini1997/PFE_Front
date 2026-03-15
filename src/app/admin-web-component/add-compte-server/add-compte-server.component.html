@@ -1,148 +1,137 @@
-<!--created by CHAIMA TABOUBI-->
-
-<div class="container-fluid">
-  @if (mode) {
-  <div class="alert alert-danger" role="alert">
-    {{messageError}}
-  </div>
-  }
-  <div class="row">
-    <div class="center">
-      <div class="card">
-        <div class="card-header" data-background-color="blue">
-          <h4 class="title">Add Server Account</h4>
-          <p class="category">Complete this Form</p>
+<div class="main-panel p-4">
+    <!-- Header Section -->
+    <div class="premium-card mb-4 header-gradient shadow-sm p-4">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div class="title-section text-white">
+                <h2 class="m-0 fw-bold">Nouveau Compte Serveur</h2>
+                <p class="m-0 text-white-50 opacity-75">Configurer une instance serveur pour un client</p>
+            </div>
+            <button class="btn btn-glass btn-sm rounded-circle" routerLink="/adminWeb/listServers" title="Retour à la liste">
+                <i class="fa fa-arrow-left text-white"></i>
+            </button>
         </div>
-        <div class="card-content">
-          <form [formGroup]="serverForm">
-            <div class="row">
-
-              <div class="col-md-6">
-                <div class="form-group label-floating">
-                  <label class="control-label" for="pseudo">Pseudo</label>
-                  <input type="text" class="form-control" formControlName="pseudo" id="pseudo" (keyup)="onKeyPseudo()">
-                </div>
-
-                @if (serverForm.get('pseudo')?.invalid && serverForm.get('pseudo')?.touched) {
-                <div class="invalid-feedback text-danger">
-                  Please provide a valid Pseudo
-                </div>
-                }
-                @if (isExistPseudo) {
-                <div class="text-danger small">Pseudo already exists</div>
-                }
-              </div>
-              <div class="col-md-6">
-                <div class="form-group label-floating">
-                  <label class="control-label" for="login">Login</label>
-                  <input type="text" class="form-control" formControlName="login" id="login" (keyup)="onKeyLogin()">
-                </div>
-
-                @if (serverForm.get('login')?.invalid && serverForm.get('login')?.touched) {
-                <div class="invalid-feedback text-danger">
-                  Please provide a valid Login
-                </div>
-                }
-                @if (isExistLogin) {
-                <div class="text-danger small">Login already exists</div>
-                }
-              </div>
-            </div>
-
-
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group label-floating"
-                  [class.has-error]="serverForm.get('password')?.touched && serverForm.get('password')?.invalid">
-                  <label for="password" class="control-label">Password</label>
-                  <input type="password" class="form-control" formControlName="password" id="Password">
-                  @if (serverForm.get('password')?.errors?.['minlength']) {
-                  <span class="help-block with-errors">Minimum of 6 characters</span>
-                  }
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group label-floating"
-                  [class.has-error]="serverForm.get('confirmationPassword')?.touched && (serverForm.get('confirmationPassword')?.invalid || serverForm.errors?.['mismatch'])">
-                  <label for=confirmPassword class="control-label">Confirmation Password</label>
-                  <input type="password" class="form-control" formControlName="confirmationPassword"
-                    id="confirmPassword">
-                  @if (serverForm.get('confirmationPassword')?.touched && serverForm.errors?.['mismatch']) {
-                  <span class="help-block text-danger">Passwords do not match</span>
-                  }
-                </div>
-              </div>
-
-            </div>
-            <div class="row">
-
-              <div class="col-md-6">
-                <div class="form-group label-floating">
-                  <label class="control-label" for="dateExpiration">Date d'expiration</label>
-                  <div class="input-group input-append date">
-                    <input type="text" class="form-control" bsDatepicker formControlName="date_Expiration"
-                      id="dateExpiration" [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }"
-                      placeholder="Date d'expiration">
-                    <span class="input-group-addon add-on"></span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-6">
-                <div class="col-md-6">
-                  <div class="form-group label-floating">
-                    <label class="control-label" for="numberBoitier">Number of Devices</label>
-                    <input type="number" min=0 class="form-control" formControlName="numberBoitier" id="numberBoitier">
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-md-6">
-                <!-- Add button here if needed -->
-              </div>
-              <button type="button" class="btn btn-info pull-right"
-                [disabled]="serverForm.invalid || isExistPseudo || isExistLogin" (click)="addCompteServer()"
-                data-toggle="modal" data-target="#Modalupdate" data-backdrop="false">Save
-                Server account
-              </button>
-            </div>
-            <div class="clearfix"></div>
-          </form>
-        </div>
-      </div>
     </div>
-  </div>
+
+    @if (mode) {
+        <div class="alert alert-danger border-0 shadow-sm mb-4 fade-in" role="alert">
+            <i class="fa fa-exclamation-circle me-2"></i> {{messageError}}
+        </div>
+    }
+
+    <div class="row justify-content-center">
+        <div class="col-lg-12">
+            <div class="premium-card shadow-sm p-4 border-0 bg-white">
+                <form [formGroup]="serverForm">
+                    <h5 class="fw-bold mb-4 border-bottom pb-2 d-flex align-items-center">
+                        <i class="material-icons me-2 text-primary">terminal</i>
+                        Identifiants du Serveur
+                    </h5>
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="form-floating mb-1">
+                                <input type="text" class="form-control" formControlName="pseudo" id="pseudo" placeholder="Pseudo" (keyup)="onKeyPseudo()"
+                                    [class.is-invalid]="(serverForm.get('pseudo')?.invalid && serverForm.get('pseudo')?.touched) || isExistPseudo">
+                                <label for="pseudo">Pseudo du Serveur</label>
+                            </div>
+                            @if (isExistPseudo) {
+                                <div class="text-danger small ms-2 mt-1"><i class="fa fa-times-circle"></i> Ce pseudo est déjà utilisé</div>
+                            }
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-1">
+                                <input type="text" class="form-control" formControlName="login" id="login" placeholder="Login" (keyup)="onKeyLogin()"
+                                    [class.is-invalid]="(serverForm.get('login')?.invalid && serverForm.get('login')?.touched) || isExistLogin">
+                                <label for="login">Login Administrateur</label>
+                            </div>
+                            @if (isExistLogin) {
+                                <div class="text-danger small ms-2 mt-1"><i class="fa fa-times-circle"></i> Ce login est déjà utilisé</div>
+                            }
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-floating mb-1">
+                                <input type="password" class="form-control" formControlName="password" id="Password" placeholder="Password"
+                                    [class.is-invalid]="serverForm.get('password')?.touched && serverForm.get('password')?.invalid">
+                                <label for="Password">Mot de passe</label>
+                            </div>
+                            @if (serverForm.get('password')?.errors?.['minlength']) {
+                                <div class="text-danger small ms-2 mt-1">Minimum 6 caractères requis</div>
+                            }
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-1">
+                                <input type="password" class="form-control" formControlName="confirmationPassword" id="confirmPassword" placeholder="Confirm"
+                                    [class.is-invalid]="serverForm.get('confirmationPassword')?.touched && (serverForm.get('confirmationPassword')?.invalid || serverForm.errors?.['mismatch'])">
+                                <label for="confirmPassword">Confirmer le mot de passe</label>
+                            </div>
+                            @if (serverForm.get('confirmationPassword')?.touched && serverForm.errors?.['mismatch']) {
+                                <div class="text-danger small ms-2 mt-1">Les mots de passe ne correspondent pas</div>
+                            }
+                        </div>
+                    </div>
+
+                    <h5 class="fw-bold mt-4 mb-4 border-bottom pb-2 d-flex align-items-center">
+                        <i class="material-icons me-2 text-primary">event_available</i>
+                        Validité & Capacité
+                    </h5>
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" bsDatepicker formControlName="date_Expiration"
+                                    id="dateExpiration" [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }" placeholder="Expiration">
+                                <label for="dateExpiration">Date d'expiration</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input type="number" min="0" class="form-control" formControlName="numberBoitier" id="numberBoitier" placeholder="Devices">
+                                <label for="numberBoitier">Nombre de Boitiers Autorisés</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pt-3 d-flex justify-content-end gap-3">
+                        <button type="button" class="btn btn-light px-4 btn-cancel-server" routerLink="/adminWeb/listServers">Annuler</button>
+                        <button type="button" class="btn btn-primary px-5 fw-bold shadow-sm btn-create-server" [disabled]="serverForm.invalid || isExistPseudo || isExistLogin" 
+                            (click)="addCompteServer()" data-toggle="modal" data-target="#Modalupdate">
+                            <i class="fa fa-check me-2"></i> Créer le Compte Serveur
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div id="Modalupdate" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-
-    <div class="modal-content">
-      <div class="modal-header">
-        <div class="alert alert-warning" role="alert">
-
-          <h1>
-
-            Notifications sur la creation du compte server:
-
-          </h1>
+<!-- Progress Modal (Modernized) -->
+<div id="Modalupdate" class="modal fade" role="dialog" tabindex="-1" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-content-server-progress">
+            <div class="modal-header bg-warning py-4 border-0">
+                <div class="w-100 text-center">
+                    <i class="fa fa-cogs fa-3x text-white mb-2 animate-spin-slow"></i>
+                    <h4 class="modal-title fw-bold text-white m-0">Création en cours</h4>
+                </div>
+            </div>
+            <div class="modal-body p-5 text-center bg-white">
+                <div class="display-4 fw-bold text-primary mb-2">
+                    {{ notifications }} <small class="text-secondary fs-4">/ {{serverForm.get('numberBoitier')?.value}}</small>
+                </div>
+                <p class="text-secondary fw-medium">Boitiers préparés avec succès</p>
+                
+                <div class="progress mt-4 shadow-sm progress-rounded-premium">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" 
+                        [style.width.%]="(notifications / serverForm.get('numberBoitier')?.value) * 100"></div>
+                </div>
+            </div>
+            <div class="modal-footer border-0 p-4 bg-light">
+                <button type="button" class="btn btn-dark w-100 py-2 fw-bold btn-finish-server" data-dismiss="modal" (click)="reinitialisation()" 
+                    [disabled]="notifications < serverForm.get('numberBoitier')?.value">
+                    Terminer & Retour
+                </button>
+            </div>
         </div>
-        <div style="text-align:center; margin-top: 100px;">
-
-          <h2>
-
-            <span style="color: red;">{{ notifications }}</span>/{{numberBoitier}} devices are ready
-
-          </h2>
-
-        </div>
-      </div>
-      <div class="modal-footer">
-
-        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="reinitialisation()">OK</button>
-      </div>
     </div>
-  </div>
 </div>

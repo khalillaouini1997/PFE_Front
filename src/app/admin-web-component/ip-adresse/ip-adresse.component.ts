@@ -8,11 +8,14 @@ import { of } from "rxjs";
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 
+import { CommonModule } from '@angular/common';
+
 @Component({
     selector: 'app-ip-adresse',
+    standalone: true,
     templateUrl: './ip-adresse.component.html',
     styleUrls: ['./ip-adresse.component.css'],
-    imports: [FormsModule, ReactiveFormsModule, PaginationModule]
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, PaginationModule]
 })
 export class IpAdresseComponent implements OnInit {
 

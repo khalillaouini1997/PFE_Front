@@ -1,656 +1,433 @@
-<div class="col-md-12" [formGroup]="mainConfigForm">
-  <div class="card">
-    <div class="card-header" data-background-color="red">
-      <h4 class="title">Configurer l'identifiant du compte web : {{compteWeb().idCompteClientWeb}}</h4>
-    </div>
-    <div class="card-content card-content-padding">
-      <div class="row margin-top-0">
-        <div class="col-md-6">
-          <div class="form-group label-floating">
-            <label class="control-label" for="configLogin">Login</label>
-            <input type="text" class="form-control" formControlName="login" id="configLogin">
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="form-group label-floating">
-            <label class="control-label" for="configPassword">Mot de passe</label>
-            <input type="text" class="form-control" formControlName="password" id="configPassword">
-          </div>
-        </div>
-      </div>
-
-      <div class="row margin-top-0">
-        <div class="col-md-6">
-          <div class="form-group label-floating">
-            <label class="control-label" for="configCodePays">Code Pays</label>
-            <select formControlName="code_pays" class="form-control" id="configCodePays">
-              @for (codePays of codesPays(); track codePays.value) {
-              <option [value]="codePays.value">
-                {{codePays.key}} (+{{codePays.value}}) </option>
-              }
-            </select>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="form-group label-floating">
-            <div class="input-group input-append date">
-              <input type="text" class="form-control" bsDatepicker formControlName="date_expiration"
-                [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }" placement="bottom" placeholder="Date expiration">
+<div class="main-panel p-4" [formGroup]="mainConfigForm">
+    <!-- Header Section -->
+    <div class="premium-card mb-4 header-gradient shadow-sm">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div class="title-section text-white">
+                <h2 class="m-0 fw-bold">Configuration du Compte</h2>
+                <p class="m-0 text-white-50 opacity-75">ID: {{compteWeb().idCompteClientWeb}} | Gérer les accès et préférences</p>
             </div>
-          </div>
-        </div>
-
-      </div>
-      <div class="row margin-top-0">
-        <!--        <div class="col-md-6 ">-->
-        <!--          <div class="form-group label-floating">-->
-        <!--            <label class="control-label">Options</label>-->
-        <!--            <input id="country" type="text" class="form-control" (click)="charge()" [(ngModel)]=query-->
-        <!--                   (keyup)=filter()>-->
-        <!--          </div>-->
-        <!--          <div class="suggestions" *ngIf="filteredList.length > 0">-->
-        <!--            <ul *ngFor="let item of filteredList" class="itemsSelect">-->
-        <!--              <li>-->
-        <!--                <a class="selectedItem" (click)="select(item)">{{item.description}}</a>-->
-        <!--              </li>-->
-        <!--            </ul>-->
-        <!--          </div>-->
-        <!--          <div *ngFor="let item of selected">-->
-        <!--            <div class="btn btn-warning">-->
-        <!--              <span>{{item.description}} &nbsp;</span>-->
-        <!--              <a class="selected" (click)="remove(item)">&times;</a>-->
-        <!--            </div>-->
-        <!--          </div>-->
-        <!--        </div>-->
-
-        <div class="col-md-6">
-          <div class="form-group margin-top-25">
-            <label class="options-title" for="configOptions">Options</label>
-            <ng-multiselect-dropdown [placeholder]="'Sélectionner des options'" [settings]="dropdownSettings()"
-              [data]="options()" formControlName="options" id="configOptions">
-            </ng-multiselect-dropdown>
-          </div>
-        </div>
-
-        <div class="col-md-6">
-          <div class="form-group margin-top-25">
-            <label class="options-title" for="configPool">Pool</label>
-            <input type="number" min="0" max="4" formControlName="pool" class="form-control" id="configPool">
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-
-        <div class="col-md-6">
-          <div class="form-group label-floating">
-            <label class="control-label" for="configFirstname">Nom</label>
-            <input type="text" class="form-control" formControlName="firstname" id="configFirstname">
-          </div>
-        </div>
-
-        <div class="col-md-6">
-          <div class="form-group label-floating">
-            <label class="control-label" for="configLastname">Prénom</label>
-            <input type="text" class="form-control" formControlName="lastname" id="configLastname">
-          </div>
-        </div>
-      </div>
-      <div class="row">
-
-        <div class="col-md-6">
-          <div class="form-group label-floating">
-            <label class="control-label" for="configEmail">Email</label>
-            <input type="email" class="form-control" formControlName="email" id="configEmail">
-          </div>
-        </div>
-
-        <div class="col-md-6">
-          <div class="form-group label-floating">
-            <label class="control-label" for="configTelephone">Téléphone</label>
-            <input type="tel" class="form-control" formControlName="telephone" id="configTelephone">
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6">
-          <div class="form-group label-floating">
-            <label class="control-label" for="configArea">Région</label>
-            <select formControlName="area" class="form-control" id="configArea">
-              @for (t of regions; track t) {
-              <option [value]="t">{{ t }}</option>
-              }
-            </select>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="form-group label-floating">
-            <label class="control-label" for="configNotificationSubquery">Type de notification</label>
-            <select formControlName="notificationSubquery" class="form-control" id="configNotificationSubquery">
-              @for (notifSub of notifSubs; track notifSub) {
-              <option [value]="notifSub">{{ notifSub }}</option>
-              }
-            </select>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="form-group label-floating">
-            <label class="control-label" for="configMobileNotif">Notification Mobile</label>
-            <input type="checkbox" formControlName="mobileNotif" id="configMobileNotif">
-          </div>
-        </div>
-
-      </div>
-      <div class="row">
-        <!-- ID Compte Serveur removed -->
-      </div>
-      <button type="button" class="btn btn-success btn-sm pull-right" (click)="saveChange()"><i class="fa fa-check"></i>
-        sauvegarder les
-        modifications</button>
-
-      <div class="row">
-        <div class="col-md-12">
-          <table class="table table-condensed table-bordered">
-            <thead>
-              <tr>
-                <th class="danger text-center-bold" colspan="6">Compte
-                  serveur associé</th>
-              </tr>
-              <tr class="table-header-gradient">
-                <th>Id</th>
-                <th>Pseudo</th>
-                <th>IP address</th>
-                <th>Créé à</th>
-                <th>Expiré le</th>
-                <th>Configurations</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>{{serverAccount().idCompteClientServer}}</td>
-                <td>{{serverAccount().pseudo}}</td>
-                <td>{{serverAccount().ipAdresse}}</td>
-                <td>{{serverAccount().date_creation | date:'dd-MM-yyyy'}}</td>
-                <td>{{serverAccount().date_Expiration | date:'dd-MM-yyyy'}}
-                  @if (serverAccount().during) {
-                  <span class="label label-success">Active</span>
-                  }
-                  @if (serverAccount().expired) {
-                  <span class="label label-danger">Expiré</span>
-                  }
-                </td>
-                <td>
-                  <!--<span class="label label-warning btn clear change" [tooltip]="tooltipup" tooltipPlacement="left" data-backdrop="false" data-toggle="modal"
-            data-target="#Modalupdateserver">
-            <i class="glyphicon glyphicon-refresh"></i> change</span>-->
-                  <button type="button" class="labell label-success btn"
-                    (click)="prepareDB(serverAccount().idCompteClientServer)">
-                    <i class="fa fa-database"></i> préparer BDD</button>
-                  <button type="button" class="labelle label-primary btn"
-                    (click)="showDevises(serverAccount().idCompteClientServer)">
-                    <i class="fa fa-mobile"></i> Boitiers</button>
-                </td>
-              </tr>
-
-            </tbody>
-          </table>
-        </div>
-      </div>
-      @if (boitiersClicked() === true) {
-      <div class="row">
-        <div class="col-md-12 tableFixHead margin-bottom-20">
-          <div class="col-md-12 bg-soft-red-center">
-            <span class="font-bold">Boitiers ({{boitiers().length}})</span>
-            @if (getNumberOfBoitiersNotInstall() > 0) {
-            <span class="text-warning font-bold">
-              {{getNumberOfBoitiersNotInstall()}} non
-              installé</span>
-            }
-          </div>
-          <table class="table table-condensed table-hover table-bordered">
-            <thead>
-              <tr>
-                <th scope="col" class="text-center">
-                   <input type="checkbox" name="optionsCheckboxes" (change)="onCheckedAllBoitiers()"
-                    [checked]="boitiers.length === selectedBoitiersIds.length && boitiers.length > 0"
-                    title="Select all boitiers" placeholder="Select all">
-                </th>
-                <th>Numéro</th>
-                <th>Etat</th>
-                <th>Configurations</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (boitier of boitiers(); track boitier.idBoitier) {
-              <tr>
-                <td>
-                   <input type="checkbox" name="optionsCheckboxes" (change)="onCheckedBoitier(boitier.numBoitier)"
-                    [checked]="isCheckedBoitier(boitier.numBoitier)" title="Select boitier" placeholder="Select">
-                </td>
-                <td>{{boitier.numBoitier}}</td>
-                <td>
-                  @if (boitier.etatBoitier==='INSTALLED') {
-                  <span class="label label-success">Installé</span>
-                  } @else {
-                  <span class="label label-danger">Non installé</span>
-                  }
-                </td>
-                <td>
-                  @if (boitier.etatBoitier==='INSTALLED') {
-                   <button type="button" class="btn btn-success pull-right config-btn" (click)="editBoitier(boitier)">
-                    <i class="material-icons">
-                      settings
-                    </i> Configurer</button>
-                  } @else {
-                  <button type="button" class="btn btn-success pull-right"
-                    (click)="prepareDBForSingleDevice(boitier.idBoitier)">
-                    <i class="material-icons">
-                      build
-                    </i> Preparer BDD</button>
-                  }
-                </td>
-              </tr>
-              }
-            </tbody>
-          </table>
-        </div>
-      </div>
-      }
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</div>
-
-
-<!--start modal update server account of web account-->
-
-<div id="Modalupdateserver" class="modal fade" role="dialog">
-  <div class="modal-dialog modal-sm">
-    <div [formGroup]="mainConfigForm">
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Change Server Account for
-            <span class="label label-info">{{compteWeb().login}}</span>
-          </h4>
-        </div>
-        <div class="modal-body">
-          <div class="row">
-            <div class="col-md-3"></div>
-            <div class="col-md-6">
-              <div class="form-group label-floating">
-                <div class="input-group input-append date">
-                  <label class="control-label" for="serverAccount">Server Account</label>
-                  <select class="form-control" name="server" required id="serverAccount">
-                    @for (server of serverAccounts(); track server.idCompteClientServer) {
-                    <option [value]="server.idCompteClientServer">{{server.pseudo}} </option>
-                    }
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3"></div>
-          </div>
-
-        </div>
-        <!--<div class="modal-footer">
-          <button type="button" class="btn btn-warning" [hidden]="!ChangeServerForm.form.valid"
-          (click)="ChangeServerAccount()" data-dismiss="modal">update</button>
-          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-        </div>-->
-      </div>
-    </div>
-  </div>
-</div>
-
-<!--end modal update compte web-->
-
-<!-- Modal INITIALIZE DATABASE-->
-@if (showConfigModal()) {
-<div class="modal-backdrop fade-in modal-backdrop-custom"
-  (click)="closeConfigModal()" (keydown.enter)="closeConfigModal()" tabindex="0" role="button" aria-label="Close configuration modal"></div>
-<div class="modal fade-in modal-custom" id="ModalConfig" role="dialog">
-  <div class="modal-dialog modal-dialog-custom">
-    <!-- Modal content-->
-    <div class="modal-content">
-
-      <form [formGroup]="recalculateForm">
-        <div class="modal-header">
-          <button type="button" class="close modal-dialog-small-margin"
-            (click)="closeConfigModal()">&times;</button>
-          <div class="header-accent-red">
-            <h4 class="title">Recalcule du boitier : {{selectedBoitierId()}}</h4>
-          </div>
-        </div>
-        <div class="modal-body">
-
-          @if (selectedBoitiersIds().length > 0) {
-          <div class="row margin-top-0">
-            <div class="col-md-12 p-10-border-btm">
-              <div class="font-bold">Appliquer aux : </div>
-              <div class="overflow-x-auto">
-                @for (idBoitier of selectedBoitiersIds(); track idBoitier) {
-                <span class="label label-info margin-left-5">{{idBoitier}}</span>
-                }
-              </div>
-            </div>
-          </div>
-          }
-          <div class="row margin-top-0">
-            <div class="col-md-6">
-              <div class="form-group label-floating">
-
-                @if (dateBoolean) {
-                <div class="input-group input-append date">
-                  <input type="text" class="form-control" bsDatepicker formControlName="datestart" [maxDate]="maxDate"
-                    [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY, HH:mm' }" placement="bottom" placeholder="Date de début"
-                    autocomplete="off">
-                </div>
-                }
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group label-floating">
-                <label class="control-label" for="typeRecalcule">Type de recalcule</label>
-                <select formControlName="typeRecalcule" class="form-control" id="typeRecalcule">
-                  <option>recalcule trajet</option>
-                  <option>recalcule boitier</option>
-                  <option>recalcule carburant</option>
-                  <option>recalcule alert</option>
-                  <option>recalcule Temps reel</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-success btn-sm" [disabled]="recalculateForm.invalid"
-            (click)="recalculate()">
-            @if (!loadingRecalculate()) {
-            <i class="fa fa-retweet"></i>
-            }
-            @if (loadingRecalculate()) {
-            <i class="fa fa-spinner fa-spin"></i>
-            }
-            Recalculer
-          </button>
-        </div>
-      </form>
-      <div class="modal-header">
-        <span class="modal-title">
-          @if (loadingRecalculate()) {
-          <i class="fa fa-spinner fa-spin"></i>
-          }
-          Notifications</span>
-        @if (notifications().length > 0 && !loadingRecalculate()) {
-        <span class="font-size-12-bold">
-          @if (getNumberOfNotificationErrors() > 0) {
-          <span class="text-danger"><i class="fa fa-exclamation-circle"></i> {{getNumberOfNotificationErrors()}} erreurs
-            trouvé</span>
-          }
-          @if (getNumberOfNotificationErrors() === 0) {
-          <span class="text-success"><i class="fa fa-check"></i> bien recalculé</span>
-          }
-        </span>
-        }
-      </div>
-      <div class="modal-body">
-        <div class="text-center-nomargin">
-          <h6 class="notification-box">
-            @for (notification of notifications(); track $index) {
-            <span [ngClass]="{'text-danger': !notification.status}">
-              @if (notification.status) {
-              <i class="fa fa-check-circle text-success"></i>
-              } @else {
-              <i class="fa fa-exclamation-circle"></i>
-              }
-              {{$index + 1}}__{{notification.value}}
-            </span>
-            }
-          </h6>
-
-        </div>
-        <div class="row">
-          <div class="col-md-4">
-            <form [formGroup]="deviceOptForm">
-              <div class="modal-header">
-                <span class="modal-title">Options de configuration de boitier</span>
-              </div>
-              <div class="modal-body">
-                <div class="row">
-                  <div class="col-md-6">
-                    <span>ignition</span>
-                    <input class="pull-right" type="checkbox" formControlName="useIgnition" title="Ignition" placeholder="Ignition" />
-                  </div>
-                  <div class="col-md-6">
-                    <span>fuel</span>
-                    <input class="pull-right" type="checkbox" formControlName="useFuel" title="Fuel" placeholder="Fuel" />
-                  </div>
-                  <div class="col-md-6">
-                    <span>temp</span>
-                    <input class="pull-right" type="checkbox" formControlName="useTemp" title="Temp" placeholder="Temp" />
-                  </div>
-                  <div class="col-md-6">
-                    <span>fms</span>
-                    <input class="pull-right" type="checkbox" formControlName="useFms" title="FMS" placeholder="FMS" />
-                  </div>
-
-                  <div class="col-md-6">
-                    <span>j1708</span>
-                    <input class="pull-right" type="checkbox" formControlName="useJ1708" title="J1708" placeholder="J1708" />
-                  </div>
-                  <div class="col-md-6">
-                    <span>id driver</span>
-                    <input class="pull-right" type="checkbox" formControlName="useIdDriver" title="Driver ID" placeholder="Driver ID" />
-                  </div>
-                  <div class="col-md-6">
-                    <span>stop</span>
-                    <input class="pull-right" type="checkbox" formControlName="useStop" title="Stop" placeholder="Stop" />
-                  </div>
-                </div>
-              </div>
-            </form>
-          </div>
-
-          <div class="col-md-8">
-            <form [formGroup]="pathConfigForm">
-              <div class="modal-header">
-                <span class="modal-title">Configurations de base de données</span>
-              </div>
-              <div class="modal-body">
-                <div class="row margin-top-0">
-                  <div class="col-md-6">
-                    <div class="form-group label-floating">
-                      <label class="control-label" for="pathMinSec">Path Minimun (sec)</label>
-                      <select class="form-control" formControlName="pathMinSec" id="pathMinSec">
-                        <option value="30">30</option>
-                        <option value="60">60</option>
-                        <option value="90">90</option>
-                        <option value="120">120</option>
-                        <option value="150">150</option>
-                        <option value="180">180</option>
-                        <option value="210">210</option>
-                        <option value="240">240</option>
-                        <option value="270">270</option>
-                        <option value="300">300</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group label-floating">
-                      <label class="control-label" for="stopMinSec">Stop Minimun (sec)</label>
-                      <select class="form-control" formControlName="stopMinSec" id="stopMinSec">
-                        <option value="30">30</option>
-                        <option value="60">60</option>
-                        <option value="90">90</option>
-                        <option value="120">120</option>
-                        <option value="150">150</option>
-                        <option value="180">180</option>
-                        <option value="210">210</option>
-                        <option value="240">240</option>
-                        <option value="270">270</option>
-                        <option value="300">300</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div class="row margin-top-0">
-                  <div class="col-md-4">
-                    <div class="form-group label-floating">
-                      <label class="control-label" for="pauseMinSec">Pause Minimun (sec)</label>
-                      <select class="form-control" formControlName="pauseMinSec" id="pauseMinSec">
-                        <option value="30">30</option>
-                        <option value="60">60</option>
-                        <option value="90">90</option>
-                        <option value="120">120</option>
-                        <option value="150">150</option>
-                        <option value="180">180</option>
-                        <option value="210">210</option>
-                        <option value="240">240</option>
-                        <option value="270">270</option>
-                        <option value="300">300</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col-md-4">
-                    <div class="form-group label-floating">
-                      <label class="control-label" for="distanceMinMeter">distance Minimun (m)</label>
-                      <select class="form-control" formControlName="distanceMinMeter" id="distanceMinMeter">
-                        <option value="5">5</option>
-                        <option value="10">10</option>
-                        <option value="20">20</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                        <option value="300">300</option>
-                        <option value="500">500</option>
-                        <option value="1000">1000</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col-md-4">
-                    <div class="form-group label-floating">
-                      <label class="control-label" for="pathMinSpeed">Speed Minimun (km/h)</label>
-                      <select class="form-control" formControlName="pathMinSpeed" id="pathMinSpeed">
-                        <option value="1">1</option>
-                        <option value="5">5</option>
-                        <option value="10">10</option>
-                        <option value="15">15</option>
-                        <option value="20">20</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </form>
-
-          </div>
-
-        </div>
-
-        <div class="row">
-          <div class="col-md-12">
-            <div [formGroup]="deviceOptForm">
-              <div class="modal-header">
-                <span class="modal-title">Coordonnées de boitier</span>
-              </div>
-              <div class="col-md-4">
-                <span>SIM</span>
-              </div>
-              <div class="col-md-6">
-                <input class="pull-right" type="number" readonly [value]="selectedBoitierId()" title="Boitier ID" placeholder="Boitier ID" />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="row margin-top-0">
-          <div class="col-md-4">
-            <button type="button" class="btn btn-success btn-sm pull-left" [disabled]="deviceOptForm.invalid"
-              (click)="editDeviceOptionConfig()">
-              @if (!loadingEditDeviceOption()) {
-              <i class="fa fa-check"></i>
-              }
-              @if (loadingEditDeviceOption()) {
-              <i class="fa fa-spinner fa-spin"></i>
-              }
-              Modifier les options</button>
-          </div>
-          <div class="col-md-2">
-            <button type="button" class="btn btn-success btn-sm pull-right" (click)="resetOdometre()">
-              @if (!loadingResetOdometre()) {
-              <i class="fa fa-check"></i>
-              }
-              @if (loadingResetOdometre()) {
-              <i class="fa fa-spinner fa-spin"></i>
-              }
-              Reset Kilometrage
+            <button type="button" class="btn btn-white shadow-sm btn-save-config" (click)="saveChange()">
+                <i class="fa fa-save me-2"></i> Sauvegarder
             </button>
-          </div>
-          <div class="col-md-6">
-            <button type="button" class="btn btn-default btn-sm pull-right" (click)="closeConfigModal()"><i
-                class="fa fa-times"></i> Annuler</button>
-            <button type="button" class="btn btn-success btn-sm pull-right" [disabled]="pathConfigForm.invalid"
-              (click)="editPathConfig()">
-              @if (!loadingEditPathConfig()) {
-              <i class="fa fa-check"></i>
-              }
-              @if (loadingEditPathConfig()) {
-              <i class="fa fa-spinner fa-spin"></i>
-              }
-              Initialiser</button>
-          </div>
         </div>
-
-
-        <!-- device setting config-->
-        <div class="row margin-top-0">
-          <div class="col-md-3" [formGroup]="deviceSettingForm">
-            <div class="form-group label-floating">
-              <label class="control-label" for="rawstreamId">Rawstream Id</label>
-              <select class="form-control" formControlName="idIpAdresse" id="rawstreamId">
-                @for (ip of ipAddresses(); track ip.idIpAdresse) {
-                <option [ngValue]="ip.idIpAdresse">{{ip.label}}</option>
-                }
-              </select>
-            </div>
-          </div>
-          <div class="col-md-3" [formGroup]="deviceSettingForm">
-            <div class="form-group label-floating">
-              <label class="control-label" for="streamId">Stream Id</label>
-              <input type="number" class="form-control" formControlName="streamId" id="streamId">
-            </div>
-          </div>
-          <form class="navbar-form navbar-right navbar-form-nomargin" role="search" [formGroup]="imeiSearchForm">
-            <div class="form-group is-empty">
-              <input type="text" class="form-control" formControlName="imei" placeholder="Rechercher Imei..." />
-              <span class="material-input"></span>
-            </div>
-            <button type="submit" class="btn btn-white btn-sm imei-search-button" title="Rechercher"
-              (click)="getSearchDeviceIemi(imeiSearchForm.get('imei')?.value)"><i class="fa fa-search font-size-14"></i>
-              Rechercher Imei</button>
-          </form>
-        </div>
-        <!-- end device setting config-->
-
-        <div class="row margin-top-0">
-          <div class="col-md-6">
-            <button type="button" class="btn btn-success btn-sm pull-right" (click)="editDeviceSetting()">
-              @if (!loadingDeviceSetting()) {
-              <i class="fa fa-check"></i>
-              }
-              @if (loadingDeviceSetting()) {
-              <i class="fa fa-spinner fa-spin"></i>
-              }
-              Modifier les paramétres boitier</button>
-          </div>
-        </div>
-
-      </div>
-
     </div>
 
-  </div>
+    <div class="row g-4">
+        <!-- Basic info and Options -->
+        <div class="col-lg-8">
+            <div class="premium-card h-100">
+                <h5 class="fw-bold mb-4 border-bottom pb-2"><i class="fa fa-user-circle me-2 text-primary"></i> Informations Générales</h5>
+                
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" formControlName="login" id="configLogin" placeholder="Login">
+                            <label for="configLogin">Login</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" formControlName="password" id="configPassword" placeholder="Mot de passe">
+                            <label for="configPassword">Mot de passe</label>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <select formControlName="code_pays" class="form-select border-0 bg-light" id="configCodePays">
+                                @for (codePays of codesPays(); track codePays.value) {
+                                    <option [value]="codePays.value">{{codePays.key}} (+{{codePays.value}})</option>
+                                }
+                            </select>
+                            <label for="configCodePays">Code Pays</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" bsDatepicker formControlName="date_expiration"
+                                [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }" placement="bottom" placeholder="Date expiration" id="configExp">
+                            <label for="configExp">Date d'expiration</label>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="mb-3 px-1">
+                            <label class="small fw-bold text-secondary text-uppercase mb-2" for="configOptions">Options du Compte</label>
+                            <ng-multiselect-dropdown [placeholder]="'Sélectionner des options'" [settings]="dropdownSettings()"
+                                [data]="options()" formControlName="options" id="configOptions" class="premium-multiselect">
+                            </ng-multiselect-dropdown>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="number" min="0" max="4" formControlName="pool" class="form-control" id="configPool" placeholder="Pool">
+                            <label for="configPool">Pool (Zonage)</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <select formControlName="area" class="form-select border-0 bg-light" id="configArea">
+                                @for (t of regions; track t) {
+                                    <option [value]="t">{{ t }}</option>
+                                }
+                            </select>
+                            <label for="configArea">Région / Secteur</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact and Notif -->
+        <div class="col-lg-4">
+            <div class="premium-card h-100">
+                <h5 class="fw-bold mb-4 border-bottom pb-2"><i class="fa fa-envelope-open me-2 text-primary"></i> Contact & Notifications</h5>
+                
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" formControlName="firstname" id="configFirstname" placeholder="Nom">
+                    <label for="configFirstname">Nom</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" formControlName="lastname" id="configLastname" placeholder="Prénom">
+                    <label for="configLastname">Prénom</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="email" class="form-control" formControlName="email" id="configEmail" placeholder="Email">
+                    <label for="configEmail">Email</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="tel" class="form-control" formControlName="telephone" id="configTelephone" placeholder="Téléphone">
+                    <label for="configTelephone">Téléphone</label>
+                </div>
+
+                <div class="premium-card bg-light border-0 shadow-none mt-3">
+                    <div class="form-floating mb-3">
+                        <select formControlName="notificationSubquery" class="form-select border-0 bg-white" id="configNotifType">
+                            @for (notifSub of notifSubs; track notifSub) {
+                                <option [value]="notifSub">{{ notifSub }}</option>
+                            }
+                        </select>
+                        <label for="configNotifType">Type de notification</label>
+                    </div>
+                    <div class="form-check form-switch p-0 d-flex align-items-center justify-content-between">
+                        <label class="form-check-label fw-medium ms-0" for="configMobileNotif">Notifications Mobile</label>
+                        <input class="form-check-input ms-0 scale-125" type="checkbox" formControlName="mobileNotif" id="configMobileNotif">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Server and Devices Section -->
+        <div class="col-12 mt-4">
+            <div class="premium-card p-0 overflow-hidden shadow-sm">
+                <div class="p-4 bg-light bg-opacity-50 border-bottom d-flex justify-content-between align-items-center">
+                    <h5 class="m-0 fw-bold"><i class="fa fa-server me-2 text-primary"></i> Serveur Associé</h5>
+                    <div class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill border border-primary border-opacity-25">
+                        ID: {{serverAccount().idCompteClientServer}}
+                    </div>
+                </div>
+                <div class="table-responsive p-3">
+                    <table class="table-premium">
+                        <thead>
+                            <tr>
+                                <th>Pseudo</th>
+                                <th>Adresse IP</th>
+                                <th>Création</th>
+                                <th>Statut / Expiration</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="align-middle">
+                                <td class="fw-bold">{{serverAccount().pseudo}}</td>
+                                <td><code>{{serverAccount().ipAdresse}}</code></td>
+                                <td>{{serverAccount().date_creation | date:'dd MMM yyyy'}}</td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        {{serverAccount().date_Expiration | date:'dd MMM yyyy'}}
+                                        @if (serverAccount().during) {
+                                            <span class="badge bg-success bg-opacity-10 text-success rounded-pill">Active</span>
+                                        }
+                                        @if (serverAccount().expired) {
+                                            <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill">Expiré</span>
+                                        }
+                                    </div>
+                                </td>
+                                <td class="text-end">
+                                    <div class="btn-group gap-2">
+                                        <button type="button" class="btn btn-sm btn-outline-purple" (click)="prepareDB(serverAccount().idCompteClientServer)" title="Préparer BDD">
+                                            <i class="fa fa-database me-1"></i> BDD
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-primary" (click)="showDevises(serverAccount().idCompteClientServer)" title="Voir Boitiers">
+                                            <i class="fa fa-mobile me-1"></i> Boitiers
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Boitier Sub-Section -->
+        @if (boitiersClicked() === true) {
+            <div class="col-12 mt-4 fade-in">
+                <div class="premium-card p-0 overflow-hidden border-warning border-opacity-25 shadow-sm">
+                    <div class="p-4 bg-warning bg-opacity-10 border-bottom d-flex justify-content-between align-items-center">
+                        <h5 class="m-0 fw-bold"><i class="fa fa-microchip me-2 text-warning"></i> Terminaux ({{boitiers().length}})</h5>
+                        @if (getNumberOfBoitiersNotInstall() > 0) {
+                            <span class="badge bg-warning text-dark border border-warning border-opacity-50">
+                                <i class="fa fa-warning me-1"></i> {{getNumberOfBoitiersNotInstall()}} non installés
+                            </span>
+                        }
+                    </div>
+                    <div class="table-responsive p-3 table-container-400px">
+                        <table class="table-premium">
+                            <thead class="sticky-top bg-white shadow-sm sidebar-sticky-header">
+                                <tr>
+                                    <th class="col-id-mini">
+                                        <div class="form-check mb-0">
+                                            <input class="form-check-input" type="checkbox" (change)="onCheckedAllBoitiers()"
+                                                [checked]="boitiers().length === selectedBoitiersIds().length && boitiers().length > 0" title="Tout sélectionner">
+                                        </div>
+                                    </th>
+                                    <th>Identifiant #</th>
+                                    <th>État Actuel</th>
+                                    <th class="text-end">Configurations</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (boitier of boitiers(); track boitier.idBoitier) {
+                                    <tr class="align-middle">
+                                        <td>
+                                            <div class="form-check mb-0">
+                                                <input class="form-check-input" type="checkbox" (change)="onCheckedBoitier(boitier.numBoitier)"
+                                                    [checked]="isCheckedBoitier(boitier.numBoitier)" title="Sélectionner">
+                                            </div>
+                                        </td>
+                                        <td class="fw-bold">{{boitier.numBoitier}}</td>
+                                        <td>
+                                            @if (boitier.etatBoitier==='INSTALLED') {
+                                                <span class="badge bg-success bg-opacity-10 text-success rounded-pill ps-3 pe-3">Installé</span>
+                                            } @else {
+                                                <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill ps-3 pe-3">Non installé</span>
+                                            }
+                                        </td>
+                                        <td class="text-end">
+                                            @if (boitier.etatBoitier==='INSTALLED') {
+                                                <button type="button" class="btn btn-sm btn-outline-success" (click)="editBoitier(boitier)">
+                                                    <i class="fa fa-cogs me-1"></i> Configurer
+                                                </button>
+                                            } @else {
+                                                <button type="button" class="btn btn-sm btn-outline-warning" (click)="prepareDBForSingleDevice(boitier.idBoitier)">
+                                                    <i class="fa fa-wrench me-1"></i> Préparer
+                                                </button>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 </div>
-}
+
+<!-- Modal Recalculate / Config (Modernized) -->
+@if (showConfigModal()) {
+    <div class="modal-backdrop fade show modal-backdrop-glass" (click)="closeConfigModal()"></div>
+    <div class="modal fade show d-block modal-config-zindex" id="ModalConfig" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content modal-content-rounded">
+                <div class="modal-header header-gradient border-0 p-4">
+                    <div class="text-white">
+                        <h4 class="m-0 fw-bold">Recalcule & Options BDD</h4>
+                        <p class="m-0 small text-white-50 opacity-75">Boitier: {{selectedBoitierId()}}</p>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" (click)="closeConfigModal()" aria-label="Close"></button>
+                </div>
+                
+                <div class="modal-body p-4 bg-light bg-opacity-50">
+                    @if (selectedBoitiersIds().length > 0) {
+                        <div class="premium-card bg-white mb-4 p-3 border-0">
+                            <label class="small fw-bold text-secondary text-uppercase mb-2">Application Multi-Boitiers ({{selectedBoitiersIds().length}})</label>
+                            <div class="d-flex flex-wrap gap-1">
+                                @for (id of selectedBoitiersIds(); track id) {
+                                    <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25">{{id}}</span>
+                                }
+                            </div>
+                        </div>
+                    }
+
+                    <div class="row g-4">
+                        <!-- Recalcule Form side -->
+                        <div class="col-md-6" [formGroup]="recalculateForm">
+                            <div class="premium-card bg-white h-100 border-0">
+                                <h6 class="fw-bold mb-3 border-bottom pb-2">Recalcule Historique</h6>
+                                <div class="mb-3" *ngIf="dateBoolean">
+                                    <label class="form-label small text-secondary">Date de début</label>
+                                    <input type="text" class="form-control" bsDatepicker formControlName="datestart" [maxDate]="maxDate"
+                                        [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY, HH:mm' }" placement="bottom" placeholder="Choisir une date..." autocomplete="off">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label small text-secondary">Nature du Recalcule</label>
+                                    <select formControlName="typeRecalcule" class="form-select bg-light border-0" title="Nature du Recalcule">
+                                        <option>recalcule trajet</option>
+                                        <option>recalcule boitier</option>
+                                        <option>recalcule carburant</option>
+                                        <option>recalcule alert</option>
+                                        <option>recalcule Temps reel</option>
+                                    </select>
+                                </div>
+                                <button type="button" class="btn btn-primary w-100 mt-2 btn-recalculate-modal" [disabled]="recalculateForm.invalid" (click)="recalculate()">
+                                    <i class="fa" [class.fa-retweet]="!loadingRecalculate()" [class.fa-spinner]="loadingRecalculate()" [class.fa-spin]="loadingRecalculate()"></i>
+                                    {{loadingRecalculate() ? 'Traitement...' : 'Démarrer le Recalcule'}}
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Device Options Form side -->
+                        <div class="col-md-6" [formGroup]="deviceOptForm">
+                            <div class="premium-card bg-white h-100 border-0">
+                                <h6 class="fw-bold mb-3 border-bottom pb-2">Options du Terminal</h6>
+                                <div class="row g-2">
+                                    @for (opt of ['useIgnition', 'useFuel', 'useTemp', 'useFms', 'useJ1708', 'useIdDriver', 'useStop']; track opt) {
+                                        <div class="col-6">
+                                            <div class="form-check form-switch bg-light p-2 ps-5 rounded-3 border-0">
+                                                <input class="form-check-input ms-0 mt-1" type="checkbox" [formControlName]="opt" [id]="'opt'+opt" title="{{opt}}" aria-label="{{opt}}">
+                                                <label class="form-check-label small fw-medium text-capitalize" [for]="'opt'+opt">{{opt.replace('use', '')}}</label>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="mt-3 pt-3 border-top d-flex gap-2">
+                                    <button type="button" class="btn btn-outline-success btn-sm flex-fill" (click)="editDeviceOptionConfig()" [disabled]="loadingEditDeviceOption()">
+                                        <i class="fa fa-save me-1"></i> Options
+                                    </button>
+                                    <button type="button" class="btn btn-outline-danger btn-sm flex-fill" (click)="resetOdometre()" [disabled]="loadingResetOdometre()">
+                                        <i class="fa fa-history me-1"></i> Odo
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- BDD Configuration (Full width below) -->
+                        <div class="col-12" [formGroup]="pathConfigForm">
+                            <div class="premium-card bg-white border-0">
+                                <h6 class="fw-bold mb-3 border-bottom pb-2">Configurations BDD (Filtrage)</h6>
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <label class="form-label small text-secondary">Path Min (sec)</label>
+                                        <select class="form-select bg-light border-0" formControlName="pathMinSec" title="Path Min (sec)">
+                                            @for (t of [30,60,90,120,150,180,210,240,270,300]; track t) { <option [value]="t">{{t}}s</option> }
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label small text-secondary">Stop Min (sec)</label>
+                                        <select class="form-select bg-light border-0" formControlName="stopMinSec" title="Stop Min (sec)">
+                                            @for (t of [30,60,90,120,150,180,210,240,270,300]; track t) { <option [value]="t">{{t}}s</option> }
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label small text-secondary">Pause Min (sec)</label>
+                                        <select class="form-select bg-light border-0" formControlName="pauseMinSec" title="Pause Min (sec)">
+                                            @for (t of [30,60,90,120,150,180,210,240,270,300]; track t) { <option [value]="t">{{t}}s</option> }
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label small text-secondary">Distance Min (m)</label>
+                                        <select class="form-select bg-light border-0" formControlName="distanceMinMeter" title="Distance Min (m)">
+                                            @for (d of [5,10,20,50,100,300,500,1000]; track d) { <option [value]="d">{{d}}m</option> }
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label small text-secondary">Vitesse Min (km/h)</label>
+                                        <select class="form-select bg-light border-0" formControlName="pathMinSpeed" title="Vitesse Min (km/h)">
+                                            @for (s of [1,5,10,15,20]; track s) { <option [value]="s">{{s}} km/h</option> }
+                                        </select>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-purple w-100 mt-4 text-white" (click)="editPathConfig()" [disabled]="pathConfigForm.invalid || loadingEditPathConfig()">
+                                    <i class="fa" [class.fa-check]="!loadingEditPathConfig()" [class.fa-spinner]="loadingEditPathConfig()" [class.fa-spin]="loadingEditPathConfig()"></i>
+                                    Initialiser la Configuration
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Technical Settings (Stream) -->
+                        <div class="col-12" [formGroup]="deviceSettingForm">
+                            <div class="premium-card bg-soft-blue border-0 shadow-none">
+                                <h6 class="fw-bold mb-3 border-bottom pb-2">Paramètres de Flux (Streams)</h6>
+                                <div class="row g-3 align-items-end">
+                                    <div class="col-md-5">
+                                        <label class="form-label small text-secondary">Rawstream IP</label>
+                                        <select class="form-select bg-white border-0" formControlName="idIpAdresse" title="Rawstream IP">
+                                            @for (ip of ipAddresses(); track ip.idIpAdresse) {
+                                                <option [ngValue]="ip.idIpAdresse">{{ip.label}}</option>
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label small text-secondary">Stream ID</label>
+                                        <input type="number" class="form-control bg-white border-0" formControlName="streamId" placeholder="ID" title="Stream ID">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <button type="button" class="btn btn-dark w-100" (click)="editDeviceSetting()" [disabled]="loadingDeviceSetting()">
+                                            <i class="fa fa-sync-alt me-1"></i> Appliquer
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4 pt-3 border-top" [formGroup]="imeiSearchForm">
+                                    <label class="form-label small text-secondary">Migrer / Rechercher IMEI</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control border-0 bg-white" formControlName="imei" placeholder="Saisir nouvel IMEI...">
+                                        <button class="btn btn-secondary px-4" (click)="getSearchDeviceIemi(imeiSearchForm.get('imei')?.value)">
+                                            <i class="fa fa-search me-1"></i> Rechercher
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-footer p-3 bg-light border-0">
+                    <div class="w-100 d-flex justify-content-between align-items-center">
+                        <div class="notification-count px-3 py-1 bg-white rounded-pill small border shadow-sm">
+                            <i class="fa fa-bell me-1 text-warning"></i>
+                            <strong>{{notifications().length}}</strong> Logs
+                        </div>
+                        <button type="button" class="btn btn-light px-4 btn-close-modal" (click)="closeConfigModal()">Fermer</button>
+                    </div>
+                </div>
+
+                <!-- Notification Dropzone/Area -->
+                @if (notifications().length > 0) {
+                    <div class="notifications-panel p-3 bg-dark text-white border-top border-secondary">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="small fw-bold text-uppercase opacity-50">Notifications récentes</span>
+                            @if (getNumberOfNotificationErrors() > 0) {
+                                <span class="text-danger small fw-bold"><i class="fa fa-times-circle"></i> {{getNumberOfNotificationErrors()}} Erreurs</span>
+                            } @else {
+                                <span class="text-success small fw-bold"><i class="fa fa-check-circle"></i> Succès</span>
+                            }
+                        </div>
+                        <div class="notification-scroll notification-scroll-config">
+                            @for (n of notifications(); track $index) {
+                                <div class="small mb-1 d-flex gap-2">
+                                    <i class="fa" [class.fa-check-circle]="n.status" [class.text-success]="n.status" [class.fa-exclamation-circle]="!n.status" [class.text-danger]="!n.status"></i>
+                                    <span class="opacity-75">{{$index+1}}.</span> {{n.value}}
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}

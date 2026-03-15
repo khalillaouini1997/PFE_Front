@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject, ElementRef, signal, viewChild, computed } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, OnDestroy, inject, ElementRef, signal, viewChild, computed } from '@angular/core';
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
 import { Router, RouterModule, ActivatedRoute } from "@angular/router";
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
@@ -15,6 +15,7 @@ Chart.register(...registerables);
 
 @Component({
     selector: 'app-dashbord',
+    standalone: true,
     templateUrl: './dashbord.component.html',
     styleUrls: ['./dashbord.component.css'],
     imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule, DecimalPipe, DatePipe]
@@ -69,6 +70,7 @@ export class DashbordComponent implements OnInit, OnDestroy {
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   ngOnInit() {
     this.initForms();
@@ -88,6 +90,10 @@ export class DashbordComponent implements OnInit, OnDestroy {
     } else {
       this.webAccountService.getAllCompteClientWeb().subscribe(res => {
         this.comptesWeb.set(res);
+        if (res && res.length > 0) {
+           this.dashboardForm.patchValue({ compteWeb: res[0] });
+           this.getAllLastTramByCompteWeb();
+        }
       });
     }
   }
@@ -228,19 +234,30 @@ export class DashbordComponent implements OnInit, OnDestroy {
   }
 
   private initMap() {
+    console.log('[Map] Init Map called.');
     if (this.map) return; // Prevent double init
     
-    const container = this.mapContainer();
+    const container = this.mapContainer()?.nativeElement;
     if (!container) return;
+    
+    // Crucial: Leaflet requires a non-zero height
+    const height = container.offsetHeight || container.clientHeight;
+    console.log('[Map] Container actual height:', height);
+    
+    if (height === 0) {
+      console.warn('[Map] Container has 0 height. Cannot initialize Leaflet yet.');
+      return; 
+    }
 
-    // Center on Tunisia
-    this.map = L.map(container.nativeElement).setView([33.8869, 9.5375], 6); 
+    // Explicitly set the map to the container
+    this.map = L.map(container).setView([33.8869, 9.5375], 6); 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap contributors'
     }).addTo(this.map);
 
     this.markerClusterGroup = (L as any).markerClusterGroup();
     this.map.addLayer(this.markerClusterGroup!);
+    console.log('[Map] Successfully initialized.');
   }
 
 
@@ -453,17 +470,33 @@ export class DashbordComponent implements OnInit, OnDestroy {
     this.webAccountService.getAllLastTram(selectedCompte.idCompteClientWeb).subscribe(res => {
       this.realtimes.set(res as any);
       this.loading.set(false);
+      this.cdr.detectChanges(); // Sync the DOM removal of [hidden]
       
-      // Use a slight delay to ensure DOM is ready and elements have size
+      // Delay to ensure the browser has painted the DOM with new dimensions
       setTimeout(() => {
+        if (!this.map) {
+           this.initMap();
+        }
+        
+        if (this.map) {
+           this.map.invalidateSize();
+        }
+           
         this.updateMarkers();
         this.updateStats();
-        
-        // Ensure map is correctly sized
+      }, 300); 
+
+      // Secondary update just in case of slow CSS layout/transitions
+      setTimeout(() => {
         if (this.map) {
-          this.map.invalidateSize();
+           this.map.invalidateSize();
+           const bounds: any[] = [];
+           this.realtimes().forEach(tram => {
+             if (tram.latitude && tram.longitude) bounds.push([tram.latitude, tram.longitude]);
+           });
+           if (bounds.length > 0) this.map.fitBounds(L.latLngBounds(bounds), { padding: [50, 50] });
         }
-      }, 50); 
+      }, 1000);
     });
   }
 

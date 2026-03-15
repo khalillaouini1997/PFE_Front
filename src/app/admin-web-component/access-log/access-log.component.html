@@ -1,63 +1,77 @@
-<div class="col-md-12">
-  <div class="card">
-    <div class="card-header" data-background-color="red">
-      <div class="row">
-        <div class="col-sm-8">
-          <h4 class="title">Liste journal d'accés</h4>
-        </div>
-        <div class="col-sm-4">
-          <form class="navbar-form navbar-right" role="search" style="margin:0;" [formGroup]="searchForm"
-            (ngSubmit)="searchAccess()">
-            <div class="form-group is-empty">
-              <input type="text" class="form-control" formControlName="keyWord" placeholder="Rechercher..."
-                style="margin:0;color:white;">
-              <span class="material-input"></span>
+<div class="main-panel p-4">
+    <!-- Header Section -->
+    <div class="premium-card mb-4 header-gradient shadow-sm">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div class="title-section text-white">
+                <h2 class="m-0 fw-bold">Journal d'Accès</h2>
+                <p class="m-0 text-white-50 opacity-75">Suivi en temps réel des connexions et de la sécurité</p>
             </div>
-            <button type="submit" class="btn btn-white btn-sm" title="Rechercher"
-              style="margin: 0px; padding: 1px 5px; margin: 0px 0px 0px 0px;"><i class="fa fa-search"
-                style="font-size: 14px"></i>
-              Rechercher</button>
-          </form>
+            
+            <div class="controls-section d-flex align-items-center gap-3">
+                <form class="d-flex align-items-center" [formGroup]="searchForm" (ngSubmit)="searchAccess()">
+                    <div class="input-group shadow-sm search-group">
+                        <input type="text" class="form-control border-0 px-3 search-input" formControlName="keyWord" placeholder="Rechercher par login...">
+                        <button class="btn btn-white border-0 btn-search" type="submit" title="Lancer la recherche">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 
-  <div class="table-responsive tableFixHead">
-    <table class="table table-bordered table-hover table-sm">
-      <thead>
-        <tr>
-          <th style="width: 25%;">Login</th>
-          <th style="width: 25%;">Date</th>
-          <th style="width: 20%;">Ip Address</th>
-          <th style="width: 30%;">Naviagteur</th>
-        </tr>
-      </thead>
-      <tbody style="font-size: 12px;">
+    <!-- Table Section -->
+    <div class="premium-card p-0 overflow-hidden shadow-sm">
+        <div class="table-responsive log-table-container">
+            <table class="table-premium">
+                <thead>
+                    <tr>
+                        <th class="col-user">Utilisateur Access</th>
+                        <th class="col-date">Date & Heure</th>
+                        <th class="col-ip">Adresse IP</th>
+                        <th class="col-agent">Navigateur / Agent</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (loading) {
+                        <tr>
+                            <td colspan="4" class="text-center py-5">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Chargement...</span>
+                                </div>
+                            </td>
+                        </tr>
+                    }
 
-        @if (loading) {
-        <tr>
-          <td style="text-align: center" colspan="7">
-            <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
-          </td>
-        </tr>
-        }
+                    @for (access of accessLogs; track access.timestamp) {
+                        <tr class="align-middle border-bottom border-light">
+                            <td class="fw-bold text-primary">{{access.login}}</td>
+                            <td>
+                                <div class="fw-medium text-dark">{{access.date | date:'dd MMM yyyy'}}</div>
+                                <div class="small text-secondary">{{access.date | date:'HH:mm:ss'}}</div>
+                            </td>
+                            <td><span class="badge bg-light text-dark border">{{access.ipAddress}}</span></td>
+                            <td><small class="text-secondary font-monospace">{{access.agent}}</small></td>
+                        </tr>
+                    }
+                    
+                    @if (!loading && accessLogs.length === 0) {
+                        <tr>
+                            <td colspan="4" class="text-center py-5 text-secondary">
+                                <i class="fa fa-history fa-3x opacity-25 mb-2"></i>
+                                <p>Aucun journal d'accès trouvé</p>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
 
-        @for (access of accessLogs; track access.timestamp) {
-        <tr>
-          <td style="width: 25%;">{{access.login}}</td>
-          <td style="width: 25%;">{{access.date | date:'dd-MM-yyyy HH:mm:ss'}}</td>
-          <td style="width: 20%;">{{access.ipAddress}}</td>
-          <td style="width: 30%;">{{access.agent}}</td>
-        </tr>
-        }
-      </tbody>
-    </table>
-  </div>
-</div>
-<div class="col-md-12 text-center">
-  <pagination [hidden]="loading" [totalItems]="bigTotalItems" [(ngModel)]="bigCurrentPage" [maxSize]="maxSize"
-    class="pagination-sm" [boundaryLinks]="true" [rotate]="false" [itemsPerPage]="itemsPerPage"
-    (pageChanged)="pageChanged($event)" previousText="Précédent" nextText="Suivant" firstText="Premier"
-    lastText="Dernier"></pagination>
+        <!-- Pagination Footer -->
+        <div class="p-4 bg-light bg-opacity-25 d-flex justify-content-center border-top">
+            <pagination [hidden]="loading" [totalItems]="bigTotalItems" [(ngModel)]="bigCurrentPage" [maxSize]="maxSize"
+                class="premium-pagination shadow-sm" [boundaryLinks]="true" [rotate]="false" [itemsPerPage]="itemsPerPage"
+                (pageChanged)="pageChanged($event)" previousText="‹" nextText="›" firstText="«" lastText="»"></pagination>
+        </div>
+    </div>
 </div>

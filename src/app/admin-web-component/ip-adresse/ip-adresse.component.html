@@ -1,153 +1,156 @@
-<form class="navbar-form navbar-right" role="search" style="margin:0;" [formGroup]="searchForm"
-    (ngSubmit)="searchIpAddress()">
-    <div class="form-group is-empty">
-        <input type="text" class="form-control" formControlName="keyWord" placeholder="Search" style="margin:0;">
-        <span class="material-input"></span>
-    </div>
-    <button type="submit" class="btn btn-white btn-round btn-just-icon" style="margin:0;">
-        <i class="material-icons">search</i>
-        <div class="ripple-container"></div>
-    </button>
-</form>
-<div class="col-md-12">
-    <div class="card">
-        <div class="card-header" data-background-color="blue">
-            <h4 class="title">List of Ip Address</h4>
+<div class="main-panel p-4">
+    <!-- Header Section -->
+    <div class="premium-card mb-4 header-gradient shadow-sm">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div class="title-section text-white">
+                <h2 class="m-0 fw-bold">Gestion des Adresses IP</h2>
+                <p class="m-0 text-white-50 opacity-75">Configuration des endpoints et connexions aux bases de données</p>
+            </div>
+            
+            <div class="controls-section d-flex align-items-center gap-3">
+                <form class="d-flex align-items-center" [formGroup]="searchForm" (ngSubmit)="searchIpAddress()">
+                    <div class="input-group shadow-sm search-group">
+                        <input type="text" class="form-control border-0 px-3 search-input" formControlName="keyWord" placeholder="Rechercher par label..." title="Terme de recherche">
+                        <button class="btn btn-white border-0 btn-search" type="submit" title="Lancer la recherche">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </form>
+                <button class="btn btn-glass btn-sm rounded-circle" routerLink="/adminWeb/addIp" title="Nouvelle IP">
+                    <i class="fa fa-plus text-white"></i>
+                </button>
+            </div>
         </div>
-        <div class="card-content table-responsive">
-            <table class="table">
-                <thead class="text-primary">
-                    <th>Id</th>
-                    <th>Label</th>
-                    <th>Ip </th>
-                    <th>Pseudo</th>
-                    <th>DB Name</th>
-                    <th>Type</th>
-                    <th>Url</th>
-                    <th>Configurations</th>
+    </div>
+
+    <!-- Table Section -->
+    <div class="premium-card p-0 overflow-hidden shadow-sm">
+        <div class="table-responsive table-container-70vh">
+            <table class="table-premium">
+                <thead>
+                    <tr>
+                        <th class="col-id-mini">ID</th>
+                        <th>Label / Usage</th>
+                        <th>Adresse IP / Valeur</th>
+                        <th>Identifiants DB</th>
+                        <th>Nom de Base</th>
+                        <th>Type Conn.</th>
+                        <th>Endpoint / URL</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
                 </thead>
                 <tbody>
                     @for (IpAddres of ips; track IpAddres.idIpAdresse) {
-                    <tr>
-                        <td>{{IpAddres.idIpAdresse}}</td>
-                        <td>{{IpAddres.label}}</td>
-                        <td>{{IpAddres.value}} </td>
-                        <td>{{IpAddres.jdbcUser }}</td>
-                        <td>{{IpAddres.dbName }}</td>
-                        <td>{{IpAddres.typeConnection}}</td>
-                        <td>{{IpAddres.url }}</td>
-
-                        <td>
-                            <!--<button class="btn btn-warning btn-xs" (click)="onSelect(IpAddres)"[tooltip]="tooltipup" tooltipPlacement="top" data-toggle="modal"
-                        data-target="#Modalupdate" data-backdrop="false"><i class="material-icons md-24">build</i></button>
-                          <tooltip-content #tooltipup>
-                            update Ip Adress.
-                          </tooltip-content>
-          
-                          <button class="btn btn-danger btn-xs" [tooltip]="tooltipinfo" tooltipPlacement="top" (click)="deleteIpAddress(IpAddres.idIpAdresse)" ><i class="material-icons md-24">delete_forever</i></button>
-                          <tooltip-content #tooltipinfo>
-                            Delete Ip Adress
-                          </tooltip-content>-->
-
-
-                        </td>
-
-
-                    </tr>
+                        <tr class="align-middle border-bottom border-light">
+                            <td><span class="badge bg-light text-dark small">{{IpAddres.idIpAdresse}}</span></td>
+                            <td class="fw-bold">{{IpAddres.label}}</td>
+                            <td><code>{{IpAddres.value}}</code></td>
+                            <td>
+                                <div class="small fw-medium">{{IpAddres.jdbcUser}}</div>
+                                <div class="small text-secondary opacity-50">*******</div>
+                            </td>
+                            <td><span class="badge bg-primary bg-opacity-10 text-primary">{{IpAddres.dbName}}</span></td>
+                            <td><span class="badge bg-info bg-opacity-10 text-info">{{IpAddres.typeConnection}}</span></td>
+                            <td><div class="small text-truncate col-endpoint-url" title="{{IpAddres.url}}">{{IpAddres.url}}</div></td>
+                            <td class="text-end">
+                                <div class="btn-group gap-2">
+                                    <button class="btn btn-sm btn-outline-warning border-0 p-2" (click)="onSelect(IpAddres)" 
+                                        data-toggle="modal" data-target="#Modalupdate" title="Modifier">
+                                        <i class="fa fa-edit"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
                     }
-
+                    @if (ips.length === 0) {
+                        <tr>
+                            <td colspan="8" class="text-center py-5 text-secondary">
+                                <i class="fa fa-network-wired fa-3x opacity-25 mb-2"></i>
+                                <p>Aucune adresse IP trouvée</p>
+                            </td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>
-    </div>
-    <div class="col-md-6">
-        <pagination [totalItems]="bigTotalItems" [(ngModel)]="bigCurrentPage" [maxSize]="maxSize" class="pagination-sm"
-            [boundaryLinks]="true" [rotate]="false" [itemsPerPage]="itemsPerPage" (pageChanged)="pageChanged($event)">
-        </pagination>
 
+        <!-- Pagination Footer -->
+        <div class="p-4 bg-light bg-opacity-25 d-flex justify-content-center border-top">
+            <pagination [totalItems]="bigTotalItems" [(ngModel)]="bigCurrentPage" [maxSize]="maxSize"
+                class="premium-pagination shadow-sm" [boundaryLinks]="true" [rotate]="false" [itemsPerPage]="itemsPerPage"
+                (pageChanged)="pageChanged($event)" previousText="‹" nextText="›" firstText="«" lastText="»"></pagination>
+        </div>
     </div>
 </div>
 
-<div id="Modalupdate" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-        <form [formGroup]="updateIpForm" (ngSubmit)="updateIpAdress()">
-
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">update Ip Address {{updateIpForm.get('label')?.value}}</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group label-floating">
-                                <label class="control-label">Label
-                                    <input type="text" formControlName="label" class="form-control">
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group label-floating">
-                                <label class="control-label">Value
-                                    <input type="text" formControlName="value" class="form-control">
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group label-floating">
-                                <label class="control-label">JDBC User
-                                    <input type="text" formControlName="jdbcUser" class="form-control">
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group label-floating">
-                                <label class="control-label">JDBC Pass
-                                    <input type="password" formControlName="jdbcPass" class="form-control">
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-9">
-                            <div class="form-group label-floating">
-                                <label class="control-label">URL
-                                    <input type="text" formControlName="url" class="form-control">
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-group label-floating">
-                                <label class="control-label">Type Connection
-                                    <select formControlName="typeConnection" class="form-control">
-                                        @for (type of typeConnection; track type.type) {
-                                        <option [value]="type.type">{{type.type}}</option>
-                                        }
-                                    </select>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group label-floating">
-                                <label class="control-label">DB Name
-                                    <input type="text" formControlName="dbName" class="form-control">
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-warning" [disabled]="updateIpForm.invalid"
-                        data-dismiss="modal">update</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                </div>
+<!-- Modernized Update IP Modal -->
+<div id="Modalupdate" class="modal fade" role="dialog" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content modal-content-rounded">
+            <div class="modal-header header-gradient text-white border-0 p-4">
+                <h5 class="modal-title fw-bold m-0"><i class="fa fa-network-wired me-2"></i> Mise à jour IP</h5>
+                <button type="button" class="btn-close btn-close-white" data-dismiss="modal" aria-label="Close"></button>
             </div>
-        </form>
+            
+            <form [formGroup]="updateIpForm" (ngSubmit)="updateIpAdress()">
+                <div class="modal-body p-4 bg-light bg-opacity-50">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" formControlName="label" class="form-control" placeholder="Label">
+                                <label>Libellé / Nom</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" formControlName="value" class="form-control" placeholder="IP">
+                                <label>Adresse IP (Value)</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" formControlName="jdbcUser" class="form-control" placeholder="User">
+                                <label>Pseudo JDBC</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="password" formControlName="jdbcPass" class="form-control" placeholder="Pass">
+                                <label>Mot de passe JDBC</label>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="form-floating">
+                                <input type="text" formControlName="url" class="form-control" placeholder="URL">
+                                <label>URL de connexion</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                <select formControlName="typeConnection" class="form-select" title="Type de connexion">
+                                    @for (type of typeConnection; track type.type) {
+                                        <option [value]="type.type">{{type.type}}</option>
+                                    }
+                                </select>
+                                <label>Type</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-floating">
+                                <input type="text" formControlName="dbName" class="form-control" placeholder="DB">
+                                <label>Nom de la Base de Données</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-footer p-3 bg-white border-0">
+                    <button type="button" class="btn btn-light px-4" data-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-warning px-5 fw-bold" [disabled]="updateIpForm.invalid" data-dismiss="modal">
+                        Enregistrer
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>

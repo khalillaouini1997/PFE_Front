@@ -1,4 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AdministratorCompte } from 'src/app/data/data';
 import { AdminAccountService } from 'src/app/service/admin-account.service';
@@ -10,9 +11,10 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 @Component({
     selector: 'app-compte-admin',
+    standalone: true,
     templateUrl: './compte-admin.component.html',
     styleUrls: ['./compte-admin.component.css'],
-    imports: [FormsModule, ReactiveFormsModule, PaginationModule]
+    imports: [FormsModule, ReactiveFormsModule, PaginationModule, CommonModule]
 })
 export class CompteAdminComponent implements OnInit {
   public maxSize: number = 5;

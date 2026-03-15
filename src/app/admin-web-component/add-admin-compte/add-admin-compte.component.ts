@@ -11,6 +11,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 
 @Component({
     selector: 'app-add-admin-compte',
+    standalone: true,
     templateUrl: './add-admin-compte.component.html',
     styleUrls: ['./add-admin-compte.component.css'],
     imports: [ReactiveFormsModule]

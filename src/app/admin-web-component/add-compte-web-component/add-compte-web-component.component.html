@@ -1,186 +1,166 @@
-<div class="content">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-10 center">
-        <div class="card">
-          <div class="card-header" data-background-color="red">
-            <h4 class="title">Ajouter un compte Web</h4>
-            <p class="category">Remplissez ce formulaire</p>
-          </div>
-          <div class="card-content">
-            <form [formGroup]="webForm">
-              <div class="row">
-
-                <div class="col-md-6">
-                  <div class="form-group label-floating">
-                    <label class="control-label" for="login">Login</label>
-                    <input type="text" class="form-control" formControlName="login" id="login">
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-group label-floating">
-                    <label class="control-label" for="password">Mot de passe</label>
-                    <input type="text" class="form-control" formControlName="password" id="password">
-                  </div>
-                </div>
-              </div>
-
-
-              <div class="row">
-
-                <div class="col-md-6">
-                  <div class="form-group label-floating">
-                    <label class="control-label" for="code_pays">Code Pays</label>
-                    <select formControlName="code_pays" class="form-control" id="code_pays">
-                      @for (codePays of codesPays(); track codePays.value) {
-                      <option [value]="codePays.value">
-                        {{codePays.key}} (+{{codePays.value}}) </option>
-                      }
-                    </select>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-group label-floating">
-                    <div class="input-group input-append date">
-                      <input type="text" class="form-control" bsDatepicker formControlName="date_expiration"
-                        [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }" placeholder="Date d'expiration">
-                    </div>
-
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="form-group label-floating">
-                    <div class="input-group input-append date">
-                      <label class="control-label" for="idCompte">Compte serveur</label>
-                      <select formControlName="idCompte" class="form-control" id="idCompte">
-                        @for (server of serverAccounts(); track server.idCompteClientServer) {
-                        <option [value]="server.idCompteClientServer"> {{server.pseudo}} </option>
-                        }
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-group label-floating">
-                    <label class="control-label" for="adresseIP">IP Adresse</label>
-                    <select formControlName="ipAdresse" id="adresseIP" class="form-control">
-                      @for (ip of ipAddresses(); track ip.value) {
-                      <option [ngValue]="ip.value">{{ip.label}}
-                      </option>
-                      }
-                    </select>
-                  </div>
-                </div>
-              </div>
-
-              <div class="row">
-
-                <div class="col-md-6">
-                  <div class="form-group label-floating">
-                    <label class="control-label" for="firstname">Nom</label>
-                    <input type="text" class="form-control" formControlName="firstname" id="firstname">
-                  </div>
-                </div>
-
-                <div class="col-md-6">
-                  <div class="form-group label-floating">
-                    <label class="control-label" for="lastname">Prénom</label>
-                    <input type="text" class="form-control" formControlName="lastname" id="lastname">
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-
-                <div class="col-md-6">
-                  <div class="form-group label-floating">
-                    <label class="control-label" for="email">Email</label>
-                    <input type="email" class="form-control" formControlName="email" id="email">
-                  </div>
-                </div>
-
-                <div class="col-md-6">
-                  <div class="form-group label-floating">
-                    <label class="control-label" for="telephone">Téléphone</label>
-                    <input type="tel" class="form-control" formControlName="telephone" id="telephone">
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="form-group label-floating">
-                    <label class="control-label" for="area">Région</label>
-                    <select formControlName="area" class="form-control" id="area">
-                      @for (t of regions; track t) {
-                      <option [value]="t">{{ t }}</option>
-                      }
-                    </select>
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="form-group label-floating">
-                    <label class="control-label" for="notificationSubquery">Type de notification</label>
-                    <select formControlName="notificationSubquery" class="form-control" id="notificationSubquery">
-                      @for (notifSub of notifSubs; track notifSub) {
-                      <option [value]="notifSub">{{ notifSub }}
-                      </option>
-                      }
-                    </select>
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="form-group label-floating">
-                    <label class="control-label" for="mobileNotif">Notification Mobile</label>
-                    <input type="checkbox" formControlName="mobileNotif" id="mobileNotif">
-                  </div>
-                </div>
-              </div>
-
-              <div class="row">
-
-                <div class="col-md-6">
-                  <div class="form-group label-floating">
-                    <label class="control-label" for="deviceFeeByDay">Redenance equipement par jour</label>
-                    <input type="number" class="form-control" formControlName="deviceFeeByDay" id="deviceFeeByDay">
-                  </div>
-                </div>
-
-                <div class="col-md-6">
-                  <div class="form-group label-floating">
-                    <label class="control-label" for="accountFeeByMonth">Redenance compte par mois</label>
-                    <input type="number" class="form-control" formControlName="accountFeeByMonth"
-                      id="accountFeeByMonth">
-                  </div>
-                </div>
-              </div>
-
-              <div class="row">
-
-                <div class="col-md-6">
-                  <div class="form-group label-floating">
-                    <label class="control-label" for="deviceFeePerMonth">Redenance equipement par mois</label>
-                    <input type="number" class="form-control" formControlName="deviceFeePerMonth"
-                      id="deviceFeePerMonth">
-                  </div>
-                </div>
-
-                <div class="col-md-6">
-                  <div class="form-group label-floating">
-                    <label class="control-label" for="simCardFeePerMonth">Redenance carte sim par mois</label>
-                    <input type="number" class="form-control" formControlName="simCardFeePerMonth"
-                      id="simCardFeePerMonth">
-                  </div>
-                </div>
-              </div>
-
-              <button type="button" class="btn btn-danger pull-right" [disabled]="webForm.invalid"
-                (click)="addCompteWeb()">Enregistrer le compte Web</button>
-              <div class="clearfix"></div>
-            </form>
-          </div>
+<div class="main-panel p-4">
+    <!-- Header Section -->
+    <div class="premium-card mb-4 header-gradient shadow-sm p-4">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div class="title-section text-white">
+                <h2 class="m-0 fw-bold">Nouveau Compte Web</h2>
+                <p class="m-0 text-white-50 opacity-75">Créer un portail client personnalisé</p>
+            </div>
+            <button class="btn btn-glass btn-sm rounded-circle" routerLink="/adminWeb/listWebs" title="Retour à la liste">
+                <i class="fa fa-arrow-left text-white"></i>
+            </button>
         </div>
-      </div>
     </div>
-  </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-12">
+            <div class="premium-card shadow-sm p-4 border-0 bg-white">
+                <form [formGroup]="webForm">
+                    <!-- section 1: Auth & Base -->
+                    <h5 class="fw-bold mb-4 border-bottom pb-2 d-flex align-items-center">
+                        <i class="material-icons me-2 text-primary">vpn_key</i>
+                        Accès & Infrastructure
+                    </h5>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" formControlName="login" id="login" placeholder="Login">
+                                <label for="login">Login Client</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" formControlName="password" id="password" placeholder="Password">
+                                <label for="password">Mot de passe</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <select formControlName="code_pays" class="form-select border-0 bg-light" id="code_pays" title="Code Pays">
+                                    @for (codePays of codesPays(); track codePays.value) {
+                                        <option [value]="codePays.value">{{codePays.key}} (+{{codePays.value}})</option>
+                                    }
+                                </select>
+                                <label for="code_pays">Code Pays</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" bsDatepicker formControlName="date_expiration"
+                                    [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }" placeholder="Expiration" id="expDate">
+                                <label for="expDate">Date d'expiration</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <select formControlName="idCompte" class="form-select border-0 bg-light" id="idCompte" title="Compte Serveur">
+                                    @for (server of serverAccounts(); track server.idCompteClientServer) {
+                                        <option [value]="server.idCompteClientServer">{{server.pseudo}}</option>
+                                    }
+                                </select>
+                                <label for="idCompte">Compte Serveur</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- section 2: Identity & Region -->
+                    <h5 class="fw-bold mt-4 mb-4 border-bottom pb-2 d-flex align-items-center">
+                        <i class="material-icons me-2 text-primary">account_circle</i>
+                        Profil & Localisation
+                    </h5>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" formControlName="firstname" id="firstname" placeholder="Nom">
+                                <label for="firstname">Nom</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" formControlName="lastname" id="lastname" placeholder="Prénom">
+                                <label for="lastname">Prénom</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input type="email" class="form-control" formControlName="email" id="email" placeholder="Email">
+                                <label for="email">Email</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input type="tel" class="form-control" formControlName="telephone" id="telephone" placeholder="Tel">
+                                <label for="telephone">Téléphone</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <select formControlName="area" class="form-select border-0 bg-light" id="area" title="Région / Territoire">
+                                    @for (t of regions; track t) {
+                                        <option [value]="t">{{ t }}</option>
+                                    }
+                                </select>
+                                <label for="area">Région / Territoire</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="premium-card bg-light border-0 shadow-none d-flex align-items-center justify-content-between p-3 mb-3">
+                                <div class="form-floating flex-grow-1 me-3">
+                                    <select formControlName="notificationSubquery" class="form-select border-0 bg-white" id="notif" title="Type de Notification">
+                                        @for (notifSub of notifSubs; track notifSub) {
+                                            <option [value]="notifSub">{{ notifSub }}</option>
+                                        }
+                                    </select>
+                                    <label for="notif">Type de Notification</label>
+                                </div>
+                                <div class="form-check form-switch p-0">
+                                    <input class="form-check-input ms-0 scale-125" type="checkbox" formControlName="mobileNotif" id="mobileNotif">
+                                    <label class="small fw-bold d-block mt-1 text-center" for="mobileNotif">Mobile</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- section 3: Billing -->
+                    <h5 class="fw-bold mt-4 mb-4 border-bottom pb-2 d-flex align-items-center">
+                        <i class="material-icons me-2 text-primary">receipt_long</i>
+                        Paramètres de Facturation
+                    </h5>
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input type="number" class="form-control" formControlName="deviceFeeByDay" id="feeDay" placeholder="Fee">
+                                <label for="feeDay">Redev. Equip. / Jour</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input type="number" class="form-control" formControlName="accountFeeByMonth" id="accMonth" placeholder="Fee">
+                                <label for="accMonth">Redev. Compte / Mois</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input type="number" class="form-control" formControlName="deviceFeePerMonth" id="devMonth" placeholder="Fee">
+                                <label for="devMonth">Redev. Equip. / Mois</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-floating mb-3">
+                                <input type="number" class="form-control" formControlName="simCardFeePerMonth" id="simMonth" placeholder="Fee">
+                                <label for="simMonth">Redev. SIM / Mois</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pt-3 d-flex justify-content-end gap-3">
+                        <button type="button" class="btn btn-light px-4 btn-cancel-premium" routerLink="/adminWeb/listWebs">Annuler</button>
+                        <button type="button" class="btn btn-primary px-5 fw-bold shadow-sm btn-save-premium" [disabled]="webForm.invalid" (click)="addCompteWeb()">
+                           <i class="fa fa-save me-2"></i> Enregistrer le Compte Web
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>

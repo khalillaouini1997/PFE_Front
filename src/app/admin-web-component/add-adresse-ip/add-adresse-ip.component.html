@@ -1,80 +1,77 @@
-<div class="container-fluid">
-
-  <div class="row">
-    <div class="col-md-6 center">
-      <div class="card">
-        <div class="card-header" data-background-color="blue">
-          <h4 class="title">Add New Ip Address</h4>
-          <p class="category">Complete this Form</p>
+<div class="main-panel p-4">
+     <div class="premium-card mb-4 header-gradient shadow-sm">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div class="title-section text-white">
+                <h2 class="m-0 fw-bold">Ajouter une Adresse IP</h2>
+                <p class="m-0 text-white-50 opacity-75">Connecter une nouvelle source de données ou endpoint serveur</p>
+            </div>
+            <button class="btn btn-glass btn-sm rounded-circle" routerLink="/adminWeb/listIps" title="Retour">
+                <i class="fa fa-arrow-left text-white"></i>
+            </button>
         </div>
-        <div class="card-content">
-          <form [formGroup]="ipForm">
-            <div class="row">
-
-              <div class="col-md-6">
-                <div class="form-group label-floating">
-                  <label class="control-label" for="ipLabel">Label</label>
-                  <input type="text" formControlName="label" class="form-control" id="ipLabel">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group label-floating">
-                  <label class="control-label" for="ipValue">Value</label>
-                  <input type="text" formControlName="value" class="form-control" id="ipValue">
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group label-floating">
-                  <label class="control-label" for="jdbcUser">Pseudo</label>
-                  <input type="text" formControlName="jdbcUser" class="form-control" id="jdbcUser">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group label-floating">
-                  <label class="control-label" for="jdbcPass">Password</label>
-                  <input type="password" formControlName="jdbcPass" class="form-control" id="jdbcPass">
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-9">
-                <div class="form-group label-floating">
-                  <label class="control-label" for="ipUrl">URL</label>
-                  <input type="text" formControlName="url" class="form-control" id="ipUrl">
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-4">
-                <div class="form-group label-floating">
-                  <label class="control-label" for="typeConnection">Type de Connection</label>
-                  <select formControlName="typeConnection" class="form-control" id="typeConnection">
-                    @for (type of typeConnection; track type.type) {
-                    <option [value]="type.type"> {{type.type}} </option>
-                    }
-                  </select>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group label-floating">
-                  <label class="control-label" for="dbName">Data Base Name</label>
-                  <input type="text" formControlName="dbName" class="form-control" id="dbName">
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-
-              </div>
-              <button type="button" class="btn btn-info pull-right" [disabled]="ipForm.invalid"
-                (click)="saveIpAddres()">Save Ip Address</button>
-
-            </div>
-          </form>
-        </div>
-      </div>
     </div>
-  </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="premium-card shadow-sm p-4">
+                <form [formGroup]="ipForm">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input type="text" formControlName="label" class="form-control" id="ipLabel" placeholder="Label">
+                                <label for="ipLabel">Libellé / Nom de l'IP</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input type="text" formControlName="value" class="form-control" id="ipValue" placeholder="Value">
+                                <label for="ipValue">Adresse IP / Valeur</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input type="text" formControlName="jdbcUser" class="form-control" id="jdbcUser" placeholder="User">
+                                <label for="jdbcUser">Pseudo JDBC</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input type="password" formControlName="jdbcPass" class="form-control" id="jdbcPass" placeholder="Pass">
+                                <label for="jdbcPass">Mot de passe JDBC</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-floating mb-3">
+                                <input type="text" formControlName="url" class="form-control" id="ipUrl" placeholder="URL">
+                                <label for="ipUrl">URL de connexion complète</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <select formControlName="typeConnection" class="form-select border-0 bg-light" id="typeConnection" title="Type de Connexion">
+                                    @for (type of typeConnection; track type.type) {
+                                        <option [value]="type.type">{{type.type}}</option>
+                                    }
+                                </select>
+                                <label for="typeConnection">Type de Connexion</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input type="text" formControlName="dbName" class="form-control" id="dbName" placeholder="DB">
+                                <label for="dbName">Nom de la Base de Données</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pt-3 d-flex justify-content-end gap-3">
+                        <button type="button" class="btn btn-light px-4 btn-cancel-premium" routerLink="/adminWeb/listIps">Annuler</button>
+                        <button type="button" class="btn btn-primary px-5 fw-bold shadow-sm btn-save-premium" [disabled]="ipForm.invalid" (click)="saveIpAddres()">
+                           <i class="fa fa-save me-2"></i> Enregistrer l'Adresse IP
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>

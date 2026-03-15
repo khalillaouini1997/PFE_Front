@@ -1,187 +1,190 @@
-<!--created by CHAIMA TABOUBI-->
-
-<div class="content">
-
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-lg-3 col-md-6 col-sm-6">
-                <div class="card card-stats">
-                    <div class="card-header" data-background-color="green">
-                        <i class="material-icons">store</i>
-                    </div>
-                    <div class="card-content">
-                        <p class="category">Number of Device Used</p>
-                        <h3 class="title">{{BOITIER_INSTALLED}}</h3>
-                    </div>
-                    <div class="card-footer">
-                        <div class="stats">
-                            <i class="material-icons">date_range</i> interval To {{intervalTo}}
-                        </div>
-                    </div>
+<div class="main-panel p-4">
+    <!-- Header Section -->
+    <div class="premium-card mb-4 header-gradient shadow-sm">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div class="title-section text-white">
+                <h2 class="m-0 fw-bold">Détails du Serveur</h2>
+                <p class="m-0 text-white-50 opacity-75">Instance #{{compteServer.idCompteClientServer}} — {{compteServer.pseudo}}</p>
+            </div>
+            <div class="controls-section d-flex align-items-center gap-2">
+                <div class="bg-white bg-opacity-10 rounded-3 p-2 px-3 text-white border border-white border-opacity-10">
+                    <small class="opacity-75 d-block text-uppercase fw-bold ssh-badge-title-small">Accès SSH/API</small>
+                    <span class="small">{{compteServer.login}} : <code class="text-warning">{{compteServer.password}}</code></span>
                 </div>
-            </div>
-
-            <div class="col-lg-3 col-md-6 col-sm-6">
-                <div class="card card-stats">
-                    <div class="card-header" data-background-color="red">
-                        <i class="material-icons">info_outline</i>
-                    </div>
-                    <div class="card-content">
-                        <p class="category">Devices Available</p>
-                        <h3 class="title">{{BOITIER_NOT_INSTALLED}}</h3>
-                    </div>
-                    <div class="card-footer">
-                        <div class="stats">
-                            <i class="material-icons">local_offer</i> interval From {{intervalFrom}}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 col-md-6 col-sm-6">
-                <div class="panel panel-info">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Add Devices</h3>
-                    </div>
-                    <div class="panel-body">
-                        <form class="form-inline" [formGroup]="addForm" (ngSubmit)="addBoitiers()">
-                            <div class="form-group margin-right-15">
-                                <label for="nbrBoitiers">Number of Devices</label>
-                                <input type="number" min="1" class="form-control" name="nbrBoitiers" id="nbrBoitiers"
-                                    formControlName="nbrBoitiers" required>
-                            </div>
-
-                            <button type="submit" class="btn btn-warning" [disabled]="!addForm.valid"
-                                title="add devices"><i class="material-icons md-36">note_add</i></button>
-                            <button type="button" class="btn btn-info" title="extend interval"
-                                (click)="extendIntervalOfBoitiers()"><i
-                                    class="material-icons md-36">extension</i></button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-</div>
-@if (mode) {
-<div class="alert alert-danger" role="alert">
-    {{messageError}}
-</div>
-}
-<!-- table boitier details -->
-<div>
-
-    <div class="col-md-12">
-        <form class="navbar-form navbar-right margin-0" role="search" [formGroup]="searchForm"
-            (ngSubmit)="searchBoitiers()">
-            <div class="form-group is-empty">
-                <input type="text" class="form-control margin-0" name="searchBoitier" formControlName="searchBoitier"
-                    placeholder="Search">
-                <span class="material-input"></span>
-            </div>
-            <button type="submit" class="btn btn-white btn-round btn-just-icon margin-0">
-                <i class="material-icons">search</i>
-                <div class="ripple-container"></div>
-            </button>
-        </form>
-        <div class="card">
-
-            <div class="card-header" data-background-color="blue">
-                <h4 class="title">List of Devices of Server Account number {{compteServer.idCompteClientServer}} with
-                    login : {{compteServer.login}}
-                    --- password : {{compteServer.password}}
-                </h4>
-            </div>
-            <div class="card-content table-responsive">
-
-                <table class="table">
-                    <thead>
-                        <th>Id</th>
-                        <th>Label</th>
-                        <th>Device</th>
-                        <th>Latitude</th>
-                        <th>Longitude</th>
-                        <th>Last Trame</th>
-                        <th>Vitesse</th>
-                        <th>Stat</th>
-                        <th>GPS Trame</th>
-                        <th>GSM Trame</th>
-                    </thead>
-                    <tbody>
-
-                        @for (boitier of boitiers; track boitier.idBoitier) {
-                        <tr>
-                            <td>{{boitier.idBoitier}}</td>
-                            <td>{{boitier.label}}</td>
-                            <td><span class="label label-info">{{boitier.numBoitier}}</span></td>
-                            <td>{{boitier.latitude}}</td>
-                            <td>{{boitier.longitude}}</td>
-                            <td>{{boitier.dateLastTrame | date:'dd-MM-yyyy hh:mm'}}</td>
-                            <td>{{boitier.vitesse}}</td>
-                            <td>
-                                @if (boitier.stat) {
-                                <span class="label label-success">installed</span>
-                                } @else {
-                                <span class="label label-danger">not installed</span>
-                                }
-                            </td>
-                            <td>{{boitier.gpsLastTrame}}</td>
-                            <td>{{boitier.gsmLastTrame}}</td>
-                        </tr>
-                        }
-
-                    </tbody>
-                </table>
+                <button class="btn btn-glass btn-sm rounded-circle" routerLink="/adminWeb/listServers" title="Retour">
+                    <i class="fa fa-arrow-left text-white"></i>
+                </button>
             </div>
         </div>
     </div>
-    <div class="col-md-6" [formGroup]="paginationForm">
-        <pagination [totalItems]="bigTotalItems" formControlName="bigCurrentPage" [maxSize]="maxSize"
-            class="pagination-sm" [boundaryLinks]="true" [rotate]="false" [itemsPerPage]="itemsPerPage"
-            (pageChanged)="pageChanged($event)">
-        </pagination>
 
-    </div>
-
-
-</div>
-
-
-<!--start modal update boitier-->
-
-<div id="ModalupdateBoitier" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">update Device id : {{selectedBoitier.idBoitier}}</h4>
-            </div>
-            <form [formGroup]="updateForm">
-                <div class="modal-body">
-                    <div class="row">
-
-                        <div class="col-md-6">
-                            <div class="form-group label-floating">
-                                <label class="control-label">Label
-                                    <input type="text" class="form-control" value="" name="pseudo"
-                                        formControlName="label" required>
-                                </label>
-                            </div>
-                        </div>
-
+    <!-- Stats & Management -->
+    <div class="row g-4 mb-4">
+        <div class="col-lg-3 col-md-6">
+            <div class="premium-card h-100 shadow-sm border-start border-4 border-success">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="icon-box bg-success bg-opacity-10 text-success p-3 rounded-4">
+                        <i class="fa fa-hdd fa-2x"></i>
+                    </div>
+                    <div>
+                        <p class="text-secondary small mb-0">Boitiers Installés</p>
+                        <h3 class="fw-bold mb-0">{{BOITIER_INSTALLED}}</h3>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-warning" (click)="updateBoitier()"
-                        [disabled]="!updateForm.valid" data-dismiss="modal">update</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <div class="mt-3 small text-secondary border-top pt-2">
+                    <i class="fa fa-clock me-1"></i> Jusqu'au: <strong>{{intervalTo}}</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="premium-card h-100 shadow-sm border-start border-4 border-danger">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="icon-box bg-danger bg-opacity-10 text-danger p-3 rounded-4">
+                        <i class="fa fa-microchip fa-2x"></i>
+                    </div>
+                    <div>
+                        <p class="text-secondary small mb-0">Slots Disponibles</p>
+                        <h3 class="fw-bold mb-0">{{BOITIER_NOT_INSTALLED}}</h3>
+                    </div>
+                </div>
+                <div class="mt-3 small text-secondary border-top pt-2">
+                    <i class="fa fa-history me-1"></i> Depuis: <strong>{{intervalFrom}}</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="premium-card h-100 shadow-sm">
+                <h6 class="fw-bold mb-3"><i class="fa fa-plus-circle me-2 text-primary"></i> Gestion de l'Infrastructure</h6>
+                <form [formGroup]="addForm" (ngSubmit)="addBoitiers()">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="form-floating flex-grow-1">
+                            <input type="number" min="1" class="form-control border-0 bg-light" formControlName="nbrBoitiers" id="nbrBoitiers" placeholder="Qté">
+                            <label for="nbrBoitiers">Nombre de boitiers à ajouter</label>
+                        </div>
+                        <div class="btn-group gap-2">
+                            <button type="submit" class="btn btn-primary px-4 fw-bold" [disabled]="!addForm.valid" title="Ajouter les devices">
+                                <i class="fa fa-save me-2"></i> Ajouter
+                            </button>
+                            <button type="button" class="btn btn-outline-info px-4 fw-bold" title="Prolonger l'intervalle" (click)="extendIntervalOfBoitiers()">
+                                <i class="fa fa-expand-arrows-alt me-2"></i> Prolonger
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    @if (mode) {
+        <div class="alert alert-danger border-0 shadow-sm mb-4" role="alert">
+            <i class="fa fa-exclamation-triangle me-2"></i> {{messageError}}
+        </div>
+    }
+
+    <!-- Devices List -->
+    <div class="premium-card p-0 overflow-hidden shadow-sm">
+        <div class="d-flex justify-content-between align-items-center p-3 border-bottom bg-light bg-opacity-25">
+            <h5 class="fw-bold m-0"><i class="fa fa-list me-2 text-primary"></i> Terminaux Connectés</h5>
+            <form [formGroup]="searchForm" (ngSubmit)="searchBoitiers()" class="d-flex">
+                <div class="input-group input-group-sm">
+                    <input type="text" class="form-control border-0 shadow-sm px-3 search-input-fancy" formControlName="searchBoitier" placeholder="Filtrer par ID ou Label..." title="Filtrer par ID ou Label">
+                    <button class="btn btn-primary px-3 search-btn-fancy" type="submit" title="Lancer le filtrage">
+                        <i class="fa fa-search"></i>
+                    </button>
                 </div>
             </form>
         </div>
 
+        <div class="table-responsive table-container-60vh">
+            <table class="table-premium">
+                <thead>
+                    <tr>
+                        <th class="col-id-boitier">ID</th>
+                        <th>Identifiant Logiciel (Label)</th>
+                        <th>ID Matériel (Device)</th>
+                        <th>Dernière Trame (GPS)</th>
+                        <th>Coordonnées (Lat/Lon)</th>
+                        <th>Vitesse</th>
+                        <th>État</th>
+                        <th class="text-end">Trame Brute</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (boitier of boitiers; track boitier.idBoitier) {
+                        <tr class="align-middle border-bottom border-light">
+                            <td><span class="badge bg-light text-dark small">{{boitier.idBoitier}}</span></td>
+                            <td class="fw-bold">{{boitier.label}}</td>
+                            <td><span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 rounded-pill px-3">{{boitier.numBoitier}}</span></td>
+                            <td class="small">{{boitier.dateLastTrame | date:'dd/MM/yyyy HH:mm'}}</td>
+                            <td class="small font-monospace text-secondary">
+                                <div class="text-nowrap">{{boitier.latitude || '—'}}</div>
+                                <div class="text-nowrap">{{boitier.longitude || '—'}}</div>
+                            </td>
+                            <td><span class="badge bg-dark rounded-pill">{{boitier.vitesse}} <small>km/h</small></span></td>
+                            <td>
+                                @if (boitier.stat) {
+                                    <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-3"><i class="fa fa-check me-1"></i> Installé</span>
+                                } @else {
+                                    <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 rounded-pill px-3"><i class="fa fa-times me-1"></i> Libre</span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                <div class="small opacity-50 text-nowrap" title="GPS Trame">G: {{boitier.gpsLastTrame || '—'}}</div>
+                                <div class="small opacity-50 text-nowrap" title="GSM Trame">S: {{boitier.gsmLastTrame || '—'}}</div>
+                            </td>
+                        </tr>
+                    }
+                    @if (boitiers.length === 0) {
+                        <tr>
+                            <td colspan="8" class="text-center py-5 text-secondary">
+                                <i class="fa fa-microchip fa-3x opacity-25 mb-2"></i>
+                                <p>Aucun terminal trouvé</p>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination Footer -->
+        <div class="p-4 bg-light bg-opacity-25 border-top" [formGroup]="paginationForm">
+            <div class="d-flex justify-content-center">
+                <pagination [totalItems]="bigTotalItems" formControlName="bigCurrentPage" [maxSize]="maxSize"
+                    class="premium-pagination shadow-sm" [boundaryLinks]="true" [rotate]="false" [itemsPerPage]="itemsPerPage"
+                    (pageChanged)="pageChanged($event)" previousText="‹" nextText="›" firstText="«" lastText="»">
+                </pagination>
+            </div>
+        </div>
     </div>
 </div>
 
-<!--end modal update compte boitier-->
+<!-- Modernized Update Device Modal -->
+<div id="ModalupdateBoitier" class="modal fade" role="dialog" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-content-premium">
+            <div class="modal-header header-gradient text-white border-0 p-4">
+                <h5 class="modal-title fw-bold m-0"><i class="fa fa-edit me-2"></i> Modifier le Terminal</h5>
+                <button type="button" class="btn-close btn-close-white" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <form [formGroup]="updateForm">
+                <div class="modal-body p-4 bg-light bg-opacity-50">
+                    <p class="small text-secondary mb-4">Mise à jour pour le boitier #{{selectedBoitier.idBoitier}}</p>
+                    <div class="form-floating shadow-sm">
+                        <input type="text" class="form-control border-0" formControlName="label" id="labelUpdate" placeholder="Label">
+                        <label for="labelUpdate">Identifiant Logiciel (Label)</label>
+                    </div>
+                </div>
+                
+                <div class="modal-footer p-3 bg-white border-0">
+                    <button type="button" class="btn btn-light px-4" data-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-warning px-5 fw-bold" (click)="updateBoitier()" [disabled]="!updateForm.valid" data-dismiss="modal">
+                        Mettre à jour
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

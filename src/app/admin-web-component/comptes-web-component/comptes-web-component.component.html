@@ -1,103 +1,111 @@
-<div class="col-md-12">
-    <div class="card">
-        <div class="card-header" data-background-color="red">
-            <div class="row">
-                <div class="col-sm-8">
-                    <h4 class="title">Liste des comptes Web</h4>
-                </div>
-                <div class="col-sm-4">
-                    <form class="navbar-form navbar-right" role="search" style="margin:0;" [formGroup]="searchForm"
-                        (ngSubmit)="searchWebAccount()">
-                        <div class="form-group is-empty">
-                            <input type="text" class="form-control" formControlName="keyWord"
-                                placeholder="Rechercher..." style="margin:0;color:white;">
-                            <span class="material-input"></span>
-                        </div>
-                        <button type="submit" class="btn btn-white btn-sm" title="Rechercher"
-                            style="margin: 0px; padding: 1px 5px; margin: 0px 0px 0px 0px;">
-                            <i class="fa fa-search" style="font-size: 14px"></i>
-                            Rechercher</button>
-                    </form>
-                </div>
+<div class="main-panel p-4">
+    <!-- Header Section -->
+    <div class="premium-card mb-4 header-gradient shadow-sm">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div class="title-section text-white">
+                <h2 class="m-0 fw-bold">Portails Clients (Web)</h2>
+                <p class="m-0 text-white-50 opacity-75">Gérer les comptes utilisateurs et les accès front-end</p>
+            </div>
+            
+            <div class="controls-section d-flex align-items-center gap-3">
+                <form class="d-flex align-items-center" [formGroup]="searchForm" (ngSubmit)="searchWebAccount()">
+                    <div class="input-group shadow-sm search-container-premium">
+                        <input type="text" class="form-control border-0 px-3 search-input-medium" formControlName="keyWord" placeholder="Rechercher client..." title="Rechercher client">
+                        <button class="btn btn-white border-0 search-btn-premium" type="submit" title="Lancer la recherche">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </form>
+                <button class="btn btn-glass btn-sm rounded-circle" routerLink="/adminWeb/addCompteWeb" title="Nouveau Compte Web">
+                    <i class="fa fa-plus text-white"></i>
+                </button>
             </div>
         </div>
+    </div>
 
-        <div class="table-responsive tableFixHead">
-            <table class="table table-bordered table-hover table-sm">
+    <!-- Table Section -->
+    <div class="premium-card p-0 overflow-hidden shadow-sm">
+        <div class="table-responsive table-container-70vh">
+            <table class="table-premium">
                 <thead>
                     <tr>
-                        <th>Id</th>
-                        <th>Login</th>
-                        <th>Mot de passe</th>
-                        <th>Créé à</th>
-                        <th>Expiré le</th>
-                        <th>Nom Prenom</th>
-                        <th>Téléphone</th>
+                        <th class="col-id-web">ID</th>
+                        <th>Client / Login</th>
+                        <th>Identifiants</th>
+                        <th>Statut Validité</th>
+                        <th>Coordonnées</th>
                         <th>Région</th>
-                        <th>Type Client</th>
-                        <th>Red E par jour</th>
-                        <th>Red C par mois</th>
-                        <th>Red E par mois</th>
-                        <th>Red sim par mois</th>
-                        <th></th>
+                        <th class="text-end">Actions</th>
                     </tr>
                 </thead>
-                <tbody style="font-size: 12px;">
-
+                <tbody>
                     @if (loading) {
-                    <tr>
-                        <td style="text-align: center" colspan="23">
-                            <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
-                        </td>
-                    </tr>
+                        <tr>
+                            <td colspan="7" class="text-center py-5">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Chargement...</span>
+                                </div>
+                            </td>
+                        </tr>
                     }
 
                     @for (compteWeb of comptesWeb; track compteWeb.idCompteClientWeb) {
-                    <tr [routerLink]="['/adminWeb/configurations',compteWeb.idCompteClientWeb]" class="cl">
-                        <td>{{compteWeb.idCompteClientWeb}}</td>
-                        <td>{{compteWeb.login}}</td>
-                        <td>{{compteWeb.rawPassword}}</td>
-                        <td>{{compteWeb.date_creation | date:'dd-MM-yyyy'}}</td>
-                        <td>{{compteWeb.date_expiration | date:'dd-MM-yyyy' }}
-                            @if (compteWeb.during) {
-                            <span class="label label-success">During</span>
-                            }
-                            @if (compteWeb.expired) {
-                            <span class="label label-danger">Expired</span>
-                            }
-                        </td>
-                        <td>{{compteWeb.firstname}}&nbsp;{{compteWeb.lastname}}</td>
-                        <td>{{compteWeb.telephone}}</td>
-                        <td>{{compteWeb.area}}</td>
-                        <td>{{compteWeb.administratorCompte.username}}</td>
-                        <td>{{compteWeb.deviceFeeByDay}}</td>
-                        <td>{{compteWeb.accountFeeByMonth}}</td>
-                        <td>{{compteWeb.deviceFeePerMonth}}</td>
-                        <td>{{compteWeb.simCardFeePerMonth}}</td>
-                        <td>
-                            <button class="btn btn-info btn-xs"
-                                style="padding: 0px 8px;font-size: 8px;margin: 1px 0px 0px 0px;"
-                                [routerLink]="['/adminWeb/configurations',compteWeb.idCompteClientWeb]"
-                                data-backdrop="false">
-                                <i class="material-icons md-24"
-                                    title="Configurer le compte Web">account_box</i></button>
-
-                            <button class="btn btn-danger btn-xs"
-                                style="padding: 0px 8px;font-size: 8px;margin: 1px 0px 0px 0px;"
-                                (click)="onSelect(compteWeb);deleteWebAccount();">
-                                <i class="material-icons md-24"
-                                    title=" Supprimer le compte Web">delete_forever</i></button>
-                        </td>
-                    </tr>
+                        <tr class="align-middle">
+                            <td><span class="badge bg-light text-dark">{{compteWeb.idCompteClientWeb}}</span></td>
+                            <td>
+                                <div class="fw-bold">{{compteWeb.firstname}} {{compteWeb.lastname}}</div>
+                                <div class="small text-primary">{{compteWeb.login}}</div>
+                            </td>
+                            <td>
+                                <div class="small text-secondary">Pass: <code>{{compteWeb.rawPassword}}</code></div>
+                                <div class="small opacity-50">Créé le {{compteWeb.date_creation | date:'dd/MM/yy'}}</div>
+                            </td>
+                            <td>
+                                <div class="small mb-1">Exp: {{compteWeb.date_expiration | date:'dd/MM/yyyy' }}</div>
+                                @if (compteWeb.during) {
+                                    <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3">Actif</span>
+                                }
+                                @if (compteWeb.expired) {
+                                    <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill px-3">Expiré</span>
+                                }
+                            </td>
+                            <td>
+                                <div class="small"><i class="fa fa-phone me-1 opacity-50"></i> {{compteWeb.telephone}}</div>
+                                <div class="small text-truncate admin-username-truncate" title="{{compteWeb.administratorCompte.username}}"><i class="fa fa-user-tie me-1 opacity-50"></i> {{compteWeb.administratorCompte.username}}</div>
+                            </td>
+                            <td><span class="badge bg-info bg-opacity-10 text-info">{{compteWeb.area}}</span></td>
+                            <td class="text-end">
+                                <div class="btn-group gap-2">
+                                    <button class="btn btn-sm btn-outline-primary border-0 p-2" 
+                                        [routerLink]="['/adminWeb/configurations',compteWeb.idCompteClientWeb]" title="Configurer">
+                                        <i class="fa fa-cog"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger border-0 p-2" 
+                                        (click)="onSelect(compteWeb);deleteWebAccount();" title="Supprimer">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    
+                    @if (!loading && comptesWeb.length === 0) {
+                        <tr>
+                            <td colspan="7" class="text-center py-5 text-secondary">
+                                <i class="fa fa-globe fa-3x opacity-25 mb-2"></i>
+                                <p>Aucun compte web trouvé</p>
+                            </td>
+                        </tr>
                     }
                 </tbody>
             </table>
         </div>
+
+        <!-- Pagination Footer -->
+        <div class="p-4 bg-light bg-opacity-25 d-flex justify-content-center border-top">
+            <pagination [hidden]="loading" [totalItems]="bigTotalItems" [(ngModel)]="bigCurrentPage" [maxSize]="maxSize"
+                class="premium-pagination shadow-sm" [boundaryLinks]="true" [rotate]="false" [itemsPerPage]="itemsPerPage"
+                (pageChanged)="pageChanged($event)" previousText="‹" nextText="›" firstText="«" lastText="»"></pagination>
+        </div>
     </div>
-</div>
-<div class="col-md-12 text-center">
-    <pagination [hidden]="loading" [totalItems]="bigTotalItems" [(ngModel)]="bigCurrentPage" [maxSize]="maxSize"
-        class="pagination-sm" [boundaryLinks]="true" [rotate]="false" [itemsPerPage]="itemsPerPage"
-        (pageChanged)="pageChanged($event)" previousText="Précédent" nextText="Suivant" firstText="Premier"
-        lastText="Dernier"></pagination>
 </div>

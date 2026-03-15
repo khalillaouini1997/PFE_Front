@@ -10,6 +10,7 @@ import { Router } from '@angular/router'; // Assuming this is needed for router
 
 @Component({
     selector: 'app-access-log',
+    standalone: true,
     templateUrl: './access-log.component.html',
     styleUrls: ['./access-log.component.css'],
     imports: [FormsModule, ReactiveFormsModule, PaginationModule, DatePipe]
