@@ -28,8 +28,8 @@ body {
 /* Glassmorphism & SaaS Card Utilities */
 .saas-card {
   background: var(--surface-color);
-  backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   border: 1px solid rgba(255,255,255,0.4);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-soft);
