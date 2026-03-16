@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { AccessLog } from 'src/app/data/data';
 import { AccessLogService } from 'src/app/service/access-log.service';
@@ -30,13 +30,12 @@ export class AccessLogComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   ngOnInit() {
     this.initForms();
     if (!this.authService.isAuthenticated()) {
       this.router.navigate(['/error']);
-    } else {
-      this.getAllAccessLogs(this.searchForm.get('keyWord')?.value || "", this.bigCurrentPage - 1, this.itemsPerPage);
     }
   }
 
@@ -62,9 +61,11 @@ export class AccessLogComponent implements OnInit {
         this.loading = false;
         this.accessLogs = _accessLogs.content as AccessLog[];
         this.bigTotalItems = _accessLogs.totalElements;
+        this.cdr.detectChanges();
       },
       error: () => {
         this.loading = false;
+        this.cdr.detectChanges();
       }
     });
   }
