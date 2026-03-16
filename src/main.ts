@@ -3,7 +3,7 @@ import { enableProdMode, importProvidersFrom, provideZonelessChangeDetection } f
 import { environment } from './environments/environment';
 import { authInterceptor } from './app/utils/security/auth.interceptor';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { routes } from './app/app-routing.module';
+import { routes } from './app/app.routes';
 import { NgOptimizedImage } from '@angular/common';
 import { provideRouter } from '@angular/router'; // Removed withHashLocation if not needed
 import { provideHttpClient, withInterceptors } from '@angular/common/http';

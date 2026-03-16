@@ -1,9 +1,9 @@
+import { Routes } from '@angular/router';
 import { ComptesWebComponentComponent } from './comptes-web-component/comptes-web-component.component';
 import { ComptesServerComponentComponent } from './comptes-server-component/comptes-server-component.component';
 import { AddCompteWebComponentComponent } from './add-compte-web-component/add-compte-web-component.component';
 import { DashbordComponent } from './dashbord/dashbord.component';
 import { AdminWebComponentComponent } from './admin-web-component.component';
-import { Routes } from '@angular/router';
 import { HelpComponent } from './help/help.component';
 import { AddCompteServerComponent } from './add-compte-server/add-compte-server.component';
 import { CompteServerDetailsComponent } from './compte-server-details/compte-server-details.component';
@@ -17,7 +17,6 @@ import { RecalculWebComponent } from "./recalcul-web/recalcul-web.component";
 import { ArchiveComponent } from "./archive/archive.component";
 import { VehiculeInfoComponent } from "./vehicule-info/vehicule-info.component";
 import { AddAdresseIpComponent } from "./add-adresse-ip/add-adresse-ip.component";
-
 
 export const ADMIN_WEB_ROUTES: Routes = [{
   path: '',
@@ -96,8 +95,5 @@ export const ADMIN_WEB_ROUTES: Routes = [{
       path: 'traccar',
       component: ListTraccarComponent
     }
-
-
   ],
 }];
-
