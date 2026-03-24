@@ -45,6 +45,7 @@
                     <th pReorderableColumn pResizableColumn>Téléphone</th>
                     <th pReorderableColumn pResizableColumn>Région</th>
                     <th pReorderableColumn pResizableColumn>Type Client</th>
+                    <th pReorderableColumn pResizableColumn>Pool</th>
                     <th pReorderableColumn pResizableColumn>Red E / j</th>
                     <th pReorderableColumn pResizableColumn>Red C / m</th>
                     <th pReorderableColumn pResizableColumn>Red E / m</th>
@@ -68,6 +69,7 @@
                     <td class="small">{{compteWeb.telephone}}</td>
                     <td><span class="badge bg-info bg-opacity-10 text-info">{{compteWeb.area}}</span></td>
                     <td class="small">{{compteWeb.administratorCompte?.username}}</td>
+                    <td class="text-center text-primary fw-bold">{{compteWeb.pool || 0}}</td>
                     <td class="text-center">{{compteWeb.deviceFeeByDay}}</td>
                     <td class="text-center">{{compteWeb.accountFeeByMonth}}</td>
                     <td class="text-center">{{compteWeb.deviceFeePerMonth}}</td>
@@ -89,7 +91,7 @@
 
             <ng-template pTemplate="emptymessage">
                 <tr>
-                    <td colspan="14" class="text-center py-5 text-secondary">
+                    <td colspan="15" class="text-center py-5 text-secondary">
                         <i class="fa fa-globe fa-3x opacity-25 mb-2"></i>
                         <p>Aucun compte web trouvé</p>
                     </td>

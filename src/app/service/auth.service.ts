@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { AdministratorCompte } from '../data/data';
 
@@ -13,12 +13,15 @@ export class AuthService {
     private readonly TOKEN_KEY = 'token';
     private readonly USER_KEY = 'currentUser';
     private readonly AUTH_STATUS_KEY = 'isAuthenticate';
-    private readonly TOKEN_PREFIX = 'Bearer ';
+    private readonly TOKEN_PREFIX = 'rimtel ';
 
     currentUser: AdministratorCompte | null = null;
 
     authentificate(login: string, password: string): Observable<any> {
-        return this.http.post<any>(`${environment.apiBaseUrl}authenticate?username=${encodeURIComponent(login)}&password=${encodeURIComponent(password)}`, {});
+        const params = new HttpParams()
+            .set('username', login)
+            .set('password', password);
+        return this.http.post<any>(`${environment.apiBaseUrl}authenticate`, null, { params });
     }
 
     saveSession(authResponse: any) {

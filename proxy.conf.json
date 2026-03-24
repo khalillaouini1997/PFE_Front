@@ -3,6 +3,7 @@
     "target": "https://fleet.tn",
     "secure": false,
     "changeOrigin": true,
+    "ws": true,
     "logLevel": "debug"
   }
 }
