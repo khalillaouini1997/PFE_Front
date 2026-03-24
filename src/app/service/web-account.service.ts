@@ -20,15 +20,15 @@ export class WebAccountService {
     ];
 
     addCompteWeb(compteWeb: any): Observable<CompteClientWebInfoDTO> {
-        return this.http.post<CompteClientWebInfoDTO>(`${environment.apiBaseUrl}compteWeb?username=${this.authService.getCurrentUserName()}`, compteWeb);
+        return this.http.post<CompteClientWebInfoDTO>(`${environment.apiBaseUrl}compteWeb?userName=${this.authService.getCurrentUserName()}`, compteWeb);
     }
 
     getAllWebAccountByKeyWord(keyWord: string, page: number, size: number): Observable<PageResponse<CompteClientWebInfoDTO>> {
-        return this.http.get<PageResponse<CompteClientWebInfoDTO>>(`${environment.apiBaseUrl}compteWeb?keyWord=${keyWord}&page=${page}&size=${size}&username=${this.authService.getCurrentUserName()}`);
+        return this.http.get<PageResponse<CompteClientWebInfoDTO>>(`${environment.apiBaseUrl}compteWeb?keyWord=${keyWord}&page=${page}&size=${size}&userName=${this.authService.getCurrentUserName()}`);
     }
 
     getWebAccountById(id: number): Observable<CompteClientWebInfoDTO> {
-        return this.http.get<CompteClientWebInfoDTO>(`${environment.apiBaseUrl}compteWeb/${id}?username=${this.authService.getCurrentUserName()}`);
+        return this.http.get<CompteClientWebInfoDTO>(`${environment.apiBaseUrl}compteWeb/${id}?userName=${this.authService.getCurrentUserName()}`);
     }
 
     updateWebAccount(idCompteWeb: number, newCompteWeb: any): Observable<CompteClientWebInfoDTO> {
@@ -40,7 +40,7 @@ export class WebAccountService {
     }
 
     getAllCompteClientWeb(): Observable<CompteClientWebInfoDTO[]> {
-        return this.http.get<CompteClientWebInfoDTO[]>(`${environment.apiBaseUrl}compteWeb/All?username=${this.authService.getCurrentUserName()}`);
+        return this.http.get<CompteClientWebInfoDTO[]>(`${environment.apiBaseUrl}compteWeb/All?userName=${this.authService.getCurrentUserName()}`);
     }
 
     getAllLastTram(idCompteWeb: number): Observable<RealTime[]> {
@@ -68,7 +68,12 @@ export class WebAccountService {
     }
 
     getAllWebAccountSummary(): Observable<any[]> {
-        return this.http.get<any[]>(`${environment.apiBaseUrl}compteWeb/summary?username=${this.authService.getCurrentUserName()}`);
+        return this.http.get<any[]>(`${environment.apiBaseUrl}compteWeb/All?userName=${this.authService.getCurrentUserName()}`);
+    }
+
+    // Lighter version for dropdowns
+    getAllWebAccountNames(): Observable<any[]> {
+        return this.http.get<any[]>(`${environment.apiBaseUrl}compteWeb/All?userName=${this.authService.getCurrentUserName()}`);
     }
 
     associateCompteWebToCompteServer(idWeb: number, idServer: number): Observable<any> {

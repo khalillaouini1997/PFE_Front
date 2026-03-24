@@ -92,12 +92,9 @@ export class DashbordComponent implements OnInit, OnDestroy {
     if (!this.authService.isAuthenticated()) {
       this.router.navigate(['/error']);
     } else {
-      this.webAccountService.getAllCompteClientWeb().subscribe(res => {
+      this.webAccountService.getAllWebAccountNames().subscribe(res => {
         this.comptesWeb.set(res);
-        if (res && res.length > 0) {
-           this.dashboardForm.patchValue({ compteWeb: res[0] });
-           this.getAllLastTramByCompteWeb();
-        }
+        // Removed auto-select of first account to improve initial loading speed
       });
     }
   }

@@ -45,8 +45,6 @@ export class ComptesWebComponentComponent implements OnInit {
     this.initForms();
     if (!this.authService.isAuthenticated()) {
       this.router.navigate(['/error']);
-    } else {
-      this.getAllWebAccount(this.searchForm.get('keyWord')?.value || "", this.bigCurrentPage - 1, this.itemsPerPage);
     }
   }
 

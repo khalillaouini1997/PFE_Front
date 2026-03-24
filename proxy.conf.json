@@ -4,6 +4,10 @@
     "secure": false,
     "changeOrigin": true,
     "ws": true,
+    "xfwd": true,
+    "headers": {
+      "Origin": "https://fleet.tn"
+    },
     "logLevel": "debug"
   }
 }

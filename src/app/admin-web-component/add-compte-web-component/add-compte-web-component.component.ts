@@ -7,7 +7,7 @@ import { CompteServerService } from "../../service/compte-server.service";
 import { IpAddressService } from "../../service/ip-address.service";
 import { ToastrService } from "ngx-toastr";
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { DatePickerModule } from 'primeng/datepicker';
 
 
 @Component({
@@ -15,7 +15,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
     standalone: true,
     templateUrl: './add-compte-web-component.component.html',
     styleUrls: ['./add-compte-web-component.component.css'],
-    imports: [ReactiveFormsModule, BsDatepickerModule]
+    imports: [ReactiveFormsModule, DatePickerModule]
 })
 export class AddCompteWebComponentComponent implements OnInit {
 

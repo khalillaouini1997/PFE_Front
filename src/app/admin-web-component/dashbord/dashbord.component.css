@@ -110,3 +110,10 @@
     color: var(--primary);
 }
 
+
+.v-hidden {
+    visibility: hidden;
+    position: absolute;
+    pointer-events: none;
+    z-index: -1;
+}

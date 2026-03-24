@@ -39,7 +39,17 @@
             </div>
         }
 
-        <div class="dashboard-content-wrapper" [class.content-loading]="loading()" [hidden]="realtimes().length === 0">
+        @if (!dashboardForm.get('compteWeb')?.value && !loading()) {
+            <div class="premium-card d-flex flex-column align-items-center justify-content-center py-5 text-center mt-4">
+                <div class="empty-state-icon mb-3">
+                    <i class="fa fa-mouse-pointer fa-3x text-primary opacity-50"></i>
+                </div>
+                <h4 class="fw-bold">Veuillez sélectionner un compte</h4>
+                <p class="text-secondary">Choisissez un compte dans la liste ci-dessus pour afficher le suivi en temps réel.</p>
+            </div>
+        }
+
+        <div class="dashboard-content-wrapper" [class.content-loading]="loading()" [class.v-hidden]="realtimes().length === 0 || !dashboardForm.get('compteWeb')?.value">
             <!-- KPI Section -->
             <div class="row g-4" *ngIf="!fullscreenMap()">
                 <div class="col-md-3">

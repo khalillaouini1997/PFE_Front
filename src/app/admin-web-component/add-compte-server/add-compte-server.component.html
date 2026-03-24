@@ -29,20 +29,20 @@
                     
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <div class="form-floating mb-1">
-                                <input type="text" class="form-control" formControlName="pseudo" id="pseudo" placeholder="Pseudo" (keyup)="onKeyPseudo()"
+                            <div class="form-group mb-3 custom-form-group">
+                                <label for="pseudo" class="premium-label">Pseudo du Serveur</label>
+                                <input type="text" class="form-control premium-input" formControlName="pseudo" id="pseudo" placeholder="Pseudo" (keyup)="onKeyPseudo()"
                                     [class.is-invalid]="(serverForm.get('pseudo')?.invalid && serverForm.get('pseudo')?.touched) || isExistPseudo">
-                                <label for="pseudo">Pseudo du Serveur</label>
                             </div>
                             @if (isExistPseudo) {
                                 <div class="text-danger small ms-2 mt-1"><i class="fa fa-times-circle"></i> Ce pseudo est déjà utilisé</div>
                             }
                         </div>
                         <div class="col-md-6">
-                            <div class="form-floating mb-1">
-                                <input type="text" class="form-control" formControlName="login" id="login" placeholder="Login" (keyup)="onKeyLogin()"
+                            <div class="form-group mb-3 custom-form-group">
+                                <label for="login" class="premium-label">Login Administrateur</label>
+                                <input type="text" class="form-control premium-input" formControlName="login" id="login" placeholder="Login" (keyup)="onKeyLogin()"
                                     [class.is-invalid]="(serverForm.get('login')?.invalid && serverForm.get('login')?.touched) || isExistLogin">
-                                <label for="login">Login Administrateur</label>
                             </div>
                             @if (isExistLogin) {
                                 <div class="text-danger small ms-2 mt-1"><i class="fa fa-times-circle"></i> Ce login est déjà utilisé</div>
@@ -50,20 +50,20 @@
                         </div>
 
                         <div class="col-md-6">
-                            <div class="form-floating mb-1">
-                                <input type="password" class="form-control" formControlName="password" id="Password" placeholder="Password"
+                            <div class="form-group mb-3 custom-form-group">
+                                <label for="Password" class="premium-label">Mot de passe</label>
+                                <input type="password" class="form-control premium-input" formControlName="password" id="Password" placeholder="******"
                                     [class.is-invalid]="serverForm.get('password')?.touched && serverForm.get('password')?.invalid">
-                                <label for="Password">Mot de passe</label>
                             </div>
                             @if (serverForm.get('password')?.errors?.['minlength']) {
                                 <div class="text-danger small ms-2 mt-1">Minimum 6 caractères requis</div>
                             }
                         </div>
                         <div class="col-md-6">
-                            <div class="form-floating mb-1">
-                                <input type="password" class="form-control" formControlName="confirmationPassword" id="confirmPassword" placeholder="Confirm"
+                            <div class="form-group mb-3 custom-form-group">
+                                <label for="confirmPassword" class="premium-label">Confirmer le mot de passe</label>
+                                <input type="password" class="form-control premium-input" formControlName="confirmationPassword" id="confirmPassword" placeholder="******"
                                     [class.is-invalid]="serverForm.get('confirmationPassword')?.touched && (serverForm.get('confirmationPassword')?.invalid || serverForm.errors?.['mismatch'])">
-                                <label for="confirmPassword">Confirmer le mot de passe</label>
                             </div>
                             @if (serverForm.get('confirmationPassword')?.touched && serverForm.errors?.['mismatch']) {
                                 <div class="text-danger small ms-2 mt-1">Les mots de passe ne correspondent pas</div>
@@ -78,16 +78,18 @@
                     
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control" bsDatepicker formControlName="date_Expiration"
-                                    id="dateExpiration" [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }" placeholder="Expiration">
-                                <label for="dateExpiration">Date d'expiration</label>
+                            <div class="form-group mb-3 custom-datepicker-container">
+                                <label for="dateExpiration" class="p-datepicker-label">Date d'expiration</label>
+                                <p-datepicker formControlName="date_Expiration" id="dateExpiration" 
+                                    dateFormat="dd-mm-yy" [showIcon]="true" appendTo="body"
+                                    styleClass="w-100" inputStyleClass="form-control premium-datepicker-input">
+                                </p-datepicker>
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="form-floating mb-3">
-                                <input type="number" min="0" class="form-control" formControlName="numberBoitier" id="numberBoitier" placeholder="Devices">
-                                <label for="numberBoitier">Nombre de Boitiers Autorisés</label>
+                            <div class="form-group mb-3 custom-form-group">
+                                <label for="numberBoitier" class="premium-label">Nombre de Boitiers Autorisés</label>
+                                <input type="number" min="0" class="form-control premium-input" formControlName="numberBoitier" id="numberBoitier" placeholder="0">
                             </div>
                         </div>
                     </div>

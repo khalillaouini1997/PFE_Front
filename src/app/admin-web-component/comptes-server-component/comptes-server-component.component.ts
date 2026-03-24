@@ -52,7 +52,6 @@ export class ComptesServerComponentComponent implements OnInit {
       return;
     }
 
-    this.getAllcompteServer(this.searchForm.get('keyWord')?.value || "", this.bigCurrentPage - 1, this.itemsPerPage);
     this.ipAddressService.getAllIps().subscribe(res => {
       this.ips = res;
       this.cdr.markForCheck();

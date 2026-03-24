@@ -9,37 +9,129 @@
     margin: auto;
     width: 75%;
 }
-.chat-container{
-    height: 80vh;
-    width: 100vw;
-  }
-  .chat{
-    text-align: left;
-    margin: 0 auto;
-    width: 50%;
-    height: 100%;
-    border: 1px solid grey;
-  }
-  
-  .footer{
-    background: #cccccc;
-    margin: 0 auto;
-    position: absolute;
-    bottom: 0;
-    height: 10vh;
-    width: 100vw;
-  }
-  .send-button{
-    margin: 0 auto;
-    height: 70%;
-    width: 50%;
-  }
-  input{
-    float: right;
-    height: 30px;
-    border-radius: 15px;
-    font-size: 1.5em;
-  }
+/* Simple column layout — no flex tricks */
+.custom-datepicker-container, .custom-form-group {
+    display: block;
+}
+
+/* Normalize PrimeNG host element to remove extra spacing */
+:host ::ng-deep p-datepicker {
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    line-height: normal !important;
+}
+
+.p-datepicker-label, .premium-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #4318ff;
+    margin-bottom: 8px;
+    margin-left: 4px;
+    display: block;
+}
+
+/* Shared outer box styling for both PrimeNG datepicker and standard inputs */
+:host ::ng-deep .p-datepicker {
+    height: 55px !important;
+    width: 100% !important;
+    border-radius: 12px !important;
+    border: 1.5px solid #e0e5f2 !important;
+    background-color: #ffffff !important;
+    display: flex !important;
+    align-items: center;
+    overflow: hidden;
+}
+
+.premium-input {
+    height: 55px !important;
+    width: 100% !important;
+    border-radius: 12px !important;
+    border: 1.5px solid #e0e5f2 !important;
+    background-color: #ffffff !important;
+    padding: 0 1rem !important;
+    font-size: 1.1rem !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* PrimeNG datepicker inner input only — no border, fills the wrapper */
+:host ::ng-deep .p-datepicker > input {
+    height: 100% !important;
+    width: 100% !important;
+    border: none !important;
+    padding: 0 1rem !important;
+    font-size: 1.1rem !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* PrimeNG calendar icon button */
+:host ::ng-deep .p-datepicker .p-datepicker-trigger {
+    background: #f4f7fe !important;
+    border: none !important;
+    border-left: 1.5px solid #e0e5f2 !important;
+    color: #4318ff !important;
+    height: 100% !important;
+    width: 45px !important;
+    border-radius: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Focus states */
+:host ::ng-deep .p-datepicker:focus-within,
+.premium-input:focus {
+    border-color: #4318ff !important;
+    box-shadow: 0 4px 20px -5px rgba(67, 24, 255, 0.15) !important;
+}
+
+.form-control {
+    font-size: 1.1rem;
+    border-radius: 12px;
+    border: 1.5px solid #e0e5f2;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #4318ff;
+    box-shadow: 0 4px 20px -5px rgba(67, 24, 255, 0.15);
+}
+
+h5.fw-bold {
+    margin-bottom: 2rem !important;
+    color: #2b3674;
+    letter-spacing: -0.02em;
+}
+
+h5.mt-4 {
+    margin-top: 3rem !important;
+}
+
+.premium-card {
+    border-radius: 20px;
+    transition: transform 0.3s ease;
+}
+
+.btn-create-server {
+    background: linear-gradient(135deg, #868CFF 0%, #4318FF 100%);
+    border: none;
+    border-radius: 12px;
+    padding: 12px 30px;
+    transition: all 0.3s ease;
+}
+
+.btn-create-server:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -5px rgba(67, 24, 255, 0.4);
+}
+
+.btn-cancel-server {
+    border-radius: 12px;
+    padding: 12px 30px;
+}
   .send{
     float: right;
 

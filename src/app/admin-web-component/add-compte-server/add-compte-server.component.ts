@@ -3,23 +3,21 @@ import { CompteServer, CompteServerWithBoitier, IpAddress } from 'src/app/data/d
 import { CompteServerService } from "../../service/compte-server.service";
 import { AuthService } from "../../service/auth.service";
 import { IpAddressService } from "../../service/ip-address.service";
-import { BsLocaleService, BsDatepickerModule } from "ngx-bootstrap/datepicker";
-import { defineLocale } from 'ngx-bootstrap/chronos';
-import { frLocale } from 'ngx-bootstrap/locale';
+import { DatePickerModule } from 'primeng/datepicker';
 import { ToastrService } from 'ngx-toastr';
 import { catchError } from "rxjs/operators";
 import { Router } from "@angular/router";
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 
-defineLocale('fr', frLocale);
+// PrimeNG DatePicker replaces bsDatepicker
 
 @Component({
     selector: 'app-add-compte-server',
     standalone: true,
     templateUrl: './add-compte-server.component.html',
     styleUrls: ['./add-compte-server.component.css'],
-    imports: [ReactiveFormsModule, BsDatepickerModule]
+    imports: [ReactiveFormsModule, DatePickerModule]
 })
 export class AddCompteServerComponent implements OnInit {
 
@@ -40,13 +38,12 @@ export class AddCompteServerComponent implements OnInit {
   private readonly compteServerService = inject(CompteServerService);
   private readonly ipAddressService = inject(IpAddressService);
   private readonly authService = inject(AuthService);
-  private readonly localeService = inject(BsLocaleService);
+  // Removed BsLocaleService as PrimeNG handles its own localization
   private readonly toastr = inject(ToastrService);
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
 
   constructor() {
-    this.localeService.use('fr');
     this.initForm();
   }
 
