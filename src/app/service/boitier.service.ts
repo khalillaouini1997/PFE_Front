@@ -111,6 +111,14 @@ export class BoitierService {
         return this.http.put<void>(`${environment.apiBaseUrl}boities/${idCompteWeb}/resetOdo`, vehiculeSetting);
     }
 
+    getLastId(idCompteWeb: number, idBoitier: number): Observable<{ lastId: number }> {
+        return this.http.get<{ lastId: number }>(`${environment.apiBaseUrl}boities/${idCompteWeb}/lastId/${idBoitier}`);
+    }
+
+    resetLastId(idCompteWeb: number, vehiculeSetting: VehiculeSetting): Observable<void> {
+        return this.http.put<void>(`${environment.apiBaseUrl}boities/${idCompteWeb}/resetLastId`, vehiculeSetting);
+    }
+
     getDeviceIdImei(url: string, imei: number): Observable<any> {
         return this.http.get<any>(url + imei);
     }

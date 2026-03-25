@@ -53,7 +53,7 @@
                     <div class="col-12">
                         <div class="mb-3 px-1">
                             <label class="small fw-bold text-secondary text-uppercase mb-2">Options du Compte</label>
-                            <ng-multiselect-dropdown [placeholder]="'Sélectionner des options'" [settings]="dropdownSettings()"
+                            <ng-multiselect-dropdown [placeholder]="'Sélectionner des options'" [settings]="dropdownSettings"
                                 [data]="options()" formControlName="options" class="premium-multiselect">
                             </ng-multiselect-dropdown>
                         </div>
@@ -247,8 +247,8 @@
 
 <!-- Modal Recalculate / Config (Modernized) -->
 @if (showConfigModal()) {
-    <div class="modal-backdrop fade show modal-backdrop-glass" (click)="closeConfigModal()"></div>
-    <div class="modal fade show d-block modal-config-zindex" id="ModalConfig" tabindex="-1" role="dialog">
+    <div class="modal-backdrop show modal-backdrop-glass" (click)="closeConfigModal()"></div>
+    <div class="modal show d-block modal-config-zindex" id="ModalConfig" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content modal-content-premium border-0 shadow-lg">
                 <div class="modal-header header-gradient border-0 p-4">
@@ -312,13 +312,28 @@
                                         </div>
                                     }
                                 </div>
-                                <div class="mt-3 pt-3 border-top d-flex gap-2">
-                                    <button type="button" class="btn btn-outline-success btn-sm flex-fill fw-bold" (click)="editDeviceOptionConfig()" [disabled]="loadingEditDeviceOption()">
-                                        <i class="fa fa-save me-1"></i> Options
+                                <div class="mt-3 pt-3 border-top">
+                                    <button type="button" class="btn btn-outline-success btn-sm w-100 fw-bold mb-3" (click)="editDeviceOptionConfig()" [disabled]="loadingEditDeviceOption()">
+                                        <i class="fa fa-save me-1"></i> Sauvegarder les Options
                                     </button>
-                                    <button type="button" class="btn btn-outline-danger btn-sm flex-fill fw-bold" (click)="resetOdometre()" [disabled]="loadingResetOdometre()">
-                                        <i class="fa fa-history me-1"></i> Odo
-                                    </button>
+                                    
+                                    <div class="reset-actions d-flex flex-column gap-2">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <button type="button" class="btn btn-outline-danger btn-sm flex-grow-1 fw-bold" (click)="resetOdometre()" [disabled]="loadingResetOdometre()" style="height: 38px;">
+                                                <i class="fa fa-history me-1"></i> Reset Odo
+                                            </button>
+                                            
+                                            <div class="flex-grow-1" [formGroup]="lastIdForm">
+                                                <div class="input-group input-group-sm shadow-sm rounded overflow-hidden" style="height: 38px;">
+                                                    <span class="input-group-text bg-light border-0 small fw-bold text-secondary">ID</span>
+                                                    <input type="number" class="form-control border-0 bg-light" formControlName="lastIdValue" placeholder="Last ID" title="Last ID">
+                                                    <button type="button" class="btn btn-primary border-0" (click)="resetLastId()" [disabled]="loadingResetLastId()">
+                                                        <i class="fa" [class.fa-save]="!loadingResetLastId()" [class.fa-spinner]="loadingResetLastId()" [class.fa-spin]="loadingResetLastId()"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

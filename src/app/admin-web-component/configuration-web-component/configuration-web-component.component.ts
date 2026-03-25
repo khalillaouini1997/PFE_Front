@@ -46,6 +46,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
   pathConfigForm!: FormGroup;
   deviceSettingForm!: FormGroup;
   imeiSearchForm!: FormGroup;
+  lastIdForm!: FormGroup;
 
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
@@ -66,22 +67,27 @@ export class ConfigurationWebComponentComponent implements OnInit {
   selected = signal<any[]>([]);
   codesPays = signal<{ key: string; value: string; }[]>([]);
   options = signal<Option[]>([]);
-  boitiers = signal<any[]>([]);
+  
+  // Data Signals
+  boitiers = signal<Boitier[]>([]);
   boitiersClicked = signal<boolean>(false);
   selectedBoitierId = signal<number>(0);
   selectedServerId = signal<number>(0);
-  loadingDeviceSetting = signal<boolean>(false);
+  ipAddresses = signal<IpAddress[]>([]);
+  notifications = signal<{ value: string, status: boolean }[]>([]);
+  selectedBoitiersIds = signal<number[]>([]);
+  recalculeP = signal<RecalculatePayload>(new RecalculatePayload());
+  vehiculeSetting = signal<VehiculeSetting>(new VehiculeSetting());
+
+  // UI & Modal State
+  showConfigModal = signal<boolean>(false);
   loadingRecalculate = signal<boolean>(false);
   loadingEditDeviceOption = signal<boolean>(false);
   loadingEditPathConfig = signal<boolean>(false);
   loadingResetOdometre = signal<boolean>(false);
-  selectedBoitiersIds = signal<number[]>([]);
-  notifications = signal<{ value: string, status: boolean }[]>([]);
-  recalculeP = signal<RecalculatePayload>(new RecalculatePayload());
-  vehiculeSetting = signal<VehiculeSetting>(new VehiculeSetting());
-  ipAddresses = signal<IpAddress[]>([]);
-  dropdownSettings = signal<IDropdownSettings>({});
-  showConfigModal = signal<boolean>(false);
+  loadingResetLastId = signal<boolean>(false);
+  loadingDeviceSetting = signal<boolean>(false);
+  dropdownSettings: IDropdownSettings = { defaultOpen: false };
 
 
   date = computed(() => this.mainConfigForm.get('date_expiration')?.value as Date | null);
@@ -158,6 +164,10 @@ export class ConfigurationWebComponentComponent implements OnInit {
     this.imeiSearchForm = this.fb.group({
       imei: ['']
     });
+
+    this.lastIdForm = this.fb.group({
+      lastIdValue: [0]
+    });
   }
 
   ngOnInit() {
@@ -205,15 +215,16 @@ export class ConfigurationWebComponentComponent implements OnInit {
       });
     }
     this.getAllIps();
-    this.dropdownSettings.set({
+    this.dropdownSettings = {
       singleSelection: false,
       idField: 'idOption',
       textField: 'description',
       selectAllText: 'Select All',
       unSelectAllText: 'UnSelect All',
       itemsShowLimit: 3,
-      allowSearchFilter: true
-    });
+      allowSearchFilter: true,
+      defaultOpen: false
+    };
   }
 
 
@@ -374,6 +385,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
     this.getDeviceOptionConfig(boitier.numBoitier);
     this.getPathConfig(boitier.numBoitier);
     this.getDeviceSettings(boitier.numBoitier);
+    this.loadLastId(boitier.numBoitier);
     this.showConfigModal.set(true);
   }
 
@@ -679,6 +691,8 @@ export class ConfigurationWebComponentComponent implements OnInit {
   }
 
 
+  // --- Odometer & Last ID Reset ---
+  
   resetOdometre() {
     this.loadingResetOdometre.set(true);
     const selectedBoitiersIdList = [...this.selectedBoitiersIds()];
@@ -696,6 +710,42 @@ export class ConfigurationWebComponentComponent implements OnInit {
         },
         error: () => {
           this.loadingResetOdometre.set(false);
+          this.toastr.error("Erreur de mise à jour", 'Erreur');
+        }
+      });
+  }
+
+  loadLastId(numBoitier: number) {
+    this.boitierService.getLastId(this.ID_COMPTE(), numBoitier)
+      .subscribe({
+        next: (res) => {
+          this.lastIdForm.patchValue({ lastIdValue: res?.lastId ?? 0 });
+        },
+        error: () => {
+          this.lastIdForm.patchValue({ lastIdValue: 0 });
+        }
+      });
+  }
+
+  resetLastId() {
+    this.loadingResetLastId.set(true);
+    const selectedBoitiersIdList = [...this.selectedBoitiersIds()];
+    if (!this.isCheckedBoitier(this.recalculeP().idBoitier)) {
+      selectedBoitiersIdList.push(this.recalculeP().idBoitier);
+    }
+
+    const setting = new VehiculeSetting();
+    setting.idBoitiers = selectedBoitiersIdList;
+    setting.lastId = this.lastIdForm.get('lastIdValue')?.value ?? 0;
+
+    this.boitierService.resetLastId(this.ID_COMPTE(), setting)
+      .subscribe({
+        next: () => {
+          this.loadingResetLastId.set(false);
+          this.toastr.success('Last ID mis à jour');
+        },
+        error: () => {
+          this.loadingResetLastId.set(false);
           this.toastr.error("Erreur de mise à jour", 'Erreur');
         }
       });

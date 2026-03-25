@@ -381,6 +381,7 @@ export interface VehiculeSettingDTO {
 export class VehiculeSetting {
   idBoitiers: number[];
   accumOdo: number = 0;
+  lastId: number = 0;
 
   constructor() {
     this.idBoitiers = [];
