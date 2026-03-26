@@ -115,6 +115,7 @@ export class ComptesWebComponentComponent implements OnInit {
       jsdate: dateDecop
     };
     this.cdr.markForCheck();
+    this.router.navigate(['/adminWeb/configurations', compteWeb.idCompteClientWeb]);
   }
 
   deleteWebAccount() {

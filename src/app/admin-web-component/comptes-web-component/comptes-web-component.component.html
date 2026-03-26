@@ -55,7 +55,7 @@
             </ng-template>
 
             <ng-template pTemplate="body" let-compteWeb>
-                <tr class="align-middle">
+                <tr class="align-middle clickable-row" (click)="onSelect(compteWeb)">
                     <td><span class="badge bg-light text-dark">{{compteWeb.idCompteClientWeb}}</span></td>
                     <td class="fw-bold text-primary">{{compteWeb.login}}</td>
                     <td><code>{{compteWeb.rawPassword}}</code></td>
@@ -81,7 +81,7 @@
                                 <i class="fa fa-cog"></i>
                             </button>
                             <button class="btn btn-sm btn-outline-danger border-0 p-1" 
-                                (click)="onSelect(compteWeb);deleteWebAccount();" title="Supprimer">
+                                (click)="onSelect(compteWeb);deleteWebAccount(); $event.stopPropagation();" title="Supprimer">
                                 <i class="fa fa-trash"></i>
                             </button>
                         </div>
