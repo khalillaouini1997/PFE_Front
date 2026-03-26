@@ -32,9 +32,9 @@
 
         @if (loading()) {
             <div class="global-spinner premium-card d-flex flex-column align-items-center gap-3">
-                <div class="spinner-border text-primary" role="status">
+                <output class="spinner-border text-primary">
                     <span class="visually-hidden">Loading...</span>
-                </div>
+                </output>
                 <p class="m-0 fw-medium">Mise à jour des données...</p>
             </div>
         }
@@ -155,26 +155,26 @@
                                 
                                 <ng-template pTemplate="header">
                                     <tr>
-                                        <th pSortableColumn="deviceid" style="width:100px">ID <p-sortIcon field="deviceid"></p-sortIcon></th>
-                                        <th pSortableColumn="matricule">Matricule <p-sortIcon field="matricule"></p-sortIcon></th>
-                                        <th pSortableColumn="status">État <p-sortIcon field="status"></p-sortIcon></th>
-                                        <th>Coordonnées</th>
-                                        <th pSortableColumn="speed">Vitesse <p-sortIcon field="speed"></p-sortIcon></th>
-                                        <th pSortableColumn="ignition">Ignition <p-sortIcon field="ignition"></p-sortIcon></th>
-                                        <th>GPS/GSM</th>
-                                        <th pSortableColumn="record_time">Trame <p-sortIcon field="record_time"></p-sortIcon></th>
-                                        <th>Détails</th>
+                                        <th scope="col" pSortableColumn="deviceid" style="width:100px">ID <p-sortIcon field="deviceid"></p-sortIcon></th>
+                                        <th scope="col" pSortableColumn="matricule">Matricule <p-sortIcon field="matricule"></p-sortIcon></th>
+                                        <th scope="col" pSortableColumn="status">État <p-sortIcon field="status"></p-sortIcon></th>
+                                        <th scope="col">Coordonnées</th>
+                                        <th scope="col" pSortableColumn="speed">Vitesse <p-sortIcon field="speed"></p-sortIcon></th>
+                                        <th scope="col" pSortableColumn="ignition">Ignition <p-sortIcon field="ignition"></p-sortIcon></th>
+                                        <th scope="col">GPS/GSM</th>
+                                        <th scope="col" pSortableColumn="record_time">Trame <p-sortIcon field="record_time"></p-sortIcon></th>
+                                        <th scope="col">Détails</th>
                                     </tr>
                                     <tr>
-                                        <th></th>
-                                        <th><p-columnFilter type="text" field="matricule" display="menu"></p-columnFilter></th>
-                                        <th><p-columnFilter type="text" field="status" display="menu"></p-columnFilter></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
+                                        <th scope="col"></th>
+                                        <th scope="col"><p-columnFilter type="text" field="matricule" display="menu"></p-columnFilter></th>
+                                        <th scope="col"><p-columnFilter type="text" field="status" display="menu"></p-columnFilter></th>
+                                        <th scope="col"></th>
+                                        <th scope="col"></th>
+                                        <th scope="col"></th>
+                                        <th scope="col"></th>
+                                        <th scope="col"></th>
+                                        <th scope="col"></th>
                                     </tr>
                                 </ng-template>
 

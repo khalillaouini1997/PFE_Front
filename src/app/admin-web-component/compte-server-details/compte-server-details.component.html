@@ -105,13 +105,13 @@
             
             <ng-template pTemplate="header">
                 <tr>
-                    <th style="width: 100px">Statut</th>
-                    <th>Terminal</th>
-                    <th>Étiquette</th>
-                    <th>Coordonnées</th>
-                    <th>Vitesse</th>
-                    <th>Dernière Trame</th>
-                    <th class="text-end" style="width: 150px">Actions</th>
+                    <th scope="col" style="width: 100px">Statut</th>
+                    <th scope="col">Terminal</th>
+                    <th scope="col">Étiquette</th>
+                    <th scope="col">Coordonnées</th>
+                    <th scope="col">Vitesse</th>
+                    <th scope="col">Dernière Trame</th>
+                    <th scope="col" class="text-end" style="width: 150px">Actions</th>
                 </tr>
             </ng-template>
 
@@ -121,6 +121,7 @@
                         <div class="form-check form-switch d-flex justify-content-center">
                             <input class="form-check-input custom-switch-lg" type="checkbox" role="switch" 
                                 [(ngModel)]="boitier.stat" 
+                                [attr.aria-checked]="boitier.stat"
                                 [disabled]="boitier.etatBoitier === 'INSTALLED'"
                                 (change)="changeBoitierStatus(boitier)"
                                 title="Changer le statut">

@@ -124,8 +124,9 @@
                 <p class="text-secondary fw-medium">Boitiers préparés avec succès</p>
                 
                 <div class="progress mt-4 shadow-sm progress-rounded-premium">
-                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" 
-                        [style.width.%]="(notifications / serverForm.get('numberBoitier')?.value) * 100"></div>
+                    <progress class="progress-bar progress-bar-striped progress-bar-animated bg-success" 
+                        [style.width.%]="(notifications / serverForm.get('numberBoitier')?.value) * 100"
+                        [value]="notifications" [max]="serverForm.get('numberBoitier')?.value"></progress>
                 </div>
             </div>
             <div class="modal-footer border-0 p-4 bg-light">

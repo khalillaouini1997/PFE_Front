@@ -36,7 +36,7 @@
         <p-tabs value="0" styleClass="premium-tabview">
             <p-tablist>
                 <p-tab value="0">Archive du Terminal</p-tab>
-                <p-tab value="1" (click)="getAllRaws()">Données Brutes (Raw)</p-tab>
+                <p-tab value="1" (click)="getAllRaws()" (keydown.enter)="getAllRaws()">Données Brutes (Raw)</p-tab>
             </p-tablist>
             <p-tabpanels>
                 <p-tabpanel value="0">
@@ -48,16 +48,16 @@
                         responsiveLayout="scroll">
                         <ng-template pTemplate="header">
                             <tr>
-                                <th pReorderableColumn pResizableColumn>Date</th>
-                                <th pReorderableColumn pResizableColumn>Trame</th>
-                                <th pReorderableColumn pResizableColumn>Coordonnées</th>
-                                <th pReorderableColumn pResizableColumn>Statut</th>
-                                <th pReorderableColumn pResizableColumn>Vitesse</th>
-                                <th pReorderableColumn pResizableColumn>Temp</th>
-                                <th pReorderableColumn pResizableColumn>G-Sensor</th>
-                                <th pReorderableColumn pResizableColumn>Moteur</th>
-                                <th pReorderableColumn pResizableColumn>Système</th>
-                                <th pReorderableColumn pResizableColumn>Divers</th>
+                                <th scope="col" pReorderableColumn pResizableColumn>Date</th>
+                                <th scope="col" pReorderableColumn pResizableColumn>Trame</th>
+                                <th scope="col" pReorderableColumn pResizableColumn>Coordonnées</th>
+                                <th scope="col" pReorderableColumn pResizableColumn>Statut</th>
+                                <th scope="col" pReorderableColumn pResizableColumn>Vitesse</th>
+                                <th scope="col" pReorderableColumn pResizableColumn>Temp</th>
+                                <th scope="col" pReorderableColumn pResizableColumn>G-Sensor</th>
+                                <th scope="col" pReorderableColumn pResizableColumn>Moteur</th>
+                                <th scope="col" pReorderableColumn pResizableColumn>Système</th>
+                                <th scope="col" pReorderableColumn pResizableColumn>Divers</th>
                             </tr>
                         </ng-template>
                         <ng-template pTemplate="body" let-archive>
@@ -112,8 +112,8 @@
                         responsiveLayout="scroll">
                         <ng-template pTemplate="header">
                             <tr>
-                                <th style="width: 100px" pReorderableColumn pResizableColumn>ID</th>
-                                <th pReorderableColumn pResizableColumn>GPRMC / Trame Raw</th>
+                                <th scope="col" style="width: 100px" pReorderableColumn pResizableColumn>ID</th>
+                                <th scope="col" pReorderableColumn pResizableColumn>GPRMC / Trame Raw</th>
                             </tr>
                         </ng-template>
                         <ng-template pTemplate="body" let-raw>

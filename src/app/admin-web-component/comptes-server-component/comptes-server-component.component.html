@@ -43,10 +43,10 @@
             
             <ng-template pTemplate="header">
                 <tr>
-                    <th style="width: 80px" pReorderableColumn pResizableColumn>ID</th>
-                    <th pReorderableColumn pResizableColumn>Pseudo du Serveur</th>
-                    <th pReorderableColumn pResizableColumn>Adresse IP / Endpoint</th>
-                    <th class="text-end" style="width: 120px">Actions</th>
+                    <th scope="col" style="width: 80px" pReorderableColumn pResizableColumn>ID</th>
+                    <th scope="col" pReorderableColumn pResizableColumn>Pseudo du Serveur</th>
+                    <th scope="col" pReorderableColumn pResizableColumn>Adresse IP / Endpoint</th>
+                    <th scope="col" class="text-end" style="width: 120px">Actions</th>
                 </tr>
             </ng-template>
 
@@ -99,30 +99,30 @@
                     <div class="row g-4">
                         <div class="col-md-6">
                             <div class="form-floating shadow-sm rounded">
-                                <input type="text" class="form-control border-0" formControlName="pseudo" placeholder="Pseudo">
-                                <label>Pseudo</label>
+                                <input type="text" id="updatePseudo" class="form-control border-0" formControlName="pseudo" placeholder="Pseudo">
+                                <label for="updatePseudo">Pseudo</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating shadow-sm rounded">
-                                <input type="text" class="form-control border-0" formControlName="login" placeholder="Login">
-                                <label>Login</label>
+                                <input type="text" id="updateLogin" class="form-control border-0" formControlName="login" placeholder="Login">
+                                <label for="updateLogin">Login</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating shadow-sm rounded">
-                                <input type="text" class="form-control border-0" formControlName="password" placeholder="Password">
-                                <label>Mot de passe</label>
+                                <input type="text" id="updatePassword" class="form-control border-0" formControlName="password" placeholder="Password">
+                                <label for="updatePassword">Mot de passe</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating shadow-sm rounded">
-                                <select formControlName="idIpAdresse" class="form-select border-0" title="Adresse IP">
+                                <select id="updateIp" formControlName="idIpAdresse" class="form-select border-0" title="Adresse IP">
                                     @for (ip of ips; track ip.idIpAdresse) {
                                         <option [value]="ip.idIpAdresse">{{ ip.label }}</option>
                                     }
                                 </select>
-                                <label>Adresse IP</label>
+                                <label for="updateIp">Adresse IP</label>
                             </div>
                         </div>
                         <div class="col-md-12">
