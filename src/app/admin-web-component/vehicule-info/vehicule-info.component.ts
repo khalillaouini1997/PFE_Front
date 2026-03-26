@@ -5,7 +5,6 @@ import { ToastrService } from "ngx-toastr";
 import { VehiculeService } from "../../service/vehicule.service";
 import { finalize } from "rxjs";
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 
 import { TableModule } from 'primeng/table';

@@ -1,16 +1,14 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { CompteWeb, RecalculatePayload } from "../../data/data";
-import { ActivatedRoute, Router } from "@angular/router";
-import { BoitierService } from "../../service/boitier.service";
-import { WebAccountService } from "../../service/web-account.service";
-import { ToastrService } from "ngx-toastr";
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CommonModule, LowerCasePipe } from '@angular/common';
+import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute, RouterModule } from "@angular/router";
+import { RecalculatePayload } from "../../data/data";
+import { WebAccountService } from '../../service/web-account.service';
+import { BoitierService } from '../../service/boitier.service';
+import { WebSocketService } from '../../service/web-socket.service';
+import { ToastrService } from 'ngx-toastr';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
-import { LowerCasePipe } from '@angular/common';
-import { WebSocketService } from 'src/app/service/web-socket.service';
-
-import { RouterModule } from "@angular/router";
 
 @Component({
     selector: 'app-recalcul-web',
@@ -76,7 +74,7 @@ export class RecalculWebComponent implements OnInit {
     this.notifications = [];
     if (confirm("Vous êtes sur de vouloir faire le recalcule ?")) {
       const datestart = this.recalculForm.get('datestart')?.value;
-      this.recalculeP.recalculeStartDate = datestart ? new Date(datestart).getTime() : new Date().getTime();
+      this.recalculeP.recalculeStartDate = datestart ? new Date(datestart).getTime() : Date.now();
       this.boitierService.recalculePaths(this.idCompteClientWeb, this.recalculeP).subscribe();
     }
   }
@@ -85,7 +83,7 @@ export class RecalculWebComponent implements OnInit {
     this.notifications = [];
     if (confirm("Vous êtes sur de vouloir faire le recalcule ?")) {
       const datestart = this.recalculForm.get('datestart')?.value;
-      this.recalculeP.recalculeStartDate = datestart ? new Date(datestart).getTime() : new Date().getTime();
+      this.recalculeP.recalculeStartDate = datestart ? new Date(datestart).getTime() : Date.now();
       this.boitierService.recalculeBoitier(this.idCompteClientWeb, this.recalculeP).subscribe();
     }
   }
@@ -94,7 +92,7 @@ export class RecalculWebComponent implements OnInit {
     this.notifications = [];
     if (confirm("Vous êtes sur de vouloir faire le recalcule ?")) {
       const datestart = this.recalculForm.get('datestart')?.value;
-      this.recalculeP.recalculeStartDate = datestart ? new Date(datestart).getTime() : new Date().getTime();
+      this.recalculeP.recalculeStartDate = datestart ? new Date(datestart).getTime() : Date.now();
       this.boitierService.recalculeFuel(this.idCompteClientWeb, this.recalculeP).subscribe();
     }
   }

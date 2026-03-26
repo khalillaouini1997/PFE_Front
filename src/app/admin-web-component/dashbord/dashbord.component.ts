@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, OnDestroy, inject, ElementRef, signal, viewChild, computed } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, OnDestroy, inject, ElementRef, signal, viewChild } from '@angular/core';
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
 import { Router, RouterModule, ActivatedRoute } from "@angular/router";
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
@@ -86,7 +86,7 @@ export class DashbordComponent implements OnInit, OnDestroy {
 
     if (localStorage.getItem("isReloading") === "true") {
       localStorage.removeItem("isReloading");
-      window.location.reload();
+      globalThis.location.reload();
     }
 
     if (!this.authService.isAuthenticated()) {
@@ -102,8 +102,8 @@ export class DashbordComponent implements OnInit, OnDestroy {
   openExternalMap() {
     const urlTree = this.router.createUrlTree(['/adminWeb/dashboard'], { queryParams: { fullscreenMap: 'true' } });
     const serialized = this.router.serializeUrl(urlTree);
-    const fullUrl = `${window.location.origin}${serialized}`;
-    window.open(fullUrl, '_blank');
+    const fullUrl = `${globalThis.location.origin}${serialized}`;
+    globalThis.open(fullUrl, '_blank');
   }
 
 
@@ -161,7 +161,7 @@ export class DashbordComponent implements OnInit, OnDestroy {
 
 
   // Map of deviceId -> car style for consistent random assignment
-  private deviceIconMap = new Map<number, string>();
+  private readonly deviceIconMap = new Map<number, string>();
   private readonly carStyles = ['c1', 'c2', 'c3', 'c4'];
   private readonly validAngles = [0, 45, 90, 135, 180, 225, 270, 315, 360];
 
@@ -358,7 +358,7 @@ export class DashbordComponent implements OnInit, OnDestroy {
 
   diffHours(date: Date): number {
     date = new Date(date);
-    return ((new Date().getTime()) - date.getTime()) / (60 * 60 * 1000);
+    return (Date.now() - date.getTime()) / (60 * 60 * 1000);
   }
 
   getAllLastTramByCompteWeb() {

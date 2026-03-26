@@ -2,12 +2,10 @@ import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import {
   Boitier,
   CompteServer,
-  CompteWeb,
-  DeviceOpt,
   Option, PathConfigPayload,
   RecalculatePayload,
   IpAddress,
-  VehiculeSetting, DeviceSetting,
+  VehiculeSetting,
 } from "../../data/data";
 import { ActivatedRoute, Params, Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
@@ -100,10 +98,10 @@ export class ConfigurationWebComponentComponent implements OnInit {
   pathConfig = computed(() => this.pathConfigForm.value);
 
 
-  regions = ['Tunis', 'Sfax', 'Sousse'];
-  notifSubs = ['date_sub(NOW(), INTERVAL 6 hour)', 'date_sub(NOW(), INTERVAL 1 DAY)', 'date_sub(NOW(), INTERVAL 2 DAY)'];
+  readonly regions = ['Tunis', 'Sfax', 'Sousse'];
+  readonly notifSubs = ['date_sub(NOW(), INTERVAL 6 hour)', 'date_sub(NOW(), INTERVAL 1 DAY)', 'date_sub(NOW(), INTERVAL 2 DAY)'];
   dateBoolean: boolean = true;
-  maxDate: Date = new Date();
+  readonly maxDate: Date = new Date();
 
 
 
@@ -202,7 +200,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
           });
 
           const currentServer = this.serverAccount();
-          if (new Date().getTime() < currentServer.date_Expiration) {
+          if (Date.now() < currentServer.date_Expiration) {
             this.serverAccount.update(s => ({ ...s, expired: false, during: true }));
           } else {
             this.serverAccount.update(s => ({ ...s, expired: true, during: false }));
@@ -266,6 +264,11 @@ export class ConfigurationWebComponentComponent implements OnInit {
       .subscribe();
 
     this.webAccountService.addOptionsToWebAccount(this.ID_COMPTE(), formValue.options).subscribe();
+  }
+
+  diffHours(date: Date): number {
+    date = new Date(date);
+    return (Date.now() - date.getTime()) / (60 * 60 * 1000);
   }
 
   updateWebAccount() {
@@ -684,7 +687,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
     const idIpAdresse = this.deviceSettingForm.get('idIpAdresse')?.value;
     const url = this.ipAddresses().find(ip => ip.idIpAdresse == idIpAdresse)?.urlGetId;
     if (url) {
-      this.boitierService.getDeviceIdImei(url, parseInt(imei)).subscribe(res => {
+      this.boitierService.getDeviceIdImei(url, Number.parseInt(imei)).subscribe(res => {
         this.deviceSettingForm.patchValue({ streamId: res.id });
       });
     }
