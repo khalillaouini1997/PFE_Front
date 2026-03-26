@@ -40,14 +40,14 @@
             <table class="table-premium">
                 <thead>
                     <tr>
-                        <th>Créé le</th>
-                        <th>Type de Demande</th>
-                        <th>Détails</th>
-                        <th>Priorité</th>
-                        <th>État Actuel</th>
-                        <th>Traité le</th>
-                        <th>Réponse</th>
-                        <th class="text-end">Actions</th>
+                        <th scope="col">Créé le</th>
+                        <th scope="col">Type de Demande</th>
+                        <th scope="col">Détails</th>
+                        <th scope="col">Priorité</th>
+                        <th scope="col">État Actuel</th>
+                        <th scope="col">Traité le</th>
+                        <th scope="col">Réponse</th>
+                        <th scope="col" class="text-end">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -110,13 +110,13 @@
     </div>
 </div>
 
-<!-- Modernized Update Modal -->
-<div class="modal fade" id="ModalInit" tabindex="-1" role="dialog" aria-hidden="true">
+<!-- Modernized Update Modal (Native Dialog) -->
+<dialog #updateModal id="ModalInit" class="border-0 rounded-4 shadow-lg p-0 overflow-hidden">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content modal-content-rounded">
+        <div class="modal-content modal-content-rounded w-100">
             <div class="modal-header header-gradient text-white border-0 p-4">
                 <h5 class="modal-title fw-bold m-0">Mise à jour de la demande</h5>
-                <button type="button" class="btn-close btn-close-white" data-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-white" (click)="closeUpdateModal()" aria-label="Close"></button>
             </div>
             
             <form [formGroup]="updateForm">
@@ -143,12 +143,12 @@
                 </div>
                 
                 <div class="modal-footer p-3 bg-white border-0">
-                    <button type="button" class="btn btn-light px-4" data-dismiss="modal">Annuler</button>
-                    <button type="button" class="btn btn-warning px-4 fw-bold" [disabled]="updateForm.invalid" (click)="updateIntervention()" data-dismiss="modal">
+                    <button type="button" class="btn btn-light px-4" (click)="closeUpdateModal()">Annuler</button>
+                    <button type="button" class="btn btn-warning px-4 fw-bold" [disabled]="updateForm.invalid" (click)="updateIntervention()">
                         Enregistrer les modifications
                     </button>
                 </div>
             </form>
         </div>
     </div>
-</div>
+</dialog>

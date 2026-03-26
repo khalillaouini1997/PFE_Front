@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule, LowerCasePipe } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from "@angular/router";
@@ -25,6 +25,7 @@ export class RecalculWebComponent implements OnInit {
   numBoitier: number = 0;
   compteWeb: any = {};
   recalculForm!: FormGroup;
+  @ViewChild('notificationModal') notificationModal!: ElementRef<HTMLDialogElement>;
 
   tooltipup = 'recalcule';
 
@@ -76,6 +77,9 @@ export class RecalculWebComponent implements OnInit {
       const datestart = this.recalculForm.get('datestart')?.value;
       this.recalculeP.recalculeStartDate = datestart ? new Date(datestart).getTime() : Date.now();
       this.boitierService.recalculePaths(this.idCompteClientWeb, this.recalculeP).subscribe();
+      if (this.notificationModal) {
+        this.notificationModal.nativeElement.showModal();
+      }
     }
   }
 
@@ -85,6 +89,9 @@ export class RecalculWebComponent implements OnInit {
       const datestart = this.recalculForm.get('datestart')?.value;
       this.recalculeP.recalculeStartDate = datestart ? new Date(datestart).getTime() : Date.now();
       this.boitierService.recalculeBoitier(this.idCompteClientWeb, this.recalculeP).subscribe();
+      if (this.notificationModal) {
+        this.notificationModal.nativeElement.showModal();
+      }
     }
   }
 
@@ -94,10 +101,16 @@ export class RecalculWebComponent implements OnInit {
       const datestart = this.recalculForm.get('datestart')?.value;
       this.recalculeP.recalculeStartDate = datestart ? new Date(datestart).getTime() : Date.now();
       this.boitierService.recalculeFuel(this.idCompteClientWeb, this.recalculeP).subscribe();
+      if (this.notificationModal) {
+        this.notificationModal.nativeElement.showModal();
+      }
     }
   }
 
   reinitialisation() {
     this.notifications = [];
+    if (this.notificationModal) {
+      this.notificationModal.nativeElement.close();
+    }
   }
 }

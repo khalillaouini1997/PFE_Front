@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ViewChild, ElementRef } from '@angular/core';
 import { CompteServer, IpAddress } from 'src/app/data/data';
 import { CompteServerService } from "../../service/compte-server.service";
 import { AuthService } from "../../service/auth.service";
@@ -22,6 +22,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 export class AddCompteServerComponent implements OnInit {
 
   serverForm!: FormGroup;
+  @ViewChild('progressModal') progressModal!: ElementRef<HTMLDialogElement>;
   ipAddresses: IpAddress[] = [];
   public loading = false;
   mode: boolean = false;
@@ -56,7 +57,7 @@ export class AddCompteServerComponent implements OnInit {
       ipAdresse: [''],
       date_Expiration: [new Date(), Validators.required],
       numberBoitier: [0, [Validators.required, Validators.min(0)]]
-    }, { validators: this.passwordMatchValidator });
+    }, { validators: [this.passwordMatchValidator] });
   }
 
   passwordMatchValidator(g: FormGroup) {
@@ -79,6 +80,10 @@ export class AddCompteServerComponent implements OnInit {
     if (this.serverForm.invalid) {
       this.toastr.warning('Please fill all required fields correctly', 'Warning');
       return;
+    }
+
+    if (this.progressModal) {
+      this.progressModal.nativeElement.showModal();
     }
 
     this.loading = true;
@@ -127,6 +132,9 @@ export class AddCompteServerComponent implements OnInit {
 
   reinitialisation() {
     this.serverForm.patchValue({ numberBoitier: 0 });
+    if (this.progressModal) {
+      this.progressModal.nativeElement.close();
+    }
   }
 }
 

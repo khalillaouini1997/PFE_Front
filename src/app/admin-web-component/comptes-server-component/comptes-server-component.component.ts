@@ -1,5 +1,4 @@
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject, ViewChild, ElementRef } from '@angular/core';
 import { saveAs as importedSaveAs } from 'file-saver';
 import { ToastrService } from 'ngx-toastr';
 import { CompteServer, IpAddress } from 'src/app/data/data';
@@ -7,8 +6,9 @@ import { CompteServerService } from "../../service/compte-server.service";
 import { IpAddressService } from "../../service/ip-address.service";
 import { AuthService } from "../../service/auth.service";
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 import { TableModule } from 'primeng/table';
 
@@ -21,6 +21,7 @@ import { TableModule } from 'primeng/table';
 })
 export class ComptesServerComponentComponent implements OnInit {
   private readonly cdr = inject(ChangeDetectorRef);
+  @ViewChild('updateModal') updateModal!: ElementRef<HTMLDialogElement>;
 
   keyWord: string = "";
   public maxSize: number = 5;
@@ -87,7 +88,7 @@ export class ComptesServerComponentComponent implements OnInit {
     this.compteServerService.getAllServerAccount(keyWord, page, size).subscribe({
       next: (_comptesServer) => {
         this.comptesServer = _comptesServer.content as any;
-        const now = new Date().getTime();
+        const now = Date.now();
         this.comptesServer.forEach(s => {
           s.expired = now >= s.date_Expiration;
           s.during = !s.expired;
@@ -137,7 +138,7 @@ export class ComptesServerComponentComponent implements OnInit {
     this.compteServerService.updateServerCompte(updatedCompte.idCompteClientServer, updatedCompte).subscribe({
       next: (_compteUp: any) => {
         this.mode = false;
-        const now = new Date().getTime();
+        const now = Date.now();
         _compteUp.expired = now >= _compteUp.date_Expiration;
         _compteUp.during = !_compteUp.expired;
 
@@ -146,6 +147,7 @@ export class ComptesServerComponentComponent implements OnInit {
           this.comptesServer[index] = _compteUp;
         }
         this.toastr.success(' Server account updated ', 'Success!');
+        this.closeUpdateModal();
       },
       error: (error) => {
         this.mode = true;
@@ -157,5 +159,14 @@ export class ComptesServerComponentComponent implements OnInit {
   onSelect(compteServer: CompteServer) {
     this.updateServerForm.patchValue(compteServer);
     this.dt = new Date(compteServer.date_Expiration);
+    if (this.updateModal) {
+      this.updateModal.nativeElement.showModal();
+    }
+  }
+
+  closeUpdateModal() {
+    if (this.updateModal) {
+      this.updateModal.nativeElement.close();
+    }
   }
 }

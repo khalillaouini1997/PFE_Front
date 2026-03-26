@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ViewChild, ElementRef } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { IpAddress } from 'src/app/data/data';
 import { IpAddressService } from 'src/app/service/ip-address.service';
@@ -27,6 +27,7 @@ export class IpAdresseComponent implements OnInit {
 
   searchForm!: FormGroup;
   updateIpForm!: FormGroup;
+  @ViewChild('updateModal') updateModal!: ElementRef<HTMLDialogElement>;
 
   private readonly ipAddressService = inject(IpAddressService);
   private readonly toastr = inject(ToastrService);
@@ -94,6 +95,15 @@ export class IpAdresseComponent implements OnInit {
   onSelect(IpAddres: IpAddress) {
     this.ipAddressSelected = IpAddres;
     this.updateIpForm.patchValue(IpAddres);
+    if (this.updateModal) {
+      this.updateModal.nativeElement.showModal();
+    }
+  }
+
+  closeUpdateModal() {
+    if (this.updateModal) {
+      this.updateModal.nativeElement.close();
+    }
   }
 
   updateIpAdress() {
@@ -103,6 +113,7 @@ export class IpAdresseComponent implements OnInit {
         .subscribe({
           next: () => {
             this.toastr.success('IP Address updated', 'Success');
+            this.closeUpdateModal();
             this.getAllIpAddresse(this.searchForm.get('keyWord')?.value, this.bigCurrentPage - 1, this.itemsPerPage);
           }
         });

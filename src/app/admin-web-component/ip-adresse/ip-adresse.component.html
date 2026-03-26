@@ -34,14 +34,14 @@
             
             <ng-template pTemplate="header">
                 <tr>
-                    <th style="width: 80px">ID</th>
-                    <th>Label / Usage</th>
-                    <th>Adresse IP / Valeur</th>
-                    <th>Identifiants DB</th>
-                    <th>Nom de Base</th>
-                    <th>Type Conn.</th>
-                    <th>Endpoint / URL</th>
-                    <th class="text-end" style="width: 100px">Actions</th>
+                    <th scope="col" style="width: 80px">ID</th>
+                    <th scope="col">Label / Usage</th>
+                    <th scope="col">Adresse IP / Valeur</th>
+                    <th scope="col">Identifiants DB</th>
+                    <th scope="col">Nom de Base</th>
+                    <th scope="col">Type Conn.</th>
+                    <th scope="col">Endpoint / URL</th>
+                    <th scope="col" class="text-end" style="width: 100px">Actions</th>
                 </tr>
             </ng-template>
 
@@ -59,7 +59,7 @@
                     <td><div class="small text-truncate col-endpoint-url" title="{{IpAddres.url}}">{{IpAddres.url}}</div></td>
                     <td class="text-end">
                         <button class="btn btn-sm btn-outline-warning border-0 p-2" (click)="onSelect(IpAddres)" 
-                            data-bs-toggle="modal" data-bs-target="#Modalupdate" title="Modifier">
+                             title="Modifier">
                             <i class="fa fa-edit fs-5"></i>
                         </button>
                     </td>
@@ -78,13 +78,13 @@
     </div>
 </div>
 
-<!-- Modernized Update IP Modal -->
-<div id="Modalupdate" class="modal fade" role="dialog" tabindex="-1" aria-hidden="true">
+<!-- Modernized Update IP Modal (Native Dialog) -->
+<dialog #updateModal id="Modalupdate" class="border-0 rounded-4 shadow-lg p-0 overflow-hidden">
     <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content modal-content-premium">
+        <div class="modal-content modal-content-premium w-100">
             <div class="modal-header header-gradient text-white border-0 p-4">
                 <h5 class="modal-title fw-bold m-0"><i class="fa fa-network-wired me-2"></i> Mise à jour IP</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-white" (click)="closeUpdateModal()" aria-label="Close"></button>
             </div>
             
             <form [formGroup]="updateIpForm" (ngSubmit)="updateIpAdress()">
@@ -92,60 +92,60 @@
                     <div class="row g-3">
                         <div class="col-md-6">
                             <div class="form-floating shadow-sm">
-                                <input type="text" formControlName="label" class="form-control border-0" placeholder="Label">
-                                <label>Libellé / Nom</label>
+                                <input type="text" formControlName="label" class="form-control border-0" placeholder="Label" id="ipLabel">
+                                <label for="ipLabel">Libellé / Nom</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating shadow-sm">
-                                <input type="text" formControlName="value" class="form-control border-0" placeholder="IP">
-                                <label>Adresse IP (Value)</label>
+                                <input type="text" formControlName="value" class="form-control border-0" placeholder="IP" id="ipValue">
+                                <label for="ipValue">Adresse IP (Value)</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating shadow-sm">
-                                <input type="text" formControlName="jdbcUser" class="form-control border-0" placeholder="User">
-                                <label>Pseudo JDBC</label>
+                                <input type="text" formControlName="jdbcUser" class="form-control border-0" placeholder="User" id="jdbcUser">
+                                <label for="jdbcUser">Pseudo JDBC</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating shadow-sm">
-                                <input type="password" formControlName="jdbcPass" class="form-control border-0" placeholder="Pass">
-                                <label>Mot de passe JDBC</label>
+                                <input type="password" formControlName="jdbcPass" class="form-control border-0" placeholder="Pass" id="jdbcPass">
+                                <label for="jdbcPass">Mot de passe JDBC</label>
                             </div>
                         </div>
                         <div class="col-md-8">
                             <div class="form-floating shadow-sm">
-                                <input type="text" formControlName="url" class="form-control border-0" placeholder="URL">
-                                <label>URL de connexion</label>
+                                <input type="text" formControlName="url" class="form-control border-0" placeholder="URL" id="connUrl">
+                                <label for="connUrl">URL de connexion</label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating shadow-sm">
-                                <select formControlName="typeConnection" class="form-select border-0" title="Type de connexion">
+                                <select formControlName="typeConnection" class="form-select border-0" title="Type de connexion" id="connType">
                                     @for (type of typeConnection; track type.type) {
                                         <option [value]="type.type">{{type.type}}</option>
                                     }
                                 </select>
-                                <label>Type</label>
+                                <label for="connType">Type</label>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-floating shadow-sm">
-                                <input type="text" formControlName="dbName" class="form-control border-0" placeholder="DB">
-                                <label>Nom de la Base de Données</label>
+                                <input type="text" formControlName="dbName" class="form-control border-0" placeholder="DB" id="dbName">
+                                <label for="dbName">Nom de la Base de Données</label>
                             </div>
                         </div>
                     </div>
                 </div>
                 
                 <div class="modal-footer p-3 bg-white border-0">
-                    <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">Annuler</button>
-                    <button type="submit" class="btn btn-warning px-5 fw-bold" [disabled]="updateIpForm.invalid" data-bs-dismiss="modal">
+                    <button type="button" class="btn btn-light px-4" (click)="closeUpdateModal()">Annuler</button>
+                    <button type="submit" class="btn btn-warning px-5 fw-bold" [disabled]="updateIpForm.invalid">
                         Enregistrer
                     </button>
                 </div>
             </form>
         </div>
     </div>
-</div>
+</dialog>

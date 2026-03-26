@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, inject, signal, computed, ViewChild, ElementRef } from '@angular/core';
 import {
   Boitier,
   CompteServer,
@@ -45,6 +45,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
   deviceSettingForm!: FormGroup;
   imeiSearchForm!: FormGroup;
   lastIdForm!: FormGroup;
+  @ViewChild('configModal') configModal!: ElementRef<HTMLDialogElement>;
 
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
@@ -390,10 +391,16 @@ export class ConfigurationWebComponentComponent implements OnInit {
     this.getDeviceSettings(boitier.numBoitier);
     this.loadLastId(boitier.numBoitier);
     this.showConfigModal.set(true);
+    if (this.configModal) {
+      this.configModal.nativeElement.showModal();
+    }
   }
 
   closeConfigModal() {
     this.showConfigModal.set(false);
+    if (this.configModal) {
+      this.configModal.nativeElement.close();
+    }
   }
 
 

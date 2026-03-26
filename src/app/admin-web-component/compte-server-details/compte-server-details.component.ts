@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Boitier, BoitierRealTime, CompteServer } from 'src/app/data/data';
 import { CompteServerService } from "../../service/compte-server.service";
@@ -21,6 +21,7 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
   searchForm!: FormGroup;
   paginationForm!: FormGroup;
   updateForm!: FormGroup;
+  @ViewChild('updateBoitierModal') updateBoitierModal!: ElementRef<HTMLDialogElement>;
 
   private refreshInterval: any;
   compteServer: CompteServer = new CompteServer();
@@ -156,6 +157,15 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
     this.updateForm.patchValue({
       label: boitier.label
     });
+    if (this.updateBoitierModal) {
+      this.updateBoitierModal.nativeElement.showModal();
+    }
+  }
+
+  closeUpdateModal() {
+    if (this.updateBoitierModal) {
+      this.updateBoitierModal.nativeElement.close();
+    }
   }
 
   updateBoitier() {
@@ -167,6 +177,7 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
           this.boitiers[index] = { ...this.boitiers[index], label: res.label };
         }
         this.toastr.success(' Device updated ', 'Success!');
+        this.closeUpdateModal();
         this.cdr.markForCheck();
       },
       error: () => {

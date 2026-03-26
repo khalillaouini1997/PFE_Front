@@ -1,4 +1,4 @@
-import { Component, OnInit, viewChild, signal, inject } from '@angular/core';
+import { Component, OnInit, signal, inject, ViewChild, ElementRef } from '@angular/core';
 import { BsModalRef, ModalDirective } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { CompteWeb, Intervention } from 'src/app/data/data';
@@ -21,8 +21,7 @@ export class HelpComponent implements OnInit {
   updateForm!: FormGroup;
 
   date: Date = new Date();
-  addEditModal = viewChild<ModalDirective>('addEditModal');
-  modalRef?: BsModalRef;
+  @ViewChild('updateModal') updateModal!: ElementRef<HTMLDialogElement>;
   selectedType = signal<string | null>(null);
   types = [
     { name: 'REQUEST', label: 'Demande d\'intervention' },
@@ -108,6 +107,7 @@ export class HelpComponent implements OnInit {
       next: (res: any) => {
         if (res) {
           this.toastr.success('Success');
+          this.closeUpdateModal();
         } else {
           this.toastr.error("Echec");
         }
@@ -133,5 +133,14 @@ export class HelpComponent implements OnInit {
       type: intervention.type,
       response: intervention.response
     });
+    if (this.updateModal) {
+      this.updateModal.nativeElement.showModal();
+    }
+  }
+
+  closeUpdateModal() {
+    if (this.updateModal) {
+      this.updateModal.nativeElement.close();
+    }
   }
 }

@@ -245,12 +245,10 @@
     </div>
 </div>
 
-<!-- Modal Recalculate / Config (Modernized) -->
-@if (showConfigModal()) {
-    <div class="modal-backdrop show modal-backdrop-glass" (click)="closeConfigModal()" (keydown.enter)="closeConfigModal()" tabindex="0"></div>
-    <div class="modal show d-block modal-config-zindex" id="ModalConfig" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content modal-content-premium border-0 shadow-lg">
+<!-- Modal Recalculate / Config (Native Dialog) -->
+<dialog #configModal id="ModalConfig" class="border-0 rounded-4 shadow-lg p-0 overflow-hidden">
+    <div class="modal-dialog modal-dialog-centered modal-lg progress-dialog-content">
+        <div class="modal-content modal-content-premium border-0 shadow-lg w-100">
                 <div class="modal-header header-gradient border-0 p-4">
                     <div class="text-white">
                         <h4 class="m-0 fw-bold">Recalcule & Options BDD</h4>
@@ -449,7 +447,6 @@
                         </div>
                     </div>
                 }
-            </div>
         </div>
     </div>
-}
+</dialog>

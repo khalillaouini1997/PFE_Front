@@ -163,3 +163,18 @@ h5.mt-4 {
             padding: 40px;
             border-radius: 12px;
         }
+
+dialog {
+    padding: 0;
+}
+
+dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+}
+
+.progress-dialog-content {
+    width: 500px;
+    max-width: 90vw;
+}

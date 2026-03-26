@@ -166,7 +166,6 @@
                     </td>
                     <td class="text-end">
                         <button class="btn btn-sm btn-outline-primary border-0" 
-                            data-bs-toggle="modal" data-bs-target="#ModalupdateBoitier"
                             (click)="onSelect(boitier)">
                             <i class="fa fa-edit me-1"></i> Étiqueter
                         </button>
@@ -186,13 +185,13 @@
     </div>
 </div>
 
-<!-- Modernized Update Device Modal -->
-<div id="ModalupdateBoitier" class="modal fade" role="dialog" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content modal-content-premium">
+<!-- Modernized Update Device Modal (Native Dialog) -->
+<dialog #updateBoitierModal id="ModalupdateBoitier" class="border-0 rounded-4 shadow-lg p-0 overflow-hidden">
+    <div class="modal-dialog-centered progress-dialog-content">
+        <div class="modal-content modal-content-premium border-0 w-100">
             <div class="modal-header header-gradient text-white border-0 p-4">
                 <h5 class="modal-title fw-bold m-0"><i class="fa fa-edit me-2"></i> Modifier le Terminal</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-white" (click)="closeUpdateModal()" aria-label="Close"></button>
             </div>
             
             <form [formGroup]="updateForm">
@@ -205,12 +204,12 @@
                 </div>
                 
                 <div class="modal-footer p-3 bg-white border-0">
-                    <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">Annuler</button>
-                    <button type="button" class="btn btn-warning px-5 fw-bold" (click)="updateBoitier()" [disabled]="!updateForm.valid" data-bs-dismiss="modal">
+                    <button type="button" class="btn btn-light px-4" (click)="closeUpdateModal()">Annuler</button>
+                    <button type="button" class="btn btn-warning px-5 fw-bold" (click)="updateBoitier()" [disabled]="!updateForm.valid">
                         Mettre à jour
                     </button>
                 </div>
             </form>
         </div>
     </div>
-</div>
+</dialog>
