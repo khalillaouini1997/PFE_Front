@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { TraccarDto } from 'src/app/data/data';
 import { TraccarService } from 'src/app/service/traccar.service';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
@@ -14,6 +14,9 @@ import { CommonModule } from '@angular/common';
 })
 export class ListTraccarComponent implements OnInit {
 
+  private readonly traccarService = inject(TraccarService);
+  private readonly fb = inject(FormBuilder);
+
   searchForm!: FormGroup;
   public maxSize: number = 5;
   public bigTotalItems: number = 175;
@@ -22,8 +25,6 @@ export class ListTraccarComponent implements OnInit {
   itemsPerPage = 30;
   traccarDtos: TraccarDto[] = [];
   loading: boolean = false;
-
-  constructor(private traccarService: TraccarService, private fb: FormBuilder) { }
 
   ngOnInit() {
     this.initForms();

@@ -1,5 +1,5 @@
 import { Component, OnInit, inject, ViewChild, ElementRef } from '@angular/core';
-import { CommonModule, LowerCasePipe } from '@angular/common';
+import { LowerCasePipe } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from "@angular/router";
 import { RecalculatePayload } from "../../data/data";
@@ -46,8 +46,8 @@ export class RecalculWebComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForms();
-    this.idCompteClientWeb = parseInt(this.route.snapshot.params['idCompteClientWeb']);
-    this.recalculeP.idBoitier = parseInt(this.route.snapshot.params['numBoitier']);
+    this.idCompteClientWeb = Number.parseInt(this.route.snapshot.params['idCompteClientWeb']);
+    this.recalculeP.idBoitier = Number.parseInt(this.route.snapshot.params['numBoitier']);
     this.webAccountService.getWebAccountById(this.idCompteClientWeb).subscribe(_compteWeb => {
       this.compteWeb = _compteWeb;
     });

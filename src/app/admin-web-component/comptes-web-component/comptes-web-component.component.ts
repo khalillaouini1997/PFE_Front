@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CompteWeb } from 'src/app/data/data';
@@ -7,7 +7,6 @@ import { environment } from '../../../environments/environment';
 import { AuthService } from 'src/app/service/auth.service';
 import { WebAccountService } from 'src/app/service/web-account.service';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
-import { DatePipe } from '@angular/common';
 
 
 import { TableModule } from 'primeng/table';
@@ -42,8 +41,9 @@ export class ComptesWebComponentComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
 
   ngOnInit() {
-    this.initForms();
-    if (!this.authService.isAuthenticated()) {
+    if (this.authService.isAuthenticated()) {
+      this.initForms();
+    } else {
       this.router.navigate(['/error']);
     }
   }
@@ -71,13 +71,13 @@ export class ComptesWebComponentComponent implements OnInit {
         this.loading = false;
         this.comptesWeb = _comptesWeb.content as any;
 
-        for (let i = 0; i < this.comptesWeb.length; i++) {
-          if (new Date().getTime() < new Date(this.comptesWeb[i].date_expiration).getTime()) {
-            this.comptesWeb[i].expired = false;
-            this.comptesWeb[i].during = true;
+        for (const compte of this.comptesWeb) {
+          if (Date.now() < new Date(compte.date_expiration).getTime()) {
+            compte.expired = false;
+            compte.during = true;
           } else {
-            this.comptesWeb[i].expired = true;
-            this.comptesWeb[i].during = false;
+            compte.expired = true;
+            compte.during = false;
           }
         }
         this.bigTotalItems = _comptesWeb.totalElements;

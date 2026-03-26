@@ -57,7 +57,7 @@ export class AddCompteServerComponent implements OnInit {
       ipAdresse: [''],
       date_Expiration: [new Date(), Validators.required],
       numberBoitier: [0, [Validators.required, Validators.min(0)]]
-    }, { validators: [this.passwordMatchValidator] });
+    }, { validators: this.passwordMatchValidator });
   }
 
   passwordMatchValidator(g: FormGroup) {

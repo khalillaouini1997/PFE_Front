@@ -20,7 +20,13 @@ export class ArchiveComponent implements OnInit {
   numBoitier = signal<number>(0);
   archiveForm!: FormGroup;
 
-  constructor(private _location: Location, private route: ActivatedRoute, private boitierService: BoitierService, private router: Router, private fb: FormBuilder) { }
+  constructor(
+    private readonly _location: Location,
+    private readonly route: ActivatedRoute,
+    private readonly boitierService: BoitierService,
+    private readonly router: Router,
+    private readonly fb: FormBuilder
+  ) { }
 
   ngOnInit(): void {
     this.initForms();

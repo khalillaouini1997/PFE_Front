@@ -48,15 +48,14 @@ export class ComptesServerComponentComponent implements OnInit {
 
   ngOnInit() {
     this.initForms();
-    if (!this.authService.isAuthenticated()) {
+    if (this.authService.isAuthenticated()) {
+      this.ipAddressService.getAllIps().subscribe(res => {
+        this.ips = res;
+        this.cdr.markForCheck();
+      });
+    } else {
       this.router.navigate(['/error']);
-      return;
     }
-
-    this.ipAddressService.getAllIps().subscribe(res => {
-      this.ips = res;
-      this.cdr.markForCheck();
-    });
   }
 
   initForms() {
@@ -87,7 +86,7 @@ export class ComptesServerComponentComponent implements OnInit {
     this.cdr.markForCheck();
     this.compteServerService.getAllServerAccount(keyWord, page, size).subscribe({
       next: (_comptesServer) => {
-        this.comptesServer = _comptesServer.content as any;
+        this.comptesServer = _comptesServer.content;
         const now = Date.now();
         this.comptesServer.forEach(s => {
           s.expired = now >= s.date_Expiration;

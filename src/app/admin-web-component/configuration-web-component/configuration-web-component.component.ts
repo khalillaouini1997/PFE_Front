@@ -170,9 +170,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (!this.authService.isAuthenticated()) {
-      this.router.navigate(['/error']);
-    } else {
+    if (this.authService.isAuthenticated()) {
       this.route.params.subscribe((params: Params) => {
         this.ID_COMPTE.set(+params['idCompteClientWeb']);
         this.webAccountService.getWebAccountById(this.ID_COMPTE()).subscribe(async (_compteWeb: any) => {
@@ -212,6 +210,8 @@ export class ConfigurationWebComponentComponent implements OnInit {
       this.compteServerService.getAllServerAccountForForm().subscribe(res => {
         this.serverAccounts.set(res.content);
       });
+    } else {
+      this.router.navigate(['/error']);
     }
     this.getAllIps();
     this.dropdownSettings = {
@@ -649,7 +649,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
   }
 
   isCheckedBoitier(numBoitier: number): boolean {
-    return this.selectedBoitiersIds().indexOf(numBoitier) != -1;
+    return this.selectedBoitiersIds().includes(numBoitier);
   }
 
 

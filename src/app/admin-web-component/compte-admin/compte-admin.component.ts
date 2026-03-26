@@ -5,8 +5,7 @@ import { AdministratorCompte } from 'src/app/data/data';
 import { AdminAccountService } from 'src/app/service/admin-account.service';
 import { AuthService } from 'src/app/service/auth.service';
 import { finalize } from "rxjs";
-import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 
 
 import { TableModule } from 'primeng/table';
@@ -34,10 +33,10 @@ export class CompteAdminComponent implements OnInit {
 
   ngOnInit() {
     this.initForms();
-    if (!this.authService.isAuthenticated()) {
-      this.router.navigate(['/error']);
-    } else {
+    if (this.authService.isAuthenticated()) {
       this.getAllAdminComptes(this.searchForm.get('keyWord')?.value || "", this.bigCurrentPage - 1, this.itemsPerPage);
+    } else {
+      this.router.navigate(['/error']);
     }
   }
 

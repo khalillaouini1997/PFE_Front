@@ -20,24 +20,24 @@ import { InputTextModule } from 'primeng/inputtext';
 Chart.register(...registerables);
 
 @Component({
-    selector: 'app-dashbord',
-    standalone: true,
-    templateUrl: './dashbord.component.html',
-    styleUrls: ['./dashbord.component.css'],
-    imports: [
-      CommonModule,
-      FormsModule,
-      ReactiveFormsModule,
-      RouterModule,
-      DecimalPipe,
-      DatePipe,
-      TableModule,
-      BadgeModule,
-      ButtonModule,
-      IconFieldModule,
-      InputIconModule,
-      InputTextModule
-    ]
+  selector: 'app-dashbord',
+  standalone: true,
+  templateUrl: './dashbord.component.html',
+  styleUrls: ['./dashbord.component.css'],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    RouterModule,
+    DecimalPipe,
+    DatePipe,
+    TableModule,
+    BadgeModule,
+    ButtonModule,
+    IconFieldModule,
+    InputIconModule,
+    InputTextModule
+  ]
 })
 export class DashbordComponent implements OnInit, OnDestroy {
   protected readonly Math = Math;
@@ -62,7 +62,7 @@ export class DashbordComponent implements OnInit, OnDestroy {
   private stateChart?: Chart;
   private speedChart?: Chart;
   private puceChart?: Chart;
-  
+
   statusChartCanvas = viewChild<ElementRef>('statusChart');
   speedChartCanvas = viewChild<ElementRef>('speedChartCanvas');
   puceChartCanvas = viewChild<ElementRef>('puceChartCanvas');
@@ -78,7 +78,7 @@ export class DashbordComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.initForms();
-    
+
     // Check for fullscreen map mode
     this.route.queryParams.subscribe(params => {
       this.fullscreenMap.set(params['fullscreenMap'] === 'true');
@@ -89,13 +89,12 @@ export class DashbordComponent implements OnInit, OnDestroy {
       globalThis.location.reload();
     }
 
-    if (!this.authService.isAuthenticated()) {
-      this.router.navigate(['/error']);
-    } else {
+    if (this.authService.isAuthenticated()) {
       this.webAccountService.getAllWebAccountNames().subscribe(res => {
         this.comptesWeb.set(res);
-        // Removed auto-select of first account to improve initial loading speed
       });
+    } else {
+      this.router.navigate(['/error']);
     }
   }
 
@@ -135,27 +134,27 @@ export class DashbordComponent implements OnInit, OnDestroy {
   private initMap() {
     console.log('[Map] Init Map called.');
     if (this.map) return; // Prevent double init
-    
+
     const container = this.mapContainer()?.nativeElement;
     if (!container) return;
-    
+
     // Crucial: Leaflet requires a non-zero height
     const height = container.offsetHeight || container.clientHeight;
     console.log('[Map] Container actual height:', height);
-    
+
     if (height === 0) {
       console.warn('[Map] Container has 0 height. Cannot initialize Leaflet yet.');
-      return; 
+      return;
     }
 
     // Explicitly set the map to the container
-    this.map = L.map(container).setView([33.8869, 9.5375], 6); 
+    this.map = L.map(container).setView([33.8869, 9.5375], 6);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap contributors'
     }).addTo(this.map);
 
-    this.markerClusterGroup = (L as any).markerClusterGroup();
-    this.map.addLayer(this.markerClusterGroup!);
+    this.markerClusterGroup = L.markerClusterGroup();
+    this.map.addLayer(this.markerClusterGroup);
     console.log('[Map] Successfully initialized.');
   }
 
@@ -193,7 +192,7 @@ export class DashbordComponent implements OnInit, OnDestroy {
     if (!this.map || !this.markerClusterGroup) {
       this.initMap();
     }
-    
+
     if (!this.map || !this.markerClusterGroup) return;
 
     // Clear existing markers
@@ -206,7 +205,7 @@ export class DashbordComponent implements OnInit, OnDestroy {
         const marker = L.marker([tram.latitude, tram.longitude], {
           icon: this.getCarIcon(tram)
         })
-        .bindPopup(`
+          .bindPopup(`
           <div style="font-family: 'Public Sans', sans-serif;">
             <b style="color: #2b3674; font-size: 14px;">${tram.matricule}</b><br>
             <span style="color: #a3aed0;">ID:</span> ${tram.deviceid}<br>
@@ -214,7 +213,7 @@ export class DashbordComponent implements OnInit, OnDestroy {
             <span style="color: #a3aed0;">Status:</span> ${tram.status}
           </div>
         `);
-        
+
         this.markerClusterGroup!.addLayer(marker);
         bounds.push([tram.latitude, tram.longitude]);
       }
@@ -223,7 +222,7 @@ export class DashbordComponent implements OnInit, OnDestroy {
     if (bounds.length > 0) {
       this.map.fitBounds(L.latLngBounds(bounds), { padding: [50, 50] });
     }
-    
+
     this.map.invalidateSize();
   }
 
@@ -319,7 +318,7 @@ export class DashbordComponent implements OnInit, OnDestroy {
   private updatePuceChart() {
     const canvas = this.puceChartCanvas();
     if (!canvas) return;
-    
+
     const realtimes = this.realtimes();
     const counts = {
       'Orange Tunisie': realtimes.filter(t => t.numPuce?.startsWith('8921601')).length,
@@ -363,37 +362,37 @@ export class DashbordComponent implements OnInit, OnDestroy {
 
   getAllLastTramByCompteWeb() {
     const selectedCompte = this.dashboardForm.get('compteWeb')?.value;
-    if (!selectedCompte || !selectedCompte.idCompteClientWeb) return;
+    if (!selectedCompte?.idCompteClientWeb) return;
 
     this.loading.set(true);
     this.webAccountService.getAllLastTram(selectedCompte.idCompteClientWeb).subscribe(res => {
       this.realtimes.set(res as any);
       this.loading.set(false);
       this.cdr.detectChanges(); // Sync the DOM removal of [hidden]
-      
+
       // Delay to ensure the browser has painted the DOM with new dimensions
       setTimeout(() => {
         if (!this.map) {
-           this.initMap();
+          this.initMap();
         }
-        
+
         if (this.map) {
-           this.map.invalidateSize();
+          this.map.invalidateSize();
         }
-           
+
         this.updateMarkers();
         this.updateStats();
-      }, 300); 
+      }, 300);
 
       // Secondary update just in case of slow CSS layout/transitions
       setTimeout(() => {
         if (this.map) {
-           this.map.invalidateSize();
-           const bounds: any[] = [];
-           this.realtimes().forEach(tram => {
-             if (tram.latitude && tram.longitude) bounds.push([tram.latitude, tram.longitude]);
-           });
-           if (bounds.length > 0) this.map.fitBounds(L.latLngBounds(bounds), { padding: [50, 50] });
+          this.map.invalidateSize();
+          const bounds: any[] = [];
+          this.realtimes().forEach(tram => {
+            if (tram.latitude && tram.longitude) bounds.push([tram.latitude, tram.longitude]);
+          });
+          if (bounds.length > 0) this.map.fitBounds(L.latLngBounds(bounds), { padding: [50, 50] });
         }
       }, 1000);
     });
