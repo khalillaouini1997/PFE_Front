@@ -58,20 +58,15 @@ export class AuthService {
     }
 
     getCurrentUserName(): string | null {
-        const session = this.getCurrentUser();
-        return session && session.user ? session.user.username : null;
+        return this.getCurrentUser()?.user?.username ?? null;
     }
 
     isAgentAdmin(): boolean {
-        const session = this.getCurrentUser();
-        if (session && session.user && (session.user.role === 'GLOBALADMIN' || session.user.role === 'WEBADMIN')) {
-            return true;
-        }
-        return false;
+        const user = this.getCurrentUser()?.user;
+        return user?.role === 'GLOBALADMIN' || user?.role === 'WEBADMIN';
     }
 
     hasRole(role: string): boolean {
-        const session = this.getCurrentUser();
-        return session && session.user && session.user.role === role;
+        return this.getCurrentUser()?.user?.role === role;
     }
 }

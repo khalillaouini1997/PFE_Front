@@ -8,8 +8,8 @@ import { environment } from '../../environments/environment';
     providedIn: 'root'
 })
 export class WebSocketService {
-    private client: Client;
-    private notificationSubject = new BehaviorSubject<any>(null);
+    private readonly client: Client;
+    private readonly notificationSubject = new BehaviorSubject<any>(null);
 
     constructor() {
         this.client = new Client({

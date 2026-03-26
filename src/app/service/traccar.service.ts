@@ -10,7 +10,7 @@ import { HttpClient } from '@angular/common/http';
 export class TraccarService {
   public currentUser: AdministratorCompte;
 
-  constructor(private _http: HttpClient) {
+  constructor(private readonly _http: HttpClient) {
 
   }
 

@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import { Boitier, CompteServer } from "../data/data";
+import { CompteServer } from "../data/data";
 import { Observable } from "rxjs";
 import { environment } from '../../environments/environment';
 import { AuthService } from './auth.service';
