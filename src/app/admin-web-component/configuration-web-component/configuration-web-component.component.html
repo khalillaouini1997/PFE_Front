@@ -15,7 +15,7 @@
     <div class="row g-4">
         <!-- Basic info and Options -->
         <div class="col-lg-8">
-            <div class="premium-card h-100 shadow-sm">
+            <div class="premium-card h-100 shadow-sm premium-card-overflow">
                 <h5 class="fw-bold mb-4 border-bottom pb-2"><i class="fa fa-user-circle me-2 text-primary"></i> Informations Générales</h5>
                 
                 <div class="row g-3">
@@ -33,13 +33,13 @@
                     </div>
                     
                     <div class="col-md-6">
-                        <div class="form-floating mb-3 shadow-sm rounded">
-                            <select formControlName="code_pays" class="form-select border-0 bg-light" id="configCodePays">
+                        <div class="mb-3 px-1">
+                            <div class="prominent-label-custom">Code Pays</div>
+                            <select formControlName="code_pays" class="form-select config-select-premium border-0" id="configCodePays" title="Code Pays" aria-label="Code Pays">
                                 @for (codePays of codesPays(); track codePays.value) {
-                                    <option [value]="codePays.value">{{codePays.key}} (+{{codePays.value}})</option>
+                                    <option [value]="codePays.value">(+{{codePays.value}}) {{codePays.key}}</option>
                                 }
                             </select>
-                            <label for="configCodePays">Code Pays</label>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -101,18 +101,25 @@
                     <label for="configTelephone">Téléphone</label>
                 </div>
 
-                <div class="premium-card bg-light border-0 shadow-none mt-3 p-3">
-                    <div class="form-floating mb-3 bg-white rounded shadow-sm">
-                        <select formControlName="notificationSubquery" class="form-select border-0" id="configNotifType">
+                <div class="mt-4 pt-3 border-top border-light">
+                    <!-- Notification Section Header -->
+                    <div class="d-flex align-items-center justify-content-between mb-4 p-3 bg-light bg-opacity-50 rounded-3 transition-hover border border-light shadow-none">
+                        <div class="d-flex flex-column">
+                            <span class="fw-bold text-indigo small text-uppercase letter-spacing-1">Notifications Mobile</span>
+                        </div>
+                        <div class="form-check form-switch m-0 d-flex align-items-center">
+                            <input class="form-check-input scale-150 cursor-pointer ms-0" type="checkbox" formControlName="mobileNotif" id="configMobileNotif" title="Notifications Mobile" aria-label="Notifications Mobile">
+                        </div>
+                    </div>
+
+                    <!-- Notification Type -->
+                    <div class="mb-3 px-1">
+                        <div class="prominent-label-custom">Type de notification</div>
+                        <select formControlName="notificationSubquery" class="form-select config-select-premium border-0 shadow-sm" id="configNotifType" title="Type de notification" aria-label="Type de notification">
                             @for (notifSub of notifSubs; track notifSub) {
                                 <option [value]="notifSub">{{ notifSub }}</option>
                             }
                         </select>
-                        <label for="configNotifType">Type de notification</label>
-                    </div>
-                    <div class="form-check form-switch p-0 d-flex align-items-center justify-content-between">
-                        <label class="form-check-label fw-bold text-secondary small text-uppercase ms-0" for="configMobileNotif">Notifications Mobile</label>
-                        <input class="form-check-input ms-0 scale-125" type="checkbox" formControlName="mobileNotif" id="configMobileNotif">
                     </div>
                 </div>
             </div>
@@ -190,10 +197,10 @@
                         </div>
                     </div>
                     
-                    <p-table [value]="boitiers()" [paginator]="true" [rows]="10" 
-                        [rowsPerPageOptions]="[10,20,50,100]"
-                        styleClass="p-datatable-sm p-datatable-gridlines premium-table-custom"
-                        responsiveLayout="scroll">
+                    <div class="table-responsive table-container-max-height">
+                        <p-table [value]="boitiers()" [paginator]="false" 
+                            styleClass="p-datatable-sm p-datatable-gridlines premium-table-custom"
+                            responsiveLayout="scroll">
                         <ng-template pTemplate="header">
                             <tr>
                                 <th scope="col" style="width: 50px">
@@ -239,6 +246,7 @@
                             </tr>
                         </ng-template>
                     </p-table>
+                    </div>
                 </div>
             </div>
         }

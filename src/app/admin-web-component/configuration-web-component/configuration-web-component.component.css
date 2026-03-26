@@ -42,7 +42,12 @@ ul li {
 }
 
 .row {
-  margin-top: 25px;
+  margin-top: 15px;
+}
+
+.row.g-4 {
+    --bs-gutter-y: 2rem;
+    --bs-gutter-x: 2rem;
 }
 
 .config {
@@ -404,6 +409,34 @@ table>thead>tr>th,
   z-index: 1;
 }
 
+.premium-card-overflow {
+    overflow: visible !important;
+    z-index: 10 !important;
+}
+
+.premium-multiselect .multiselect-dropdown {
+    position: relative !important;
+}
+
+.premium-multiselect .dropdown-list {
+    z-index: 9999 !important;
+    position: absolute !important;
+    background: #fff !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
+}
+
+.premium-multiselect .multiselect-dropdown .dropdown-btn {
+    border: 1px solid rgba(0,0,0,0.05) !important;
+    border-radius: 12px !important;
+    padding: 0.75rem 1rem !important;
+    background-color: #f8fafc !important;
+}
+
+.premium-multiselect .multiselect-dropdown .dropdown-btn .selected-item {
+    background: #4f46e5 !important;
+    border: 1px solid #4f46e5 !important;
+}
+
 .modal-content-premium .premium-card {
   border: 1px solid rgba(0,0,0,0.05) !important;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
@@ -479,4 +512,44 @@ dialog::backdrop {
 .progress-dialog-content {
     width: 800px;
     max-width: 95vw;
+}
+
+/* Reorganized Configuration Styles */
+.prominent-label-custom {
+    display: block !important;
+    position: relative !important;
+    font-size: 0.85rem !important;
+    font-weight: 800 !important;
+    color: #4f46e5 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    margin-bottom: 8px !important;
+}
+
+.text-indigo { color: #4f46e5 !important; }
+.letter-spacing-1 { letter-spacing: 0.05em !important; }
+.transition-hover:hover { background-color: #f1f5f9 !important; }
+.scale-150 { transform: scale(1.5); }
+.cursor-pointer { cursor: pointer !important; }
+
+.config-select-premium {
+    background-color: #f8fafc !important;
+    border: 1px solid rgba(0,0,0,0.05) !important;
+    border-radius: 12px !important;
+    padding: 0.75rem 1rem !important;
+    font-weight: 500 !important;
+    color: #1e293b !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important;
+    transition: all 0.2s ease !important;
+    cursor: pointer !important;
+}
+
+.secondary-value {
+    font-size: 0.75rem !important;
+    color: #64748b !important;
+    font-weight: 400 !important;
+}
+
+.table-container-max-height {
+    max-height: 500px;
 }
