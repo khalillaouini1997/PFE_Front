@@ -1,5 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { CompteServer, CompteServerWithBoitier, IpAddress } from 'src/app/data/data';
+import { CompteServer, IpAddress } from 'src/app/data/data';
 import { CompteServerService } from "../../service/compte-server.service";
 import { AuthService } from "../../service/auth.service";
 import { IpAddressService } from "../../service/ip-address.service";

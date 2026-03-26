@@ -1,5 +1,4 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { IpAddress } from "../../data/data";
 import { IpAddressService } from "../../service/ip-address.service";
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 

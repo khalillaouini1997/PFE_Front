@@ -59,7 +59,7 @@ export class AccessLogComponent implements OnInit {
     this.accessLogService.getAllAccessLog(keyWord, page, size).subscribe({
       next: (_accessLogs) => {
         this.loading = false;
-        this.accessLogs = _accessLogs.content as AccessLog[];
+        this.accessLogs = _accessLogs.content;
         this.bigTotalItems = _accessLogs.totalElements;
         this.cdr.detectChanges();
       },
