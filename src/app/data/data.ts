@@ -22,12 +22,12 @@ export class Archive {
 }
 
 export class Boitier {
-  idBoitier: number;
-  label: string;
-  numBoitier: number;
-  etatBoitier: string;
-  streamId: number;
-  ipAdresse: IpAddress;
+  idBoitier: number = 0;
+  label: string = '';
+  numBoitier: number = 0;
+  etatBoitier: string = '';
+  streamId: number = 0;
+  ipAdresse: IpAddress = new IpAddress();
 
   // Real-time fields (transient/runtime only)
   emplacement?: string;
@@ -38,15 +38,6 @@ export class Boitier {
   gpsLastTrame?: number;
   gsmLastTrame?: number;
   stat?: boolean = true;
-
-  constructor() {
-    this.idBoitier = 0;
-    this.label = '';
-    this.numBoitier = 0;
-    this.etatBoitier = '';
-    this.ipAdresse = new IpAddress();
-    this.streamId = 0;
-  }
 }
 
 export interface BoitierRealTime {
@@ -62,86 +53,51 @@ export interface BoitierRealTime {
 }
 
 export class CompteServer {
-
-  idCompteClientServer: number;
-  pseudo: string;
-  intervaleStart: number;
-  intervaleEnd: number;
-  ipAdresse: string;
-  login: string;
-  date_creation: number;
-  date_Expiration: number;
-  password: string;
-  expired: boolean;
-  during: boolean;
-
-  str_expiration: string;
-  constructor() {
-    this.idCompteClientServer = 0;
-
-    this.pseudo = "";
-    this.ipAdresse = "";
-
-    this.login = "";
-
-    this.password = "";
-    this.expired = false;
-
-    this.during = false;
-    this.intervaleStart = 0;
-    this.intervaleEnd = 0;
-    this.str_expiration = "";
-  }
+  idCompteClientServer: number = 0;
+  pseudo: string = "";
+  intervaleStart: number = 0;
+  intervaleEnd: number = 0;
+  ipAdresse: string = "";
+  login: string = "";
+  date_creation: number = 0;
+  date_Expiration: number = 0;
+  password: string = "";
+  expired: boolean = false;
+  during: boolean = false;
+  str_expiration: string = "";
 }
 
 export class CompteServerWithBoitier {
-  compteServer: CompteServer;
-  nbrBoitiers: number;
-
-  constructor() {
-    this.compteServer = new CompteServer();
-    this.nbrBoitiers = 0;
-  }
+  compteServer: CompteServer = new CompteServer();
+  nbrBoitiers: number = 0;
 }
 
 export class CompteWeb {
-  idCompteClientWeb: number;
-  login: string;
-  password: string;
-  rawPassword: string;
-  date_creation: number;
-  date_expiration: number;
-  code_pays: string;
-  options: Option[];
+  idCompteClientWeb: number = 0;
+  login: string = "";
+  password: string = "";
+  rawPassword: string = "";
+  date_creation: number = 0;
+  date_expiration: number = 0;
+  code_pays: string = "+212";
+  options: Option[] = [];
   compteClientServer: CompteServer = new CompteServer();
-  expired: boolean;
-  during: boolean;
-  ipAdresse: string;
-  pool: number;
-  firstname: string;
-  lastname: string;
-  email: string;
-  telephone: number;
-  area: string;
-  administratorCompte: AdministratorCompte;
-  notificationSubquery: string;
-  mobileNotif: boolean;
-  deviceFeeByDay: number;
-  accountFeeByMonth: number;
-  deviceFeePerMonth: number;
-  simCardFeePerMonth: number;
-
-  constructor() {
-    this.idCompteClientWeb = 0;
-    this.login = "";
-    this.password = "";
-    this.rawPassword = "";
-    this.code_pays = "+212";
-    this.expired = false;
-    this.ipAdresse = 'localhost';
-    this.during = false;
-  }
-
+  expired: boolean = false;
+  during: boolean = false;
+  ipAdresse: string = 'localhost';
+  pool: number = 0;
+  firstname: string = "";
+  lastname: string = "";
+  email: string = "";
+  telephone: number = 0;
+  area: string = "";
+  administratorCompte!: AdministratorCompte;
+  notificationSubquery: string = "";
+  mobileNotif: boolean = false;
+  deviceFeeByDay: number = 0;
+  accountFeeByMonth: number = 0;
+  deviceFeePerMonth: number = 0;
+  simCardFeePerMonth: number = 0;
 }
 
 export interface PageResponse<T> {
@@ -153,89 +109,65 @@ export interface PageResponse<T> {
 }
 
 export class AdministratorCompte {
-  idAdministratorCompte: number;
-  username: string;
-  password: string;
-  role: string;
-  token: string;
-  idTraccar: number;
-  useFcm: boolean;
-  fcmApikey: string;
-  fcmPrefix: string;
-  mailSupport: string;
-  deviceCostByDay: number;
-  accountFreePerMonth: number;
-  transctionFee: number;
-  numLastBoitierAvailable: number;
-  constructor() {
-    this.idAdministratorCompte = 0;
-    this.username = '';
-    this.role = '';
-  }
+  idAdministratorCompte: number = 0;
+  username: string = '';
+  password: string = '';
+  role: string = '';
+  token: string = '';
+  idTraccar: number = 0;
+  useFcm: boolean = false;
+  fcmApikey: string = '';
+  fcmPrefix: string = '';
+  mailSupport: string = '';
+  deviceCostByDay: number = 0;
+  accountFreePerMonth: number = 0;
+  transctionFee: number = 0;
+  numLastBoitierAvailable: number = 0;
 }
 
 export class ConfigurationVehicules {
-  idConfig: number;
-  vehiculeGender: string;
-  pathMinSpeed: number;
-  pathMin: number;
-  stopMin: number;
-  pauseMin: number;
-  distancemin: number;
-  constructor() {
-    this.idConfig = 0;
-    this.vehiculeGender = "";
-    this.pathMinSpeed = 0;
-    this.pathMin = 0;
-    this.stopMin = 0;
-    this.pauseMin = 0;
-    this.distancemin = 0;
-  }
+  idConfig: number = 0;
+  vehiculeGender: string = "";
+  pathMinSpeed: number = 0;
+  pathMin: number = 0;
+  stopMin: number = 0;
+  pauseMin: number = 0;
+  distancemin: number = 0;
 }
 
 
 export class Intervention {
   /**intervention id */
-  id: number;
+  id: number = 0;
   /**intervention type :REQUEST|INPROGRESS|CARRYOUT|REJECTED*/
-  type: 'REQUEST' | 'INPROGRESS' | 'CARRYOUT' | 'REJECTED';
+  type!: 'REQUEST' | 'INPROGRESS' | 'CARRYOUT' | 'REJECTED';
 
-  idBoitiers: number;
+  idBoitiers: number = 0;
 
-  content: string;
+  content: string = "";
   /**request type */
-  request: string;
+  request: string = "";
   /**response */
-  response: string;
+  response: string = "";
   /**intervention was created at */
-  createdAt: Date;
+  createdAt!: Date;
 
-  submitAt: Date;
+  submitAt!: Date;
   /** we have three possibilities :moyen,faible,urgent */
-  priority: number;
-
-  constructor() { }
+  priority: number = 0;
 }
 
 export class UpdateIntervention extends Intervention {
-  idTenant: number;
-  constructor() { super(); }
+  idTenant: number = 0;
 }
 
 export class Option {
-  idOption: number;
-  description: string;
-  constructor() {
-    this.idOption = 0;
-    this.description = ""
-  }
+  idOption: number = 0;
+  description: string = "";
 }
 
 export class Path {
-  path: string;
-  constructor() {
-    this.path = "";
-  }
+  path: string = "";
 }
 
 export class raw {
@@ -244,11 +176,8 @@ export class raw {
 }
 
 export class raws {
-  raws: raw[];
-  count: number;
-  constructor() {
-    this.count = 0;
-  }
+  raws: raw[] = [];
+  count: number = 0;
 }
 
 export interface OptionInfoDTO {
@@ -318,14 +247,9 @@ export interface RecalculatePayloadDTO {
 }
 
 export class RecalculatePayload {
-  idBoitier: number;
-  idBoitiers: number[];
-  recalculeStartDate: number | null;
-  constructor() {
-    this.idBoitier = 0;
-    this.idBoitiers = [];
-    this.recalculeStartDate = null;
-  }
+  idBoitier: number = 0;
+  idBoitiers: number[] = [];
+  recalculeStartDate: number | null = null;
 }
 
 export interface DeviceOptDTO {
@@ -335,26 +259,15 @@ export interface DeviceOptDTO {
 }
 
 export class DeviceOpt {
-  idBoitiers: number[];
-  idBoitier: number;
-  useIgnition: boolean;
-  useFuel: boolean;
-  useTemp: boolean;
-  useFms: boolean;
-  useJ1708: boolean;
-  useIdDriver: boolean;
-  useStop: boolean;
-  constructor() {
-    this.idBoitiers = [];
-    this.idBoitier = 0;
-    this.useFms = false;
-    this.useFuel = false;
-    this.useIdDriver = false;
-    this.useIgnition = false;
-    this.useJ1708 = false;
-    this.useStop = false;
-    this.useTemp = false;
-  }
+  idBoitiers: number[] = [];
+  idBoitier: number = 0;
+  useIgnition: boolean = false;
+  useFuel: boolean = false;
+  useTemp: boolean = false;
+  useFms: boolean = false;
+  useJ1708: boolean = false;
+  useIdDriver: boolean = false;
+  useStop: boolean = false;
 }
 
 export interface DeviceSettingDTO {
@@ -364,13 +277,9 @@ export interface DeviceSettingDTO {
 }
 
 export class DeviceSetting {
-  idBoitiers: number[];
+  idBoitiers: number[] = [];
   idIpAdresse: number = 0;
   streamId: number = 0;
-
-  constructor() {
-    this.idBoitiers = [];
-  }
 }
 
 export interface VehiculeSettingDTO {
@@ -379,13 +288,9 @@ export interface VehiculeSettingDTO {
 }
 
 export class VehiculeSetting {
-  idBoitiers: number[];
+  idBoitiers: number[] = [];
   accumOdo: number = 0;
   lastId: number = 0;
-
-  constructor() {
-    this.idBoitiers = [];
-  }
 }
 
 export interface PathConfigPayloadDTO {
@@ -400,14 +305,12 @@ export class PathConfigPayload {
   stopMinSec: number = 0;
   pauseMinSec: number = 0;
   distanceMinMeter: number = 0;
-
-  constructor() { }
 }
 
 export class TraccarDto {
-  id: number;
-  name: string;
-  imei: string;
+  id!: number;
+  name!: string;
+  imei!: string;
 }
 
 export interface Tram {
@@ -451,13 +354,12 @@ export interface Tram {
 }
 
 export class InterventionInfo {
-  deviceId: number;
-  matricule: string;
-  mark: string;
-  driver: string;
-  technician: string;
-  createdAt: Date;
-  verifiedAt: Date;
-  verified: boolean;
-  constructor() { }
+  deviceId!: number;
+  matricule!: string;
+  mark!: string;
+  driver!: string;
+  technician!: string;
+  createdAt!: Date;
+  verifiedAt!: Date;
+  verified!: boolean;
 }

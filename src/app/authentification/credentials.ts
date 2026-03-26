@@ -1,28 +1,18 @@
 export class Credentials {
-    username: string;
-    password: string;
-    ancienPassword: string;
-  
-    constructor() {
-      this.username = '';
-      this.password = '';
-    }
-  }
+  username = '';
+  password = '';
+  ancienPassword: string = '';
+}
 
-  
-  export class Authority {
-    id: string;
-    name: string;
-    label: string;
-  
-    constructor() { }
-  }
-  
-  export class AccessLog{
-    userId: number;
-    login: string;
-    ipAddress: string;
-    date: Date;
-    constructor() { }
-  }
-  
+export class Authority {
+  id: string = '';
+  name: string = '';
+  label: string = '';
+}
+
+export class AccessLog {
+  userId: number = 0;
+  login: string = '';
+  ipAddress: string = '';
+  date: Date = new Date();
+}
