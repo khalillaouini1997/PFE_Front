@@ -1,11 +1,7 @@
 
 
 .center {
-     float: none;
-     margin-left: auto;
-     margin-right: auto;
-}
-.center {
+    float: none;
     margin: auto;
     width: 75%;
 }
@@ -156,13 +152,14 @@ h5.mt-4 {
         margin: -1.33em 15px -80px 0px;}
 
         .h2 {
-            /* margin-top: -27px; */
             margin-bottom: -20px;
             font-size: 25px;
         }
 
         .alert-warning {
-            color:#ffffff;
-            background-color: #FF9800;
-            border-color: #faebcc;
-            padding: 40px;}
+            color: #856404;
+            background-color: #fff3cd;
+            border-color: #ffeeba;
+            padding: 40px;
+            border-radius: 12px;
+        }

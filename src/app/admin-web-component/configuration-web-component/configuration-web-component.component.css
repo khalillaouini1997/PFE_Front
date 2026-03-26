@@ -244,7 +244,6 @@ table>thead>tr>th,
 }
 
 .imei-search-button {
-  margin: 0px;
   padding: 1px 5px;
   margin: 0px 0px 0px 0px;
 }
@@ -462,4 +461,9 @@ table>thead>tr>th,
 
 .bg-info.bg-opacity-10 {
   background-color: rgba(14, 165, 233, 0.1) !important;
+}
+
+.btn-reset-fixed-height,
+.input-group-fixed-height {
+  height: 38px !important;
 }

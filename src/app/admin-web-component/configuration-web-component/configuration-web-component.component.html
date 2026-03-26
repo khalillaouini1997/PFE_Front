@@ -131,11 +131,11 @@
                 <p-table [value]="[serverAccount()]" styleClass="p-datatable-sm p-datatable-gridlines premium-table-custom" responsiveLayout="scroll">
                     <ng-template pTemplate="header">
                         <tr>
-                            <th>Pseudo</th>
-                            <th>Adresse IP</th>
-                            <th>Création</th>
-                            <th>Statut / Expiration</th>
-                            <th class="text-end" style="width: 250px">Actions</th>
+                            <th scope="col">Pseudo</th>
+                            <th scope="col">Adresse IP</th>
+                            <th scope="col">Création</th>
+                            <th scope="col">Statut / Expiration</th>
+                            <th scope="col" class="text-end" style="width: 250px">Actions</th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-server>
@@ -196,16 +196,16 @@
                         responsiveLayout="scroll">
                         <ng-template pTemplate="header">
                             <tr>
-                                <th style="width: 50px">
+                                <th scope="col" style="width: 50px">
                                     <div class="form-check m-0">
                                         <input class="form-check-input" type="checkbox" (change)="onCheckedAllBoitiers()"
                                             [checked]="boitiers().length === selectedBoitiersIds().length && boitiers().length > 0"
                                             title="Tout sélectionner">
                                     </div>
                                 </th>
-                                <th>Identifiant #</th>
-                                <th>État Actuel</th>
-                                <th class="text-end" style="width: 200px">Configurations</th>
+                                <th scope="col">Identifiant #</th>
+                                <th scope="col">État Actuel</th>
+                                <th scope="col" class="text-end" style="width: 200px">Configurations</th>
                             </tr>
                         </ng-template>
                         <ng-template pTemplate="body" let-boitier>
@@ -247,7 +247,7 @@
 
 <!-- Modal Recalculate / Config (Modernized) -->
 @if (showConfigModal()) {
-    <div class="modal-backdrop show modal-backdrop-glass" (click)="closeConfigModal()"></div>
+    <div class="modal-backdrop show modal-backdrop-glass" (click)="closeConfigModal()" (keydown.enter)="closeConfigModal()" tabindex="0"></div>
     <div class="modal show d-block modal-config-zindex" id="ModalConfig" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content modal-content-premium border-0 shadow-lg">
@@ -319,15 +319,15 @@
                                     
                                     <div class="reset-actions d-flex flex-column gap-2">
                                         <div class="d-flex align-items-center gap-2">
-                                            <button type="button" class="btn btn-outline-danger btn-sm flex-grow-1 fw-bold" (click)="resetOdometre()" [disabled]="loadingResetOdometre()" style="height: 38px;">
+                                            <button type="button" class="btn btn-outline-danger btn-sm flex-grow-1 fw-bold btn-reset-fixed-height" (click)="resetOdometre()" [disabled]="loadingResetOdometre()" title="Réinitialiser l'odomètre">
                                                 <i class="fa fa-history me-1"></i> Reset Odo
                                             </button>
                                             
                                             <div class="flex-grow-1" [formGroup]="lastIdForm">
-                                                <div class="input-group input-group-sm shadow-sm rounded overflow-hidden" style="height: 38px;">
+                                                <div class="input-group input-group-sm shadow-sm rounded overflow-hidden input-group-fixed-height">
                                                     <span class="input-group-text bg-light border-0 small fw-bold text-secondary">ID</span>
-                                                    <input type="number" class="form-control border-0 bg-light" formControlName="lastIdValue" placeholder="Last ID" title="Last ID">
-                                                    <button type="button" class="btn btn-primary border-0" (click)="resetLastId()" [disabled]="loadingResetLastId()">
+                                                    <input type="number" class="form-control border-0 bg-light" formControlName="lastIdValue" placeholder="Last ID" title="Dernier ID">
+                                                    <button type="button" class="btn btn-primary border-0" (click)="resetLastId()" [disabled]="loadingResetLastId()" title="Réinitialiser le dernier ID">
                                                         <i class="fa" [class.fa-save]="!loadingResetLastId()" [class.fa-spinner]="loadingResetLastId()" [class.fa-spin]="loadingResetLastId()"></i>
                                                     </button>
                                                 </div>
@@ -387,8 +387,8 @@
                                 <h6 class="fw-bold mb-3 border-bottom pb-2 text-dark"><i class="fa fa-rss me-2 text-info"></i> Paramètres de Flux (Streams)</h6>
                                 <div class="row g-3 align-items-end">
                                     <div class="col-md-5">
-                                        <label class="form-label small text-secondary fw-bold">Rawstream IP</label>
-                                        <select class="form-select bg-white border-0 shadow-sm" formControlName="idIpAdresse" title="Rawstream IP">
+                                        <label for="rawstreamIp" class="form-label small text-secondary fw-bold">Rawstream IP</label>
+                                        <select id="rawstreamIp" class="form-select bg-white border-0 shadow-sm" formControlName="idIpAdresse" title="Rawstream IP">
                                             @for (ip of ipAddresses(); track ip.idIpAdresse) {
                                                 <option [ngValue]="ip.idIpAdresse">{{ip.label}}</option>
                                             }
