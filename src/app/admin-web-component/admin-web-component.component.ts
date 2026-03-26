@@ -1,12 +1,10 @@
-import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { Component, OnInit, inject } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
+import { Component, OnInit, inject, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { AdministratorCompte } from '../data/data';
-import { AuthService } from '../service/auth.service';
 import { WebAccountService } from '../service/web-account.service';
 import { WebSocketService } from '../service/web-socket.service';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { signal } from '@angular/core';
+import { AuthService } from '../service/auth.service';
 
 @Component({
   selector: 'app-admin-web-component',

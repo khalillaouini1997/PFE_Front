@@ -1,4 +1,4 @@
-import { enableProdMode, importProvidersFrom, provideZonelessChangeDetection } from '@angular/core';
+import { enableProdMode, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 
 import { environment } from './environments/environment';
 import { authInterceptor } from './app/utils/security/auth.interceptor';
@@ -25,7 +25,7 @@ if (environment.production) {
 
 bootstrapApplication(AppComponent, {
   providers: [
-    provideZonelessChangeDetection(),
+    provideZoneChangeDetection(),
     provideRouter(routes), // Hash location was false in original config
     importProvidersFrom(
       FormsModule,
