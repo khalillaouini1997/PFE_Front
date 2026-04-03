@@ -59,3 +59,27 @@ th {
 .td-small {
   font-size: 12px;
 }
+
+/* Premium Badge for Terminal ID */
+.premium-terminal-badge {
+    background: rgba(15, 23, 42, 0.4) !important;
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 0.5rem 1.25rem !important;
+    font-size: 0.85rem !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.025em;
+    border-radius: 50rem !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+    display: inline-flex;
+    align-items: center;
+}
+
+.terminal-number {
+    font-size: 1.1rem !important;
+    font-weight: 800 !important;
+    margin-left: 2px;
+    color: #ffffff;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}

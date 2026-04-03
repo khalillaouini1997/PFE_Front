@@ -9,8 +9,8 @@
                     </button>
                     <div>
                         <h2 class="m-0 fw-bold">Archives & Raw</h2>
-                        <span class="badge bg-white bg-opacity-20 text-white border border-white border-opacity-10 mt-1">
-                            <i class="fa fa-microchip me-1"></i> Terminal: {{numBoitier()}}
+                        <span class="badge premium-terminal-badge mt-2">
+                            <i class="fa fa-microchip me-2"></i> Terminal: <span class="terminal-number">{{numBoitier()}}</span>
                         </span>
                     </div>
                 </div>
@@ -18,11 +18,9 @@
             
             <div class="controls-section d-flex align-items-center gap-3" [formGroup]="archiveForm">
                 <div class="input-group input-group-sm limit-input-group shadow-sm">
-                <div class="input-group input-group-sm limit-input-group shadow-sm">
                     <span class="input-group-text bg-white bg-opacity-10 text-white border-0">Limite:</span>
                     <input type="number" id="limit" class="form-control border-0 bg-white bg-opacity-10 text-white" 
                         formControlName="limit" title="Limite" placeholder="200">
-                </div>
                 </div>
                 <button type="button" class="btn btn-white shadow-sm fw-bold" (click)="getArchives()" title="Afficher">
                     <i class="fa fa-refresh me-2"></i> Afficher
@@ -40,8 +38,7 @@
             </p-tablist>
             <p-tabpanels>
                 <p-tabpanel value="0">
-                    <p-table [value]="archives()" [paginator]="true" [rows]="50" 
-                        [rowsPerPageOptions]="[50,100,200,500]"
+                    <p-table [value]="archives()" 
                         stateStorage="session" stateKey="archive-table-state"
                         [reorderableColumns]="true" [resizableColumns]="true" columnResizeMode="expand"
                         styleClass="p-datatable-sm p-datatable-gridlines premium-table-custom"
@@ -105,7 +102,7 @@
                         <span class="badge bg-primary px-3 rounded-pill shadow-sm">Total: {{rawData().count}}</span>
                         <button class="btn btn-sm btn-outline-primary border-0" (click)="getAllRaws()"><i class="fa fa-refresh me-1"></i> Recharger Brutes</button>
                     </div>
-                    <p-table [value]="rawData().raws" [paginator]="true" [rows]="50"
+                    <p-table [value]="rawData().raws"
                         stateStorage="session" stateKey="raw-archive-table-state"
                         [reorderableColumns]="true" [resizableColumns]="true" columnResizeMode="expand"
                         styleClass="p-datatable-sm p-datatable-gridlines premium-table-custom"
