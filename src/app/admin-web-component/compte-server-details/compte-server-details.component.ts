@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, inject, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import { Boitier, BoitierRealTime, CompteServer } from 'src/app/data/data';
 import { CompteServerService } from "../../service/compte-server.service";
 import { BoitierService } from "../../service/boitier.service";
@@ -14,7 +14,7 @@ import { CommonModule, DatePipe, DecimalPipe, NgClass } from '@angular/common';
     standalone: true,
     templateUrl: './compte-server-details.component.html',
     styleUrls: ['./compte-server-details.component.css'],
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, TableModule, DatePipe, DecimalPipe, NgClass]
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, TableModule, DatePipe, DecimalPipe, NgClass, RouterModule]
 })
 export class CompteServerDetailsComponent implements OnInit, OnDestroy {
   addForm!: FormGroup;
