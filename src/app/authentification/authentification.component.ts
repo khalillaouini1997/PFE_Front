@@ -3,13 +3,16 @@ import { Router } from '@angular/router';
 import { AuthService } from '../service/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @Component({
     selector: 'app-authentification',
     templateUrl: './authentification.component.html',
     styleUrls: ['./authentification.component.scss'],
-    imports: [FormsModule]
+    standalone: true,
+    imports: [CommonModule, FormsModule, TranslateModule]
 })
 export class AuthentificationComponent {
 

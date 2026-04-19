@@ -6,6 +6,7 @@ import { AdminAccountService } from 'src/app/service/admin-account.service';
 import { AuthService } from 'src/app/service/auth.service';
 import { finalize } from "rxjs";
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 import { TableModule } from 'primeng/table';
@@ -15,7 +16,7 @@ import { TableModule } from 'primeng/table';
   standalone: true,
   templateUrl: './compte-admin.component.html',
   styleUrls: ['./compte-admin.component.css'],
-  imports: [FormsModule, ReactiveFormsModule, TableModule, CommonModule]
+  imports: [FormsModule, ReactiveFormsModule, TableModule, CommonModule, TranslateModule]
 })
 export class CompteAdminComponent implements OnInit {
   public maxSize: number = 5;

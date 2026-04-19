@@ -7,13 +7,14 @@ import { of } from "rxjs";
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-ip-adresse',
   standalone: true,
   templateUrl: './ip-adresse.component.html',
   styleUrls: ['./ip-adresse.component.css'],
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, TableModule]
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TableModule, TranslateModule]
 })
 export class IpAdresseComponent implements OnInit {
 
@@ -32,6 +33,7 @@ export class IpAdresseComponent implements OnInit {
   private readonly ipAddressService = inject(IpAddressService);
   private readonly toastr = inject(ToastrService);
   private readonly fb = inject(FormBuilder);
+  private readonly translate = inject(TranslateService);
 
   ngOnInit() {
     this.initForms();
@@ -71,7 +73,7 @@ export class IpAdresseComponent implements OnInit {
   }
 
   deleteIpAddress(id: number) {
-    const res = confirm("are you sure that you want to delete this Ip ?");
+    const res = confirm(this.translate.instant('WEB_ACCOUNTS.DELETE_CONFIRM'));
     if (res) {
       this.ipAddressService.deleteIpAddress(id)
         .pipe(
@@ -82,11 +84,14 @@ export class IpAdresseComponent implements OnInit {
         )
         .subscribe({
           next: () => {
-            this.toastr.success(' Account was deleted ', 'Success!');
+            this.toastr.success(
+              this.translate.instant('WEB_ACCOUNTS.DELETE_SUCCESS'), 
+              this.translate.instant('COMMON.SUCCESS')
+            );
             this.getAllIpAddresse(this.searchForm.get('keyWord')?.value, this.bigCurrentPage - 1, this.itemsPerPage);
           },
           error: (error) => {
-            this.toastr.error(error, 'Error!');
+            this.toastr.error(this.translate.instant('COMMON.ERROR'), this.translate.instant('COMMON.ERROR'));
           }
         });
     }
@@ -112,7 +117,10 @@ export class IpAdresseComponent implements OnInit {
       this.ipAddressService.updateIpAddress(updatedIp.idIpAdresse, updatedIp)
         .subscribe({
           next: () => {
-            this.toastr.success('IP Address updated', 'Success');
+            this.toastr.success(
+              this.translate.instant('IP_ADDRESS.UPDATE_TITLE') + ' ' + this.translate.instant('COMMON.SUCCESS'), 
+              this.translate.instant('COMMON.SUCCESS')
+            );
             this.closeUpdateModal();
             this.getAllIpAddresse(this.searchForm.get('keyWord')?.value, this.bigCurrentPage - 1, this.itemsPerPage);
           }

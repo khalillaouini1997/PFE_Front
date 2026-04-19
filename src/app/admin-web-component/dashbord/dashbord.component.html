@@ -4,26 +4,26 @@
         <div class="premium-card mb-4 header-gradient" *ngIf="!fullscreenMap()">
             <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
                 <div class="title-section">
-                    <h2 class="m-0 fw-bold text-white">Dashboard</h2>
-                    <p class="m-0 text-white-50 opacity-75">Suivi en temps réel de votre flotte</p>
+                    <h2 class="m-0 fw-bold text-white">{{ 'DASHBOARD.TITLE' | translate }}</h2>
+                    <p class="m-0 text-white-50 opacity-75">{{ 'DASHBOARD.SUBTITLE' | translate }}</p>
                 </div>
                 <div class="controls-section d-flex align-items-center gap-3 flex-wrap">
                     <form [formGroup]="dashboardForm" class="d-flex align-items-center gap-2">
-                        <label class="fw-semibold text-white mb-0" for="compteWebSelect">Compte:</label>
+                        <label class="fw-semibold text-white mb-0" for="compteWebSelect">{{ 'DASHBOARD.ACCOUNT_LABEL' | translate }}</label>
                         <select formControlName="compteWeb" id="compteWebSelect" class="form-select border-0 shadow-sm dashboard-select" (change)="getAllLastTramByCompteWeb()"
-                            title="Sélectionner un compte client">
-                            <option [ngValue]="null" disabled selected>Choisir un compte</option>
+                            title="{{ 'DASHBOARD.CHOOSE_ACCOUNT' | translate }}">
+                            <option [ngValue]="null" disabled selected>{{ 'DASHBOARD.CHOOSE_ACCOUNT' | translate }}</option>
                              @for (compte of comptesWeb(); track compte.idCompteClientWeb) {
                                 <option [ngValue]="compte">{{compte.login}}</option>
                             }
                         </select>
                     </form>
                     <div class="btn-group gap-2">
-                        <button class="btn btn-light shadow-sm btn-action-dash" (click)="onExport()" [disabled]="realtimes().length === 0" title="Exporter le rapport">
-                            <i class="fa fa-download me-2 text-primary"></i> <span class="d-none d-md-inline">Exporter</span>
+                        <button class="btn btn-light shadow-sm btn-action-dash" (click)="onExport()" [disabled]="realtimes().length === 0" title="{{ 'COMMON.EXPORT' | translate }}">
+                            <i class="fa fa-download me-2 text-primary"></i> <span class="d-none d-md-inline">{{ 'COMMON.EXPORT' | translate }}</span>
                         </button>
-                        <button class="btn btn-white shadow-sm btn-refresh-dash" (click)="getAllLastTramByCompteWeb()" title="Actualiser les données">
-                            <i class="fa fa-refresh me-2"></i> <span class="d-none d-md-inline">Actualiser</span>
+                        <button class="btn btn-white shadow-sm btn-refresh-dash" (click)="getAllLastTramByCompteWeb()" title="{{ 'COMMON.REFRESH' | translate }}">
+                            <i class="fa fa-refresh me-2"></i> <span class="d-none d-md-inline">{{ 'COMMON.REFRESH' | translate }}</span>
                         </button>
                     </div>
                 </div>
@@ -33,9 +33,9 @@
         @if (loading()) {
             <div class="global-spinner premium-card d-flex flex-column align-items-center gap-3">
                 <output class="spinner-border text-primary">
-                    <span class="visually-hidden">Loading...</span>
+                    <span class="visually-hidden">{{ 'COMMON.LOADING' | translate }}</span>
                 </output>
-                <p class="m-0 fw-medium">Mise à jour des données...</p>
+                <p class="m-0 fw-medium">{{ 'DASHBOARD.UPDATING_DATA' | translate }}</p>
             </div>
         }
 
@@ -44,8 +44,8 @@
                 <div class="empty-state-icon mb-3">
                     <i class="fa fa-mouse-pointer fa-3x text-primary opacity-50"></i>
                 </div>
-                <h4 class="fw-bold">Veuillez sélectionner un compte</h4>
-                <p class="text-secondary">Choisissez un compte dans la liste ci-dessus pour afficher le suivi en temps réel.</p>
+                <h4 class="fw-bold">{{ 'DASHBOARD.PLEASE_SELECT_ACCOUNT' | translate }}</h4>
+                <p class="text-secondary">{{ 'DASHBOARD.SELECT_ACCOUNT_DESC' | translate }}</p>
             </div>
         }
 
@@ -58,7 +58,7 @@
                             <i class="fa fa-hdd-o"></i>
                         </div>
                         <div>
-                            <span class="text-secondary small fw-bold text-uppercase">Total Boitier</span>
+                            <span class="text-secondary small fw-bold text-uppercase">{{ 'DASHBOARD.TOTAL_TERMINALS' | translate }}</span>
                             <h3 class="m-0 fw-bold">{{stats().total}}</h3>
                         </div>
                     </div>
@@ -69,7 +69,7 @@
                             <i class="fa fa-check-circle"></i>
                         </div>
                         <div>
-                            <span class="text-secondary small fw-bold text-uppercase">Boitiers Valides</span>
+                            <span class="text-secondary small fw-bold text-uppercase">{{ 'DASHBOARD.VALID_TERMINALS' | translate }}</span>
                             <h3 class="m-0 fw-bold text-success">{{stats().valid}}</h3>
                         </div>
                     </div>
@@ -80,7 +80,7 @@
                             <i class="fa fa-exclamation-triangle"></i>
                         </div>
                         <div>
-                            <span class="text-secondary small fw-bold text-uppercase">Problèmes Tech</span>
+                            <span class="text-secondary small fw-bold text-uppercase">{{ 'DASHBOARD.TECHNICAL_ISSUES' | translate }}</span>
                             <h3 class="m-0 fw-bold text-danger">{{stats().technicalIssue}}</h3>
                         </div>
                     </div>
@@ -91,7 +91,7 @@
                             <i class="fa fa-truck"></i>
                         </div>
                         <div>
-                            <span class="text-secondary small fw-bold text-uppercase">En Mouvement</span>
+                            <span class="text-secondary small fw-bold text-uppercase">{{ 'DASHBOARD.MOVING' | translate }}</span>
                             <h3 class="m-0 fw-bold text-warning">{{stats().moving}}</h3>
                         </div>
                     </div>
@@ -103,8 +103,8 @@
                 <div class="col-lg-12">
                     <div class="premium-card p-0 overflow-hidden" [class.fullscreen-card]="fullscreenMap()">
                         <div class="p-3 d-flex justify-content-between align-items-center border-bottom">
-                            <h5 class="m-0 fw-bold"><i class="fa fa-map-marker me-2 text-primary"></i> Suivi Géographique</h5>
-                            <button class="btn btn-sm btn-light border-0" (click)="openExternalMap()" title="Ouvrir dans un nouvel onglet" *ngIf="!fullscreenMap()">
+                            <h5 class="m-0 fw-bold"><i class="fa fa-map-marker me-2 text-primary"></i> {{ 'DASHBOARD.GEO_TRACKING' | translate }}</h5>
+                            <button class="btn btn-sm btn-light border-0" (click)="openExternalMap()" title="{{ 'COMMON.EXTERNAL_WINDOW' | translate }}" *ngIf="!fullscreenMap()">
                                 <i class="fa fa-external-link"></i>
                             </button>
                         </div>
@@ -118,7 +118,7 @@
             <div class="row g-4 mt-2" [hidden]="fullscreenMap()">
                 <div class="col-lg-4 col-md-6">
                     <div class="premium-card h-100">
-                        <h6 class="fw-bold mb-3"><i class="fa fa-pie-chart me-2 text-primary"></i> Distribution d'état</h6>
+                        <h6 class="fw-bold mb-3"><i class="fa fa-pie-chart me-2 text-primary"></i> {{ 'DASHBOARD.STATUS_DISTRIBUTION' | translate }}</h6>
                         <div class="chart-container-wrapper">
                             <canvas #statusChart></canvas>
                         </div>
@@ -126,7 +126,7 @@
                 </div>
                 <div class="col-lg-4 col-md-6">
                     <div class="premium-card h-100">
-                        <h6 class="fw-bold mb-3"><i class="fa fa-tachometer-alt me-2 text-primary"></i> Vitesses</h6>
+                        <h6 class="fw-bold mb-3"><i class="fa fa-tachometer-alt me-2 text-primary"></i> {{ 'DASHBOARD.SPEEDS' | translate }}</h6>
                         <div class="chart-container-wrapper">
                             <canvas #speedChartCanvas></canvas>
                         </div>
@@ -134,7 +134,7 @@
                 </div>
                 <div class="col-lg-4 col-md-12">
                     <div class="premium-card h-100">
-                        <h6 class="fw-bold mb-3"><i class="fa fa-sim-card me-2 text-primary"></i> Opérateurs SIM</h6>
+                        <h6 class="fw-bold mb-3"><i class="fa fa-sim-card me-2 text-primary"></i> {{ 'DASHBOARD.SIM_OPERATORS' | translate }}</h6>
                         <div class="chart-container-wrapper">
                             <canvas #puceChartCanvas></canvas>
                         </div>
@@ -145,7 +145,7 @@
                 <div class="col-12">
                     <div class="premium-card overflow-hidden p-0" *ngIf="!fullscreenMap()">
                         <div class="p-4 d-flex justify-content-between align-items-center border-bottom bg-light bg-opacity-10">
-                            <h5 class="m-0 fw-bold"><i class="fa fa-list me-2 text-primary"></i> Détails des Terminaux</h5>
+                            <h5 class="m-0 fw-bold"><i class="fa fa-list me-2 text-primary"></i> {{ 'DASHBOARD.TERMINAL_DETAILS' | translate }}</h5>
                         </div>
                         <div class="p-3">
                             <p-table #dt [value]="realtimes()" [paginator]="true" [rows]="10" 
@@ -155,15 +155,15 @@
                                 
                                 <ng-template pTemplate="header">
                                     <tr>
-                                        <th scope="col" pSortableColumn="deviceid" style="width:100px">ID <p-sortIcon field="deviceid"></p-sortIcon></th>
-                                        <th scope="col" pSortableColumn="matricule">Matricule <p-sortIcon field="matricule"></p-sortIcon></th>
-                                        <th scope="col" pSortableColumn="status">État <p-sortIcon field="status"></p-sortIcon></th>
-                                        <th scope="col">Coordonnées</th>
-                                        <th scope="col" pSortableColumn="speed">Vitesse <p-sortIcon field="speed"></p-sortIcon></th>
-                                        <th scope="col" pSortableColumn="ignition">Ignition <p-sortIcon field="ignition"></p-sortIcon></th>
+                                        <th scope="col" pSortableColumn="deviceid" style="width:100px">{{ 'COMMON.ID' | translate }} <p-sortIcon field="deviceid"></p-sortIcon></th>
+                                        <th scope="col" pSortableColumn="matricule">{{ 'DASHBOARD.MATRICULE' | translate }} <p-sortIcon field="matricule"></p-sortIcon></th>
+                                        <th scope="col" pSortableColumn="status">{{ 'DASHBOARD.STATE' | translate }} <p-sortIcon field="status"></p-sortIcon></th>
+                                        <th scope="col">{{ 'SERVER_DETAILS.COORDINATES' | translate }}</th>
+                                        <th scope="col" pSortableColumn="speed">{{ 'SERVER_DETAILS.SPEED' | translate }} <p-sortIcon field="speed"></p-sortIcon></th>
+                                        <th scope="col" pSortableColumn="ignition">{{ 'DASHBOARD.IGNITION' | translate }} <p-sortIcon field="ignition"></p-sortIcon></th>
                                         <th scope="col">GPS/GSM</th>
-                                        <th scope="col" pSortableColumn="record_time">Trame <p-sortIcon field="record_time"></p-sortIcon></th>
-                                        <th scope="col">Détails</th>
+                                        <th scope="col" pSortableColumn="record_time">{{ 'DASHBOARD.TRAME' | translate }} <p-sortIcon field="record_time"></p-sortIcon></th>
+                                        <th scope="col">{{ 'COMMON.DETAILS' | translate }}</th>
                                     </tr>
                                     <tr>
                                         <th scope="col"></th>
@@ -243,7 +243,7 @@
         @if (realtimes().length === 0 && !loading()) {
             <div class="premium-card text-center py-5 mt-4 d-flex flex-column align-items-center gap-3">
                 <i class="fa fa-folder-open-o fa-3x opacity-25"></i>
-                <p class="fs-5 text-secondary fw-medium m-0">Aucune donnée à afficher. Veuillez sélectionner un compte web.</p>
+                <p class="fs-5 text-secondary fw-medium m-0">{{ 'DASHBOARD.NO_DATA_DESC' | translate }}</p>
             </div>
         }
     </div>

@@ -16,6 +16,7 @@ import { ButtonModule } from 'primeng/button';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 Chart.register(...registerables);
 
@@ -36,7 +37,8 @@ Chart.register(...registerables);
     ButtonModule,
     IconFieldModule,
     InputIconModule,
-    InputTextModule
+    InputTextModule,
+    TranslateModule
   ]
 })
 export class DashbordComponent implements OnInit, OnDestroy {
@@ -75,6 +77,7 @@ export class DashbordComponent implements OnInit, OnDestroy {
   private readonly fb = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly translate = inject(TranslateService);
 
   ngOnInit() {
     this.initForms();
@@ -249,7 +252,11 @@ export class DashbordComponent implements OnInit, OnDestroy {
     if (!canvas) return;
     const stats = this.stats();
     const data = {
-      labels: ['Valide', 'Problème Tech', 'Non Valide'],
+      labels: [
+        this.translate.instant('DASHBOARD.STATE_VALID'),
+        this.translate.instant('DASHBOARD.STATE_ISSUE'),
+        this.translate.instant('DASHBOARD.STATE_NON_VALID')
+      ],
       datasets: [{
         data: [
           stats.valid,
@@ -291,7 +298,7 @@ export class DashbordComponent implements OnInit, OnDestroy {
     const data = {
       labels: Object.keys(bands),
       datasets: [{
-        label: 'Véhicules',
+        label: this.translate.instant('DASHBOARD.VEHICLES'),
         data: Object.values(bands),
         backgroundColor: '#4318ff',
         borderRadius: 8

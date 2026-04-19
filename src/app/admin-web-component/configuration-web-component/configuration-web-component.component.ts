@@ -17,6 +17,7 @@ import { IpAddressService } from "../../service/ip-address.service";
 import { CompteServerService } from "../../service/compte-server.service";
 import { of, tap } from "rxjs";
 import { catchError } from "rxjs/operators";
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { BsLocaleService, BsDatepickerModule } from "ngx-bootstrap/datepicker";
 import { defineLocale } from 'ngx-bootstrap/chronos';
@@ -34,7 +35,7 @@ import { TableModule } from 'primeng/table';
     standalone: true,
     templateUrl: './configuration-web-component.component.html',
     styleUrls: ['./configuration-web-component.component.css'],
-    imports: [CommonModule, ReactiveFormsModule, BsDatepickerModule, NgSelectModule, NgMultiSelectDropDownModule, TableModule, DatePipe]
+    imports: [CommonModule, ReactiveFormsModule, BsDatepickerModule, NgSelectModule, NgMultiSelectDropDownModule, TableModule, DatePipe, TranslateModule]
 })
 export class ConfigurationWebComponentComponent implements OnInit {
 
@@ -58,6 +59,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
   private readonly webSocketService = inject(WebSocketService);
   private readonly fb = inject(FormBuilder);
   private readonly localeService = inject(BsLocaleService);
+  private readonly translate = inject(TranslateService);
 
   ID_COMPTE = signal<number>(0);
   compteWeb = signal<any>({});
@@ -218,8 +220,8 @@ export class ConfigurationWebComponentComponent implements OnInit {
       singleSelection: false,
       idField: 'idOption',
       textField: 'description',
-      selectAllText: 'Select All',
-      unSelectAllText: 'UnSelect All',
+      selectAllText: this.translate.instant('SERVER_DETAILS.SELECT_ALL'),
+      unSelectAllText: this.translate.instant('SERVER_DETAILS.UNSELECT_ALL'),
       itemsShowLimit: 3,
       allowSearchFilter: true,
       defaultOpen: false
@@ -242,7 +244,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
 
   saveChange() {
     if (this.mainConfigForm.invalid) {
-      this.toastr.warning('Please check regular settings form', 'Warning');
+      this.toastr.warning(this.translate.instant('WEB_ACCOUNTS.FILL_REQUIRED'), this.translate.instant('COMMON.WARNING'));
       return;
     }
     const formValue = this.mainConfigForm.value;
@@ -256,9 +258,9 @@ export class ConfigurationWebComponentComponent implements OnInit {
 
     this.webAccountService.updateWebAccount(this.ID_COMPTE(), updatedCompte)
       .pipe(
-        tap(() => this.toastr.success('Web account updated', 'Success!')),
+        tap(() => this.toastr.success(this.translate.instant('WEB_ACCOUNTS.ADD_SUCCESS'), this.translate.instant('COMMON.SUCCESS'))),
         catchError(() => {
-          this.toastr.error('Error during update', 'Error!');
+          this.toastr.error(this.translate.instant('COMMON.AN_ERROR_OCCURRED'), this.translate.instant('COMMON.ERROR'));
           return of(null);
         })
       )
@@ -282,9 +284,9 @@ export class ConfigurationWebComponentComponent implements OnInit {
     const currentCompte = this.compteWeb();
     this.webAccountService.updateWebAccount(currentCompte.idCompteClientWeb, currentCompte)
       .pipe(
-        tap(() => this.toastr.success('Web account updated', 'Success!')),
+        tap(() => this.toastr.success(this.translate.instant('WEB_ACCOUNTS.ADD_SUCCESS'), this.translate.instant('COMMON.SUCCESS'))),
         catchError(() => {
-          this.toastr.error('There are mistakes here', 'Error!');
+          this.toastr.error(this.translate.instant('COMMON.AN_ERROR_OCCURRED'), this.translate.instant('COMMON.ERROR'));
           return of(null);
         })
       )
@@ -326,11 +328,11 @@ export class ConfigurationWebComponentComponent implements OnInit {
       .pipe(
         tap(() => {
           this.loadingEditPathConfig.set(false);
-          this.toastr.success("Configuration de boîtier enregistrée");
+          this.toastr.success(this.translate.instant('WEB_CONFIG.INIT_CONFIG'), this.translate.instant('COMMON.SUCCESS'));
         }),
         catchError(error => {
           this.loadingEditPathConfig.set(false);
-          this.toastr.error("Modification erronée", 'Erreur!');
+          this.toastr.error(this.translate.instant('COMMON.AN_ERROR_OCCURRED'), this.translate.instant('COMMON.ERROR'));
           throw error;
         })
       )
@@ -341,11 +343,11 @@ export class ConfigurationWebComponentComponent implements OnInit {
     this.boitierService.prepareDBForSingleDevise(this.selectedServerId(), idBoitier)
       .pipe(
         tap(() => {
-          this.toastr.success("Bases de donnees preparee pour le boitier " + idBoitier, 'Reussi!');
+          this.toastr.success(this.translate.instant('WEB_CONFIG.PREPARE') + " " + idBoitier, this.translate.instant('COMMON.SUCCESS'));
           this.updateBoitierState(idBoitier);
         }),
         catchError(() => {
-          this.toastr.error("Une erreur est survenue", 'Erreur!');
+          this.toastr.error(this.translate.instant('COMMON.AN_ERROR_OCCURRED'), this.translate.instant('COMMON.ERROR'));
           return of(null);
         })
       )
@@ -365,9 +367,9 @@ export class ConfigurationWebComponentComponent implements OnInit {
   prepareDB(idServer: number) {
     this.boitierService.prepareDBForAllDevises(idServer).subscribe({
       next: () => {
-        this.toastr.success(' Bases de donnees preparee ', 'Preparee!');
+        this.toastr.success(this.translate.instant('WEB_CONFIG.PREPARE'), this.translate.instant('COMMON.SUCCESS'));
       },
-      error: () => this.toastr.error(' Une erreur est survenue ', 'Erreur!')
+      error: () => this.toastr.error(this.translate.instant('COMMON.AN_ERROR_OCCURRED'), this.translate.instant('COMMON.ERROR'))
     });
   }
 
@@ -423,7 +425,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
             }
           }
         },
-        error: () => this.toastr.error("Erreur options")
+        error: () => this.toastr.error(this.translate.instant('COMMON.AN_ERROR_OCCURRED'), this.translate.instant('COMMON.ERROR'))
       });
   }
 
@@ -439,7 +441,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
             }
           }
         },
-        error: () => this.toastr.error("Erreur path config")
+        error: () => this.toastr.error(this.translate.instant('COMMON.AN_ERROR_OCCURRED'), this.translate.instant('COMMON.ERROR'))
       });
   }
 
@@ -458,7 +460,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
             }
           }
         },
-        error: () => this.toastr.error("Erreur settings")
+        error: () => this.toastr.error(this.translate.instant('COMMON.AN_ERROR_OCCURRED'), this.translate.instant('COMMON.ERROR'))
       });
   }
 
@@ -479,11 +481,11 @@ export class ConfigurationWebComponentComponent implements OnInit {
       .subscribe({
         next: () => {
           this.loadingEditDeviceOption.set(false);
-          this.toastr.success('Options updated');
+          this.toastr.success(this.translate.instant('WEB_CONFIG.SAVE_OPTIONS'), this.translate.instant('COMMON.SUCCESS'));
         },
         error: () => {
           this.loadingEditDeviceOption.set(false);
-          this.toastr.error("Erreur de mise à jour", 'Erreur');
+          this.toastr.error(this.translate.instant('COMMON.AN_ERROR_OCCURRED'), this.translate.instant('COMMON.ERROR'));
         }
       });
   }
@@ -491,7 +493,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
 
   recalculeFuel() {
     this.notifications.set([]);
-    if (confirm("Vous êtes sur de vouloir faire le recalcule ?")) {
+    if (confirm(this.translate.instant('WEB_CONFIG.HISTORIC_RECALC'))) {
       this.loadingRecalculate.set(true);
       const recalculePayload = new RecalculatePayload();
       recalculePayload.recalculeStartDate = this.datestart()?.getTime() ?? 0;
@@ -514,7 +516,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
 
   recalculeHistorique() {
     this.notifications.set([]);
-    if (confirm("Vous êtes sur de vouloir faire le recalcule ?")) {
+    if (confirm(this.translate.instant('WEB_CONFIG.HISTORIC_RECALC'))) {
       this.loadingRecalculate.set(true);
       const recalculePayload = new RecalculatePayload();
       recalculePayload.recalculeStartDate = this.datestart()?.getTime() ?? 0;
@@ -537,7 +539,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
 
   public recalculeAlert() {
     this.notifications.set([]);
-    if (confirm("Vous êtes sur de vouloir faire le recalcule ?")) {
+    if (confirm(this.translate.instant('WEB_CONFIG.HISTORIC_RECALC'))) {
       this.loadingRecalculate.set(true);
       const recalculePayload = new RecalculatePayload();
       recalculePayload.recalculeStartDate = this.datestart()?.getTime() ?? 0;
@@ -560,7 +562,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
 
   recalculePaths() {
     this.notifications.set([]);
-    if (confirm("Vous êtes sur de vouloir faire le recalcule ?")) {
+    if (confirm(this.translate.instant('WEB_CONFIG.HISTORIC_RECALC'))) {
       this.loadingRecalculate.set(true);
       const recalculePayload = new RecalculatePayload();
       recalculePayload.recalculeStartDate = this.datestart()?.getTime() ?? 0;
@@ -582,7 +584,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
 
   recalculeBoitier() {
     this.notifications.set([]);
-    if (confirm("Vous êtes sur de vouloir faire le recalcule ?")) {
+    if (confirm(this.translate.instant('WEB_CONFIG.HISTORIC_RECALC'))) {
       this.loadingRecalculate.set(true);
       const recalculePayload = new RecalculatePayload();
       recalculePayload.idBoitiers = [...this.selectedBoitiersIds()];
@@ -604,7 +606,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
 
   resetRT() {
     this.notifications.set([]);
-    if (confirm("Vous êtes sur de vouloir faire le reset ?")) {
+    if (confirm(this.translate.instant('COMMON.CONFIRM'))) {
       this.loadingRecalculate.set(true);
       const recalculePayload = new RecalculatePayload();
       recalculePayload.idBoitiers = [...this.selectedBoitiersIds()];
@@ -680,11 +682,11 @@ export class ConfigurationWebComponentComponent implements OnInit {
       next: () => {
         this.showDevises(this.serverAccount().idCompteClientServer);
         this.loadingDeviceSetting.set(false);
-        this.toastr.success('Paramètres boitier mis à jour');
+        this.toastr.success(this.translate.instant('COMMON.SUCCESS'), this.translate.instant('COMMON.SUCCESS'));
       },
       error: () => {
         this.loadingDeviceSetting.set(false);
-        this.toastr.error("Erreur de mise à jour", 'Erreur');
+        this.toastr.error(this.translate.instant('COMMON.AN_ERROR_OCCURRED'), this.translate.instant('COMMON.ERROR'));
       }
     });
   }
@@ -716,11 +718,11 @@ export class ConfigurationWebComponentComponent implements OnInit {
         next: () => {
           this.showDevises(this.serverAccount().idCompteClientServer);
           this.loadingResetOdometre.set(false);
-          this.toastr.success('Odometer reset success');
+          this.toastr.success(this.translate.instant('WEB_CONFIG.RESET_ODO'), this.translate.instant('COMMON.SUCCESS'));
         },
         error: () => {
           this.loadingResetOdometre.set(false);
-          this.toastr.error("Erreur de mise à jour", 'Erreur');
+          this.toastr.error(this.translate.instant('COMMON.AN_ERROR_OCCURRED'), this.translate.instant('COMMON.ERROR'));
         }
       });
   }
@@ -752,13 +754,14 @@ export class ConfigurationWebComponentComponent implements OnInit {
       .subscribe({
         next: () => {
           this.loadingResetLastId.set(false);
-          this.toastr.success('Last ID mis à jour');
+          this.toastr.success(this.translate.instant('WEB_CONFIG.LAST_ID'), this.translate.instant('COMMON.SUCCESS'));
         },
         error: () => {
           this.loadingResetLastId.set(false);
-          this.toastr.error("Erreur de mise à jour", 'Erreur');
+          this.toastr.error(this.translate.instant('COMMON.AN_ERROR_OCCURRED'), this.translate.instant('COMMON.ERROR'));
         }
       });
   }
 
 }
+

@@ -7,6 +7,7 @@ import { environment } from '../../../environments/environment';
 import { AuthService } from 'src/app/service/auth.service';
 import { WebAccountService } from 'src/app/service/web-account.service';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 
 import { TableModule } from 'primeng/table';
@@ -16,7 +17,7 @@ import { TableModule } from 'primeng/table';
   standalone: true,
   templateUrl: './comptes-web-component.component.html',
   styleUrls: ['./comptes-web-component.component.css'],
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, TableModule, DatePipe]
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, TableModule, DatePipe, TranslateModule]
 })
 export class ComptesWebComponentComponent implements OnInit {
   private readonly cdr = inject(ChangeDetectorRef);
@@ -39,6 +40,7 @@ export class ComptesWebComponentComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly toastr = inject(ToastrService);
   private readonly fb = inject(FormBuilder);
+  private readonly translate = inject(TranslateService);
 
   ngOnInit() {
     if (this.authService.isAuthenticated()) {
@@ -85,7 +87,10 @@ export class ComptesWebComponentComponent implements OnInit {
       },
       error: (err) => {
         this.loading = false;
-        this.toastr.error('Error loading web accounts', 'Error');
+        this.toastr.error(
+          this.translate.instant('WEB_ACCOUNTS.LOAD_ERROR'), 
+          this.translate.instant('COMMON.ERROR')
+        );
         this.cdr.markForCheck();
       }
     });
@@ -119,19 +124,25 @@ export class ComptesWebComponentComponent implements OnInit {
   }
 
   deleteWebAccount() {
-    const res = confirm("are you sure that you want to delete this Account ?");
+    const res = confirm(this.translate.instant('WEB_ACCOUNTS.DELETE_CONFIRM'));
     if (res) {
       const indexCompte = this.comptesWeb.findIndex(x => x.idCompteClientWeb == this.selectedWebAccount.idCompteClientWeb);
       this.webAccountService.deleteWebAccount(this.selectedWebAccount.idCompteClientWeb).subscribe({
         next: () => {
-          this.toastr.success(' Account was deleted ', 'Success!');
+          this.toastr.success(
+            this.translate.instant('WEB_ACCOUNTS.DELETE_SUCCESS'), 
+            this.translate.instant('COMMON.SUCCESS')
+          );
           if (indexCompte > -1) {
             this.comptesWeb.splice(indexCompte, 1);
             this.cdr.markForCheck();
           }
         },
         error: () => {
-          this.toastr.error(' Account was not deleted ', 'Error!');
+          this.toastr.error(
+            this.translate.instant('WEB_ACCOUNTS.DELETE_ERROR'), 
+            this.translate.instant('COMMON.ERROR')
+          );
           this.cdr.markForCheck();
         }
       });

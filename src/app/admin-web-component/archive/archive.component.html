@@ -4,13 +4,13 @@
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
             <div class="title-section text-white">
                 <div class="d-flex align-items-center gap-3">
-                    <button type="button" class="btn btn-glass btn-sm rounded-circle" (click)="back()" title="Retour">
+                    <button type="button" class="btn btn-glass btn-sm rounded-circle" (click)="back()" title="{{ 'COMMON.BACK' | translate }}">
                         <i class="fa fa-arrow-left"></i>
                     </button>
                     <div>
-                        <h2 class="m-0 fw-bold">Archives & Raw</h2>
+                        <h2 class="m-0 fw-bold">{{ 'ARCHIVE.TITLE' | translate }}</h2>
                         <span class="badge premium-terminal-badge mt-2">
-                            <i class="fa fa-microchip me-2"></i> Terminal: <span class="terminal-number">{{numBoitier()}}</span>
+                            <i class="fa fa-microchip me-2"></i> {{ 'SERVER_DETAILS.TERMINAL' | translate }}: <span class="terminal-number">{{numBoitier()}}</span>
                         </span>
                     </div>
                 </div>
@@ -18,12 +18,12 @@
             
             <div class="controls-section d-flex align-items-center gap-3" [formGroup]="archiveForm">
                 <div class="input-group input-group-sm limit-input-group shadow-sm">
-                    <span class="input-group-text bg-white bg-opacity-10 text-white border-0">Limite:</span>
+                    <span class="input-group-text bg-white bg-opacity-10 text-white border-0">{{ 'ARCHIVE.LIMIT' | translate }}</span>
                     <input type="number" id="limit" class="form-control border-0 bg-white bg-opacity-10 text-white" 
-                        formControlName="limit" title="Limite" placeholder="200">
+                        formControlName="limit" title="{{ 'ARCHIVE.LIMIT' | translate }}" placeholder="200">
                 </div>
-                <button type="button" class="btn btn-white shadow-sm fw-bold" (click)="getArchives()" title="Afficher">
-                    <i class="fa fa-refresh me-2"></i> Afficher
+                <button type="button" class="btn btn-white shadow-sm fw-bold" (click)="getArchives()" title="{{ 'COMMON.SHOW' | translate }}">
+                    <i class="fa fa-refresh me-2"></i> {{ 'COMMON.SHOW' | translate }}
                 </button>
             </div>
         </div>
@@ -33,8 +33,8 @@
     <div class="premium-card p-0 overflow-hidden shadow-sm bg-white">
         <p-tabs value="0" styleClass="premium-tabview">
             <p-tablist>
-                <p-tab value="0">Archive du Terminal</p-tab>
-                <p-tab value="1" (click)="getAllRaws()" (keydown.enter)="getAllRaws()">Données Brutes (Raw)</p-tab>
+                <p-tab value="0">{{ 'ARCHIVE.TERMINAL_ARCHIVE' | translate }}</p-tab>
+                <p-tab value="1" (click)="getAllRaws()" (keydown.enter)="getAllRaws()">{{ 'ARCHIVE.RAW_DATA' | translate }}</p-tab>
             </p-tablist>
             <p-tabpanels>
                 <p-tabpanel value="0">
@@ -45,16 +45,16 @@
                         responsiveLayout="scroll">
                         <ng-template pTemplate="header">
                             <tr>
-                                <th scope="col" pReorderableColumn pResizableColumn>Date</th>
-                                <th scope="col" pReorderableColumn pResizableColumn>Trame</th>
-                                <th scope="col" pReorderableColumn pResizableColumn>Coordonnées</th>
-                                <th scope="col" pReorderableColumn pResizableColumn>Statut</th>
-                                <th scope="col" pReorderableColumn pResizableColumn>Vitesse</th>
-                                <th scope="col" pReorderableColumn pResizableColumn>Temp</th>
-                                <th scope="col" pReorderableColumn pResizableColumn>G-Sensor</th>
-                                <th scope="col" pReorderableColumn pResizableColumn>Moteur</th>
-                                <th scope="col" pReorderableColumn pResizableColumn>Système</th>
-                                <th scope="col" pReorderableColumn pResizableColumn>Divers</th>
+                                <th scope="col" pReorderableColumn pResizableColumn>{{ 'COMMON.DATE' | translate }}</th>
+                                <th scope="col" pReorderableColumn pResizableColumn>{{ 'DASHBOARD.TRAME' | translate }}</th>
+                                <th scope="col" pReorderableColumn pResizableColumn>{{ 'SERVER_DETAILS.COORDINATES' | translate }}</th>
+                                <th scope="col" pReorderableColumn pResizableColumn>{{ 'SERVER_DETAILS.STATUS' | translate }}</th>
+                                <th scope="col" pReorderableColumn pResizableColumn>{{ 'SERVER_DETAILS.SPEED' | translate }}</th>
+                                <th scope="col" pReorderableColumn pResizableColumn>{{ 'ARCHIVE.TEMP' | translate }}</th>
+                                <th scope="col" pReorderableColumn pResizableColumn>{{ 'ARCHIVE.G_SENSOR' | translate }}</th>
+                                <th scope="col" pReorderableColumn pResizableColumn>{{ 'ARCHIVE.ENGINE' | translate }}</th>
+                                <th scope="col" pReorderableColumn pResizableColumn>{{ 'SIDEBAR.SYSTEM' | translate }}</th>
+                                <th scope="col" pReorderableColumn pResizableColumn>{{ 'ARCHIVE.MISC' | translate }}</th>
                             </tr>
                         </ng-template>
                         <ng-template pTemplate="body" let-archive>
@@ -100,7 +100,7 @@
                 <p-tabpanel value="1">
                     <div class="p-3 bg-light bg-opacity-50 border-bottom d-flex align-items-center gap-3">
                         <span class="badge bg-primary px-3 rounded-pill shadow-sm">Total: {{rawData().count}}</span>
-                        <button class="btn btn-sm btn-outline-primary border-0" (click)="getAllRaws()"><i class="fa fa-refresh me-1"></i> Recharger Brutes</button>
+                        <button class="btn btn-sm btn-outline-primary border-0" (click)="getAllRaws()"><i class="fa fa-refresh me-1"></i> {{ 'ARCHIVE.RELOAD_RAW' | translate }}</button>
                     </div>
                     <p-table [value]="rawData().raws"
                         stateStorage="session" stateKey="raw-archive-table-state"
@@ -109,8 +109,8 @@
                         responsiveLayout="scroll">
                         <ng-template pTemplate="header">
                             <tr>
-                                <th scope="col" style="width: 100px" pReorderableColumn pResizableColumn>ID</th>
-                                <th scope="col" pReorderableColumn pResizableColumn>GPRMC / Trame Raw</th>
+                                <th scope="col" style="width: 100px" pReorderableColumn pResizableColumn>{{ 'COMMON.ID' | translate }}</th>
+                                <th scope="col" pReorderableColumn pResizableColumn>{{ 'ARCHIVE.RAW_DATA' | translate }}</th>
                             </tr>
                         </ng-template>
                         <ng-template pTemplate="body" let-raw>

@@ -7,13 +7,14 @@ import { AdminAccountService } from 'src/app/service/admin-account.service';
 import { AuthService } from 'src/app/service/auth.service';
 import { Router } from '@angular/router';
 import { TableModule } from 'primeng/table';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-access-log',
     standalone: true,
     templateUrl: './access-log.component.html',
     styleUrls: ['./access-log.component.css'],
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, TableModule, DatePipe]
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, TableModule, DatePipe, TranslateModule]
 })
 export class AccessLogComponent implements OnInit {
 

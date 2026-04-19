@@ -8,6 +8,7 @@ import { IpAddressService } from "../../service/ip-address.service";
 import { ToastrService } from "ngx-toastr";
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DatePickerModule } from 'primeng/datepicker';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 
 @Component({
@@ -15,7 +16,7 @@ import { DatePickerModule } from 'primeng/datepicker';
     standalone: true,
     templateUrl: './add-compte-web-component.component.html',
     styleUrls: ['./add-compte-web-component.component.css'],
-    imports: [ReactiveFormsModule, DatePickerModule]
+    imports: [ReactiveFormsModule, DatePickerModule, TranslateModule]
 })
 export class AddCompteWebComponentComponent implements OnInit {
 
@@ -35,6 +36,7 @@ export class AddCompteWebComponentComponent implements OnInit {
   private readonly ipAddressService = inject(IpAddressService);
   private readonly compteServerService = inject(CompteServerService);
   private readonly fb = inject(FormBuilder);
+  private readonly translate = inject(TranslateService);
 
   constructor() {
     this.initForm();
@@ -81,7 +83,10 @@ export class AddCompteWebComponentComponent implements OnInit {
 
   addCompteWeb() {
     if (this.webForm.invalid) {
-      this.toastr.warning('Please fill all required fields', 'Warning');
+      this.toastr.warning(
+        this.translate.instant('WEB_ACCOUNTS.FILL_REQUIRED'), 
+        this.translate.instant('COMMON.WARNING')
+      );
       return;
     }
 
@@ -101,11 +106,17 @@ export class AddCompteWebComponentComponent implements OnInit {
     this.webAccountService.addCompteWeb(compteWeb).subscribe({
       next: (_compteWeb) => {
         this.webAccountService.associateCompteWebToCompteServer(_compteWeb.idCompteClientWeb, idCompteServer).subscribe();
-        this.toastr.success('Web Account is added successfully', 'Success!');
+        this.toastr.success(
+          this.translate.instant('WEB_ACCOUNTS.ADD_SUCCESS'), 
+          this.translate.instant('COMMON.SUCCESS')
+        );
         this.router.navigate(['/adminWeb/listWebs']);
       },
       error: () => {
-        this.toastr.error('There is a mistake', 'Error!');
+        this.toastr.error(
+          this.translate.instant('WEB_ACCOUNTS.ADD_ERROR'), 
+          this.translate.instant('COMMON.ERROR')
+        );
       }
     });
   }

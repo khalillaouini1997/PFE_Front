@@ -3,21 +3,22 @@
     <div class="premium-card mb-4 header-gradient shadow-sm p-4">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
             <div class="title-section text-white">
-                <h2 class="m-0 fw-bold">Gestion des Adresses IP</h2>
-                <p class="m-0 text-white-50 opacity-75">Configuration des endpoints et connexions aux bases de données</p>
+                <h2 class="m-0 fw-bold">{{ 'IP_ADDRESS.TITLE' | translate }}</h2>
+                <p class="m-0 text-white-50 opacity-75">{{ 'IP_ADDRESS.SUBTITLE' | translate }}</p>
             </div>
             
             <div class="controls-section d-flex align-items-center gap-3">
                 <form class="d-flex align-items-center" [formGroup]="searchForm" (ngSubmit)="searchIpAddress()">
                     <div class="input-group shadow-sm search-group">
                         <input type="text" class="form-control border-0 px-3 search-input bg-white bg-opacity-10 text-white" 
-                            formControlName="keyWord" placeholder="Rechercher par label..." title="Terme de recherche">
-                        <button class="btn btn-glass border-0" type="submit" title="Lancer la recherche">
+                            formControlName="keyWord" placeholder="{{ 'IP_ADDRESS.SEARCH_PLACEHOLDER' | translate }}" 
+                            title="{{ 'IP_ADDRESS.SEARCH_PLACEHOLDER' | translate }}">
+                        <button class="btn btn-glass border-0" type="submit" title="{{ 'COMMON.SEARCH' | translate }}">
                             <i class="fa fa-search"></i>
                         </button>
                     </div>
                 </form>
-                <button class="btn btn-glass btn-sm rounded-circle" routerLink="/adminWeb/addIp" title="Nouvelle IP">
+                <button class="btn btn-glass btn-sm rounded-circle" routerLink="/adminWeb/addIp" title="{{ 'IP_ADDRESS.ADD' | translate }}">
                     <i class="fa fa-plus"></i>
                 </button>
             </div>
@@ -34,14 +35,14 @@
             
             <ng-template pTemplate="header">
                 <tr>
-                    <th scope="col" style="width: 80px">ID</th>
-                    <th scope="col">Label / Usage</th>
-                    <th scope="col">Adresse IP / Valeur</th>
-                    <th scope="col">Identifiants DB</th>
-                    <th scope="col">Nom de Base</th>
-                    <th scope="col">Type Conn.</th>
-                    <th scope="col">Endpoint / URL</th>
-                    <th scope="col" class="text-end" style="width: 100px">Actions</th>
+                    <th scope="col" style="width: 80px">{{ 'COMMON.ID' | translate }}</th>
+                    <th scope="col">{{ 'IP_ADDRESS.LABEL_USAGE' | translate }}</th>
+                    <th scope="col">{{ 'IP_ADDRESS.IP_VALUE' | translate }}</th>
+                    <th scope="col">{{ 'IP_ADDRESS.DB_CREDENTIALS' | translate }}</th>
+                    <th scope="col">{{ 'IP_ADDRESS.DB_NAME' | translate }}</th>
+                    <th scope="col">{{ 'IP_ADDRESS.CONN_TYPE' | translate }}</th>
+                    <th scope="col">{{ 'IP_ADDRESS.URL' | translate }}</th>
+                    <th scope="col" class="text-end" style="width: 100px">{{ 'COMMON.ACTIONS' | translate }}</th>
                 </tr>
             </ng-template>
 
@@ -59,7 +60,7 @@
                     <td><div class="small text-truncate col-endpoint-url" title="{{IpAddres.url}}">{{IpAddres.url}}</div></td>
                     <td class="text-end">
                         <button class="btn btn-sm btn-outline-warning border-0 p-2" (click)="onSelect(IpAddres)" 
-                             title="Modifier">
+                             title="{{ 'COMMON.EDIT' | translate }}">
                             <i class="fa fa-edit fs-5"></i>
                         </button>
                     </td>
@@ -70,7 +71,7 @@
                 <tr>
                     <td colspan="8" class="text-center py-5 text-secondary">
                         <i class="fa fa-network-wired fa-3x opacity-25 mb-2"></i>
-                        <p>Aucune adresse IP trouvée</p>
+                        <p>{{ 'IP_ADDRESS.NO_DATA' | translate }}</p>
                     </td>
                 </tr>
             </ng-template>
@@ -83,7 +84,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content modal-content-premium w-100">
             <div class="modal-header header-gradient text-white border-0 p-4">
-                <h5 class="modal-title fw-bold m-0"><i class="fa fa-network-wired me-2"></i> Mise à jour IP</h5>
+                <h5 class="modal-title fw-bold m-0"><i class="fa fa-network-wired me-2"></i> {{ 'IP_ADDRESS.UPDATE_TITLE' | translate }}</h5>
                 <button type="button" class="btn-close btn-close-white" (click)="closeUpdateModal()" aria-label="Close"></button>
             </div>
             
@@ -92,57 +93,57 @@
                     <div class="row g-3">
                         <div class="col-md-6">
                             <div class="form-floating shadow-sm">
-                                <input type="text" formControlName="label" class="form-control border-0" placeholder="Label" id="ipLabel">
-                                <label for="ipLabel">Libellé / Nom</label>
+                                <input type="text" formControlName="label" class="form-control border-0" placeholder="{{ 'IP_ADDRESS.LABEL_NAME' | translate }}" id="ipLabel">
+                                <label for="ipLabel">{{ 'IP_ADDRESS.LABEL_NAME' | translate }}</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating shadow-sm">
-                                <input type="text" formControlName="value" class="form-control border-0" placeholder="IP" id="ipValue">
-                                <label for="ipValue">Adresse IP (Value)</label>
+                                <input type="text" formControlName="value" class="form-control border-0" placeholder="{{ 'IP_ADDRESS.IP_VALUE_INPUT' | translate }}" id="ipValue">
+                                <label for="ipValue">{{ 'IP_ADDRESS.IP_VALUE_INPUT' | translate }}</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating shadow-sm">
-                                <input type="text" formControlName="jdbcUser" class="form-control border-0" placeholder="User" id="jdbcUser">
-                                <label for="jdbcUser">Pseudo JDBC</label>
+                                <input type="text" formControlName="jdbcUser" class="form-control border-0" placeholder="{{ 'IP_ADDRESS.JDBC_USER' | translate }}" id="jdbcUser">
+                                <label for="jdbcUser">{{ 'IP_ADDRESS.JDBC_USER' | translate }}</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating shadow-sm">
-                                <input type="password" formControlName="jdbcPass" class="form-control border-0" placeholder="Pass" id="jdbcPass">
-                                <label for="jdbcPass">Mot de passe JDBC</label>
+                                <input type="password" formControlName="jdbcPass" class="form-control border-0" placeholder="{{ 'IP_ADDRESS.JDBC_PASS' | translate }}" id="jdbcPass">
+                                <label for="jdbcPass">{{ 'IP_ADDRESS.JDBC_PASS' | translate }}</label>
                             </div>
                         </div>
                         <div class="col-md-8">
                             <div class="form-floating shadow-sm">
-                                <input type="text" formControlName="url" class="form-control border-0" placeholder="URL" id="connUrl">
-                                <label for="connUrl">URL de connexion</label>
+                                <input type="text" formControlName="url" class="form-control border-0" placeholder="{{ 'IP_ADDRESS.CONN_URL' | translate }}" id="connUrl">
+                                <label for="connUrl">{{ 'IP_ADDRESS.CONN_URL' | translate }}</label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating shadow-sm">
-                                <select formControlName="typeConnection" class="form-select border-0" title="Type de connexion" id="connType">
+                                <select formControlName="typeConnection" class="form-select border-0" title="{{ 'COMMON.TYPE' | translate }}" id="connType">
                                     @for (type of typeConnection; track type.type) {
                                         <option [value]="type.type">{{type.type}}</option>
                                     }
                                 </select>
-                                <label for="connType">Type</label>
+                                <label for="connType">{{ 'COMMON.TYPE' | translate }}</label>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-floating shadow-sm">
-                                <input type="text" formControlName="dbName" class="form-control border-0" placeholder="DB" id="dbName">
-                                <label for="dbName">Nom de la Base de Données</label>
+                                <input type="text" formControlName="dbName" class="form-control border-0" placeholder="{{ 'IP_ADDRESS.DB_NAME_INPUT' | translate }}" id="dbName">
+                                <label for="dbName">{{ 'IP_ADDRESS.DB_NAME_INPUT' | translate }}</label>
                             </div>
                         </div>
                     </div>
                 </div>
                 
                 <div class="modal-footer p-3 bg-white border-0">
-                    <button type="button" class="btn btn-light px-4" (click)="closeUpdateModal()">Annuler</button>
+                    <button type="button" class="btn btn-light px-4" (click)="closeUpdateModal()">{{ 'COMMON.CANCEL' | translate }}</button>
                     <button type="submit" class="btn btn-warning px-5 fw-bold" [disabled]="updateIpForm.invalid">
-                        Enregistrer
+                        {{ 'COMMON.SAVE' | translate }}
                     </button>
                 </div>
             </form>

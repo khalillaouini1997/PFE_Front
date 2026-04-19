@@ -9,6 +9,7 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } 
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { TableModule } from 'primeng/table';
 
@@ -17,7 +18,7 @@ import { TableModule } from 'primeng/table';
   standalone: true,
   templateUrl: './comptes-server-component.component.html',
   styleUrls: ['./comptes-server-component.component.css'],
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, TableModule, BsDatepickerModule]
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, TableModule, BsDatepickerModule, TranslateModule]
 })
 export class ComptesServerComponentComponent implements OnInit {
   private readonly cdr = inject(ChangeDetectorRef);
@@ -45,6 +46,7 @@ export class ComptesServerComponentComponent implements OnInit {
   private readonly ipAddressService = inject(IpAddressService);
   private readonly authService = inject(AuthService);
   private readonly fb = inject(FormBuilder);
+  private readonly translate = inject(TranslateService);
 
   ngOnInit() {
     this.initForms();
@@ -113,20 +115,26 @@ export class ComptesServerComponentComponent implements OnInit {
 
     this.compteServerService.ExportListComptesServer(this.comptesServer)
       .subscribe(blob => {
-        importedSaveAs(blob, 'Rapport des comptes serveur.xlsx');
+        importedSaveAs(blob, this.translate.instant('SERVER_ACCOUNTS.REPORT_FILENAME'));
       });
   }
 
   deleteCompteServer() {
     const selectedId = this.updateServerForm.get('idCompteClientServer')?.value;
-    if (selectedId && confirm("are you sure that you want to delete this Account ?")) {
+    if (selectedId && confirm(this.translate.instant('WEB_ACCOUNTS.DELETE_CONFIRM'))) {
       this.compteServerService.deleteCompteServer(selectedId).subscribe({
         next: () => {
           this.comptesServer = this.comptesServer.filter(x => x.idCompteClientServer !== selectedId);
-          this.toastr.success(' Account was deleted ', 'Success!');
+          this.toastr.success(
+            this.translate.instant('SERVER_ACCOUNTS.DELETE_SUCCESS'), 
+            this.translate.instant('COMMON.SUCCESS')
+          );
         },
         error: () => {
-          this.toastr.error(' Account was not deleted ', 'Error!');
+          this.toastr.error(
+            this.translate.instant('SERVER_ACCOUNTS.DELETE_ERROR'), 
+            this.translate.instant('COMMON.ERROR')
+          );
         }
       });
     }
@@ -145,12 +153,15 @@ export class ComptesServerComponentComponent implements OnInit {
         if (index !== -1) {
           this.comptesServer[index] = _compteUp;
         }
-        this.toastr.success(' Server account updated ', 'Success!');
+        this.toastr.success(
+          this.translate.instant('SERVER_ACCOUNTS.UPDATE_SUCCESS'), 
+          this.translate.instant('COMMON.SUCCESS')
+        );
         this.closeUpdateModal();
       },
       error: (error) => {
         this.mode = true;
-        this.messageError = error.error?.message || "An error occurred";
+        this.messageError = error.error?.message || this.translate.instant('COMMON.AN_ERROR_OCCURRED');
       }
     });
   }

@@ -8,13 +8,14 @@ import { ToastrService } from "ngx-toastr";
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { CommonModule, DatePipe, DecimalPipe, NgClass } from '@angular/common';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-compte-server-details',
     standalone: true,
     templateUrl: './compte-server-details.component.html',
     styleUrls: ['./compte-server-details.component.css'],
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, TableModule, DatePipe, DecimalPipe, NgClass, RouterModule]
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, TableModule, DatePipe, DecimalPipe, NgClass, RouterModule, TranslateModule]
 })
 export class CompteServerDetailsComponent implements OnInit, OnDestroy {
   addForm!: FormGroup;
@@ -51,6 +52,7 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
   private readonly toastr = inject(ToastrService);
   private readonly fb = inject(FormBuilder);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly translate = inject(TranslateService);
 
   ngOnInit() {
     this.initForms();
@@ -176,12 +178,18 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
         if (index !== -1) {
           this.boitiers[index] = { ...this.boitiers[index], label: res.label };
         }
-        this.toastr.success(' Device updated ', 'Success!');
+        this.toastr.success(
+          this.translate.instant('SERVER_DETAILS.UPDATE_SUCCESS'), 
+          this.translate.instant('COMMON.SUCCESS')
+        );
         this.closeUpdateModal();
         this.cdr.markForCheck();
       },
       error: () => {
-        this.toastr.error('There is a mistake', 'Error!');
+        this.toastr.error(
+          this.translate.instant('COMMON.ERROR_OCCURRED'), 
+          this.translate.instant('COMMON.ERROR')
+        );
         this.cdr.markForCheck();
       }
     });
@@ -190,7 +198,7 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
   addBoitiers() {
     const nbrBoitiersToAdd = this.addForm.get('nbrBoitiers')?.value;
     if (this.BOITIER_NOT_INSTALLED < nbrBoitiersToAdd) {
-      if (!confirm("Vous êtes sur de vouloir ajouter une nouvelle intervalle libre ?")) return;
+      if (!confirm(this.translate.instant('SERVER_DETAILS.CONFIRM_NEW_INTERVAL'))) return;
     }
     this.addBoitierAfterConfirmation(nbrBoitiersToAdd);
   }
@@ -203,14 +211,20 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
         this.intervalFrom = res.compteserver.intervaleStart;
         this.intervalTo = res.compteserver.intervaleEnd;
         this.loadBoitierList();
-        this.toastr.success(nbrBoitiersToAdd + ' devices added', 'Success!');
+        this.toastr.success(
+          nbrBoitiersToAdd + ' ' + this.translate.instant('SERVER_DETAILS.DEVICES_ADDED'), 
+          this.translate.instant('COMMON.SUCCESS')
+        );
         this.addForm.reset({ nbrBoitiers: 0 });
         this.cdr.markForCheck();
       },
       error: (err) => {
         this.mode = true;
-        this.messageError = err.error?.message || "An error occurred";
-        this.toastr.error('There is a mistake', 'Error!');
+        this.messageError = err.error?.message || this.translate.instant('COMMON.ERROR_OCCURRED');
+        this.toastr.error(
+          this.translate.instant('COMMON.ERROR_OCCURRED'), 
+          this.translate.instant('COMMON.ERROR')
+        );
         this.cdr.markForCheck();
       }
     });
@@ -218,14 +232,20 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
 
   extendIntervalOfBoitiers() {
     if (this.BOITIER_NOT_INSTALLED !== 0) {
-      this.toastr.error('you cannot extend this interval because there are more devices available', 'Error!');
+      this.toastr.error(
+        this.translate.instant('SERVER_DETAILS.CANNOT_EXTEND_AVAILABLE'), 
+        this.translate.instant('COMMON.ERROR')
+      );
       return;
     }
 
-    if (confirm("are you sure that you want extend this Account ?")) {
+    if (confirm(this.translate.instant('SERVER_DETAILS.CONFIRM_EXTEND_ACCOUNT'))) {
       this.compteServerService.extendIntervalOfBoitiers(this.ID_COMPTE).subscribe(res => {
         this.BOITIER_NOT_INSTALLED = res.intervaleEnd - res.intervaleStart + 1;
-        this.toastr.success('interval extended', 'Success!');
+        this.toastr.success(
+          this.translate.instant('SERVER_DETAILS.INTERVAL_EXTENDED'), 
+          this.translate.instant('COMMON.SUCCESS')
+        );
         this.cdr.markForCheck();
       });
     }
@@ -240,11 +260,17 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
           this.boitiers[index].etatBoitier = 'INSTALLED';
           this.boitiers[index].stat = true;
         }
-        this.toastr.success(' Device is Installed now ', 'Success!');
+        this.toastr.success(
+          this.translate.instant('SERVER_DETAILS.DEVICE_INSTALLED'), 
+          this.translate.instant('COMMON.SUCCESS')
+        );
         this.cdr.markForCheck();
       },
       error: () => {
-        this.toastr.error('Table of this server does not exist', 'Error!');
+        this.toastr.error(
+          this.translate.instant('SERVER_DETAILS.TABLE_NOT_EXIST'), 
+          this.translate.instant('COMMON.ERROR')
+        );
         this.cdr.markForCheck();
       }
     });

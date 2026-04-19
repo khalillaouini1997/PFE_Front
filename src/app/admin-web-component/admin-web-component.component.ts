@@ -5,11 +5,12 @@ import { AdministratorCompte } from '../data/data';
 import { WebAccountService } from '../service/web-account.service';
 import { WebSocketService } from '../service/web-socket.service';
 import { AuthService } from '../service/auth.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-admin-web-component',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, TranslateModule],
   templateUrl: './admin-web-component.component.html',
   styleUrls: ['./admin-web-component.component.css']
 })
@@ -36,6 +37,7 @@ export class AdminWebComponentComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly webAccountService = inject(WebAccountService);
   private readonly webSocketService = inject(WebSocketService);
+  private readonly translate = inject(TranslateService);
 
   constructor() {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
@@ -106,5 +108,14 @@ export class AdminWebComponentComponent implements OnInit {
     this.isActiveListWeb = menu === 'listWeb';
     this.isActiveAccessLog = menu === 'logs';
     this.isActiveTraccar = menu === 'traccar';
+  }
+
+  changeLanguage(lang: string) {
+    this.translate.use(lang);
+    localStorage.setItem('language', lang);
+  }
+
+  isLang(lang: string): boolean {
+    return this.translate.currentLang === lang || (lang === 'fr' && !this.translate.currentLang);
   }
 }

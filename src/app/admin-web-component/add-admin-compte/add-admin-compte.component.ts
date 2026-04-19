@@ -7,6 +7,7 @@ import { catchError } from "rxjs/operators";
 import { of, tap } from "rxjs";
 import { ToastrService } from "ngx-toastr";
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 
 @Component({
@@ -14,7 +15,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
     standalone: true,
     templateUrl: './add-admin-compte.component.html',
     styleUrls: ['./add-admin-compte.component.css'],
-    imports: [ReactiveFormsModule]
+    imports: [ReactiveFormsModule, TranslateModule]
 })
 export class AddAdminCompteComponent implements OnInit {
 
@@ -29,6 +30,7 @@ export class AddAdminCompteComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly toastr = inject(ToastrService);
   private readonly fb = inject(FormBuilder);
+  private readonly translate = inject(TranslateService);
 
   constructor() {
     this.initForm();
@@ -57,7 +59,10 @@ export class AddAdminCompteComponent implements OnInit {
 
   addAdminCompte() {
     if (this.adminForm.invalid) {
-      this.toastr.warning('Please fill all required fields', 'Warning');
+      this.toastr.warning(
+        this.translate.instant('WEB_ACCOUNTS.FILL_REQUIRED'), 
+        this.translate.instant('COMMON.WARNING')
+      );
       return;
     }
 
@@ -65,12 +70,18 @@ export class AddAdminCompteComponent implements OnInit {
     this.adminAccountService.addAdminCompte(payload)
       .pipe(
         tap(() => {
-          this.toastr.success('Admin Account is added successfully', 'Success!');
+          this.toastr.success(
+            this.translate.instant('ADMIN_ACCOUNTS.ADD_SUCCESS'), 
+            this.translate.instant('COMMON.SUCCESS')
+          );
           this.adminForm.reset({ role: 'WEBADMIN', idTraccar: 0, useFcm: false });
         }),
         catchError(error => {
           console.error('Error adding admin compte:', error);
-          this.toastr.error('There is a mistake', 'Error!');
+          this.toastr.error(
+            this.translate.instant('ADMIN_ACCOUNTS.ADD_ERROR'), 
+            this.translate.instant('COMMON.ERROR')
+          );
           return of(null);
         })
       )

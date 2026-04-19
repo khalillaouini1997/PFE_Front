@@ -1,3 +1,5 @@
+import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { enableProdMode, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 
 import { environment } from './environments/environment';
@@ -5,12 +7,23 @@ import { authInterceptor } from './app/utils/security/auth.interceptor';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { routes } from './app/app.routes';
 import { NgOptimizedImage } from '@angular/common';
-import { provideRouter } from '@angular/router'; // Removed withHashLocation if not needed
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { provideRouter } from '@angular/router'; 
 import { FormsModule } from '@angular/forms';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+
+export class CustomTranslateLoader implements TranslateLoader {
+  constructor(private http: HttpClient) {}
+  getTranslation(lang: string): Observable<any> {
+    return this.http.get(`./assets/i18n/${lang}.json`);
+  }
+}
+
+export function HttpLoaderFactory(http: HttpClient) {
+  return new CustomTranslateLoader(http);
+}
 
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
@@ -35,7 +48,14 @@ bootstrapApplication(AppComponent, {
       ToastrModule.forRoot({
         positionClass: 'toast-bottom-right',
       }),
-      NgMultiSelectDropDownModule.forRoot()
+      NgMultiSelectDropDownModule.forRoot(),
+      TranslateModule.forRoot({
+        loader: {
+          provide: TranslateLoader,
+          useFactory: HttpLoaderFactory,
+          deps: [HttpClient]
+        }
+      })
     ),
     provideHttpClient(withInterceptors([authInterceptor])),
     provideAnimations(),

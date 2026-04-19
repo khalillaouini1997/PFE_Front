@@ -3,11 +3,11 @@
     <div class="premium-card mb-4 header-gradient shadow-sm p-4">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
             <div class="title-section text-white">
-                <h2 class="m-0 fw-bold">Configuration du Compte</h2>
-                <p class="m-0 text-white-50 opacity-75">ID: {{compteWeb().idCompteClientWeb}} | Gérer les accès et préférences</p>
+                <h2 class="m-0 fw-bold">{{ 'WEB_CONFIG.TITLE' | translate }}</h2>
+                <p class="m-0 text-white-50 opacity-75">ID: {{compteWeb().idCompteClientWeb}} | {{ 'WEB_CONFIG.SUBTITLE_DESC' | translate }}</p>
             </div>
             <button type="button" class="btn btn-white shadow-sm fw-bold px-4" (click)="saveChange()">
-                <i class="fa fa-save me-2 text-primary"></i> Sauvegarder
+                <i class="fa fa-save me-2 text-primary"></i> {{ 'COMMON.SAVE' | translate }}
             </button>
         </div>
     </div>
@@ -16,26 +16,26 @@
         <!-- Basic info and Options -->
         <div class="col-lg-8">
             <div class="premium-card h-100 shadow-sm premium-card-overflow">
-                <h5 class="fw-bold mb-4 border-bottom pb-2"><i class="fa fa-user-circle me-2 text-primary"></i> Informations Générales</h5>
+                <h5 class="fw-bold mb-4 border-bottom pb-2"><i class="fa fa-user-circle me-2 text-primary"></i> {{ 'WEB_CONFIG.GENERAL_INFO' | translate }}</h5>
                 
                 <div class="row g-3">
                     <div class="col-md-6">
                         <div class="form-floating mb-3 shadow-sm rounded">
                             <input type="text" class="form-control border-0 bg-light" formControlName="login" id="configLogin" placeholder="Login">
-                            <label for="configLogin">Login</label>
+                            <label for="configLogin">{{ 'AUTH.USERNAME' | translate }}</label>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating mb-3 shadow-sm rounded">
-                            <input type="text" class="form-control border-0 bg-light" formControlName="password" id="configPassword" placeholder="Mot de passe">
-                            <label for="configPassword">Mot de passe</label>
+                            <input type="text" class="form-control border-0 bg-light" formControlName="password" id="configPassword" placeholder="{{ 'AUTH.PASSWORD' | translate }}">
+                            <label for="configPassword">{{ 'AUTH.PASSWORD' | translate }}</label>
                         </div>
                     </div>
                     
                     <div class="col-md-6">
                         <div class="mb-3 px-1">
-                            <div class="prominent-label-custom">Code Pays</div>
-                            <select formControlName="code_pays" class="form-select config-select-premium border-0" id="configCodePays" title="Code Pays" aria-label="Code Pays">
+                            <label for="configCodePays" class="prominent-label-custom">{{ 'WEB_CONFIG.COUNTRY_CODE' | translate }}</label>
+                            <select formControlName="code_pays" class="form-select config-select-premium border-0" id="configCodePays" title="{{ 'WEB_CONFIG.COUNTRY_CODE' | translate }}">
                                 @for (codePays of codesPays(); track codePays.value) {
                                     <option [value]="codePays.value">(+{{codePays.value}}) {{codePays.key}}</option>
                                 }
@@ -45,15 +45,15 @@
                     <div class="col-md-6">
                         <div class="form-floating mb-3 shadow-sm rounded">
                             <input type="text" class="form-control border-0 bg-light" bsDatepicker formControlName="date_expiration"
-                                [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }" placement="bottom" placeholder="Date expiration" id="configExp">
-                            <label for="configExp">Date d'expiration</label>
+                                [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }" placement="bottom" placeholder="{{ 'SERVER_ACCOUNTS.EXPIRATION_DATE' | translate }}" id="configExp">
+                            <label for="configExp">{{ 'SERVER_ACCOUNTS.EXPIRATION_DATE' | translate }}</label>
                         </div>
                     </div>
 
                     <div class="col-12">
                         <div class="mb-3 px-1">
-                            <label class="small fw-bold text-secondary text-uppercase mb-2">Options du Compte</label>
-                            <ng-multiselect-dropdown [placeholder]="'Sélectionner des options'" [settings]="dropdownSettings"
+                            <label class="small fw-bold text-secondary text-uppercase mb-2">{{ 'WEB_CONFIG.ACCOUNT_OPTIONS' | translate }}</label>
+                            <ng-multiselect-dropdown [placeholder]="'WEB_CONFIG.SELECT_OPTIONS' | translate" [settings]="dropdownSettings"
                                 [data]="options()" formControlName="options" class="premium-multiselect">
                             </ng-multiselect-dropdown>
                         </div>
@@ -62,7 +62,7 @@
                     <div class="col-md-6">
                         <div class="form-floating mb-3 shadow-sm rounded">
                             <input type="number" min="0" max="4" formControlName="pool" class="form-control border-0 bg-light" id="configPool" placeholder="Pool">
-                            <label for="configPool">Pool (Zonage)</label>
+                            <label for="configPool">{{ 'WEB_CONFIG.POOL_ZONAGE' | translate }}</label>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -72,7 +72,7 @@
                                     <option [value]="t">{{ t }}</option>
                                 }
                             </select>
-                            <label for="configArea">Région / Secteur</label>
+                            <label for="configArea">{{ 'WEB_CONFIG.REGION_SECTOR' | translate }}</label>
                         </div>
                     </div>
                 </div>
@@ -82,40 +82,40 @@
         <!-- Contact and Notif -->
         <div class="col-lg-4">
             <div class="premium-card h-100 shadow-sm">
-                <h5 class="fw-bold mb-4 border-bottom pb-2"><i class="fa fa-envelope-open me-2 text-primary"></i> Contact & Notifications</h5>
+                <h5 class="fw-bold mb-4 border-bottom pb-2"><i class="fa fa-envelope-open me-2 text-primary"></i> {{ 'WEB_CONFIG.CONTACT_NOTIF' | translate }}</h5>
                 
                 <div class="form-floating mb-3 shadow-sm rounded">
-                    <input type="text" class="form-control border-0 bg-light" formControlName="firstname" id="configFirstname" placeholder="Nom">
-                    <label for="configFirstname">Nom</label>
+                    <input type="text" class="form-control border-0 bg-light" formControlName="firstname" id="configFirstname" placeholder="{{ 'COMMON.LASTNAME' | translate }}">
+                    <label for="configFirstname">{{ 'COMMON.LASTNAME' | translate }}</label>
                 </div>
                 <div class="form-floating mb-3 shadow-sm rounded">
-                    <input type="text" class="form-control border-0 bg-light" formControlName="lastname" id="configLastname" placeholder="Prénom">
-                    <label for="configLastname">Prénom</label>
+                    <input type="text" class="form-control border-0 bg-light" formControlName="lastname" id="configLastname" placeholder="{{ 'COMMON.FIRSTNAME' | translate }}">
+                    <label for="configLastname">{{ 'COMMON.FIRSTNAME' | translate }}</label>
                 </div>
                 <div class="form-floating mb-3 shadow-sm rounded">
                     <input type="email" class="form-control border-0 bg-light" formControlName="email" id="configEmail" placeholder="Email">
                     <label for="configEmail">Email</label>
                 </div>
                 <div class="form-floating mb-3 shadow-sm rounded">
-                    <input type="tel" class="form-control border-0 bg-light" formControlName="telephone" id="configTelephone" placeholder="Téléphone">
-                    <label for="configTelephone">Téléphone</label>
+                    <input type="tel" class="form-control border-0 bg-light" formControlName="telephone" id="configTelephone" placeholder="{{ 'COMMON.PHONE' | translate }}">
+                    <label for="configTelephone">{{ 'COMMON.PHONE' | translate }}</label>
                 </div>
 
                 <div class="mt-4 pt-3 border-top border-light">
                     <!-- Notification Section Header -->
                     <div class="d-flex align-items-center justify-content-between mb-4 p-3 bg-light bg-opacity-50 rounded-3 transition-hover border border-light shadow-none">
                         <div class="d-flex flex-column">
-                            <span class="fw-bold text-indigo small text-uppercase letter-spacing-1">Notifications Mobile</span>
+                            <span class="fw-bold text-indigo small text-uppercase letter-spacing-1">{{ 'WEB_CONFIG.MOBILE_NOTIF' | translate }}</span>
                         </div>
                         <div class="form-check form-switch m-0 d-flex align-items-center">
-                            <input class="form-check-input scale-150 cursor-pointer ms-0" type="checkbox" formControlName="mobileNotif" id="configMobileNotif" title="Notifications Mobile" aria-label="Notifications Mobile">
+                            <input class="form-check-input scale-150 cursor-pointer ms-0" type="checkbox" formControlName="mobileNotif" id="configMobileNotif" title="{{ 'WEB_CONFIG.MOBILE_NOTIF' | translate }}" aria-label="{{ 'WEB_CONFIG.MOBILE_NOTIF' | translate }}">
                         </div>
                     </div>
 
                     <!-- Notification Type -->
                     <div class="mb-3 px-1">
-                        <div class="prominent-label-custom">Type de notification</div>
-                        <select formControlName="notificationSubquery" class="form-select config-select-premium border-0 shadow-sm" id="configNotifType" title="Type de notification" aria-label="Type de notification">
+                        <label for="configNotifType" class="prominent-label-custom">{{ 'WEB_CONFIG.NOTIF_TYPE' | translate }}</label>
+                        <select formControlName="notificationSubquery" class="form-select config-select-premium border-0 shadow-sm" id="configNotifType" title="{{ 'WEB_CONFIG.NOTIF_TYPE' | translate }}">
                             @for (notifSub of notifSubs; track notifSub) {
                                 <option [value]="notifSub">{{ notifSub }}</option>
                             }
@@ -129,7 +129,7 @@
         <div class="col-12 mt-4">
             <div class="premium-card p-0 overflow-hidden shadow-sm">
                 <div class="p-4 bg-light bg-opacity-50 border-bottom d-flex justify-content-between align-items-center">
-                    <h5 class="m-0 fw-bold"><i class="fa fa-server me-2 text-primary"></i> Serveur Associé</h5>
+                    <h5 class="m-0 fw-bold"><i class="fa fa-server me-2 text-primary"></i> {{ 'WEB_CONFIG.ASSOCIATED_SERVER' | translate }}</h5>
                     <div class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill border border-primary border-opacity-10">
                         ID: {{serverAccount().idCompteClientServer}}
                     </div>
@@ -138,11 +138,11 @@
                 <p-table [value]="[serverAccount()]" styleClass="p-datatable-sm p-datatable-gridlines premium-table-custom" responsiveLayout="scroll">
                     <ng-template pTemplate="header">
                         <tr>
-                            <th scope="col">Pseudo</th>
-                            <th scope="col">Adresse IP</th>
-                            <th scope="col">Création</th>
-                            <th scope="col">Statut / Expiration</th>
-                            <th scope="col" class="text-end" style="width: 250px">Actions</th>
+                            <th scope="col">{{ 'SERVER_ACCOUNTS.PSEUDO' | translate }}</th>
+                            <th scope="col">{{ 'SERVER_ACCOUNTS.IP_ENDPOINT' | translate }}</th>
+                            <th scope="col">{{ 'WEB_ACCOUNTS.CREATED_AT' | translate }}</th>
+                            <th scope="col">{{ 'WEB_CONFIG.STATE_ACTUAL' | translate }}</th>
+                            <th scope="col" class="text-end" style="width: 250px">{{ 'COMMON.ACTIONS' | translate }}</th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-server>
@@ -154,20 +154,20 @@
                                 <div class="d-flex align-items-center gap-2">
                                     <span class="text-secondary">{{server.date_Expiration | date:'dd MMM yyyy'}}</span>
                                     @if (server.during) {
-                                        <span class="badge bg-success bg-opacity-10 text-success rounded-pill border border-success border-opacity-10">Active</span>
+                                        <span class="badge bg-success bg-opacity-10 text-success rounded-pill border border-success border-opacity-10">{{ 'COMMON.ACTIVE' | translate }}</span>
                                     }
                                     @if (server.expired) {
-                                        <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill border border-danger border-opacity-10">Expiré</span>
+                                        <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill border border-danger border-opacity-10">{{ 'SERVER_ACCOUNTS.EXPIRED' | translate }}</span>
                                     }
                                 </div>
                             </td>
                             <td class="text-end">
                                 <div class="btn-group gap-2">
-                                    <button type="button" class="btn btn-sm btn-outline-purple border-0" (click)="prepareDB(server.idCompteClientServer)" title="Préparer BDD">
-                                        <i class="fa fa-database me-1"></i> BDD
+                                    <button type="button" class="btn btn-sm btn-outline-purple border-0" (click)="prepareDB(server.idCompteClientServer)" [title]="'WEB_CONFIG.PREPARE_DB' | translate">
+                                        <i class="fa fa-database me-1"></i> {{ 'WEB_CONFIG.PREPARE_DB' | translate }}
                                     </button>
-                                    <button type="button" class="btn btn-sm btn-primary px-3" (click)="showDevises(server.idCompteClientServer)" title="Voir Boitiers">
-                                        <i class="fa fa-mobile me-1"></i> Boitiers
+                                    <button type="button" class="btn btn-sm btn-primary px-3" (click)="showDevises(server.idCompteClientServer)" [title]="'WEB_CONFIG.VIEW_DEVICES' | translate">
+                                        <i class="fa fa-mobile me-1"></i> {{ 'WEB_CONFIG.VIEW_DEVICES' | translate }}
                                     </button>
                                 </div>
                             </td>
@@ -182,16 +182,16 @@
             <div class="col-12 mt-4 fade-in">
                 <div class="premium-card p-0 overflow-hidden border-warning border-opacity-25 shadow-sm">
                     <div class="p-4 bg-warning bg-opacity-10 border-bottom d-flex justify-content-between align-items-center">
-                        <h5 class="m-0 fw-bold text-dark"><i class="fa fa-microchip me-2 text-warning"></i> Terminaux ({{boitiers().length}})</h5>
+                        <h5 class="m-0 fw-bold text-dark"><i class="fa fa-microchip me-2 text-warning"></i> {{ 'WEB_CONFIG.TERMINALS' | translate }} ({{boitiers().length}})</h5>
                         <div class="d-flex gap-2">
                             @if (getNumberOfBoitiersNotInstall() > 0) {
                                 <span class="badge bg-warning text-dark border border-warning border-opacity-25 rounded-pill px-3">
-                                    <i class="fa fa-warning me-1"></i> {{getNumberOfBoitiersNotInstall()}} non installés
+                                    <i class="fa fa-warning me-1"></i> {{getNumberOfBoitiersNotInstall()}} {{ 'WEB_CONFIG.NOT_INSTALLED' | translate }}
                                 </span>
                             }
                             @if (selectedBoitiersIds().length > 0) {
                                 <span class="badge bg-dark text-white rounded-pill px-3">
-                                    {{selectedBoitiersIds().length}} sélectionnés
+                                    {{selectedBoitiersIds().length}} {{ 'WEB_CONFIG.SELECTED' | translate }}
                                 </span>
                             }
                         </div>
@@ -205,41 +205,41 @@
                             <tr>
                                 <th scope="col" style="width: 50px">
                                     <div class="form-check m-0">
-                                        <input class="form-check-input" type="checkbox" (change)="onCheckedAllBoitiers()"
+                                        <input class="form-check-input" type="checkbox" id="selectAllBoitiers" (change)="onCheckedAllBoitiers()"
                                             [checked]="boitiers().length === selectedBoitiersIds().length && boitiers().length > 0"
-                                            title="Tout sélectionner">
+                                            title="{{ 'WEB_CONFIG.SELECT_ALL' | translate }}" aria-label="{{ 'WEB_CONFIG.SELECT_ALL' | translate }}">
                                     </div>
                                 </th>
-                                <th scope="col">Identifiant #</th>
-                                <th scope="col">État Actuel</th>
-                                <th scope="col" class="text-end" style="width: 200px">Configurations</th>
+                                <th scope="col">{{ 'COMMON.ID' | translate }} #</th>
+                                <th scope="col">{{ 'WEB_CONFIG.STATE_ACTUAL' | translate }}</th>
+                                <th scope="col" class="text-end" style="width: 200px">{{ 'SERVER_DETAILS.CONFIGURATION' | translate }}</th>
                             </tr>
                         </ng-template>
                         <ng-template pTemplate="body" let-boitier>
                             <tr class="align-middle">
                                 <td>
                                     <div class="form-check m-0">
-                                        <input class="form-check-input" type="checkbox" (change)="onCheckedBoitier(boitier.numBoitier)"
+                                        <input class="form-check-input" type="checkbox" [id]="'checkBoitier' + boitier.numBoitier" (change)="onCheckedBoitier(boitier.numBoitier)"
                                             [checked]="isCheckedBoitier(boitier.numBoitier)"
-                                            title="Sélectionner le boitier">
+                                            title="{{ 'WEB_CONFIG.SELECT_DEVICE' | translate }}" aria-label="{{ 'WEB_CONFIG.SELECT_DEVICE' | translate }}">
                                     </div>
                                 </td>
                                 <td class="fw-bold text-primary">{{boitier.numBoitier}}</td>
                                 <td>
                                     @if (boitier.etatBoitier==='INSTALLED') {
-                                        <span class="badge bg-success bg-opacity-10 text-success rounded-pill border border-success border-opacity-10 px-3">Installé</span>
+                                        <span class="badge bg-success bg-opacity-10 text-success rounded-pill border border-success border-opacity-10 px-3">{{ 'WEB_CONFIG.INSTALLED' | translate }}</span>
                                     } @else {
-                                        <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill border border-danger border-opacity-10 px-3">Non installé</span>
+                                        <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill border border-danger border-opacity-10 px-3">{{ 'WEB_CONFIG.NOT_INSTALLED_STATE' | translate }}</span>
                                     }
                                 </td>
                                 <td class="text-end">
                                     @if (boitier.etatBoitier==='INSTALLED') {
                                         <button type="button" class="btn btn-sm btn-outline-success border-0" (click)="editBoitier(boitier)">
-                                            <i class="fa fa-cogs me-1"></i> Configurer
+                                            <i class="fa fa-cogs me-1"></i> {{ 'COMMON.CONFIGURE' | translate }}
                                         </button>
                                     } @else {
                                         <button type="button" class="btn btn-sm btn-outline-warning border-0" (click)="prepareDBForSingleDevice(boitier.idBoitier)">
-                                            <i class="fa fa-wrench me-1"></i> Préparer
+                                            <i class="fa fa-wrench me-1"></i> {{ 'WEB_CONFIG.PREPARE' | translate }}
                                         </button>
                                     }
                                 </td>
@@ -259,8 +259,8 @@
         <div class="modal-content modal-content-premium border-0 shadow-lg w-100">
                 <div class="modal-header header-gradient border-0 p-4">
                     <div class="text-white">
-                        <h4 class="m-0 fw-bold">Recalcule & Options BDD</h4>
-                        <p class="m-0 small text-white-50 opacity-75">Boitier: {{selectedBoitierId()}}</p>
+                        <h4 class="m-0 fw-bold">{{ 'WEB_CONFIG.RECALC_TITLE' | translate }}</h4>
+                        <p class="m-0 small text-white-50 opacity-75">{{ 'SERVER_DETAILS.TERMINAL' | translate }}: {{selectedBoitierId()}}</p>
                     </div>
                     <button type="button" class="btn-close btn-close-white" (click)="closeConfigModal()" aria-label="Close"></button>
                 </div>
@@ -268,7 +268,7 @@
                 <div class="modal-body p-4 bg-light bg-opacity-50">
                     @if (selectedBoitiersIds().length > 0) {
                         <div class="premium-card bg-white mb-4 p-3 border-0 shadow-sm">
-                            <label class="small fw-bold text-secondary text-uppercase mb-2">Application Multi-Boitiers ({{selectedBoitiersIds().length}})</label>
+                            <label class="small fw-bold text-secondary text-uppercase mb-2">{{ 'WEB_CONFIG.MULTI_DEVICE_APP' | translate }} ({{selectedBoitiersIds().length}})</label>
                             <div class="d-flex flex-wrap gap-1">
                                 @for (id of selectedBoitiersIds(); track id) {
                                     <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-10">{{id}}</span>
@@ -281,25 +281,25 @@
                         <!-- Recalcule Form side -->
                         <div class="col-md-6" [formGroup]="recalculateForm">
                             <div class="premium-card bg-white h-100 border-0 shadow-sm p-3">
-                                <h6 class="fw-bold mb-3 border-bottom pb-2"><i class="fa fa-history me-2 text-primary"></i> Recalcule Historique</h6>
+                                <h6 class="fw-bold mb-3 border-bottom pb-2"><i class="fa fa-history me-2 text-primary"></i> {{ 'WEB_CONFIG.HISTORIC_RECALC' | translate }}</h6>
                                 <div class="mb-3" *ngIf="dateBoolean">
-                                    <label class="form-label small text-secondary fw-bold">Date de début</label>
+                                    <label class="form-label small text-secondary fw-bold">{{ 'WEB_CONFIG.START_DATE' | translate }}</label>
                                     <input type="text" class="form-control bg-light border-0 shadow-none" bsDatepicker formControlName="datestart" [maxDate]="maxDate"
-                                        [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY, HH:mm' }" placement="bottom" placeholder="Choisir une date..." autocomplete="off">
+                                        [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY, HH:mm' }" placement="bottom" placeholder="{{ 'WEB_CONFIG.CHOOSE_DATE' | translate }}" autocomplete="off">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label small text-secondary fw-bold">Nature du Recalcule</label>
-                                    <select formControlName="typeRecalcule" class="form-select bg-light border-0 shadow-none" title="Nature du recalcule">
-                                        <option value="recalcule trajet">recalcule trajet</option>
-                                        <option value="recalcule boitier">recalcule boitier</option>
-                                        <option value="recalcule carburant">recalcule carburant</option>
-                                        <option value="recalcule alert">recalcule alert</option>
-                                        <option value="recalcule Temps reel">recalcule Temps reel</option>
+                                    <label class="form-label small text-secondary fw-bold">{{ 'WEB_CONFIG.RECALC_NATURE' | translate }}</label>
+                                    <select formControlName="typeRecalcule" class="form-select bg-light border-0 shadow-none" [title]="'WEB_CONFIG.RECALC_NATURE' | translate">
+                                        <option value="recalcule trajet">{{ 'RECALC.PATH' | translate }}</option>
+                                        <option value="recalcule boitier">{{ 'RECALC.BOX' | translate }}</option>
+                                        <option value="recalcule carburant">{{ 'RECALC.FUEL' | translate }}</option>
+                                        <option value="recalcule alert">{{ 'RECALC.ALERT' | translate }}</option>
+                                        <option value="recalcule Temps reel">{{ 'RECALC.REAL_TIME' | translate }}</option>
                                     </select>
                                 </div>
                                 <button type="button" class="btn btn-primary w-100 mt-2 fw-bold" [disabled]="recalculateForm.invalid" (click)="recalculate()">
                                     <i class="fa me-2" [class.fa-retweet]="!loadingRecalculate()" [class.fa-spinner]="loadingRecalculate()" [class.fa-spin]="loadingRecalculate()"></i>
-                                    {{loadingRecalculate() ? 'Traitement...' : 'Démarrer le Recalcule'}}
+                                    {{loadingRecalculate() ? ('WEB_CONFIG.PROCESSING' | translate) : ('WEB_CONFIG.START_RECALC' | translate)}}
                                 </button>
                             </div>
                         </div>
@@ -307,12 +307,12 @@
                         <!-- Device Options Form side -->
                         <div class="col-md-6" [formGroup]="deviceOptForm">
                             <div class="premium-card bg-white h-100 border-0 shadow-sm p-3">
-                                <h6 class="fw-bold mb-3 border-bottom pb-2"><i class="fa fa-toggle-on me-2 text-primary"></i> Options Terminal</h6>
+                                <h6 class="fw-bold mb-3 border-bottom pb-2"><i class="fa fa-toggle-on me-2 text-primary"></i> {{ 'WEB_CONFIG.DEVICE_OPTIONS' | translate }}</h6>
                                 <div class="row g-2">
                                     @for (opt of ['useIgnition', 'useFuel', 'useTemp', 'useFms', 'useJ1708', 'useIdDriver', 'useStop']; track opt) {
                                         <div class="col-6">
                                             <div class="form-check form-switch bg-light p-2 ps-5 rounded-3 border-0 h-100 d-flex align-items-center">
-                                                <input class="form-check-input ms-0 mt-0 scale-110" type="checkbox" [formControlName]="opt" [id]="'opt'+opt" title="{{opt}}">
+                                                <input class="form-check-input ms-0 mt-0 scale-110" type="checkbox" [formControlName]="opt" [id]="'opt'+opt" [title]="opt">
                                                 <label class="form-check-label small fw-bold text-secondary text-capitalize" [for]="'opt'+opt">{{opt.replace('use', '')}}</label>
                                             </div>
                                         </div>
@@ -320,20 +320,20 @@
                                 </div>
                                 <div class="mt-3 pt-3 border-top">
                                     <button type="button" class="btn btn-outline-success btn-sm w-100 fw-bold mb-3" (click)="editDeviceOptionConfig()" [disabled]="loadingEditDeviceOption()">
-                                        <i class="fa fa-save me-1"></i> Sauvegarder les Options
+                                        <i class="fa fa-save me-1"></i> {{ 'WEB_CONFIG.SAVE_OPTIONS' | translate }}
                                     </button>
                                     
                                     <div class="reset-actions d-flex flex-column gap-2">
                                         <div class="d-flex align-items-center gap-2">
-                                            <button type="button" class="btn btn-outline-danger btn-sm flex-grow-1 fw-bold btn-reset-fixed-height" (click)="resetOdometre()" [disabled]="loadingResetOdometre()" title="Réinitialiser l'odomètre">
-                                                <i class="fa fa-history me-1"></i> Reset Odo
+                                            <button type="button" class="btn btn-outline-danger btn-sm flex-grow-1 fw-bold btn-reset-fixed-height" (click)="resetOdometre()" [disabled]="loadingResetOdometre()" [title]="'WEB_CONFIG.RESET_ODO' | translate">
+                                                <i class="fa fa-history me-1"></i> {{ 'WEB_CONFIG.RESET_ODO' | translate }}
                                             </button>
                                             
                                             <div class="flex-grow-1" [formGroup]="lastIdForm">
                                                 <div class="input-group input-group-sm shadow-sm rounded overflow-hidden input-group-fixed-height">
                                                     <span class="input-group-text bg-light border-0 small fw-bold text-secondary">ID</span>
-                                                    <input type="number" class="form-control border-0 bg-light" formControlName="lastIdValue" placeholder="Last ID" title="Dernier ID">
-                                                    <button type="button" class="btn btn-primary border-0" (click)="resetLastId()" [disabled]="loadingResetLastId()" title="Réinitialiser le dernier ID">
+                                                    <input type="number" class="form-control border-0 bg-light" formControlName="lastIdValue" placeholder="{{ 'WEB_CONFIG.LAST_ID' | translate }}" [title]="'WEB_CONFIG.LAST_ID' | translate">
+                                                    <button type="button" class="btn btn-primary border-0" (click)="resetLastId()" [disabled]="loadingResetLastId()" [title]="'WEB_CONFIG.LAST_ID' | translate">
                                                         <i class="fa" [class.fa-save]="!loadingResetLastId()" [class.fa-spinner]="loadingResetLastId()" [class.fa-spin]="loadingResetLastId()"></i>
                                                     </button>
                                                 </div>
@@ -347,7 +347,7 @@
                         <!-- BDD Configuration -->
                         <div class="col-12" [formGroup]="pathConfigForm">
                             <div class="premium-card bg-white border-0 shadow-sm p-3">
-                                <h6 class="fw-bold mb-3 border-bottom pb-2"><i class="fa fa-database me-2 text-primary"></i> Configurations BDD (Filtrage)</h6>
+                                <h6 class="fw-bold mb-3 border-bottom pb-2"><i class="fa fa-database me-2 text-primary"></i> {{ 'WEB_CONFIG.BDD_CONFIG_FILTER' | translate }}</h6>
                                 <div class="row g-3">
                                     <div class="col-md-4">
                                         <label class="form-label small text-secondary fw-bold">Path Min (sec)</label>
@@ -382,7 +382,7 @@
                                 </div>
                                 <button type="button" class="btn btn-purple w-100 mt-4 text-white fw-bold shadow-sm" (click)="editPathConfig()" [disabled]="pathConfigForm.invalid || loadingEditPathConfig()">
                                     <i class="fa me-2" [class.fa-check]="!loadingEditPathConfig()" [class.fa-spinner]="loadingEditPathConfig()" [class.fa-spin]="loadingEditPathConfig()"></i>
-                                    Initialiser la Configuration
+                                    {{ 'WEB_CONFIG.INIT_CONFIG' | translate }}
                                 </button>
                             </div>
                         </div>
@@ -390,7 +390,7 @@
                         <!-- Technical Settings (Stream) -->
                         <div class="col-12" [formGroup]="deviceSettingForm">
                             <div class="premium-card bg-info bg-opacity-10 border-0 shadow-none p-3">
-                                <h6 class="fw-bold mb-3 border-bottom pb-2 text-dark"><i class="fa fa-rss me-2 text-info"></i> Paramètres de Flux (Streams)</h6>
+                                <h6 class="fw-bold mb-3 border-bottom pb-2 text-dark"><i class="fa fa-rss me-2 text-info"></i> {{ 'WEB_CONFIG.STREAM_SETTINGS' | translate }}</h6>
                                 <div class="row g-3 align-items-end">
                                     <div class="col-md-5">
                                         <label for="rawstreamIp" class="form-label small text-secondary fw-bold">Rawstream IP</label>
@@ -406,17 +406,17 @@
                                     </div>
                                     <div class="col-md-3">
                                         <button type="button" class="btn btn-dark w-100 fw-bold shadow-sm" (click)="editDeviceSetting()" [disabled]="loadingDeviceSetting()">
-                                            <i class="fa fa-sync-alt me-2"></i> Appliquer
+                                            <i class="fa fa-sync-alt me-2"></i> {{ 'COMMON.APPLY' | translate }}
                                         </button>
                                     </div>
                                 </div>
                                 
                                 <div class="mt-4 pt-3 border-top border-dark border-opacity-10" [formGroup]="imeiSearchForm">
-                                    <label class="form-label small text-secondary fw-bold italic mb-2">Migrer / Rechercher IMEI Traccar</label>
+                                    <label class="form-label small text-secondary fw-bold italic mb-2">{{ 'WEB_CONFIG.MIGRATE_IMEI' | translate }}</label>
                                     <div class="input-group shadow-sm rounded overflow-hidden">
-                                        <input type="text" class="form-control border-0 bg-white" formControlName="imei" placeholder="Saisir IMEI..." title="Rechercher IMEI Traccar">
+                                        <input type="text" class="form-control border-0 bg-white" formControlName="imei" placeholder="{{ 'WEB_CONFIG.ENTER_IMEI' | translate }}" [title]="'WEB_CONFIG.MIGRATE_IMEI' | translate">
                                         <button type="button" class="btn btn-secondary px-4 border-0" (click)="getSearchDeviceIemi(imeiSearchForm.get('imei')?.value)">
-                                            <i class="fa fa-search me-1"></i> Rechercher
+                                            <i class="fa fa-search me-1"></i> {{ 'COMMON.SEARCH' | translate }}
                                         </button>
                                     </div>
                                 </div>
@@ -431,18 +431,18 @@
                             <i class="fa fa-bell me-1 text-warning"></i>
                             {{notifications().length}} Logs
                         </div>
-                        <button type="button" class="btn btn-light px-4 fw-bold shadow-sm" (click)="closeConfigModal()">Fermer</button>
+                        <button type="button" class="btn btn-light px-4 fw-bold shadow-sm" (click)="closeConfigModal()">{{ 'COMMON.CLOSE' | translate }}</button>
                     </div>
                 </div>
 
                 @if (notifications().length > 0) {
                     <div class="notifications-panel p-3 bg-dark text-white border-top border-secondary fade-in">
                         <div class="d-flex justify-content-between mb-2">
-                            <span class="small fw-bold text-uppercase opacity-50">Flux console</span>
+                            <span class="small fw-bold text-uppercase opacity-50">{{ 'WEB_CONFIG.CONSOLE_STREAM' | translate }}</span>
                             @if (getNumberOfNotificationErrors() > 0) {
-                                <span class="text-danger small fw-bold"><i class="fa fa-times-circle me-1"></i> {{getNumberOfNotificationErrors()}} Erreurs</span>
+                                <span class="text-danger small fw-bold"><i class="fa fa-times-circle me-1"></i> {{getNumberOfNotificationErrors()}} {{ 'COMMON.ERRORS' | translate }}</span>
                             } @else {
-                                <span class="text-success small fw-bold"><i class="fa fa-check-circle me-1"></i> Ok</span>
+                                <span class="text-success small fw-bold"><i class="fa fa-check-circle me-1"></i> {{ 'COMMON.OK' | translate }}</span>
                             }
                         </div>
                         <div class="notification-scroll">

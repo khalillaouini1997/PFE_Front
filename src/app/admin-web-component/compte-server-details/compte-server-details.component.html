@@ -3,15 +3,15 @@
     <div class="premium-card mb-4 header-gradient shadow-sm">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
             <div class="title-section text-white">
-                <h2 class="m-0 fw-bold">Détails du Serveur</h2>
-                <p class="m-0 text-white-50 opacity-75">Instance #{{compteServer.idCompteClientServer}} — {{compteServer.pseudo}}</p>
+                <h2 class="m-0 fw-bold">{{ 'SERVER_DETAILS.TITLE' | translate }}</h2>
+                <p class="m-0 text-white-50 opacity-75">{{ 'COMMON.INSTANCE' | translate }} #{{compteServer.idCompteClientServer}} — {{compteServer.pseudo}}</p>
             </div>
             <div class="controls-section d-flex align-items-center gap-2">
                 <div class="bg-white bg-opacity-10 rounded-3 p-2 px-3 text-white border border-white border-opacity-10">
-                    <small class="opacity-75 d-block text-uppercase fw-bold ssh-badge-title-small">Accès SSH/API</small>
+                    <small class="opacity-75 d-block text-uppercase fw-bold ssh-badge-title-small">{{ 'SERVER_DETAILS.SSH_ACCESS' | translate }}</small>
                     <span class="small">{{compteServer.login}} : <code class="text-warning">{{compteServer.password}}</code></span>
                 </div>
-                <button class="btn btn-glass btn-sm rounded-circle" routerLink="/adminWeb/listServers" title="Retour">
+                <button class="btn btn-glass btn-sm rounded-circle" routerLink="/adminWeb/listServers" title="{{ 'COMMON.BACK' | translate }}">
                     <i class="fa fa-arrow-left text-white"></i>
                 </button>
             </div>
@@ -27,12 +27,12 @@
                         <i class="fa fa-hdd fa-2x"></i>
                     </div>
                     <div>
-                        <p class="text-secondary small mb-0">Boitiers Installés</p>
+                        <p class="text-secondary small mb-0">{{ 'SERVER_DETAILS.INSTALLED_BOXES' | translate }}</p>
                         <h3 class="fw-bold mb-0">{{BOITIER_INSTALLED}}</h3>
                     </div>
                 </div>
                 <div class="mt-3 small text-secondary border-top pt-2">
-                    <i class="fa fa-clock me-1"></i> Jusqu'au: <strong>{{intervalTo}}</strong>
+                    <i class="fa fa-clock me-1"></i> {{ 'SERVER_DETAILS.UNTIL' | translate }}: <strong>{{intervalTo}}</strong>
                 </div>
             </div>
         </div>
@@ -44,31 +44,31 @@
                         <i class="fa fa-microchip fa-2x"></i>
                     </div>
                     <div>
-                        <p class="text-secondary small mb-0">Slots Disponibles</p>
+                        <p class="text-secondary small mb-0">{{ 'SERVER_DETAILS.AVAILABLE_SLOTS' | translate }}</p>
                         <h3 class="fw-bold mb-0">{{BOITIER_NOT_INSTALLED}}</h3>
                     </div>
                 </div>
                 <div class="mt-3 small text-secondary border-top pt-2">
-                    <i class="fa fa-history me-1"></i> Depuis: <strong>{{intervalFrom}}</strong>
+                    <i class="fa fa-history me-1"></i> {{ 'SERVER_DETAILS.SINCE' | translate }}: <strong>{{intervalFrom}}</strong>
                 </div>
             </div>
         </div>
 
         <div class="col-lg-6">
             <div class="premium-card h-100 shadow-sm">
-                <h6 class="fw-bold mb-3"><i class="fa fa-plus-circle me-2 text-primary"></i> Gestion de l'Infrastructure</h6>
+                <h6 class="fw-bold mb-3"><i class="fa fa-plus-circle me-2 text-primary"></i> {{ 'SERVER_DETAILS.INFRASTRUCTURE_MANAGEMENT' | translate }}</h6>
                 <form [formGroup]="addForm" (ngSubmit)="addBoitiers()">
                     <div class="d-flex align-items-center gap-3">
                         <div class="form-floating flex-grow-1">
-                            <input type="number" min="1" class="form-control border-0 bg-light" formControlName="nbrBoitiers" id="nbrBoitiers" placeholder="Qté">
-                            <label for="nbrBoitiers">Nombre de boitiers à ajouter</label>
+                            <input type="number" min="1" class="form-control border-0 bg-light" formControlName="nbrBoitiers" id="nbrBoitiers" placeholder="{{ 'SERVER_DETAILS.QTY_TO_ADD' | translate }}">
+                            <label for="nbrBoitiers">{{ 'SERVER_DETAILS.QTY_TO_ADD' | translate }}</label>
                         </div>
                         <div class="btn-group gap-2">
-                            <button type="submit" class="btn btn-primary px-4 fw-bold" [disabled]="!addForm.valid" title="Ajouter les devices">
-                                <i class="fa fa-save me-2"></i> Ajouter
+                            <button type="submit" class="btn btn-primary px-4 fw-bold" [disabled]="!addForm.valid" [title]="'SERVER_DETAILS.ADD_DEVICES' | translate">
+                                <i class="fa fa-save me-2"></i> {{ 'COMMON.ADD' | translate }}
                             </button>
-                            <button type="button" class="btn btn-outline-info px-4 fw-bold" title="Prolonger l'intervalle" (click)="extendIntervalOfBoitiers()">
-                                <i class="fa fa-expand-arrows-alt me-2"></i> Prolonger
+                            <button type="button" class="btn btn-outline-info px-4 fw-bold" [title]="'SERVER_DETAILS.EXTEND_INTERVAL' | translate" (click)="extendIntervalOfBoitiers()">
+                                <i class="fa fa-expand-arrows-alt me-2"></i> {{ 'SERVER_DETAILS.EXTEND' | translate }}
                             </button>
                         </div>
                     </div>
@@ -86,11 +86,15 @@
     <!-- Devices List -->
     <div class="premium-card p-0 overflow-hidden shadow-sm">
         <div class="d-flex justify-content-between align-items-center p-3 border-bottom bg-light bg-opacity-25">
-            <h5 class="fw-bold m-0"><i class="fa fa-list me-2 text-primary"></i> Terminaux Connectés</h5>
+            <h5 class="fw-bold m-0"><i class="fa fa-list me-2 text-primary"></i> {{ 'SERVER_DETAILS.CONNECTED_TERMINALS' | translate }}</h5>
             <form [formGroup]="searchForm" (ngSubmit)="searchBoitiers()" class="d-flex">
                 <div class="input-group input-group-sm">
-                    <input type="text" class="form-control border-0 shadow-sm px-3 search-input-fancy" formControlName="searchBoitier" placeholder="Filtrer par ID ou Label..." title="Filtrer par ID ou Label">
-                    <button class="btn btn-primary px-3 search-btn-fancy" type="submit" title="Lancer le filtrage">
+                    <input type="text" class="form-control border-0 shadow-sm px-3 search-input-fancy" 
+                        formControlName="searchBoitier" 
+                        placeholder="{{ 'SERVER_DETAILS.FILTER_PLACEHOLDER' | translate }}" 
+                        title="{{ 'SERVER_DETAILS.FILTER_PLACEHOLDER' | translate }}">
+                    <button class="btn btn-primary px-3 search-btn-fancy" type="submit" 
+                        title="{{ 'COMMON.SEARCH' | translate }}">
                         <i class="fa fa-search"></i>
                     </button>
                 </div>
@@ -105,14 +109,14 @@
             
             <ng-template pTemplate="header">
                 <tr>
-                    <th scope="col" style="width: 100px">Statut</th>
-                    <th scope="col">Terminal</th>
-                    <th scope="col">Étiquette</th>
-                    <th scope="col">Coordonnées</th>
-                    <th scope="col">Vitesse</th>
-                    <th scope="col">Dernière Trame</th>
-                    <th scope="col" style="width: 110px">Configuration</th>
-                    <th scope="col" class="text-end" style="width: 150px">Actions</th>
+                    <th scope="col" style="width: 100px">{{ 'SERVER_DETAILS.STATUS' | translate }}</th>
+                    <th scope="col">{{ 'SERVER_DETAILS.TERMINAL' | translate }}</th>
+                    <th scope="col">{{ 'SERVER_DETAILS.LABEL' | translate }}</th>
+                    <th scope="col">{{ 'SERVER_DETAILS.COORDINATES' | translate }}</th>
+                    <th scope="col">{{ 'SERVER_DETAILS.SPEED' | translate }}</th>
+                    <th scope="col">{{ 'SERVER_DETAILS.LAST_TRAME' | translate }}</th>
+                    <th scope="col" style="width: 110px">{{ 'SERVER_DETAILS.CONFIGURATION' | translate }}</th>
+                    <th scope="col" class="text-end" style="width: 150px">{{ 'COMMON.ACTIONS' | translate }}</th>
                 </tr>
             </ng-template>
 
@@ -125,7 +129,7 @@
                                 [attr.aria-checked]="boitier.stat"
                                 [disabled]="boitier.etatBoitier === 'INSTALLED'"
                                 (change)="changeBoitierStatus(boitier)"
-                                title="Changer le statut">
+                                title="{{ 'SERVER_DETAILS.CHANGE_STATUS' | translate }}">
                         </div>
                     </td>
                     <td>
@@ -134,19 +138,19 @@
                     </td>
                     <td>
                         <div class="d-flex align-items-center gap-2">
-                            <span class="badge bg-light text-dark">{{boitier.label || 'Sans étiquette'}}</span>
+                            <span class="badge bg-light text-dark">{{boitier.label || ('SERVER_DETAILS.NO_LABEL' | translate)}}</span>
                         </div>
                     </td>
                     <td>
                         @if (boitier.latitude && boitier.longitude) {
                             <div class="small">
-                                <div class="text-truncate location-text-premium" title="{{boitier.emplacement}}">
-                                    <i class="fa fa-map-marker text-danger me-1"></i> {{boitier.emplacement || 'Localisation...'}}
+                                <div class="text-truncate location-text-premium" [title]="boitier.emplacement">
+                                    <i class="fa fa-map-marker text-danger me-1"></i> {{boitier.emplacement || ('SERVER_DETAILS.LOCATION' | translate)}}
                                 </div>
                                 <div class="text-secondary opacity-75">{{boitier.latitude | number:'.4-4'}}, {{boitier.longitude | number:'.4-4'}}</div>
                             </div>
                         } @else {
-                            <span class="text-secondary small italic">Aucun signal</span>
+                            <span class="text-secondary small italic">{{ 'SERVER_DETAILS.NO_SIGNAL' | translate }}</span>
                         }
                     </td>
                     <td>
@@ -160,19 +164,21 @@
                                 {{boitier.dateLastTrame | date:'dd/MM HH:mm:ss'}}
                             </div>
                             <div class="d-flex gap-2 mt-1 opacity-75">
-                                <span title="GPS"><i class="fa fa-satellite" [ngClass]="boitier.gpsLastTrame ? 'text-primary' : 'text-secondary'"></i></span>
-                                <span title="GSM"><i class="fa fa-signal" [ngClass]="boitier.gsmLastTrame ? 'text-info' : 'text-secondary'"></i></span>
+                                <span title="{{ 'SERVER_DETAILS.GPS' | translate }}"><i class="fa fa-satellite" [ngClass]="boitier.gpsLastTrame ? 'text-primary' : 'text-secondary'"></i></span>
+                                <span title="{{ 'SERVER_DETAILS.GSM' | translate }}"><i class="fa fa-signal" [ngClass]="boitier.gsmLastTrame ? 'text-info' : 'text-secondary'"></i></span>
                             </div>
                         </div>
                     </td>
                     <td>
                         <div class="btn-group gap-1">
                             <button class="btn btn-sm btn-outline-info border-0 p-1" 
-                                [routerLink]="['/adminWeb/recalcule', 0, boitier.numBoitier]" title="CMD / Recalculer">
+                                [routerLink]="['/adminWeb/recalcule', 0, boitier.numBoitier]" 
+                                title="{{ 'SERVER_DETAILS.CMD' | translate }}">
                                 <i class="fa fa-terminal"></i>
                             </button>
                             <button class="btn btn-sm btn-outline-secondary border-0 p-1" 
-                                [routerLink]="['/adminWeb/archiveBoitier', boitier.numBoitier]" title="Archive">
+                                [routerLink]="['/adminWeb/archiveBoitier', boitier.numBoitier]" 
+                                title="{{ 'SERVER_DETAILS.ARCHIVE' | translate }}">
                                 <i class="fa fa-history"></i>
                             </button>
                         </div>
@@ -180,7 +186,7 @@
                     <td class="text-end">
                         <button class="btn btn-sm btn-outline-primary border-0" 
                             (click)="onSelect(boitier)">
-                            <i class="fa fa-edit me-1"></i> Étiqueter
+                            <i class="fa fa-edit me-1"></i> {{ 'SERVER_DETAILS.LABEL_ACTION' | translate }}
                         </button>
                     </td>
                 </tr>
@@ -190,7 +196,7 @@
                 <tr>
                     <td colspan="8" class="text-center py-5 text-secondary">
                         <i class="fa fa-microchip fa-3x opacity-25 mb-2"></i>
-                        <p>Aucun terminal trouvé</p>
+                        <p>{{ 'SERVER_DETAILS.NO_TERMINAL' | translate }}</p>
                     </td>
                 </tr>
             </ng-template>
@@ -203,23 +209,23 @@
     <div class="modal-dialog-centered progress-dialog-content">
         <div class="modal-content modal-content-premium border-0 w-100">
             <div class="modal-header header-gradient text-white border-0 p-4">
-                <h5 class="modal-title fw-bold m-0"><i class="fa fa-edit me-2"></i> Modifier le Terminal</h5>
+                <h5 class="modal-title fw-bold m-0"><i class="fa fa-edit me-2"></i> {{ 'SERVER_DETAILS.EDIT_TERMINAL' | translate }}</h5>
                 <button type="button" class="btn-close btn-close-white" (click)="closeUpdateModal()" aria-label="Close"></button>
             </div>
             
             <form [formGroup]="updateForm">
                 <div class="modal-body p-4 bg-light bg-opacity-50">
-                    <p class="small text-secondary mb-4">Mise à jour pour le boitier #{{selectedBoitier.idBoitier}}</p>
+                    <p class="small text-secondary mb-4">{{ 'SERVER_DETAILS.UPDATE_FOR_BOX' | translate }} #{{selectedBoitier.idBoitier}}</p>
                     <div class="form-floating shadow-sm">
-                        <input type="text" class="form-control border-0" formControlName="label" id="labelUpdate" placeholder="Label">
-                        <label for="labelUpdate">Identifiant Logiciel (Label)</label>
+                        <input type="text" class="form-control border-0" formControlName="label" id="labelUpdate" placeholder="{{ 'SERVER_DETAILS.SOFTWARE_LABEL' | translate }}">
+                        <label for="labelUpdate">{{ 'SERVER_DETAILS.SOFTWARE_LABEL' | translate }}</label>
                     </div>
                 </div>
                 
                 <div class="modal-footer p-3 bg-white border-0">
-                    <button type="button" class="btn btn-light px-4" (click)="closeUpdateModal()">Annuler</button>
+                    <button type="button" class="btn btn-light px-4" (click)="closeUpdateModal()">{{ 'COMMON.CANCEL' | translate }}</button>
                     <button type="button" class="btn btn-warning px-5 fw-bold" (click)="updateBoitier()" [disabled]="!updateForm.valid">
-                        Mettre à jour
+                        {{ 'COMMON.UPDATE' | translate }}
                     </button>
                 </div>
             </form>

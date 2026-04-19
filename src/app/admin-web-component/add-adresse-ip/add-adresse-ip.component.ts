@@ -3,13 +3,14 @@ import { IpAddressService } from "../../service/ip-address.service";
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { ToastrService } from 'ngx-toastr';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-add-adresse-ip',
     standalone: true,
     templateUrl: './add-adresse-ip.component.html',
     styleUrls: ['./add-adresse-ip.component.css'],
-    imports: [ReactiveFormsModule]
+    imports: [ReactiveFormsModule, TranslateModule]
 })
 export class AddAdresseIpComponent implements OnInit {
 
@@ -19,6 +20,7 @@ export class AddAdresseIpComponent implements OnInit {
   private readonly ipAddressService = inject(IpAddressService);
   private readonly toastr = inject(ToastrService);
   private readonly fb = inject(FormBuilder);
+  private readonly translate = inject(TranslateService);
 
   constructor() {
     this.initForm();
@@ -42,17 +44,26 @@ export class AddAdresseIpComponent implements OnInit {
 
   saveIpAddres() {
     if (this.ipForm.invalid) {
-      this.toastr.warning('Please fill all required fields correctly', 'Warning');
+      this.toastr.warning(
+        this.translate.instant('WEB_ACCOUNTS.FILL_REQUIRED'), 
+        this.translate.instant('COMMON.WARNING')
+      );
       return;
     }
 
     this.ipAddressService.saveIpAddress(this.ipForm.value).subscribe({
       next: () => {
-        this.toastr.success('IP Address saved', 'Success');
+        this.toastr.success(
+          this.translate.instant('IP_ADDRESS.SAVED'), 
+          this.translate.instant('COMMON.SUCCESS')
+        );
         this.ipForm.reset({ typeConnection: 'SSH' });
       },
       error: () => {
-        this.toastr.error('Error saving IP address', 'Error');
+        this.toastr.error(
+          this.translate.instant('IP_ADDRESS.ERROR_SAVING'), 
+          this.translate.instant('COMMON.ERROR')
+        );
       }
     });
   }

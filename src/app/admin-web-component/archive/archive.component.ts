@@ -6,13 +6,14 @@ import { BoitierService } from "../../service/boitier.service";
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { TabsModule } from 'primeng/tabs';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-archive',
   standalone: true,
   templateUrl: './archive.component.html',
   styleUrls: ['./archive.component.css'],
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, TableModule, TabsModule, DatePipe, DecimalPipe, NgClass]
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TableModule, TabsModule, DatePipe, DecimalPipe, NgClass, TranslateModule]
 })
 export class ArchiveComponent implements OnInit {
   archives = signal<Archive[]>([]);

@@ -8,6 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 import { catchError } from "rxjs/operators";
 import { Router } from "@angular/router";
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 
 // PrimeNG DatePicker replaces bsDatepicker
@@ -16,8 +17,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
     selector: 'app-add-compte-server',
     standalone: true,
     templateUrl: './add-compte-server.component.html',
-    styleUrls: ['./add-compte-server.component.css'],
-    imports: [ReactiveFormsModule, DatePickerModule]
+    imports: [ReactiveFormsModule, DatePickerModule, TranslateModule]
 })
 export class AddCompteServerComponent implements OnInit {
 
@@ -43,6 +43,7 @@ export class AddCompteServerComponent implements OnInit {
   private readonly toastr = inject(ToastrService);
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
+  private readonly translate = inject(TranslateService);
 
   constructor() {
     this.initForm();
@@ -78,7 +79,10 @@ export class AddCompteServerComponent implements OnInit {
 
   addCompteServer() {
     if (this.serverForm.invalid) {
-      this.toastr.warning('Please fill all required fields correctly', 'Warning');
+      this.toastr.warning(
+        this.translate.instant('WEB_ACCOUNTS.FILL_REQUIRED'), 
+        this.translate.instant('COMMON.WARNING')
+      );
       return;
     }
 
@@ -98,9 +102,12 @@ export class AddCompteServerComponent implements OnInit {
       .pipe(
         catchError(error => {
           this.mode = true;
-          this.messageError = error.error?.message || "An error occurred";
+          this.messageError = error.error?.message || this.translate.instant('COMMON.AN_ERROR_OCCURRED');
           this.loading = false;
-          this.toastr.error('can not add account', 'Error!');
+          this.toastr.error(
+            this.translate.instant('SERVER_ACCOUNTS.ADD_ERROR'), 
+            this.translate.instant('COMMON.ERROR')
+          );
           throw error;
         })
       )
@@ -108,7 +115,10 @@ export class AddCompteServerComponent implements OnInit {
         next: () => {
           this.mode = false;
           this.loading = false;
-          this.toastr.success('Server Account added', 'Success!');
+          this.toastr.success(
+            this.translate.instant('SERVER_ACCOUNTS.UPDATE_SUCCESS'), 
+            this.translate.instant('COMMON.SUCCESS')
+          );
           this.router.navigate(['/adminWeb/listWebs']);
         }
       });
