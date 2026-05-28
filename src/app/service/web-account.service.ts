@@ -71,9 +71,9 @@ export class WebAccountService {
         return this.http.get<any[]>(`${environment.apiBaseUrl}compteWeb/All?userName=${this.authService.getCurrentUserName()}`);
     }
 
-    // Lighter version for dropdowns
+    // Lighter version for dropdowns — only returns {idCompteClientWeb, login}
     getAllWebAccountNames(): Observable<any[]> {
-        return this.http.get<any[]>(`${environment.apiBaseUrl}compteWeb/All?userName=${this.authService.getCurrentUserName()}`);
+        return this.http.get<any[]>(`${environment.apiBaseUrl}compteWeb/AllNames?userName=${this.authService.getCurrentUserName()}`);
     }
 
     associateCompteWebToCompteServer(idWeb: number, idServer: number): Observable<any> {

@@ -18,10 +18,8 @@ export class AuthService {
     currentUser: AdministratorCompte | null = null;
 
     authentificate(login: string, password: string): Observable<any> {
-        const params = new HttpParams()
-            .set('username', login)
-            .set('password', password);
-        return this.http.post<any>(`${environment.apiBaseUrl}authenticate`, null, { params });
+        const body = { username: login, password: password };
+        return this.http.post<any>(`${environment.apiBaseUrl}authenticate`, body);
     }
 
     saveSession(authResponse: any) {

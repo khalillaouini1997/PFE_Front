@@ -1,0 +1,117 @@
+<div class="powerbi-dashboard-container">
+  <!-- Header -->
+  <div class="dashboard-header">
+    <h3>Power BI Analytics Dashboard</h3>
+    <div class="header-actions">
+      <button class="btn btn-secondary" (click)="refreshDashboard()" [disabled]="loading">
+        <i class="fa fa-refresh"></i> Refresh
+      </button>
+    </div>
+  </div>
+  
+  <!-- ETL Trigger Section -->
+  <div class="etl-section">
+    <h4>Manual ETL Triggers</h4>
+    <div class="etl-message" *ngIf="etlMessage()" [ngClass]="{ 'success': etlSuccess(), 'error': !etlSuccess() }">
+      <i [ngClass]="etlSuccess() ? 'fa fa-check-circle' : 'fa fa-exclamation-circle'"></i>
+      {{ etlMessage() }}
+    </div>
+    <div class="etl-buttons">
+      <button class="btn btn-info btn-sm" (click)="triggerETL('dim-device')" [disabled]="etlLoading()">
+        <i class="fa fa-database"></i> Sync Devices
+      </button>
+      <button class="btn btn-info btn-sm" (click)="triggerETL('dim-user')" [disabled]="etlLoading()">
+        <i class="fa fa-users"></i> Sync Users
+      </button>
+      <button class="btn btn-info btn-sm" (click)="triggerETL('device-performance')" [disabled]="etlLoading()">
+        <i class="fa fa-tachometer-alt"></i> Sync Performance
+      </button>
+      <button class="btn btn-info btn-sm" (click)="triggerETL('user-activity')" [disabled]="etlLoading()">
+        <i class="fa fa-user-clock"></i> Sync Activity
+      </button>
+      <button class="btn btn-info btn-sm" (click)="triggerETL('maintenance')" [disabled]="etlLoading()">
+        <i class="fa fa-wrench"></i> Sync Maintenance
+      </button>
+      <button class="btn btn-info btn-sm" (click)="triggerETL('revenue')" [disabled]="etlLoading()">
+        <i class="fa fa-dollar-sign"></i> Sync Revenue
+      </button>
+      <button class="btn btn-primary btn-sm" (click)="triggerETL('all')" [disabled]="etlLoading()">
+        <i class="fa fa-sync"></i> Sync All
+      </button>
+    </div>
+  </div>
+  
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p>Loading Power BI dashboard...</p>
+  </div>
+  
+  <!-- Error State -->
+  <div *ngIf="error" class="error-state">
+    <div class="alert alert-danger">
+      <i class="fa fa-exclamation-triangle"></i>
+      {{ error }}
+    </div>
+  </div>
+  
+  <!-- Dashboard Content -->
+  <div *ngIf="!loading && !error && metrics" class="dashboard-content">
+    <!-- Metrics Cards -->
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-icon total">
+          <i class="fa fa-hdd-o"></i>
+        </div>
+        <div class="metric-info">
+          <span class="metric-label">Total Devices</span>
+          <span class="metric-value">{{ metrics.total_devices }}</span>
+        </div>
+      </div>
+      
+      <div class="metric-card">
+        <div class="metric-icon active">
+          <i class="fa fa-check-circle"></i>
+        </div>
+        <div class="metric-info">
+          <span class="metric-label">Active Devices</span>
+          <span class="metric-value">{{ metrics.active_devices }}</span>
+        </div>
+      </div>
+      
+      <div class="metric-card">
+        <div class="metric-icon speed">
+          <i class="fa fa-tachometer-alt"></i>
+        </div>
+        <div class="metric-info">
+          <span class="metric-label">Avg Speed</span>
+          <span class="metric-value">{{ metrics.avg_speed | number: '.1-1' }} km/h</span>
+        </div>
+      </div>
+      
+      <div class="metric-card">
+        <div class="metric-icon moving">
+          <i class="fa fa-truck"></i>
+        </div>
+        <div class="metric-info">
+          <span class="metric-label">Moving Devices</span>
+          <span class="metric-value">{{ metrics.moving_devices }}</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Placeholder for Power BI Report -->
+    <div class="powerbi-report-placeholder">
+      <div class="placeholder-content">
+        <i class="fa fa-chart-line fa-4x"></i>
+        <h4>Power BI Report: {{ reportId }}</h4>
+        <p>Power BI report will be embedded here once configured with Power BI Desktop or Power BI Service</p>
+        <button class="btn btn-primary mt-3">
+          <i class="fa fa-cog"></i> Configure Power BI
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

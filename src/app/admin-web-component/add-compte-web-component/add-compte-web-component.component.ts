@@ -71,7 +71,7 @@ export class AddCompteWebComponentComponent implements OnInit {
     }
 
     this.compteServerService.getAllServerAccountForForm().subscribe(res => {
-      this.serverAccounts.set(res.content);
+      this.serverAccounts.set(res);
     });
 
     this.codesPays.set(this.webAccountService.codesPays);

@@ -27,8 +27,8 @@
 
     <!-- Table Section -->
     <div class="premium-card p-0 overflow-hidden shadow-sm">
-        <p-table [value]="comptesWeb" [lazy]="true" (onLazyLoad)="pageChanged($event)" 
-            [paginator]="true" [rows]="itemsPerPage" [totalRecords]="bigTotalItems" 
+        <p-table [value]="comptesWeb" [lazy]="true" (onLazyLoad)="loadWebAccounts($event)"
+            [paginator]="true" [rows]="itemsPerPage" [totalRecords]="bigTotalItems"
             [rowsPerPageOptions]="[10,15,30,50,60]"
             [loading]="loading"
             stateStorage="session" stateKey="comptes-web-state"

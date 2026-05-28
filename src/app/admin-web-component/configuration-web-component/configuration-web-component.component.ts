@@ -19,13 +19,14 @@ import { of, tap } from "rxjs";
 import { catchError } from "rxjs/operators";
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
-import { BsLocaleService, BsDatepickerModule } from "ngx-bootstrap/datepicker";
+import { BsLocaleService } from "ngx-bootstrap/datepicker";
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { frLocale } from 'ngx-bootstrap/locale';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgMultiSelectDropDownModule, IDropdownSettings } from 'ng-multiselect-dropdown';
+import { DatePickerModule } from 'primeng/datepicker';
 defineLocale('fr', frLocale);
 
 import { TableModule } from 'primeng/table';
@@ -35,7 +36,7 @@ import { TableModule } from 'primeng/table';
     standalone: true,
     templateUrl: './configuration-web-component.component.html',
     styleUrls: ['./configuration-web-component.component.css'],
-    imports: [CommonModule, ReactiveFormsModule, BsDatepickerModule, NgSelectModule, NgMultiSelectDropDownModule, TableModule, DatePipe, TranslateModule]
+    imports: [CommonModule, ReactiveFormsModule, NgSelectModule, NgMultiSelectDropDownModule, TableModule, DatePipe, TranslateModule, DatePickerModule]
 })
 export class ConfigurationWebComponentComponent implements OnInit {
 
@@ -210,7 +211,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
       });
       this.codesPays.set(this.webAccountService.codesPays);
       this.compteServerService.getAllServerAccountForForm().subscribe(res => {
-        this.serverAccounts.set(res.content);
+        this.serverAccounts.set(res);
       });
     } else {
       this.router.navigate(['/error']);

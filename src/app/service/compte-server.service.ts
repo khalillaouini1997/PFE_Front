@@ -56,9 +56,8 @@ export class CompteServerService {
     return this.http.get<any>(`${environment.apiBaseUrl}compteServerWeb/${id}`);
   }
 
-  getAllServerAccountForForm(): Observable<any> {
-    const keyWord = "";
-    return this.http.get<any>(`${environment.apiBaseUrl}compteServerWeb?keyWord=${keyWord}&size=1000000&userName=${this.authService.getCurrentUserName()}`);
+  getAllServerAccountForForm(): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.apiBaseUrl}compteServerWeb/AllNames?userName=${this.authService.getCurrentUserName()}`);
   }
 
   createServerComptewithBoitier(compteServer: CompteServer, nbrBoitiers: number): Observable<any> {

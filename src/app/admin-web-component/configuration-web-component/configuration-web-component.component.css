@@ -442,7 +442,7 @@ table>thead>tr>th,
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
 }
 
-.modal-body label:not(.form-check-label) {
+.modal-body label:not(.form-check-label):not(.toggle-option-label) {
   position: relative !important;
   display: block !important;
   transform: none !important;
@@ -455,6 +455,17 @@ table>thead>tr>th,
   text-transform: uppercase !important;
   letter-spacing: 0.025em !important;
   pointer-events: auto !important;
+}
+
+.toggle-option-label {
+  display: inline !important;
+  margin-bottom: 0 !important;
+  color: #1e293b !important;
+  font-size: 0.8rem !important;
+  font-weight: 700 !important;
+  text-transform: capitalize !important;
+  letter-spacing: normal !important;
+  text-transform: capitalize !important;
 }
 
 .modal-body .form-check-label {
@@ -476,7 +487,7 @@ table>thead>tr>th,
   font-size: 0.85rem !important;
 }
 
-.modal-body select.form-select, 
+.modal-body select.form-select,
 .modal-body input.form-control {
   background-color: #f8fafc !important;
   border: 1px solid transparent !important;
@@ -485,7 +496,7 @@ table>thead>tr>th,
   transition: all 0.2s ease !important;
 }
 
-.modal-body select.form-select:focus, 
+.modal-body select.form-select:focus,
 .modal-body input.form-control:focus {
   background-color: #ffffff !important;
   border-color: #6366f1 !important;
@@ -552,4 +563,4 @@ dialog::backdrop {
 
 .table-container-max-height {
     max-height: 500px;
-}
+}

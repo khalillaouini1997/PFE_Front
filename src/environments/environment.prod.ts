@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiBaseUrl: "https://fleet.tn/ws_webadmin/",
+  apiBaseUrl: "http://localhost:8080/",
   owner: "TDS"
 };

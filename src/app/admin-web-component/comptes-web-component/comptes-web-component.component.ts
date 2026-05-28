@@ -45,6 +45,9 @@ export class ComptesWebComponentComponent implements OnInit {
   ngOnInit() {
     if (this.authService.isAuthenticated()) {
       this.initForms();
+      // Initially, we can wait for p-table's onLazyLoad to trigger the first fetch
+      // But if it doesn't trigger immediately, we can call it. Usually p-table triggers it.
+      // this.loadWebAccounts();
     } else {
       this.router.navigate(['/error']);
     }
@@ -56,24 +59,26 @@ export class ComptesWebComponentComponent implements OnInit {
     });
   }
 
-  public pageChanged(event: any): void {
-    if (event.first !== undefined && event.rows !== undefined) {
-      this.bigCurrentPage = (event.first / event.rows) + 1;
-      this.itemsPerPage = event.rows;
-      this.getAllWebAccount(this.searchForm.get('keyWord')?.value, this.bigCurrentPage - 1, this.itemsPerPage);
-    }
-  }
-
-  getAllWebAccount(keyWord: string, page: number, size: number) {
+  loadWebAccounts(event?: any) {
     this.loading = true;
-    this.comptesWeb = [];
-    this.cdr.markForCheck();
-    this.webAccountService.getAllWebAccountByKeyWord(keyWord, page, size).subscribe({
-      next: (_comptesWeb) => {
-        this.loading = false;
-        this.comptesWeb = _comptesWeb.content as any;
+    
+    // Extract pagination parameters from the PrimeNG table event
+    let page = 0;
+    let size = this.itemsPerPage;
+    
+    if (event) {
+      page = event.first ? Math.floor(event.first / event.rows) : 0;
+      size = event.rows || this.itemsPerPage;
+    }
+    
+    const keyWord = (this.searchForm?.get('keyWord')?.value || '').trim();
 
-        for (const compte of this.comptesWeb) {
+    this.webAccountService.getAllWebAccountByKeyWord(keyWord, page, size).subscribe({
+      next: (res: any) => {
+        this.loading = false;
+        const loaded = res.content || [];
+        
+        for (const compte of loaded) {
           if (Date.now() < new Date(compte.date_expiration).getTime()) {
             compte.expired = false;
             compte.during = true;
@@ -82,7 +87,9 @@ export class ComptesWebComponentComponent implements OnInit {
             compte.during = false;
           }
         }
-        this.bigTotalItems = _comptesWeb.totalElements;
+        
+        this.comptesWeb = loaded;
+        this.bigTotalItems = res.totalElements || 0;
         this.cdr.markForCheck();
       },
       error: (err) => {
@@ -101,12 +108,7 @@ export class ComptesWebComponentComponent implements OnInit {
   }
 
   searchWebAccount() {
-    this.loading = true;
-    this.bigCurrentPage = 1;
-    this.cdr.markForCheck();
-    this.getAllWebAccount(this.searchForm.get('keyWord')?.value, this.bigCurrentPage - 1, this.itemsPerPage);
-    this.loading = false;
-    this.cdr.markForCheck();
+    this.loadWebAccounts();
   }
 
   onSelect(compteWeb: CompteWeb) {
@@ -126,17 +128,13 @@ export class ComptesWebComponentComponent implements OnInit {
   deleteWebAccount() {
     const res = confirm(this.translate.instant('WEB_ACCOUNTS.DELETE_CONFIRM'));
     if (res) {
-      const indexCompte = this.comptesWeb.findIndex(x => x.idCompteClientWeb == this.selectedWebAccount.idCompteClientWeb);
       this.webAccountService.deleteWebAccount(this.selectedWebAccount.idCompteClientWeb).subscribe({
         next: () => {
           this.toastr.success(
             this.translate.instant('WEB_ACCOUNTS.DELETE_SUCCESS'), 
             this.translate.instant('COMMON.SUCCESS')
           );
-          if (indexCompte > -1) {
-            this.comptesWeb.splice(indexCompte, 1);
-            this.cdr.markForCheck();
-          }
+          this.loadWebAccounts();
         },
         error: () => {
           this.toastr.error(
