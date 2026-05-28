@@ -4,6 +4,7 @@ import { TraccarService } from 'src/app/service/traccar.service';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'app-list-traccar',
@@ -16,15 +17,12 @@ export class ListTraccarComponent implements OnInit {
 
   private readonly traccarService = inject(TraccarService);
   private readonly fb = inject(FormBuilder);
+  private readonly toastr = inject(ToastrService);
 
   searchForm!: FormGroup;
-  public maxSize: number = 5;
-  public bigTotalItems: number = 175;
-  public bigCurrentPage: number = 1;
-  public numPages: number = 0;
-  itemsPerPage = 30;
   traccarDtos: TraccarDto[] = [];
   loading: boolean = false;
+  totalRecords: number = 0;
 
   ngOnInit() {
     this.initForms();
@@ -37,13 +35,30 @@ export class ListTraccarComponent implements OnInit {
     });
   }
 
-  getLisTraccar() {
-    this.traccarService.getLisTraccar().subscribe((traccarDto: any) => {
-      this.traccarDtos = traccarDto;
+  getLisTraccar(keyword: string = '') {
+    this.loading = true;
+    this.traccarService.getLisTraccar(keyword).subscribe({
+      next: (traccarDto: any) => {
+        if (!traccarDto || traccarDto.length === 0) {
+          this.traccarDtos = [];
+          this.totalRecords = 0;
+          this.toastr.warning('Aucun Traccar configuré pour cet utilisateur', 'Information');
+        } else {
+          this.traccarDtos = traccarDto;
+          this.totalRecords = traccarDto?.length || 0;
+        }
+        this.loading = false;
+      },
+      error: (error) => {
+        this.toastr.error('Erreur lors du chargement des Traccars', 'Erreur');
+        this.loading = false;
+        console.error('Error loading traccars:', error);
+      }
     });
   }
 
   searchWebAccount() {
-    this.getLisTraccar();
+    const keyword = this.searchForm.get('keyWord')?.value || '';
+    this.getLisTraccar(keyword);
   }
 }

@@ -11,10 +11,13 @@ export class TraccarService {
   private readonly authService = inject(AuthService);
   private readonly _http = inject(HttpClient);
 
-  getLisTraccar(): Observable<any> {
+  getLisTraccar(keyword: string = ''): Observable<any> {
     const userObj = this.authService.getCurrentUser();
     const idTraccar = userObj?.user?.idTraccar ?? 0;
-    const url = `${environment.apiBaseUrl}traccar/${idTraccar}`;
+    let url = `${environment.apiBaseUrl}traccar/${idTraccar}`;
+    if (keyword) {
+      url += `?keyword=${encodeURIComponent(keyword)}`;
+    }
     return this._http.get(url);
   }
 }

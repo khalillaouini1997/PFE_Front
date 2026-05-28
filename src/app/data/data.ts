@@ -311,6 +311,15 @@ export class TraccarDto {
   id!: number;
   name!: string;
   imei!: string;
+  lastupdate?: string;
+  category?: string;
+  contact?: string;
+  phone?: string;
+  model?: string;
+  disabled?: boolean;
+  iccid?: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 export interface Tram {

@@ -106,6 +106,8 @@ export class ConfigurationWebComponentComponent implements OnInit {
   readonly notifSubs = ['date_sub(NOW(), INTERVAL 6 hour)', 'date_sub(NOW(), INTERVAL 1 DAY)', 'date_sub(NOW(), INTERVAL 2 DAY)'];
   dateBoolean: boolean = true;
   readonly maxDate: Date = new Date();
+  sqlQuery: string = '';
+  showSqlBox: boolean = false;
 
 
 
@@ -629,6 +631,14 @@ export class ConfigurationWebComponentComponent implements OnInit {
 
   recalculate() {
     const type = this.recalculateForm.get('typeRecalcule')?.value;
+    const deviceIds = [...this.selectedBoitiersIds()];
+    if (this.recalculeP().idBoitier && !deviceIds.includes(this.recalculeP().idBoitier)) {
+      deviceIds.push(this.recalculeP().idBoitier);
+    }
+
+    this.updateSqlQuery(type, deviceIds);
+    this.showSqlBox = true;
+
     if (type == "recalcule carburant") {
       this.recalculeFuel();
     } else if (type == "recalcule Temps reel") {
@@ -762,6 +772,58 @@ export class ConfigurationWebComponentComponent implements OnInit {
           this.toastr.error(this.translate.instant('COMMON.AN_ERROR_OCCURRED'), this.translate.instant('COMMON.ERROR'));
         }
       });
+  }
+
+  updateSqlQuery(type: string, deviceIds: number[]) {
+    const queries: any = {
+      'recalcule trajet': [
+        'delete from path where device_id = ? and begin_path_time >= ?',
+        'delete from stop where device_id = ? and stop_start >= ?',
+        'delete from mileage where device_id = ? and start_hour >= ?',
+        'delete from activity where device_id = ? and begin_time >= ?',
+        'delete from cal_travel where device_id = ?',
+        'delete from cal_travel_commit where device_id = ?',
+        'insert into cal_travel_commit (device_id) values (?)',
+        'insert into cal_travel (device_id) values (?)',
+        'update cal_travel set last_id = ?, last_time = ? where device_id = ?',
+        'update cal_travel_commit set last_id = ?, last_time = ? where device_id = ?'
+      ],
+      'recalcule carburant': [
+        'delete from rep_fuel_variation where id_device = ? and appro_start_time > ?',
+        'delete from cal_option where device_id = ?',
+        'delete from cal_option_commit where device_id = ?',
+        'insert into cal_option_commit (device_id) values (?)',
+        'update cal_option_commit set last_id = 0, last_time = ? where device_id = ?'
+      ],
+      'recalcule alert': [
+        'delete from notification where alertId = ? and created_at >= ?',
+        'delete from cal_alert where alert_id = ?',
+        'delete from cal_alert_commit where alert_id = ?'
+      ],
+      'recalcule boitier': [
+        'delete from path where device_id = ? and begin_path_time >= ?',
+        'delete from stop where device_id = ? and stop_start >= ?',
+        'delete from mileage where device_id = ? and start_hour >= ?',
+        'delete from rep_overspeed where device_id = ? and begin_path_time >= ?',
+        'delete from cal_travel where device_id = ?',
+        'delete from cal_travel_commit where device_id = ?'
+      ],
+      'recalcule Temps reel': [
+        'delete from real_time_dev where deviceid = ?'
+      ]
+    };
+
+    if (!queries[type] || deviceIds.length === 0) {
+      this.sqlQuery = '';
+      return;
+    }
+
+    const deviceId = deviceIds[0];
+    const formattedQueries = queries[type].map((query: string) => {
+      return query.replace(/\?/g, deviceId.toString());
+    });
+
+    this.sqlQuery = formattedQueries.join('\n\n');
   }
 
 }

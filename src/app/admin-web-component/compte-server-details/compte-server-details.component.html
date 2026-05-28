@@ -171,13 +171,8 @@
                     </td>
                     <td>
                         <div class="btn-group gap-1">
-                            <button class="btn btn-sm btn-outline-info border-0 p-1" 
-                                [routerLink]="['/adminWeb/recalcule', 0, boitier.numBoitier]" 
-                                title="{{ 'SERVER_DETAILS.CMD' | translate }}">
-                                <i class="fa fa-terminal"></i>
-                            </button>
-                            <button class="btn btn-sm btn-outline-secondary border-0 p-1" 
-                                [routerLink]="['/adminWeb/archiveBoitier', boitier.numBoitier]" 
+                            <button class="btn btn-sm btn-outline-secondary border-0 p-1"
+                                [routerLink]="['/adminWeb/archiveBoitier', boitier.numBoitier]"
                                 title="{{ 'SERVER_DETAILS.ARCHIVE' | translate }}">
                                 <i class="fa fa-history"></i>
                             </button>

@@ -13,7 +13,6 @@ import { ListTraccarComponent } from './list-traccar/list-traccar.component';
 import { CompteAdminComponent } from './compte-admin/compte-admin.component';
 import { AddAdminCompteComponent } from './add-admin-compte/add-admin-compte.component';
 import { ConfigurationWebComponentComponent } from "./configuration-web-component/configuration-web-component.component";
-import { RecalculWebComponent } from "./recalcul-web/recalcul-web.component";
 import { ArchiveComponent } from "./archive/archive.component";
 import { VehiculeInfoComponent } from "./vehicule-info/vehicule-info.component";
 import { AddAdresseIpComponent } from "./add-adresse-ip/add-adresse-ip.component";
@@ -74,10 +73,6 @@ export const ADMIN_WEB_ROUTES: Routes = [{
     {
       path: 'archiveBoitier/:numBoitier',
       component: ArchiveComponent
-    },
-    {
-      path: 'recalcule/:idCompteClientWeb/:numBoitier',
-      component: RecalculWebComponent
     },
     {
       path: 'intervention',

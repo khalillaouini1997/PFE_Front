@@ -349,36 +349,37 @@
                             </h6>
 
                             <div class="row g-3">
-                                <div class="col-12" *ngIf="dateBoolean">
-                                    <label class="form-label text-secondary fw-bold text-uppercase mb-2"
-                                        style="font-size: 0.75rem; letter-spacing: 0.5px;">{{ 'WEB_CONFIG.START_DATE' | translate }}</label>
-                                    <div class="custom-datepicker-container">
-                                        <p-datepicker formControlName="datestart"
-                                            dateFormat="dd-mm-yy" [showIcon]="true" [appendTo]="configModal" [showTime]="true"
-                                            [maxDate]="maxDate"
-                                            styleClass="w-100"
-                                            inputStyleClass="form-control bg-light border-0 shadow-sm fs-6 px-3 py-2 text-dark w-100">
-                                        </p-datepicker>
-                                    </div>
-                                </div>
-
-                                <div class="col-12">
-                                    <label class="form-label text-secondary fw-bold text-uppercase mb-2"
-                                        style="font-size: 0.75rem; letter-spacing: 0.5px;">{{ 'WEB_CONFIG.RECALC_NATURE' | translate }}</label>
-                                    <div class="input-group input-group-lg bg-light rounded-3 overflow-hidden shadow-sm border-0">
-                                        <span class="input-group-text bg-transparent border-0 text-muted px-3"><i class="fa fa-list-ul"></i></span>
-                                        <select formControlName="typeRecalcule"
-                                            class="form-select bg-transparent border-0 shadow-none fs-6 px-0 fw-medium text-dark cursor-pointer"
-                                            [title]="'WEB_CONFIG.RECALC_NATURE' | translate">
-                                            <option value="recalcule trajet">{{ 'RECALC.PATH' | translate }}</option>
-                                            <option value="recalcule boitier">{{ 'RECALC.BOX' | translate }}</option>
-                                            <option value="recalcule carburant">{{ 'RECALC.FUEL' | translate }}</option>
-                                            <option value="recalcule alert">{{ 'RECALC.ALERT' | translate }}</option>
-                                            <option value="recalcule Temps reel">{{ 'RECALC.REAL_TIME' | translate }}</option>
-                                        </select>
-                                    </div>
-                                </div>
+                            <div class="col-6" *ngIf="dateBoolean">
+                              <label class="form-label text-secondary fw-bold text-uppercase mb-2"
+                                     style="font-size: 0.75rem; letter-spacing: 0.5px;">{{ 'WEB_CONFIG.START_DATE' | translate }}</label>
+                              <div class="custom-datepicker-container">
+                                <p-datepicker formControlName="datestart"
+                                              dateFormat="dd-mm-yy" [showIcon]="true" [appendTo]="configModal" [showTime]="true"
+                                              [maxDate]="maxDate"
+                                              [showOnFocus]="false"
+                                              styleClass="w-100"
+                                              inputStyleClass="form-control bg-light border-0 shadow-sm fs-6 px-3 py-2 text-dark w-100">
+                                </p-datepicker>
+                              </div>
                             </div>
+
+                            <div class="col-6">
+                              <label class="form-label text-secondary fw-bold text-uppercase mb-2"
+                                     style="font-size: 0.75rem; letter-spacing: 0.5px;">{{ 'WEB_CONFIG.RECALC_NATURE' | translate }}</label>
+                              <div class="input-group input-group-lg bg-light rounded-3 overflow-hidden shadow-sm border-0">
+                                <span class="input-group-text bg-transparent border-0 text-muted px-3"><i class="fa fa-list-ul"></i></span>
+                                <select formControlName="typeRecalcule"
+                                        class="form-select bg-transparent border-0 shadow-none fs-6 px-0 fw-medium text-dark cursor-pointer"
+                                        [title]="'WEB_CONFIG.RECALC_NATURE' | translate">
+                                  <option value="recalcule trajet">{{ 'RECALC.PATH' | translate }}</option>
+                                  <option value="recalcule boitier">{{ 'RECALC.BOX' | translate }}</option>
+                                  <option value="recalcule carburant">{{ 'RECALC.FUEL' | translate }}</option>
+                                  <option value="recalcule alert">{{ 'RECALC.ALERT' | translate }}</option>
+                                  <option value="recalcule Temps reel">{{ 'RECALC.REAL_TIME' | translate }}</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
 
                             <button type="button"
                                 class="btn btn-lg w-100 fw-bold rounded-3 text-white transition-all border-0 shadow-sm mt-4"
@@ -389,6 +390,16 @@
                                     [class.fa-spin]="loadingRecalculate()"></i>
                                 {{loadingRecalculate() ? ('WEB_CONFIG.PROCESSING' | translate) : ('WEB_CONFIG.START_RECALC' | translate)}}
                             </button>
+
+                            @if(showSqlBox) {
+                            <div class="sql-query-box mt-4">
+                                <h6 class="sql-query-title">
+                                    <i class="fa fa-code"></i>
+                                    Requêtes SQL
+                                </h6>
+                                <pre class="sql-query-content">{{sqlQuery}}</pre>
+                            </div>
+                            }
                         </div>
                     </div>
 
@@ -539,6 +550,7 @@
                                 <div class="d-flex flex-column px-3 py-2 flex-grow-1 border-end border-secondary border-opacity-25">
                                   <span class="fw-bold text-secondary text-uppercase mb-1" style="font-size: 0.7rem;">Rawstream Id</span>
                                   <select class="form-select form-select-sm bg-transparent border-0 shadow-none p-0 text-dark fw-medium"
+                                          style="height: 38px;"
                                           formControlName="idIpAdresse" title="Rawstream IP">
                                     @for (ip of ipAddresses(); track ip.idIpAdresse) {
                                       <option [ngValue]="ip.idIpAdresse">{{ip.label}}</option>
@@ -561,7 +573,7 @@
                               </div>
                             </div>
                           </div>
-                          
+
                         </div>
                     </div>
                 </div>

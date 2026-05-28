@@ -564,3 +564,38 @@ dialog::backdrop {
 .table-container-max-height {
     max-height: 500px;
 }
+
+/* SQL Query Box Styles */
+.sql-query-box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 16px;
+    margin-top: 20px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.sql-query-title {
+    color: #4f46e5;
+    font-weight: 600;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+}
+
+.sql-query-content {
+    background: #1e293b;
+    color: #e2e8f0;
+    padding: 16px;
+    border-radius: 8px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    margin: 0;
+}
