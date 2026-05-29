@@ -335,5 +335,11 @@
     "FUEL": "recalcule carburant",
     "ALERT": "recalcule alert",
     "REAL_TIME": "recalcule Temps reel"
+  },
+  "TRACCAR": {
+    "TITLE": "Liste des Traccars",
+    "SUBTITLE": "Gestion des instances Traccar",
+    "SEARCH_PLACEHOLDER": "Rechercher par nom ou IMEI...",
+    "NO_DATA": "Aucun Traccar trouvé"
   }
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -20,18 +20,27 @@ import { TableModule } from 'primeng/table';
   imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, TableModule, DatePipe, TranslateModule]
 })
 export class ComptesWebComponentComponent implements OnInit {
-  private readonly cdr = inject(ChangeDetectorRef);
   itemsPerPage = 30;
   public bigTotalItems: number = 0;
   public bigCurrentPage: number = 1;
   public maxSize: number = 5;
   comptesWeb: CompteWeb[] = [];
   loading: boolean = false;
+  private loadingInProgress: boolean = false;
   selectedWebAccount: CompteWeb = new CompteWeb();
   dt: any;
   code_pays = [];
 
   searchForm!: FormGroup;
+  availablePools: number[] = [];
+
+  get regionControl() {
+    return this.searchForm.get('region') as any;
+  }
+
+  get poolControl() {
+    return this.searchForm.get('pool') as any;
+  }
 
   owner: string = environment.owner;
 
@@ -41,13 +50,11 @@ export class ComptesWebComponentComponent implements OnInit {
   private readonly toastr = inject(ToastrService);
   private readonly fb = inject(FormBuilder);
   private readonly translate = inject(TranslateService);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   ngOnInit() {
     if (this.authService.isAuthenticated()) {
       this.initForms();
-      // Initially, we can wait for p-table's onLazyLoad to trigger the first fetch
-      // But if it doesn't trigger immediately, we can call it. Usually p-table triggers it.
-      // this.loadWebAccounts();
     } else {
       this.router.navigate(['/error']);
     }
@@ -55,29 +62,36 @@ export class ComptesWebComponentComponent implements OnInit {
 
   initForms() {
     this.searchForm = this.fb.group({
-      keyWord: ['']
+      keyWord: [''],
+      region: [''],
+      pool: ['']
     });
+    this.loadAvailablePools();
   }
 
   loadWebAccounts(event?: any) {
+    if (this.loadingInProgress) return;
+    this.loadingInProgress = true;
     this.loading = true;
-    
+    this.cdr.detectChanges();
+
     // Extract pagination parameters from the PrimeNG table event
     let page = 0;
     let size = this.itemsPerPage;
-    
+
     if (event) {
       page = event.first ? Math.floor(event.first / event.rows) : 0;
       size = event.rows || this.itemsPerPage;
     }
-    
-    const keyWord = (this.searchForm?.get('keyWord')?.value || '').trim();
 
-    this.webAccountService.getAllWebAccountByKeyWord(keyWord, page, size).subscribe({
+    const keyWord = (this.searchForm?.get('keyWord')?.value || '').trim();
+    const region = this.searchForm?.get('region')?.value || '';
+    const pool = this.searchForm?.get('pool')?.value ? parseInt(this.searchForm?.get('pool')?.value) : undefined;
+
+    this.webAccountService.getAllWebAccountByKeyWord(keyWord, page, size, region, pool).subscribe({
       next: (res: any) => {
-        this.loading = false;
         const loaded = res.content || [];
-        
+
         for (const compte of loaded) {
           if (Date.now() < new Date(compte.date_expiration).getTime()) {
             compte.expired = false;
@@ -87,18 +101,21 @@ export class ComptesWebComponentComponent implements OnInit {
             compte.during = false;
           }
         }
-        
+
         this.comptesWeb = loaded;
         this.bigTotalItems = res.totalElements || 0;
-        this.cdr.markForCheck();
+        this.loading = false;
+        this.loadingInProgress = false;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         this.loading = false;
+        this.loadingInProgress = false;
+        this.cdr.detectChanges();
         this.toastr.error(
-          this.translate.instant('WEB_ACCOUNTS.LOAD_ERROR'), 
+          this.translate.instant('WEB_ACCOUNTS.LOAD_ERROR'),
           this.translate.instant('COMMON.ERROR')
         );
-        this.cdr.markForCheck();
       }
     });
   }
@@ -108,6 +125,7 @@ export class ComptesWebComponentComponent implements OnInit {
   }
 
   searchWebAccount() {
+    this.loadingInProgress = false; // Reset guard for explicit user action
     this.loadWebAccounts();
   }
 
@@ -121,8 +139,24 @@ export class ComptesWebComponentComponent implements OnInit {
       date: { year: dateDecop.getFullYear(), month: dateDecop.getUTCMonth() + 1, day: dateDecop.getUTCDate() },
       jsdate: dateDecop
     };
-    this.cdr.markForCheck();
     this.router.navigate(['/adminWeb/configurations', compteWeb.idCompteClientWeb]);
+  }
+
+  loadAvailablePools() {
+    this.webAccountService.getAllWebAccountSummary().subscribe({
+      next: (accounts: any[]) => {
+        const pools = new Set<number>();
+        accounts.forEach(account => {
+          if (account.pool !== null && account.pool !== undefined) {
+            pools.add(account.pool);
+          }
+        });
+        this.availablePools = Array.from(pools).sort((a, b) => a - b);
+      },
+      error: (err) => {
+        console.error('Error loading pools:', err);
+      }
+    });
   }
 
   deleteWebAccount() {
@@ -134,6 +168,7 @@ export class ComptesWebComponentComponent implements OnInit {
             this.translate.instant('WEB_ACCOUNTS.DELETE_SUCCESS'), 
             this.translate.instant('COMMON.SUCCESS')
           );
+          this.loadingInProgress = false; // Reset guard for reload after delete
           this.loadWebAccounts();
         },
         error: () => {
@@ -141,7 +176,6 @@ export class ComptesWebComponentComponent implements OnInit {
             this.translate.instant('WEB_ACCOUNTS.DELETE_ERROR'), 
             this.translate.instant('COMMON.ERROR')
           );
-          this.cdr.markForCheck();
         }
       });
     }

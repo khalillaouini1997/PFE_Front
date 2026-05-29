@@ -23,8 +23,15 @@ export class WebAccountService {
         return this.http.post<CompteClientWebInfoDTO>(`${environment.apiBaseUrl}compteWeb?userName=${this.authService.getCurrentUserName()}`, compteWeb);
     }
 
-    getAllWebAccountByKeyWord(keyWord: string, page: number, size: number): Observable<PageResponse<CompteClientWebInfoDTO>> {
-        return this.http.get<PageResponse<CompteClientWebInfoDTO>>(`${environment.apiBaseUrl}compteWeb?keyWord=${keyWord}&page=${page}&size=${size}&userName=${this.authService.getCurrentUserName()}`);
+    getAllWebAccountByKeyWord(keyWord: string, page: number, size: number, region?: string, pool?: number): Observable<PageResponse<CompteClientWebInfoDTO>> {
+        let url = `${environment.apiBaseUrl}compteWeb?keyWord=${keyWord}&page=${page}&size=${size}&userName=${this.authService.getCurrentUserName()}`;
+        if (region) {
+            url += `&region=${region}`;
+        }
+        if (pool !== undefined && pool !== null) {
+            url += `&pool=${pool}`;
+        }
+        return this.http.get<PageResponse<CompteClientWebInfoDTO>>(url);
     }
 
     getWebAccountById(id: number): Observable<CompteClientWebInfoDTO> {

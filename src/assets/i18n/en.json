@@ -335,5 +335,11 @@
     "FUEL": "recalculate fuel",
     "ALERT": "recalculate alert",
     "REAL_TIME": "real time reset"
+  },
+  "TRACCAR": {
+    "TITLE": "Traccar List",
+    "SUBTITLE": "Manage Traccar instances",
+    "SEARCH_PLACEHOLDER": "Search by name or IMEI...",
+    "NO_DATA": "No Traccar found"
   }
 }

@@ -51,11 +51,6 @@ export class SidebarComponent implements OnInit {
         this.notificationCount++;
       }
     });
-
-    this.webAccountService.getAllOptions().subscribe({
-      next: (res) => {
-      }
-    });
   }
 
   logout() {

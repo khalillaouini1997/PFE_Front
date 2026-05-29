@@ -1,4 +1,4 @@
-import { ExtraOptions, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 import { AuthentificationComponent } from './authentification/authentification.component';
 import { authGuard } from './guards/auth.guard';
 
@@ -19,7 +19,3 @@ export const routes: Routes = [
     pathMatch: 'full'
   }
 ];
-
-export const routingConfig: ExtraOptions = {
-  useHash: false,
-};

@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { SidebarComponent } from '../shared/components/sidebar/sidebar.component';
@@ -8,7 +8,8 @@ import { SidebarComponent } from '../shared/components/sidebar/sidebar.component
   standalone: true,
   imports: [CommonModule, RouterModule, SidebarComponent],
   templateUrl: './admin-web-component.component.html',
-  styleUrls: ['./admin-web-component.component.css']
+  styleUrls: ['./admin-web-component.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AdminWebComponentComponent {
   isSidebarCollapsed = false;

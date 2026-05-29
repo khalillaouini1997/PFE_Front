@@ -45,9 +45,34 @@
                     <th scope="col" pReorderableColumn pResizableColumn>{{ 'WEB_ACCOUNTS.EXPIRES_AT' | translate }}</th>
                     <th scope="col" pReorderableColumn pResizableColumn>{{ 'WEB_ACCOUNTS.FULL_NAME' | translate }}</th>
                     <th scope="col" pReorderableColumn pResizableColumn>{{ 'WEB_ACCOUNTS.PHONE' | translate }}</th>
-                    <th scope="col" pReorderableColumn pResizableColumn>{{ 'WEB_ACCOUNTS.REGION' | translate }}</th>
+                    <th scope="col" pReorderableColumn pResizableColumn>
+                        <div class="d-flex flex-column">
+                            <span>{{ 'WEB_ACCOUNTS.REGION' | translate }}</span>
+                            <select class="form-select form-select-sm mt-1" 
+                                [formControl]="regionControl" (change)="searchWebAccount()" 
+                                title="Filter by region">
+                                <option value="">All</option>
+                                <option value="TUNIS">TUNIS</option>
+                                <option value="sousse">sousse</option>
+                                <option value="sfax">sfax</option>
+                                <option value="UNDEFINED">Not Defined</option>
+                            </select>
+                        </div>
+                    </th>
                     <th scope="col" pReorderableColumn pResizableColumn>{{ 'WEB_ACCOUNTS.CLIENT_TYPE' | translate }}</th>
-                    <th scope="col" pReorderableColumn pResizableColumn>{{ 'WEB_ACCOUNTS.POOL' | translate }}</th>
+                    <th scope="col" pReorderableColumn pResizableColumn>
+                        <div class="d-flex flex-column">
+                            <span>{{ 'WEB_ACCOUNTS.POOL' | translate }}</span>
+                            <select class="form-select form-select-sm mt-1" 
+                                [formControl]="poolControl" (change)="searchWebAccount()" 
+                                title="Filter by pool">
+                                <option value="">All</option>
+                                @for (pool of availablePools; track pool) {
+                                    <option [ngValue]="pool">{{pool}}</option>
+                                }
+                            </select>
+                        </div>
+                    </th>
                     <th scope="col" pReorderableColumn pResizableColumn>{{ 'WEB_ACCOUNTS.DEVICE_FEE_DAY' | translate }}</th>
                     <th scope="col" pReorderableColumn pResizableColumn>{{ 'WEB_ACCOUNTS.ACCOUNT_FEE_MONTH' | translate }}</th>
                     <th scope="col" pReorderableColumn pResizableColumn>{{ 'WEB_ACCOUNTS.DEVICE_FEE_MONTH' | translate }}</th>

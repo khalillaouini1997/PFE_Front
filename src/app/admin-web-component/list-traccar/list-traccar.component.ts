@@ -1,23 +1,26 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { TraccarDto } from 'src/app/data/data';
 import { TraccarService } from 'src/app/service/traccar.service';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-list-traccar',
     standalone: true,
     templateUrl: './list-traccar.component.html',
     styleUrls: ['./list-traccar.component.css'],
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, TableModule]
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, TableModule, TranslateModule],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListTraccarComponent implements OnInit {
+export class ListTraccarComponent implements OnInit, OnDestroy {
 
   private readonly traccarService = inject(TraccarService);
   private readonly fb = inject(FormBuilder);
   private readonly toastr = inject(ToastrService);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   searchForm!: FormGroup;
   traccarDtos: TraccarDto[] = [];
@@ -48,10 +51,12 @@ export class ListTraccarComponent implements OnInit {
           this.totalRecords = traccarDto?.length || 0;
         }
         this.loading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.toastr.error('Erreur lors du chargement des Traccars', 'Erreur');
         this.loading = false;
+        this.cdr.markForCheck();
         console.error('Error loading traccars:', error);
       }
     });
@@ -60,5 +65,9 @@ export class ListTraccarComponent implements OnInit {
   searchWebAccount() {
     const keyword = this.searchForm.get('keyWord')?.value || '';
     this.getLisTraccar(keyword);
+  }
+
+  ngOnDestroy() {
+    // Cleanup logic if needed in the future
   }
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, OnDestroy, inject, ElementRef, signal, viewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, OnDestroy, inject, ElementRef, signal, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
 import { Router, RouterModule, ActivatedRoute } from "@angular/router";
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
@@ -39,7 +39,8 @@ Chart.register(...registerables);
     InputTextModule,
     TranslateModule,
     PowerBIDashboardComponent
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashbordComponent implements OnInit, OnDestroy {
   protected readonly Math = Math;
