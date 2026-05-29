@@ -59,11 +59,15 @@
                     <td><span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-10">{{adminCompte.numLastBoitierAvailable}}</span></td>
                     <td>
                         <span class="badge rounded-pill px-3" [ngClass]="{
-                            'bg-danger bg-opacity-10 text-danger border border-danger border-opacity-10': adminCompte.role === 'GLOBALADMINDESC',
-                            'bg-info bg-opacity-10 text-info border border-info border-opacity-10': adminCompte.role === 'AGENT',
+                            'bg-primary bg-opacity-10 text-dark border border-primary border-opacity-10': adminCompte.role === 'GLOBALADMINDESC',
+                            'bg-info bg-opacity-10 text-dark border border-info border-opacity-10': adminCompte.role === 'AGENT',
                             'bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-10': !adminCompte.role.includes('ADMIN')
                         }">
-                            {{adminCompte.role}}
+                            @if (adminCompte.role === 'GLOBALADMINDESC') {
+                                Admin Accounts
+                            } @else {
+                                {{adminCompte.role}}
+                            }
                         </span>
                     </td>
                     <td>{{adminCompte.idTraccar || '—'}}</td>

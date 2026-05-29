@@ -45,7 +45,7 @@ body {
   color: #1e293b;
   margin: 0;
   -webkit-font-smoothing: antialiased;
-  font-size: 1rem;
+  font-size: 1.1rem;
 }
 
 /* Glassmorphism Utilities */
@@ -70,62 +70,13 @@ body {
   border-color: rgba(99, 102, 241, 0.3);
 }
 
-/* Table Enhancements */
-.table-premium {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0 0.5rem;
-
-  thead th {
-    background: transparent;
-    border: none;
-    color: #64748b;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding: 1rem;
-    border-right: 1px solid rgba(0, 0, 0, 0.05);
-
-    &:last-child {
-      border-right: none;
-    }
-  }
-
-  tbody tr {
-    background: white;
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-sm);
-    transition: all 0.2s ease;
-
-    td {
-      padding: 1rem;
-      border: none;
-      font-size: 0.95rem;
-      border-right: 1px solid rgba(0, 0, 0, 0.05);
-
-      &:first-child {
-        border-radius: var(--radius-md) 0 0 var(--radius-md);
-      }
-
-      &:last-child {
-        border-radius: 0 var(--radius-md) var(--radius-md) 0;
-        border-right: none;
-      }
-    }
-
-    &:hover {
-      background: #f1f5f9;
-      transform: scale(1.005);
-    }
-  }
-}
 
 /* PrimeNG Table Premium Customization */
 .premium-table-custom.p-datatable {
     .p-datatable-thead > tr > th {
         background: rgba(248, 250, 252, 0.7) !important;
         color: #64748b !important;
-        font-size: 1.1rem !important;
+        font-size: 1.2rem !important;
         text-transform: uppercase;
         letter-spacing: 0.05em;
         border-bottom: 2px solid var(--primary-light);
@@ -143,7 +94,7 @@ body {
         > td {
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
             padding: 1rem;
-            font-size: 1.15rem !important;
+            font-size: 1.25rem !important;
         }
     }
 
@@ -326,9 +277,6 @@ body {
   box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
 }
 
-.scale-125 {
-  transform: scale(1.25);
-}
 
 /* Override legacy material-dashboard.css .main-panel rules */
 .main-panel {
