@@ -64,7 +64,7 @@ export class SidebarComponent implements OnInit {
   }
 
   isAdminGolbal(): boolean {
-    return this.authService.hasRole('GLOBALADMIN');
+    return this.authService.hasRole('GLOBALADMINDESC');
   }
 
   isWebAdmin(): boolean {
@@ -80,11 +80,11 @@ export class SidebarComponent implements OnInit {
   }
 
   isGlobalAdmin(): boolean {
-    return this.authService.hasRole('GLOBALADMIN') || this.authService.hasRole('WEBADMIN');
+    return this.authService.hasRole('GLOBALADMINDESC') || this.authService.hasRole('WEBADMIN');
   }
 
   isAgentAdmin(): boolean {
-    return this.authService.hasRole('AGENT') || this.authService.hasRole('GLOBALADMIN');
+    return this.authService.hasRole('AGENT') || this.authService.hasRole('GLOBALADMINDESC');
   }
 
   isGlobalAdminDesc(): boolean {

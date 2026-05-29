@@ -61,7 +61,7 @@ export class AuthService {
 
     isAgentAdmin(): boolean {
         const user = this.getCurrentUser()?.user;
-        return user?.role === 'GLOBALADMIN' || user?.role === 'WEBADMIN';
+        return user?.role === 'GLOBALADMINDESC' || user?.role === 'WEBADMIN';
     }
 
     hasRole(role: string): boolean {

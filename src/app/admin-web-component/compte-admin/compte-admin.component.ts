@@ -34,9 +34,7 @@ export class CompteAdminComponent implements OnInit {
 
   ngOnInit() {
     this.initForms();
-    if (this.authService.isAuthenticated()) {
-      this.getAllAdminComptes(this.searchForm.get('keyWord')?.value || "", this.bigCurrentPage - 1, this.itemsPerPage);
-    } else {
+    if (!this.authService.isAuthenticated()) {
       this.router.navigate(['/error']);
     }
   }

@@ -3,6 +3,7 @@
     "GENERAL": "Général",
     "DASHBOARD": "Tableau de bord",
     "TRACCAR": "Suivi Traccar",
+    "ADMIN_MANAGEMENT": "Gestion Admin",
     "MANAGEMENT": "Gestion",
     "ADD_ADMIN": "Ajouter Admin",
     "LIST_ADMIN": "Liste Admins",

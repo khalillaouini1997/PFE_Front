@@ -3,6 +3,7 @@
     "GENERAL": "General",
     "DASHBOARD": "Dashboard",
     "TRACCAR": "Traccar Tracking",
+    "ADMIN_MANAGEMENT": "Admin Management",
     "MANAGEMENT": "Management",
     "ADD_ADMIN": "Add Admin",
     "LIST_ADMIN": "Admins List",

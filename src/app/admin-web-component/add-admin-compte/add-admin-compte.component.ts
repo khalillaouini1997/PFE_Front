@@ -20,7 +20,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 export class AddAdminCompteComponent implements OnInit {
 
   adminForm!: FormGroup;
-  roles = ['GLOBALADMIN', 'WEBADMIN', 'GLOBALADMINDESC', 'AGENT'];
+  roles = ['GLOBALADMINDESC', 'WEBADMIN', 'AGENT'];
   notifSubs = ['date_sub(NOW(), INTERVAL 6 hour)', 'date_sub(NOW(), INTERVAL 1 DAY)', 'date_sub(NOW(), INTERVAL 2 DAY)'];
   messageError: string = "";
   mode: boolean = false;
