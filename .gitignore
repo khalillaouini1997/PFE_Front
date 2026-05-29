@@ -42,3 +42,4 @@ testem.log
 Thumbs.db
 .scannerwork/
 scan-frontend.ps1
+frontend_security_performance_audit.md
