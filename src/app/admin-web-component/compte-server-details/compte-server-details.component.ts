@@ -38,6 +38,7 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
   intervalTo: number = 0;
   mode: boolean = false;
   messageError: string = "";
+  today: Date = new Date();
 
   public maxSize: number = 5;
   public bigTotalItems: number = 0;
@@ -64,7 +65,7 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
     this.route.params.subscribe((params: Params) => {
       this.ID_COMPTE = +params['idCompteClientServer'];
       this.loadCompteDetails();
-      this.loadBoitierList();
+      // loadBoitierList() is called by PrimeNG table's onLazyLoad event
     });
 
     this.refreshInterval = setInterval(() => {
@@ -124,7 +125,30 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
   private refreshBoitierArchives() {
     this.boitiers.forEach(boitier => {
       this.boitierService.lastArchiveOfBoitier(boitier.numBoitier).subscribe((arch: BoitierRealTime) => {
-        boitier.dateLastTrame = arch.dateLastTrame;
+        // Handle dateLastTrame - could be timestamp (number) or string
+        if (arch.dateLastTrame) {
+          if (typeof arch.dateLastTrame === 'number') {
+            // It's a timestamp
+            boitier.dateLastTrame = new Date(arch.dateLastTrame);
+          } else if (typeof arch.dateLastTrame === 'string') {
+            // Parse date from DD-MM-YYYY HH:mm:ss format to Date object
+            const parts = arch.dateLastTrame.split(' ');
+            if (parts.length === 2) {
+              const dateParts = parts[0].split('-');
+              const timeParts = parts[1].split(':');
+              if (dateParts.length === 3 && timeParts.length === 3) {
+                boitier.dateLastTrame = new Date(
+                  parseInt(dateParts[2]), // year
+                  parseInt(dateParts[1]) - 1, // month (0-indexed)
+                  parseInt(dateParts[0]), // day
+                  parseInt(timeParts[0]), // hours
+                  parseInt(timeParts[1]), // minutes
+                  parseInt(timeParts[2]) // seconds
+                );
+              }
+            }
+          }
+        }
         if (arch.emplacement) {
           boitier.emplacement = arch.emplacement;
         } else if (arch.vitesse !== undefined) {
