@@ -42,7 +42,7 @@ export class SidebarComponent implements OnInit {
   private readonly translate = inject(TranslateService);
 
   constructor() {
-    this.currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    this.currentUser = this.authService.getCurrentUser() || new AdministratorCompte();
   }
 
   ngOnInit() {
