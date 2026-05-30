@@ -1,4 +1,4 @@
-import { Component, input, output, viewChild, inject, AfterViewInit, OnDestroy, ElementRef } from '@angular/core';
+import { Component, input, output, viewChild, inject, AfterViewInit, OnDestroy, ElementRef, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RealTime } from '../../../../data/data';
 import { MAP_CONSTANTS, CAR_STYLES, VALID_ANGLES, TIMEOUTS } from '../../../../shared/constants/app.constants';
@@ -22,6 +22,13 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
   private markerClusterGroup?: any;
   private deviceIconMap = new Map<number, string>();
   private cdr = inject(ChangeDetectorRef);
+
+  constructor() {
+    effect(() => {
+      this.realtimes();
+      this.updateMarkers();
+    });
+  }
 
   ngAfterViewInit() {
     this.initMap();
@@ -116,10 +123,6 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
 
   zoomOut() {
     this.map?.zoomOut();
-  }
-
-  toggleOverlay() {
-    // Toggle overlay panel - to be implemented
   }
 
   invalidateSize() {

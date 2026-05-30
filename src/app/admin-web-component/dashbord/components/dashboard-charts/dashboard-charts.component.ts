@@ -1,4 +1,4 @@
-import { Component, input, viewChild, inject, AfterViewInit, OnDestroy, ElementRef } from '@angular/core';
+import { Component, input, viewChild, inject, AfterViewInit, OnDestroy, ElementRef, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RealTime } from '../../../../data/data';
 import { CHART_CONSTANTS, SPEED_BANDS, SIM_CARD_PREFIXES, STATUS_TYPES } from '../../../../shared/constants/app.constants';
@@ -31,6 +31,14 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
   private speedChartInstance?: Chart;
   private puceChartInstance?: Chart;
   private translate = inject(TranslateService);
+
+  constructor() {
+    effect(() => {
+      this.realtimes();
+      this.stats();
+      this.updateCharts();
+    });
+  }
 
   ngAfterViewInit() {
     this.updateCharts();
