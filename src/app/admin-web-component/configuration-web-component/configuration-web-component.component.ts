@@ -19,15 +19,11 @@ import { of, tap } from "rxjs";
 import { catchError } from "rxjs/operators";
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
-import { BsLocaleService } from "ngx-bootstrap/datepicker";
-import { defineLocale } from 'ngx-bootstrap/chronos';
-import { frLocale } from 'ngx-bootstrap/locale';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgMultiSelectDropDownModule, IDropdownSettings } from 'ng-multiselect-dropdown';
 import { DatePickerModule } from 'primeng/datepicker';
-defineLocale('fr', frLocale);
 
 import { TableModule } from 'primeng/table';
 
@@ -59,7 +55,6 @@ export class ConfigurationWebComponentComponent implements OnInit {
   private readonly compteServerService = inject(CompteServerService);
   private readonly webSocketService = inject(WebSocketService);
   private readonly fb = inject(FormBuilder);
-  private readonly localeService = inject(BsLocaleService);
   private readonly translate = inject(TranslateService);
 
   ID_COMPTE = signal<number>(0);
@@ -114,7 +109,6 @@ export class ConfigurationWebComponentComponent implements OnInit {
   constructor() {
     this.notifications.set([]);
     this.webSocketService.getNotifications().subscribe(_ => { });
-    this.localeService.use('fr');
     this.initForms();
   }
 

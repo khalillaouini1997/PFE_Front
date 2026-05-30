@@ -1,10 +1,9 @@
 import { Component, OnInit, signal, inject, ViewChild, ElementRef } from '@angular/core';
-import { BsModalRef, ModalDirective } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { CompteWeb, Intervention } from 'src/app/data/data';
 import { WebAccountService } from "../../service/web-account.service";
 import { InterventionService } from "../../service/intervention.service";
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { TooltipModule } from 'primeng/tooltip';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DatePipe, CommonModule } from '@angular/common';
 

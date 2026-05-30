@@ -8,7 +8,7 @@ import { AuthService } from "../../service/auth.service";
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { DatePickerModule } from 'primeng/datepicker';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { TableModule } from 'primeng/table';
@@ -18,7 +18,7 @@ import { TableModule } from 'primeng/table';
   standalone: true,
   templateUrl: './comptes-server-component.component.html',
   styleUrls: ['./comptes-server-component.component.css'],
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, TableModule, BsDatepickerModule, TranslateModule]
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, TableModule, DatePickerModule, TranslateModule]
 })
 export class ComptesServerComponentComponent implements OnInit {
   private readonly cdr = inject(ChangeDetectorRef);

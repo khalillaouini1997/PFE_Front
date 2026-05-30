@@ -128,9 +128,9 @@
                         </div>
                         <div class="col-md-12">
                             <div class="form-floating shadow-sm rounded">
-                                <input type="text" class="form-control border-0" bsDatepicker [(ngModel)]="dt"
-                                    [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }" [ngModelOptions]="{standalone: true}"
-                                    placement="bottom" placeholder="{{ 'SERVER_ACCOUNTS.EXPIRATION_DATE' | translate }}" id="dtExp">
+                                <p-datepicker [(ngModel)]="dt" [showIcon]="true" dateFormat="dd/mm/yy"
+                                    placeholder="{{ 'SERVER_ACCOUNTS.EXPIRATION_DATE' | translate }}" id="dtExp"
+                                    [ngModelOptions]="{standalone: true}" class="w-100"></p-datepicker>
                                 <label for="dtExp">{{ 'SERVER_ACCOUNTS.EXPIRATION_DATE' | translate }}</label>
                             </div>
                         </div>

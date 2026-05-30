@@ -60,11 +60,33 @@ export class ArchiveComponent implements OnInit {
   getArchives() {
     const limit = this.archiveForm.get('limit')?.value || 200;
     this.boitierService.getArchiveOfBoitier(this.numBoitier(), limit).subscribe(_archives => {
-      const archs = (_archives as any[]).map(a => ({
-        ...a,
-        latitude: +a.latitude.toFixed(5),
-        longitude: +a.longitude.toFixed(5)
-      }));
+      const archs = (_archives as any[]).map(a => {
+        // Parse date from DD-MM-YYYY HH:mm:ss format to Date object
+        let parsedDate = a.date;
+        if (a.date && typeof a.date === 'string') {
+          const parts = a.date.split(' ');
+          if (parts.length === 2) {
+            const dateParts = parts[0].split('-');
+            const timeParts = parts[1].split(':');
+            if (dateParts.length === 3 && timeParts.length === 3) {
+              parsedDate = new Date(
+                parseInt(dateParts[2]), // year
+                parseInt(dateParts[1]) - 1, // month (0-indexed)
+                parseInt(dateParts[0]), // day
+                parseInt(timeParts[0]), // hours
+                parseInt(timeParts[1]), // minutes
+                parseInt(timeParts[2]) // seconds
+              );
+            }
+          }
+        }
+        return {
+          ...a,
+          date: parsedDate,
+          latitude: +a.latitude.toFixed(5),
+          longitude: +a.longitude.toFixed(5)
+        };
+      });
       this.archives.set(archs);
     });
   }
