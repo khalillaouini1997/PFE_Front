@@ -1,5 +1,5 @@
 export class Archive {
-  date: string = "";
+  date: string | Date = "";
   trame_id: number = 0;
   idDevice: number = 0;
   latitude: number = 0;
@@ -33,7 +33,7 @@ export class Boitier {
   emplacement?: string;
   latitude?: number;
   longitude?: number;
-  dateLastTrame?: number;
+  dateLastTrame?: number | string | Date;
   vitesse?: number;
   gpsLastTrame?: number;
   gsmLastTrame?: number;
@@ -46,7 +46,7 @@ export interface BoitierRealTime {
   emplacement: string;
   latitude: number;
   longitude: number;
-  dateLastTrame: number;
+  dateLastTrame: number | string;
   vitesse: number;
   gpsLastTrame: number;
   gsmLastTrame: number;
