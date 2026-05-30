@@ -23,22 +23,24 @@ export class AuthService {
     }
 
     saveSession(authResponse: any) {
-        const token = authResponse.token;
-        localStorage.setItem(this.TOKEN_KEY, this.TOKEN_PREFIX + token);
+        // Token is now stored in httpOnly cookie by the backend
+        // Only store user data and auth status in localStorage
         localStorage.setItem(this.USER_KEY, JSON.stringify(authResponse));
         localStorage.setItem(this.AUTH_STATUS_KEY, 'true');
         this.currentUser = authResponse;
     }
 
     logout() {
-        localStorage.removeItem(this.TOKEN_KEY);
+        // Clear cookie by setting it to expire
+        document.cookie = 'jwt_token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=Strict';
         localStorage.removeItem(this.USER_KEY);
         localStorage.removeItem(this.AUTH_STATUS_KEY);
         this.currentUser = null;
     }
 
     getToken(): string | null {
-        return localStorage.getItem(this.TOKEN_KEY);
+        // Token is now in httpOnly cookie, not accessible from JavaScript
+        return null;
     }
 
     isAuthenticated(): boolean {

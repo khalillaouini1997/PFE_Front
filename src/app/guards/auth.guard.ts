@@ -12,44 +12,16 @@ interface JwtPayload {
 
 export const authGuard: CanMatchFn = (route: Route, segments: UrlSegment[]) => {
     const router = inject(Router);
-    
-    // Get token from localStorage
-    const token = localStorage.getItem('token');
-    
-    if (!token) {
+
+    // Check authentication status from localStorage
+    const isAuthenticated = localStorage.getItem('isAuthenticate') === 'true';
+
+    if (!isAuthenticated) {
         return router.parseUrl('/authentification');
     }
-    
-    // Remove prefix if present
-    const tokenWithoutPrefix = token.replace('rimtel ', '');
-    
-    try {
-        // Decode and verify token
-        const decoded: JwtPayload = jwtDecode(tokenWithoutPrefix);
-        
-        // Check if token is expired
-        const currentTime = Math.floor(Date.now() / 1000);
-        if (decoded.exp < currentTime) {
-            // Token expired, clear localStorage and redirect
-            localStorage.removeItem('token');
-            localStorage.removeItem('currentUser');
-            localStorage.removeItem('isAuthenticate');
-            return router.parseUrl('/authentification');
-        }
-        
-        // Check if route requires specific role
-        const requiredRole = route.data?.['role'];
-        if (requiredRole && decoded.role !== requiredRole) {
-            // User doesn't have required role
-            return router.parseUrl('/authentification');
-        }
-        
-        return true;
-    } catch (error) {
-        // Invalid token, clear localStorage and redirect
-        localStorage.removeItem('token');
-        localStorage.removeItem('currentUser');
-        localStorage.removeItem('isAuthenticate');
-        return router.parseUrl('/authentification');
-    }
+
+    // Token is now in httpOnly cookie, browser handles it automatically
+    // We can't validate it client-side, so we rely on server validation
+    // If the token is invalid/expired, the server will return 401 and we can handle it there
+    return true;
 };
