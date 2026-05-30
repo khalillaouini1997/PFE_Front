@@ -4,15 +4,18 @@ import { enableProdMode, importProvidersFrom, provideZoneChangeDetection } from 
 
 import { environment } from './environments/environment';
 import { authInterceptor } from './app/utils/security/auth.interceptor';
+import { httpErrorInterceptor } from './app/utils/security/http-error.interceptor';
+import { tokenRefreshInterceptor } from './app/utils/security/token-refresh.interceptor';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { routes } from './app/app.routes';
 import { NgOptimizedImage } from '@angular/common';
-import { provideRouter } from '@angular/router'; 
+import { provideRouter, withPreloading, PreloadAllModules } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 export class CustomTranslateLoader implements TranslateLoader {
   constructor(private http: HttpClient) {}
@@ -25,9 +28,6 @@ export function HttpLoaderFactory(http: HttpClient) {
   return new CustomTranslateLoader(http);
 }
 
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
-
 import { ToastrModule } from 'ngx-toastr';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { AppComponent } from './app/app.component';
@@ -39,11 +39,9 @@ if (environment.production) {
 bootstrapApplication(AppComponent, {
   providers: [
     provideZoneChangeDetection(),
-    provideRouter(routes), // Hash location was false in original config
+    provideRouter(routes, withPreloading(PreloadAllModules)),
     importProvidersFrom(
       FormsModule,
-      BsDatepickerModule.forRoot(),
-      TooltipModule.forRoot(),
       NgOptimizedImage,
       ToastrModule.forRoot({
         positionClass: 'toast-bottom-right',
@@ -55,9 +53,13 @@ bootstrapApplication(AppComponent, {
           useFactory: HttpLoaderFactory,
           deps: [HttpClient]
         }
+      }),
+      ServiceWorkerModule.register('ngsw-worker.js', {
+        enabled: environment.production,
+        registrationStrategy: 'registerWhenStable:30000'
       })
     ),
-    provideHttpClient(withInterceptors([authInterceptor])),
+    provideHttpClient(withInterceptors([authInterceptor, httpErrorInterceptor, tokenRefreshInterceptor])),
     provideAnimations(),
     providePrimeNG({
         theme: {
