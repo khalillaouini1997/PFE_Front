@@ -28,17 +28,16 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/manifest.webmanifest"
             ],
             "styles": [
               "src/styles.scss",
               "node_modules/primeicons/primeicons.css",
-              "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/assets/css/yaozl.css",
               "src/assets/css/style.css",
               "src/assets/css/ng2-toastr.min.css",
               "node_modules/ngx-toastr/toastr.css",
-              "node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
               "node_modules/leaflet/dist/leaflet.css",
               "node_modules/leaflet.markercluster/dist/MarkerCluster.css",
               "node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css"
@@ -47,7 +46,8 @@
               "node_modules/leaflet/dist/leaflet.js",
               "node_modules/leaflet.markercluster/dist/leaflet.markercluster.js"
             ],
-            "browser": "src/main.ts"
+            "browser": "src/main.ts",
+            "serviceWorker": "ngsw-config.json"
           },
           "configurations": {
             "production": {
