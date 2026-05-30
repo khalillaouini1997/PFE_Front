@@ -1,0 +1,89 @@
+.error-boundary {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  padding: 20px;
+}
+
+.error-content {
+  text-align: center;
+  max-width: 500px;
+}
+
+.error-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+}
+
+.error-title {
+  font-family: 'Public Sans', sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  color: #2b3674;
+  margin: 0 0 16px;
+}
+
+.error-message {
+  font-family: 'Public Sans', sans-serif;
+  font-size: 16px;
+  color: #a3aed0;
+  margin: 0 0 24px;
+}
+
+.error-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.btn-primary, .btn-secondary {
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-family: 'Public Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background: #4318ff;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #3311cc;
+}
+
+.btn-secondary {
+  background: #f4f7fe;
+  color: #2b3674;
+}
+
+.btn-secondary:hover {
+  background: #e9ecef;
+}
+
+.error-details {
+  text-align: left;
+  background: #f4f7fe;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.error-details summary {
+  cursor: pointer;
+  font-family: 'Public Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #2b3674;
+}
+
+.error-details pre {
+  margin: 12px 0 0 0;
+  font-size: 12px;
+  overflow-x: auto;
+}

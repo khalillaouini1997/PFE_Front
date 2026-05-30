@@ -1,0 +1,16 @@
+<div class="error-boundary" *ngIf="error()">
+  <div class="error-content">
+    <div class="error-icon">⚠️</div>
+    <h2 class="error-title">Something went wrong</h2>
+    <p class="error-message">{{ error()?.message || 'An unexpected error occurred' }}</p>
+    <div class="error-actions">
+      <button class="btn-primary" (click)="onRetry()">Retry</button>
+      <button class="btn-secondary" (click)="onGoHome()">Go to Dashboard</button>
+    </div>
+    <details class="error-details" *ngIf="showDetails">
+      <summary>Error Details</summary>
+      <pre>{{ error() | json }}</pre>
+    </details>
+  </div>
+</div>
+<ng-content *ngIf="!error()"></ng-content>
