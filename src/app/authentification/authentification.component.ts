@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, AfterViewInit, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../service/auth.service';
 import { ToastrService } from 'ngx-toastr';
@@ -14,7 +14,7 @@ import { TranslateModule } from '@ngx-translate/core';
     standalone: true,
     imports: [CommonModule, FormsModule, TranslateModule]
 })
-export class AuthentificationComponent {
+export class AuthentificationComponent implements AfterViewInit {
 
   login: string = '';
   password: string = '';
@@ -25,6 +25,18 @@ export class AuthentificationComponent {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly toastr = inject(ToastrService);
+
+  ngAfterViewInit() {
+    // Lazy load background image
+    const img = new Image();
+    img.src = '/assets/images/road_authenification.jpg';
+    img.onload = () => {
+      const authPage = document.querySelector('.auth-page');
+      if (authPage) {
+        authPage.classList.add('lazy-loaded');
+      }
+    };
+  }
 
   onSubmit() {
     this.loading = true;
