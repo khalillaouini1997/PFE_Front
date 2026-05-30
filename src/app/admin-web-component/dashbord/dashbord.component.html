@@ -94,61 +94,8 @@
 
       <!-- ── KPI Row ── -->
       <div class="row g-3" *ngIf="!fullscreenMap()">
-        <!-- Total -->
-        <div class="col-12 col-sm-6 col-xl-3">
-          <div class="premium-card kpi-card total h-100">
-            <div class="kpi-left">
-              <div class="kpi-icon-wrapper"><i class="fa fa-hdd-o"></i></div>
-              <div class="kpi-content">
-                <span>{{ 'DASHBOARD.TOTAL_TERMINALS' | translate }}</span>
-                <h3>{{stats().total}}</h3>
-                <span class="kpi-trend up"><i class="fa fa-arrow-up"></i> +2% today</span>
-              </div>
-            </div>
-            <canvas class="kpi-sparkline" #sparkTotal></canvas>
-          </div>
-        </div>
-        <!-- Valid -->
-        <div class="col-12 col-sm-6 col-xl-3">
-          <div class="premium-card kpi-card valid h-100">
-            <div class="kpi-left">
-              <div class="kpi-icon-wrapper"><i class="fa fa-check-circle"></i></div>
-              <div class="kpi-content">
-                <span>{{ 'DASHBOARD.VALID_TERMINALS' | translate }}</span>
-                <h3>{{stats().valid}}</h3>
-                <span class="kpi-trend up"><i class="fa fa-arrow-up"></i> +6% since last hour</span>
-              </div>
-            </div>
-            <canvas class="kpi-sparkline" #sparkValid></canvas>
-          </div>
-        </div>
-        <!-- Issues -->
-        <div class="col-12 col-sm-6 col-xl-3">
-          <div class="premium-card kpi-card issue h-100">
-            <div class="kpi-left">
-              <div class="kpi-icon-wrapper"><i class="fa fa-exclamation-triangle"></i></div>
-              <div class="kpi-content">
-                <span>{{ 'DASHBOARD.TECHNICAL_ISSUES' | translate }}</span>
-                <h3>{{stats().technicalIssue}}</h3>
-                <span class="kpi-trend down"><i class="fa fa-arrow-down"></i> -2% today</span>
-              </div>
-            </div>
-            <canvas class="kpi-sparkline" #sparkIssue></canvas>
-          </div>
-        </div>
-        <!-- Moving -->
-        <div class="col-12 col-sm-6 col-xl-3">
-          <div class="premium-card kpi-card moving h-100">
-            <div class="kpi-left">
-              <div class="kpi-icon-wrapper"><i class="fa fa-truck"></i></div>
-              <div class="kpi-content">
-                <span>{{ 'DASHBOARD.MOVING' | translate }}</span>
-                <h3>{{stats().moving}}</h3>
-                <span class="kpi-trend live"><i class="fa fa-circle"></i> +10% currently</span>
-              </div>
-            </div>
-            <canvas class="kpi-sparkline" #sparkMoving></canvas>
-          </div>
+        <div class="col-12">
+          <app-dashboard-kpi [stats]="stats()"></app-dashboard-kpi>
         </div>
       </div>
 
@@ -167,33 +114,7 @@
                 <i class="fa fa-expand"></i>
               </button>
             </div>
-            <div class="map-container-wrapper" style="position:relative">
-              <div id="map" #mapContainer></div>
-
-              <!-- Overlay panel (layers / zoom) -->
-              <div class="map-overlay-panel" [class.show]="mapOverlayOpen">
-                <div class="overlay-item">
-                  <i class="fa fa-th-large"></i> Lenses
-                </div>
-                <div class="overlay-item">
-                  <i class="fa fa-layer-group"></i> Layers
-                </div>
-                <div class="overlay-item d-flex justify-content-between">
-                  <span><i class="fa fa-toggle-on"></i> Satlife</span>
-                  <label class="mini-toggle">
-                    <input type="checkbox" checked>
-                    <span class="mini-toggle-slider"></span>
-                  </label>
-                </div>
-                <hr class="my-1">
-                <div class="overlay-item" (click)="zoomIn()">
-                  <i class="fa fa-search-plus"></i> Zoom in
-                </div>
-                <div class="overlay-item" (click)="zoomOut()">
-                  <i class="fa fa-search-minus"></i> Zoom out
-                </div>
-              </div>
-            </div>
+            <app-dashboard-map [realtimes]="realtimes()" (locateDevice)="locateOnMap($event)"></app-dashboard-map>
           </div>
         </div>
       </div>
@@ -201,41 +122,13 @@
       <!-- Map fullscreen mode -->
       <div [class.col-12]="fullscreenMap()" [class.fullscreen-card]="fullscreenMap()" *ngIf="fullscreenMap()">
         <div class="premium-card overflow-hidden h-100" [class.fullscreen-map]="fullscreenMap()">
-          <div class="map-container-wrapper" [class.fullscreen-map]="fullscreenMap()">
-            <div id="map" #mapContainer></div>
-          </div>
+          <app-dashboard-map [realtimes]="realtimes()" (locateDevice)="locateOnMap($event)"></app-dashboard-map>
         </div>
       </div>
 
       <!-- ── Charts Row (3 columns) ── -->
       <div class="charts-row mt-3" *ngIf="!fullscreenMap()">
-        <!-- Status Distribution -->
-        <div class="premium-card overflow-hidden">
-          <div class="widget-header">
-            <h6><i class="fa fa-pie-chart text-success me-2"></i> {{ 'DASHBOARD.STATUS_DISTRIBUTION' | translate }}</h6>
-          </div>
-          <div class="chart-container-wrapper">
-            <canvas #statusChart></canvas>
-          </div>
-        </div>
-        <!-- Speeds -->
-        <div class="premium-card overflow-hidden">
-          <div class="widget-header">
-            <h6><i class="fa fa-tachometer-alt text-warning me-2"></i> {{ 'DASHBOARD.SPEEDS' | translate }}</h6>
-          </div>
-          <div class="chart-container-wrapper">
-            <canvas #speedChartCanvas></canvas>
-          </div>
-        </div>
-        <!-- SIM Operators -->
-        <div class="premium-card overflow-hidden">
-          <div class="widget-header">
-            <h6><i class="fa fa-sim-card text-danger me-2"></i> {{ 'DASHBOARD.SIM_OPERATORS' | translate }}</h6>
-          </div>
-          <div class="chart-container-wrapper">
-            <canvas #puceChartCanvas></canvas>
-          </div>
-        </div>
+        <app-dashboard-charts [realtimes]="realtimes()" [stats]="stats()"></app-dashboard-charts>
       </div>
 
       <!-- ── Table ── -->
@@ -248,6 +141,8 @@
             <div class="p-4 bg-white">
               <p-table #dt [value]="realtimes()" [paginator]="true" [rows]="10"
                        [globalFilterFields]="['deviceid', 'matricule', 'status']"
+                       [scrollable]="true" scrollHeight="400px"
+                       [virtualScroll]="true" [virtualScrollItemSize]="50"
                        responsiveLayout="scroll" [rowsPerPageOptions]="[10,20,50]"
                        styleClass="p-datatable-sm p-datatable-gridlines">
 
