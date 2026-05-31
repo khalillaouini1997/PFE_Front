@@ -26,10 +26,14 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
   statusChart = viewChild<ElementRef>('statusChart');
   speedChart = viewChild<ElementRef>('speedChart');
   puceChart = viewChild<ElementRef>('puceChart');
+  ignitionChart = viewChild<ElementRef>('ignitionChart');
+  signalChart = viewChild<ElementRef>('signalChart');
 
   private stateChart?: Chart;
   private speedChartInstance?: Chart;
   private puceChartInstance?: Chart;
+  private ignitionChartInstance?: Chart;
+  private signalChartInstance?: Chart;
   private translate = inject(TranslateService);
 
   constructor() {
@@ -48,12 +52,16 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
     this.stateChart?.destroy();
     this.speedChartInstance?.destroy();
     this.puceChartInstance?.destroy();
+    this.ignitionChartInstance?.destroy();
+    this.signalChartInstance?.destroy();
   }
 
   updateCharts() {
     this.updateStateChart();
     this.updateSpeedChart();
     this.updatePuceChart();
+    this.updateIgnitionChart();
+    this.updateSignalChart();
   }
 
   private updateStateChart() {
@@ -180,6 +188,89 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
           responsive: true,
           maintainAspectRatio: false,
           plugins: { legend: { position: 'bottom' } }
+        }
+      });
+    }
+  }
+
+  private updateIgnitionChart() {
+    const canvas = this.ignitionChart();
+    if (!canvas) return;
+
+    const r = this.realtimes();
+    const ignitionOn = r.filter(t => t.ignition).length;
+    const ignitionOff = r.filter(t => !t.ignition).length;
+
+    const data = {
+      labels: ['Ignition On', 'Ignition Off'],
+      datasets: [{
+        data: [ignitionOn, ignitionOff],
+        backgroundColor: [
+          CHART_CONSTANTS.COLORS.VALID,
+          CHART_CONSTANTS.COLORS.NON_VALID
+        ],
+        hoverOffset: 4
+      }]
+    };
+
+    if (this.ignitionChartInstance) {
+      this.ignitionChartInstance.data = data;
+      this.ignitionChartInstance.update();
+    } else {
+      this.ignitionChartInstance = new Chart(canvas.nativeElement, {
+        type: 'doughnut',
+        data,
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { position: 'bottom' } }
+        }
+      });
+    }
+  }
+
+  private updateSignalChart() {
+    const canvas = this.signalChart();
+    if (!canvas) return;
+
+    const r = this.realtimes() as any[];
+    const signalDistribution = {
+      'Excellent': r.filter(t => t.signal >= 20).length,
+      'Good': r.filter(t => t.signal >= 15 && t.signal < 20).length,
+      'Fair': r.filter(t => t.signal >= 10 && t.signal < 15).length,
+      'Poor': r.filter(t => t.signal < 10).length
+    };
+
+    const data = {
+      labels: Object.keys(signalDistribution),
+      datasets: [{
+        label: 'Vehicles',
+        data: Object.values(signalDistribution),
+        backgroundColor: [
+          CHART_CONSTANTS.COLORS.VALID,
+          '#10b981',
+          '#f59e0b',
+          CHART_CONSTANTS.COLORS.ISSUE
+        ],
+        borderRadius: CHART_CONSTANTS.BORDER_RADIUS
+      }]
+    };
+
+    if (this.signalChartInstance) {
+      this.signalChartInstance.data = data;
+      this.signalChartInstance.update();
+    } else {
+      this.signalChartInstance = new Chart(canvas.nativeElement, {
+        type: 'bar',
+        data,
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { beginAtZero: true, grid: { display: false } },
+            x: { grid: { display: false } }
+          }
         }
       });
     }

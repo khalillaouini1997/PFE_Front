@@ -131,6 +131,20 @@
         <app-dashboard-charts [realtimes]="realtimes()" [stats]="stats()"></app-dashboard-charts>
       </div>
 
+      <!-- ── Client Growth Over Time ── -->
+      <div class="row mt-4" *ngIf="!fullscreenMap()">
+        <div class="col-12">
+          <app-dashboard-activity [comptesWeb]="comptesWeb()" [realtimes]="realtimes()"></app-dashboard-activity>
+        </div>
+      </div>
+
+      <!-- ── Top Speed Leaders ── -->
+      <div class="row mt-4" *ngIf="!fullscreenMap()">
+        <div class="col-md-6">
+          <app-dashboard-speed-leaders [realtimes]="realtimes()"></app-dashboard-speed-leaders>
+        </div>
+      </div>
+
       <!-- ── Table ── -->
       <div class="row mt-4" *ngIf="!fullscreenMap()">
         <div class="col-12">

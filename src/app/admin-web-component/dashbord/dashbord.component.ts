@@ -17,6 +17,8 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DashboardMapComponent } from './components/dashboard-map/dashboard-map.component';
 import { DashboardChartsComponent } from './components/dashboard-charts/dashboard-charts.component';
 import { DashboardKpiComponent } from './components/dashboard-kpi/dashboard-kpi.component';
+import { DashboardSpeedLeadersComponent } from './components/dashboard-speed-leaders/dashboard-speed-leaders.component';
+import { DashboardActivityComponent } from './components/dashboard-activity/dashboard-activity.component';
 import { STORAGE_KEYS } from 'src/app/shared/constants';
 import { DashboardStore } from 'src/app/shared/stores';
 
@@ -42,7 +44,9 @@ import { DashboardStore } from 'src/app/shared/stores';
     PowerBIDashboardComponent,
     DashboardMapComponent,
     DashboardChartsComponent,
-    DashboardKpiComponent
+    DashboardKpiComponent,
+    DashboardSpeedLeadersComponent,
+    DashboardActivityComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })

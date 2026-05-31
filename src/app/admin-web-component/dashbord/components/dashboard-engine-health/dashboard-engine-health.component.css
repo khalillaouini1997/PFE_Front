@@ -1,0 +1,96 @@
+.engine-health-container {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.engine-health-card {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.engine-health-card h3 {
+  font-family: 'Public Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #2b3674;
+  margin: 0 0 16px;
+}
+
+.no-data {
+  text-align: center;
+  color: #a3aed0;
+  padding: 20px;
+  font-size: 14px;
+}
+
+.health-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.health-cell {
+  padding: 12px;
+  border-radius: 8px;
+  border: 2px solid;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.health-cell:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.health-cell.healthy {
+  border-color: #10b981;
+  background: #ecfdf5;
+}
+
+.health-cell.warning {
+  border-color: #f59e0b;
+  background: #fffbeb;
+}
+
+.health-cell.critical {
+  border-color: #f43f5e;
+  background: #fef2f2;
+}
+
+.health-icon {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.vehicle-matricule {
+  font-weight: 600;
+  color: #2b3674;
+  font-size: 13px;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.metric {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+}
+
+.metric-label {
+  color: #a3aed0;
+}
+
+.metric-value {
+  font-weight: 600;
+  color: #2b3674;
+}
