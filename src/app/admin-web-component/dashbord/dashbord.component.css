@@ -6,13 +6,15 @@
     radial-gradient(ellipse at 80% 0%, rgba(99, 102, 241, 0.07) 0%, transparent 55%),
     radial-gradient(ellipse at 0% 100%, rgba(16, 185, 129, 0.04) 0%, transparent 50%);
   min-height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 /* ── Layout ─────────────────────────────────────────── */
 .main-panel {
   width: 100% !important;
-  min-height: 100vh;
   padding: 2rem !important;
+  box-sizing: border-box;
 }
 
 .dashboard-container {
@@ -21,18 +23,21 @@
   gap: 1.5rem;
   max-width: 1600px;
   margin: 0 auto;
+  padding-bottom: 2rem;
+  flex-shrink: 0;
 }
 
 /* ── Base Card ──────────────────────────────────────── */
 .premium-card {
   background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
   border: 1px solid rgba(226, 232, 240, 0.8);
   border-radius: 1.25rem;
   box-shadow: 0 2px 12px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(15,23,42,0.04);
   transition: box-shadow 0.25s ease, transform 0.25s ease;
   overflow: hidden;
+  min-height: 0;
 }
 
 /* ── Header ─────────────────────────────────────────── */
@@ -57,6 +62,7 @@
   background: rgba(255, 255, 255, 0.15);
   padding: 0.375rem;
   border-radius: 0.75rem;
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
 }
 
@@ -288,6 +294,8 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.25rem;
+  min-height: 0;
+  flex-shrink: 0;
 }
 @media (max-width: 900px) {
   .charts-row { grid-template-columns: 1fr; }
@@ -338,6 +346,7 @@
   font-size: 0.875rem;
   padding: 0.55rem 1.1rem;
   background: rgba(255,255,255,0.2);
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   color: white;
   border: 1px solid rgba(255,255,255,0.3);
@@ -365,15 +374,24 @@
 
 /* ── Utilities ──────────────────────────────────────── */
 .v-hidden {
-  visibility: hidden;
-  position: absolute;
+  display: none;
+}
+
+.dashboard-content-wrapper {
+  flex: 1;
+  min-height: 0;
+  overflow: visible;
+}
+
+.content-loading {
+  opacity: 0.5;
   pointer-events: none;
-  z-index: -1;
 }
 
 .global-spinner {
   padding: 4rem;
   background: rgba(255,255,255,0.92);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
 }
 

@@ -1,4 +1,4 @@
-import { Component, input, inject, effect } from '@angular/core';
+import { Component, input, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RealTime } from '../../../../data/data';
 
@@ -12,19 +12,15 @@ import { RealTime } from '../../../../data/data';
 export class DashboardSpeedLeadersComponent {
   realtimes = input<RealTime[]>([]);
 
-  constructor() {
-    effect(() => {
-      this.realtimes();
-    });
-  }
-
-  getTopSpeedVehicles() {
+  // Use a computed signal instead of a method call in the template
+  // to avoid re-computing on every change detection cycle
+  readonly topSpeedVehicles = computed(() => {
     const r = this.realtimes() as any[];
     return r
       .filter(t => t.speed > 0)
       .sort((a, b) => b.speed - a.speed)
       .slice(0, 5);
-  }
+  });
 
   getSpeedColor(speed: number): string {
     if (speed > 100) return '#f43f5e';

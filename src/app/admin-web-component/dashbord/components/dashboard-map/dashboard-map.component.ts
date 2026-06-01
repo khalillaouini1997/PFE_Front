@@ -43,11 +43,7 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
     const container = this.mapContainer()?.nativeElement;
     if (!container) return;
 
-    const height = container.offsetHeight || container.clientHeight;
-    if (height === 0) {
-      console.warn('[Map] Container height is 0, skipping init.');
-      return;
-    }
+
 
     this.map = L.map(container).setView(
       [MAP_CONSTANTS.DEFAULT_CENTER.lat, MAP_CONSTANTS.DEFAULT_CENTER.lng],
@@ -64,11 +60,16 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
     this.updateMarkers();
   }
 
+  private currentFleetHash = '';
+
   private updateMarkers() {
     if (!this.map || !this.markerClusterGroup) return;
 
     this.markerClusterGroup.clearLayers();
     const bounds: any[] = [];
+    
+    const newFleetHash = this.realtimes().map(t => t.deviceid).sort().join(',');
+    const fleetChanged = newFleetHash !== this.currentFleetHash;
 
     this.realtimes().forEach(tram => {
       if (tram.latitude && tram.longitude) {
@@ -88,11 +89,21 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
       }
     });
 
-    if (bounds.length) {
-      this.map.fitBounds(L.latLngBounds(bounds), { padding: MAP_CONSTANTS.PADDING });
+    if (bounds.length && fleetChanged) {
+      this.currentFleetHash = newFleetHash;
+      setTimeout(() => {
+        if (this.map) {
+          this.map.invalidateSize();
+          this.map.fitBounds(L.latLngBounds(bounds), { padding: MAP_CONSTANTS.PADDING });
+        }
+      }, 100);
+    } else {
+      setTimeout(() => {
+        if (this.map) {
+          this.map.invalidateSize();
+        }
+      }, 100);
     }
-    
-    this.map.invalidateSize();
   }
 
   private getCarIcon(tram: RealTime) {

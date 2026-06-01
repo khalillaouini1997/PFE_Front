@@ -19,12 +19,19 @@ export class DashboardActivityComponent implements AfterViewInit, OnDestroy {
 
   activityChart = viewChild<ElementRef>('activityChart');
   private activityChartInstance?: Chart;
+  private lastComptesLength = -1;
+  private lastRealtimesLength = -1;
 
   constructor() {
     effect(() => {
-      this.comptesWeb();
-      this.realtimes();
-      this.updateActivityChart();
+      const comptes = this.comptesWeb();
+      const realtimes = this.realtimes();
+      // Only update if data actually changed
+      if (comptes.length !== this.lastComptesLength || realtimes.length !== this.lastRealtimesLength) {
+        this.lastComptesLength = comptes.length;
+        this.lastRealtimesLength = realtimes.length;
+        this.updateActivityChart();
+      }
     });
   }
 
@@ -36,25 +43,36 @@ export class DashboardActivityComponent implements AfterViewInit, OnDestroy {
     this.activityChartInstance?.destroy();
   }
 
+  /**
+   * Generates a deterministic pseudo-random number from a string seed.
+   * This avoids Math.random() which would produce different values on every call,
+   * causing infinite re-renders when used inside an Angular effect().
+   */
+  private seedHash(str: string): number {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      const char = str.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash |= 0; // Convert to 32-bit integer
+    }
+    return Math.abs(hash);
+  }
+
   private updateActivityChart() {
     const canvas = this.activityChart();
     if (!canvas) return;
 
     const comptes = this.comptesWeb();
-    const realtimes = this.realtimes();
 
     // Sort comptes by creation date
     const sortedComptes = [...comptes].sort((a, b) =>
       new Date(a.date_creation).getTime() - new Date(b.date_creation).getTime()
     );
 
-    // Calculate device count per client (using realtimes data)
-    // Since we don't have historical device data, we'll show current device count per client
-    // ordered by when the client was created
+    // Calculate device count per client using a deterministic hash
+    // instead of Math.random() (which would cause infinite re-renders)
     const clientDeviceData = sortedComptes.map(compte => {
-      // Filter realtimes for this client (assuming deviceid or similar field links them)
-      // For now, we'll assign random device counts since we don't have the linking data
-      const deviceCount = Math.floor(Math.random() * 20) + 1;
+      const deviceCount = (this.seedHash(compte.login) % 20) + 1;
       return {
         name: compte.login,
         deviceCount,
@@ -74,7 +92,6 @@ export class DashboardActivityComponent implements AfterViewInit, OnDestroy {
     }
 
     // Create datasets for each client (showing their device count over time)
-    // Since we don't have historical data, we'll show cumulative device growth
     const datasets = clientDeviceData.map((client, index) => {
       const colors = [
         CHART_CONSTANTS.COLORS.PRIMARY,
@@ -88,8 +105,7 @@ export class DashboardActivityComponent implements AfterViewInit, OnDestroy {
       ];
       const color = colors[index % colors.length];
 
-      // Simulate device growth over time for this client
-      const data = months.map((month, monthIndex) => {
+      const data = months.map((_month, monthIndex) => {
         const monthDate = new Date(firstDate);
         monthDate.setMonth(monthDate.getMonth() + monthIndex);
         
@@ -98,9 +114,9 @@ export class DashboardActivityComponent implements AfterViewInit, OnDestroy {
           return 0;
         }
         
-        // Otherwise, show cumulative device count (simulated growth)
+        // Cumulative device growth simulation
         const monthsSinceCreation = monthIndex;
-        const growthFactor = Math.min(1, monthsSinceCreation / 6); // Reach full count in 6 months
+        const growthFactor = Math.min(1, monthsSinceCreation / 6);
         return Math.round(client.deviceCount * growthFactor);
       });
 
@@ -124,7 +140,7 @@ export class DashboardActivityComponent implements AfterViewInit, OnDestroy {
 
     if (this.activityChartInstance) {
       this.activityChartInstance.data = chartData;
-      this.activityChartInstance.update();
+      this.activityChartInstance.update('none');
     } else {
       this.activityChartInstance = new Chart(canvas.nativeElement, {
         type: 'line',
@@ -132,6 +148,7 @@ export class DashboardActivityComponent implements AfterViewInit, OnDestroy {
         options: {
           responsive: true,
           maintainAspectRatio: false,
+          animation: false,
           plugins: {
             legend: {
               display: true,

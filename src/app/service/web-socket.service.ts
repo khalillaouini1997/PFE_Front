@@ -32,8 +32,18 @@ export class WebSocketService {
             console.error('Broker reported error: ' + frame.headers['message']);
             console.error('Additional details: ' + frame.body);
         };
+    }
 
-        this.client.activate();
+    connect() {
+        if (!this.client.active) {
+            this.client.activate();
+        }
+    }
+
+    disconnect() {
+        if (this.client.active) {
+            this.client.deactivate();
+        }
     }
 
     private getSocketUrl(): string {

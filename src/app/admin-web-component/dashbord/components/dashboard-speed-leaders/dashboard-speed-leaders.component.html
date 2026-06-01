@@ -1,11 +1,11 @@
 <div class="speed-leaders-container">
   <div class="speed-leaders-card">
     <h3>🏆 Top Speed Leaders</h3>
-    @if (getTopSpeedVehicles().length === 0) {
+    @if (topSpeedVehicles().length === 0) {
       <div class="no-data">No moving vehicles</div>
     } @else {
       <div class="speed-table">
-        @for (vehicle of getTopSpeedVehicles(); track vehicle.deviceid) {
+        @for (vehicle of topSpeedVehicles(); track vehicle.deviceid) {
           <div class="speed-row">
             <div class="vehicle-info">
               <span class="matricule">{{ vehicle.matricule }}</span>
@@ -29,3 +29,4 @@
     }
   </div>
 </div>
+

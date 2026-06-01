@@ -26,13 +26,13 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
   statusChart = viewChild<ElementRef>('statusChart');
   speedChart = viewChild<ElementRef>('speedChart');
   puceChart = viewChild<ElementRef>('puceChart');
-  ignitionChart = viewChild<ElementRef>('ignitionChart');
+
   signalChart = viewChild<ElementRef>('signalChart');
 
   private stateChart?: Chart;
   private speedChartInstance?: Chart;
   private puceChartInstance?: Chart;
-  private ignitionChartInstance?: Chart;
+
   private signalChartInstance?: Chart;
   private translate = inject(TranslateService);
 
@@ -52,15 +52,17 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
     this.stateChart?.destroy();
     this.speedChartInstance?.destroy();
     this.puceChartInstance?.destroy();
-    this.ignitionChartInstance?.destroy();
+
     this.signalChartInstance?.destroy();
   }
 
   updateCharts() {
+    if (!this.statusChart() || !this.speedChart() || !this.puceChart() || !this.signalChart()) {
+        return;
+    }
     this.updateStateChart();
     this.updateSpeedChart();
     this.updatePuceChart();
-    this.updateIgnitionChart();
     this.updateSignalChart();
   }
 
@@ -92,7 +94,7 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
 
     if (this.stateChart) {
       this.stateChart.data = data;
-      this.stateChart.update();
+      this.stateChart.update('none');
     } else {
       this.stateChart = new Chart(canvas.nativeElement, {
         type: 'doughnut',
@@ -100,6 +102,7 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
         options: {
           responsive: true,
           maintainAspectRatio: false,
+          animation: false,
           plugins: { legend: { position: 'bottom' } }
         }
       });
@@ -130,7 +133,7 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
 
     if (this.speedChartInstance) {
       this.speedChartInstance.data = data;
-      this.speedChartInstance.update();
+      this.speedChartInstance.update('none');
     } else {
       this.speedChartInstance = new Chart(canvas.nativeElement, {
         type: 'bar',
@@ -138,6 +141,7 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
         options: {
           responsive: true,
           maintainAspectRatio: false,
+          animation: false,
           plugins: { legend: { display: false } },
           scales: {
             y: { beginAtZero: true, grid: { display: false } },
@@ -179,7 +183,7 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
 
     if (this.puceChartInstance) {
       this.puceChartInstance.data = data;
-      this.puceChartInstance.update();
+      this.puceChartInstance.update('none');
     } else {
       this.puceChartInstance = new Chart(canvas.nativeElement, {
         type: 'pie',
@@ -187,47 +191,13 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
         options: {
           responsive: true,
           maintainAspectRatio: false,
+          animation: false,
           plugins: { legend: { position: 'bottom' } }
         }
       });
     }
   }
 
-  private updateIgnitionChart() {
-    const canvas = this.ignitionChart();
-    if (!canvas) return;
-
-    const r = this.realtimes();
-    const ignitionOn = r.filter(t => t.ignition).length;
-    const ignitionOff = r.filter(t => !t.ignition).length;
-
-    const data = {
-      labels: ['Ignition On', 'Ignition Off'],
-      datasets: [{
-        data: [ignitionOn, ignitionOff],
-        backgroundColor: [
-          CHART_CONSTANTS.COLORS.VALID,
-          CHART_CONSTANTS.COLORS.NON_VALID
-        ],
-        hoverOffset: 4
-      }]
-    };
-
-    if (this.ignitionChartInstance) {
-      this.ignitionChartInstance.data = data;
-      this.ignitionChartInstance.update();
-    } else {
-      this.ignitionChartInstance = new Chart(canvas.nativeElement, {
-        type: 'doughnut',
-        data,
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: { legend: { position: 'bottom' } }
-        }
-      });
-    }
-  }
 
   private updateSignalChart() {
     const canvas = this.signalChart();
@@ -258,7 +228,7 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
 
     if (this.signalChartInstance) {
       this.signalChartInstance.data = data;
-      this.signalChartInstance.update();
+      this.signalChartInstance.update('none');
     } else {
       this.signalChartInstance = new Chart(canvas.nativeElement, {
         type: 'bar',
@@ -266,6 +236,7 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
         options: {
           responsive: true,
           maintainAspectRatio: false,
+          animation: false,
           plugins: { legend: { display: false } },
           scales: {
             y: { beginAtZero: true, grid: { display: false } },

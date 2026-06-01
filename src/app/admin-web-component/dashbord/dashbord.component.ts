@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, OnDestroy, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, OnDestroy, inject, signal, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
 import { Router, RouterModule, ActivatedRoute } from "@angular/router";
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
@@ -17,8 +17,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DashboardMapComponent } from './components/dashboard-map/dashboard-map.component';
 import { DashboardChartsComponent } from './components/dashboard-charts/dashboard-charts.component';
 import { DashboardKpiComponent } from './components/dashboard-kpi/dashboard-kpi.component';
-import { DashboardSpeedLeadersComponent } from './components/dashboard-speed-leaders/dashboard-speed-leaders.component';
-import { DashboardActivityComponent } from './components/dashboard-activity/dashboard-activity.component';
+
 import { STORAGE_KEYS } from 'src/app/shared/constants';
 import { DashboardStore } from 'src/app/shared/stores';
 
@@ -44,9 +43,7 @@ import { DashboardStore } from 'src/app/shared/stores';
     PowerBIDashboardComponent,
     DashboardMapComponent,
     DashboardChartsComponent,
-    DashboardKpiComponent,
-    DashboardSpeedLeadersComponent,
-    DashboardActivityComponent
+    DashboardKpiComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -77,6 +74,9 @@ export class DashbordComponent implements OnInit, OnDestroy {
   readonly realtimes = this.store.realtimes;
   readonly stats = this.store.stats;
   readonly loading = this.store.loading;
+
+  // ── Computed signal for data loaded state ─────────────────────────────────────
+  readonly hasData = computed(() => this.realtimes().length > 0);
 
   // ── Lifecycle ─────────────────────────────────────────────────────────────
   ngOnInit() {

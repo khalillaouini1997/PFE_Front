@@ -1,6 +1,7 @@
 import { Component, inject, AfterViewInit, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../service/auth.service';
+import { WebSocketService } from '../service/web-socket.service';
 import { ToastrService } from 'ngx-toastr';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -23,6 +24,7 @@ export class AuthentificationComponent implements AfterViewInit {
   loading: boolean = false;
 
   private readonly authService = inject(AuthService);
+  private readonly webSocketService = inject(WebSocketService);
   private readonly router = inject(Router);
   private readonly toastr = inject(ToastrService);
 
@@ -46,6 +48,7 @@ export class AuthentificationComponent implements AfterViewInit {
       next: (_admin) => {
         this.loading = false;
         this.authService.saveSession(_admin);
+        this.webSocketService.connect();
         localStorage.setItem("isReloading", "true");
         if (_admin.user.role === 'AGENT') {
           this.router.navigate(['/adminWeb/compteweb']);

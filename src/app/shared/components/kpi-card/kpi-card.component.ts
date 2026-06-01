@@ -22,16 +22,15 @@ export class KpiCardComponent implements AfterViewInit, OnDestroy {
   sparkline = viewChild<ElementRef>('sparkline');
   private sparklineChart?: Chart;
   private sparklineData: number[] = [];
+  private lastValue: number | string = '';
 
   constructor() {
-    // Generate stable sparkline data once
-    this.sparklineData = this.generateSparklineData();
-
     effect(() => {
-      this.value();
-      this.trend();
-      // Only re-render if chart exists and showSparkline is true
-      if (this.showSparkline() && this.sparklineChart) {
+      const value = this.value();
+
+      // Only update sparkline if chart exists and value actually changed
+      if (this.showSparkline() && this.sparklineChart && value !== this.lastValue) {
+        this.lastValue = value;
         this.updateSparklineData();
       }
     });
@@ -39,6 +38,8 @@ export class KpiCardComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     if (this.showSparkline() && this.sparkline()) {
+      this.sparklineData = this.generateSparklineData();
+      this.lastValue = this.value();
       this.renderSparkline();
     }
   }
@@ -47,11 +48,17 @@ export class KpiCardComponent implements AfterViewInit, OnDestroy {
     this.sparklineChart?.destroy();
   }
 
+  /**
+   * Generates deterministic sparkline data based on current value and trend.
+   * Uses a simple algorithm instead of Math.random() to avoid triggering
+   * infinite re-renders when called inside an Angular effect().
+   */
   private generateSparklineData(): number[] {
     const trend = this.trend() === 'up' ? 1 : -1;
     const baseValue = typeof this.value() === 'number' ? this.value() as number : 10;
     return Array.from({ length: 7 }, (_, i) => {
-      const variation = Math.random() * 5;
+      // Deterministic variation using index and baseValue
+      const variation = ((i * 3 + baseValue) % 5) + 1;
       return Math.max(0, baseValue + (trend * variation * i / 7));
     });
   }
@@ -59,13 +66,7 @@ export class KpiCardComponent implements AfterViewInit, OnDestroy {
   private updateSparklineData() {
     if (!this.sparklineChart) return;
 
-    const trend = this.trend() === 'up' ? 1 : -1;
-    const baseValue = typeof this.value() === 'number' ? this.value() as number : 10;
-    const newData = Array.from({ length: 7 }, (_, i) => {
-      const variation = Math.random() * 5;
-      return Math.max(0, baseValue + (trend * variation * i / 7));
-    });
-
+    const newData = this.generateSparklineData();
     this.sparklineChart.data.datasets[0].data = newData;
     this.sparklineChart.update('none'); // Use 'none' mode to prevent animation
   }
@@ -106,3 +107,4 @@ export class KpiCardComponent implements AfterViewInit, OnDestroy {
     });
   }
 }
+

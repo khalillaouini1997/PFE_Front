@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { AdministratorCompte } from '../data/data';
+import { WebSocketService } from './web-socket.service';
 
 @Injectable({
     providedIn: 'root'
@@ -10,6 +11,7 @@ import { AdministratorCompte } from '../data/data';
 export class AuthService {
 
     private readonly http = inject(HttpClient);
+    private readonly webSocketService = inject(WebSocketService);
     private readonly TOKEN_KEY = 'token';
     private readonly USER_KEY = 'currentUser';
     private readonly AUTH_STATUS_KEY = 'isAuthenticate';
@@ -36,6 +38,7 @@ export class AuthService {
         localStorage.removeItem(this.USER_KEY);
         localStorage.removeItem(this.AUTH_STATUS_KEY);
         this.currentUser = null;
+        this.webSocketService.disconnect();
     }
 
     getToken(): string | null {

@@ -41,7 +41,6 @@
 body {
   font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  min-height: 100vh;
   color: #1e293b;
   margin: 0;
   -webkit-font-smoothing: antialiased;
@@ -278,12 +277,3 @@ body {
 }
 
 
-/* Override legacy material-dashboard.css .main-panel rules */
-.main-panel {
-  width: 100% !important;
-  float: none !important;
-  position: relative;
-  min-height: 0;
-  overflow: visible;
-  transform: none !important;
-}

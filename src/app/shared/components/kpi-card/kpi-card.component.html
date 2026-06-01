@@ -7,5 +7,7 @@
   </div>
   <div class="kpi-value">{{ value() }}</div>
   <div class="kpi-label">{{ label() }}</div>
-  <canvas #sparkline *ngIf="showSparkline" class="sparkline"></canvas>
+  <div class="sparkline-container" *ngIf="showSparkline()">
+    <canvas #sparkline class="sparkline"></canvas>
+  </div>
 </div>
