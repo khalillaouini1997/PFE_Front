@@ -104,6 +104,9 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
       this.intervalFrom = res.intervaleStart;
       this.intervalTo = res.intervaleEnd;
       this.BOITIER_NOT_INSTALLED = res.intervaleEnd - res.intervaleStart + 1;
+      if (res.installedBoitiersCount !== undefined) {
+        this.BOITIER_INSTALLED = res.installedBoitiersCount;
+      }
       this.cdr.markForCheck();
     });
   }
@@ -116,7 +119,7 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
         stat: b.etatBoitier === 'INSTALLED'
       }));
       this.bigTotalItems = res.totalElements;
-      this.BOITIER_INSTALLED = res.totalElements;
+      // Do not overwrite BOITIER_INSTALLED here, as res.totalElements is the search result count!
       this.refreshBoitierArchives();
       this.cdr.markForCheck();
     });
@@ -231,9 +234,10 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
     this.boitierService.addBoitiers(this.ID_COMPTE, nbrBoitiersToAdd).subscribe({
       next: (res: any) => {
         this.mode = false;
-        this.BOITIER_NOT_INSTALLED = res.compteserver.intervaleEnd - res.compteserver.intervaleStart + 1;
-        this.intervalFrom = res.compteserver.intervaleStart;
-        this.intervalTo = res.compteserver.intervaleEnd;
+        this.BOITIER_NOT_INSTALLED = res.compteServer.intervaleEnd - res.compteServer.intervaleStart + 1;
+        this.intervalFrom = res.compteServer.intervaleStart;
+        this.intervalTo = res.compteServer.intervaleEnd;
+        this.loadCompteDetails();
         this.loadBoitierList();
         this.toastr.success(
           nbrBoitiersToAdd + ' ' + this.translate.instant('SERVER_DETAILS.DEVICES_ADDED'), 
@@ -284,6 +288,7 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
           this.boitiers[index].etatBoitier = 'INSTALLED';
           this.boitiers[index].stat = true;
         }
+        this.BOITIER_INSTALLED++;
         this.toastr.success(
           this.translate.instant('SERVER_DETAILS.DEVICE_INSTALLED'), 
           this.translate.instant('COMMON.SUCCESS')

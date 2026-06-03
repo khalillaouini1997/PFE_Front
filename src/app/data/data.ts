@@ -65,6 +65,8 @@ export class CompteServer {
   expired: boolean = false;
   during: boolean = false;
   str_expiration: string = "";
+  installedBoitiersCount: number = 0;
+  totalBoitiersCount: number = 0;
 }
 
 export class CompteServerWithBoitier {
