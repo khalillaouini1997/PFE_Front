@@ -6,7 +6,6 @@ import { RealTime } from 'src/app/data/data';
 import { AuthService } from 'src/app/service/auth.service';
 import { WebAccountService } from "src/app/service/web-account.service";
 import { saveAs as importedSaveAs } from 'file-saver';
-import { PowerBIDashboardComponent } from '../../powerbi-dashboard/powerbi-dashboard.component';
 import { TableModule } from 'primeng/table';
 import { BadgeModule } from 'primeng/badge';
 import { ButtonModule } from 'primeng/button';
@@ -40,7 +39,6 @@ import { DashboardStore } from 'src/app/shared/stores';
     InputIconModule,
     InputTextModule,
     TranslateModule,
-    PowerBIDashboardComponent,
     DashboardMapComponent,
     DashboardChartsComponent,
     DashboardKpiComponent
@@ -56,7 +54,6 @@ export class DashbordComponent implements OnInit, OnDestroy {
   // ── Form & UI state ───────────────────────────────────────────────────────
   dashboardForm!: FormGroup;
   fullscreenMap = signal<boolean>(false);
-  currentTab = signal<'realtime' | 'analytics'>('realtime');
   mapOverlayOpen = false;
 
 
@@ -130,11 +127,6 @@ export class DashbordComponent implements OnInit, OnDestroy {
   // ── Utilities ─────────────────────────────────────────────────────────────
   diffHours(date: Date): number {
     return (Date.now() - new Date(date).getTime()) / (60 * 60 * 1000);
-  }
-
-  // ── Tab Navigation ─────────────────────────────────────────────────────
-  switchTab(tab: 'realtime' | 'analytics') {
-    this.currentTab.set(tab);
   }
 
   // ── Data loading ──────────────────────────────────────────────────────────

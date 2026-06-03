@@ -9,16 +9,6 @@
           <p class="m-0 text-white-50" style="font-size:.85rem">{{ 'DASHBOARD.SUBTITLE' | translate }}</p>
         </div>
         <div class="controls-section d-flex align-items-center gap-2 flex-wrap">
-          <!-- Tab Navigation -->
-          <div class="dashboard-tabs">
-            <button class="tab-button" [class.active]="currentTab() === 'realtime'" (click)="switchTab('realtime')">
-              <i class="fa fa-map-marker"></i> Real-time Tracking
-            </button>
-            <button class="tab-button" [class.active]="currentTab() === 'analytics'" (click)="switchTab('analytics')">
-              <i class="fa fa-chart-line"></i> Advanced Analytics
-            </button>
-          </div>
-
           <!-- Notification bell -->
           <div class="notif-btn">
             <i class="fa fa-bell"></i>
@@ -76,10 +66,9 @@
 
     <!-- ══ Main content ══ -->
     <div class="dashboard-content-wrapper" [class.content-loading]="loading()"
-      [class.v-hidden]="realtimes().length === 0 || !dashboardForm.get('compteWeb')?.value && currentTab() === 'realtime'">
+      [class.v-hidden]="(realtimes().length === 0 || !dashboardForm.get('compteWeb')?.value)">
 
-      <!-- ── Real-time Dashboard Tab ── -->
-      @if (currentTab() === 'realtime') {
+      <!-- ── Real-time Dashboard ── -->
 
       <!-- ── KPI Row ── -->
       <div class="row g-3" *ngIf="!fullscreenMap()">
@@ -228,15 +217,9 @@
           </div>
         </div>
       </div>
-      }
-
-      <!-- ── Power BI Analytics Tab ── -->
-      @if (currentTab() === 'analytics') {
-      <app-powerbi-dashboard></app-powerbi-dashboard>
-      }
 
       <!-- ── No data ── -->
-      @if (realtimes().length === 0 && !loading() && currentTab() === 'realtime') {
+      @if (realtimes().length === 0 && !loading()) {
       <div class="premium-card text-center p-5 mt-4">
         <i class="fa fa-folder-open-o fa-4x text-muted mb-4 opacity-50"></i>
         <h4 class="text-dark fw-bold">{{ 'DASHBOARD.NO_DATA_DESC' | translate }}</h4>
