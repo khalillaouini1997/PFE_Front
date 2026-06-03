@@ -76,7 +76,7 @@
                 </a>
             </li>
             <li class="language-switcher-item">
-                <div class="language-switcher px-3 py-1 d-flex gap-2" [class.d-none]="isCollapsed()">
+                <div class="language-switcher px-3 py-1 d-flex gap-2 align-items-center" [class.d-none]="isCollapsed()">
                     <button (click)="changeLanguage('fr')" class="btn btn-sm py-1 px-2 border border-white border-opacity-10 text-white" 
                         [class.bg-white]="isLang('fr')" [class.bg-opacity-20]="isLang('fr')" [class.opacity-50]="!isLang('fr')">
                         FR
@@ -85,6 +85,12 @@
                         [class.bg-white]="isLang('en')" [class.bg-opacity-20]="isLang('en')" [class.opacity-50]="!isLang('en')">
                         EN
                     </button>
+                    <app-theme-toggle></app-theme-toggle>
+                </div>
+            </li>
+            <li class="theme-toggle-item" [class.d-none]="!isCollapsed()">
+                <div class="theme-toggle-centered">
+                    <app-theme-toggle></app-theme-toggle>
                 </div>
             </li>
             <li class="logout-item mt-2">

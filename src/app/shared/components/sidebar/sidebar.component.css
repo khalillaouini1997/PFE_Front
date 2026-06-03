@@ -150,6 +150,31 @@
     padding-top: 0.75rem;
 }
 
+/* === LANGUAGE SWITCHER === */
+.language-switcher-item {
+    margin-top: 0.5rem;
+}
+
+.language-switcher {
+    flex-wrap: wrap;
+}
+
+/* === THEME TOGGLE === */
+.theme-toggle-item {
+    margin-top: 0.5rem;
+    padding: 0.5rem 0;
+}
+
+.theme-toggle-centered {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sidebar.collapsed .theme-toggle-item {
+    margin-top: 0.25rem;
+}
+
 /* ===== TOGGLE BUTTON ===== */
 .toggle-sidebar-btn {
     width: 36px;
