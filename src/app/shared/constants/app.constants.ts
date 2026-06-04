@@ -51,6 +51,12 @@ export const TIMEOUTS = {
   MAP_FIT_BOUNDS: 1000
 } as const;
 
+export const REALTIME_CONSTANTS = {
+  UPDATE_DEBOUNCE_MS: 300,
+  ANIMATION_DURATION_MS: 500,
+  WEBSOCKET_RECONNECT_DELAY: 5000
+} as const;
+
 export const STORAGE_KEYS = {
   TOKEN: 'token',
   IS_RELOADING: 'isReloading'
