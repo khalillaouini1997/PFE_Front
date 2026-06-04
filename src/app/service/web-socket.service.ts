@@ -3,6 +3,8 @@ import SockJS from 'sockjs-client';
 import { Client, IMessage } from '@stomp/stompjs';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { REALTIME_CONSTANTS } from '../shared/constants/app.constants';
+import { RealTime } from '../data/data';
 
 @Injectable({
     providedIn: 'root'
@@ -10,6 +12,8 @@ import { environment } from '../../environments/environment';
 export class WebSocketService {
     private readonly client: Client;
     private readonly notificationSubject = new BehaviorSubject<any>(null);
+    private readonly vehiclePositionSubject = new BehaviorSubject<RealTime[]>([]);
+    private readonly connectionStatusSubject = new BehaviorSubject<boolean>(false);
 
     constructor() {
         this.client = new Client({
@@ -18,19 +22,26 @@ export class WebSocketService {
             debug: (str) => {
                 console.log(new Date(), str);
             },
-            reconnectDelay: 5000,
+            reconnectDelay: REALTIME_CONSTANTS.WEBSOCKET_RECONNECT_DELAY,
             heartbeatIncoming: 4000,
             heartbeatOutgoing: 4000,
         });
 
         this.client.onConnect = (frame) => {
             console.log('Connected to WebSocket');
+            this.connectionStatusSubject.next(true);
             this.subscribeToNotifications();
+            this.subscribeToVehiclePositions();
         };
 
         this.client.onStompError = (frame) => {
             console.error('Broker reported error: ' + frame.headers['message']);
             console.error('Additional details: ' + frame.body);
+        };
+
+        this.client.onDisconnect = () => {
+            console.log('Disconnected from WebSocket');
+            this.connectionStatusSubject.next(false);
         };
     }
 
@@ -61,8 +72,33 @@ export class WebSocketService {
         });
     }
 
+    private subscribeToVehiclePositions() {
+        this.client.subscribe('/topic/vehicle-positions', (message: IMessage) => {
+            if (message.body) {
+                try {
+                    const positions = JSON.parse(message.body) as RealTime[];
+                    this.vehiclePositionSubject.next(positions);
+                } catch (error) {
+                    console.error('Error parsing vehicle positions:', error);
+                }
+            }
+        });
+    }
+
     getNotifications(): Observable<any> {
         return this.notificationSubject.asObservable();
+    }
+
+    getVehiclePositions(): Observable<RealTime[]> {
+        return this.vehiclePositionSubject.asObservable();
+    }
+
+    getConnectionStatus(): Observable<boolean> {
+        return this.connectionStatusSubject.asObservable();
+    }
+
+    isConnected(): boolean {
+        return this.client.connected;
     }
 
     // Helper to send messages if needed in future
