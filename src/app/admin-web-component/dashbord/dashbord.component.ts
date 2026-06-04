@@ -49,7 +49,7 @@ export class DashbordComponent implements OnInit, OnDestroy {
   protected readonly Math = Math;
 
   // ── Store ────────────────────────────────────────────────────────────────
-  private readonly store = inject(DashboardStore);
+  readonly store = inject(DashboardStore);
 
   // ── Form & UI state ───────────────────────────────────────────────────────
   dashboardForm!: FormGroup;

@@ -1,6 +1,9 @@
-import { Injectable, inject, signal, computed, effect } from '@angular/core';
-import { CompteClientWebInfoDTO, RealTime } from '../../data/data';
+import { Injectable, inject, signal, computed, effect, OnDestroy } from '@angular/core';
+import { CompteClientWebInfoDTO, DeviceInstallationEvolution, RealTime } from '../../data/data';
 import { WebAccountService } from '../../service/web-account.service';
+import { WebSocketService } from '../../service/web-socket.service';
+import { REALTIME_CONSTANTS } from '../constants/app.constants';
+import { debounceTime, distinctUntilChanged, Subscription } from 'rxjs';
 
 export interface DashboardStats {
   total: number;
@@ -14,15 +17,21 @@ export interface DashboardState {
   realtimes: RealTime[];
   selectedCompteWeb: CompteClientWebInfoDTO | null;
   stats: DashboardStats;
+  installationEvolution: DeviceInstallationEvolution[];
+  granularity: string;
   loading: boolean;
   error: string | null;
+  useWebSocket: boolean;
 }
 
 @Injectable({
   providedIn: 'root'
 })
-export class DashboardStore {
+export class DashboardStore implements OnDestroy {
   private readonly webAccountService = inject(WebAccountService);
+  private readonly webSocketService = inject(WebSocketService);
+  private vehiclePositionSubscription?: Subscription;
+  private connectionStatusSubscription?: Subscription;
 
   // State signals
   private readonly state = signal<DashboardState>({
@@ -30,8 +39,11 @@ export class DashboardStore {
     realtimes: [],
     selectedCompteWeb: null,
     stats: { total: 0, valid: 0, technicalIssue: 0, moving: 0 },
+    installationEvolution: [],
+    granularity: 'month',
     loading: false,
-    error: null
+    error: null,
+    useWebSocket: false
   });
 
   // Computed selectors
@@ -39,6 +51,8 @@ export class DashboardStore {
   readonly realtimes = computed(() => this.state().realtimes);
   readonly selectedCompteWeb = computed(() => this.state().selectedCompteWeb);
   readonly stats = computed(() => this.state().stats);
+  readonly installationEvolution = computed(() => this.state().installationEvolution);
+  readonly granularity = computed(() => this.state().granularity);
   readonly loading = computed(() => this.state().loading);
   readonly error = computed(() => this.state().error);
 
@@ -59,20 +73,94 @@ export class DashboardStore {
     this.updateState({ selectedCompteWeb: compte });
     if (compte) {
       this.loadRealtimes(compte.idCompteClientWeb);
+      this.loadInstallationEvolution(compte.idCompteClientWeb);
     }
   }
 
   private loadRealtimes(idCompteWeb: number) {
     this.updateState({ loading: true, error: null });
-    this.webAccountService.getAllLastTram(idCompteWeb).subscribe({
-      next: (realtimes) => {
-        this.updateState({ realtimes, loading: false });
-        this.calculateStats();
+    
+    // Try WebSocket first if connected
+    if (this.webSocketService.isConnected()) {
+      this.setupWebSocketUpdates();
+      // Load initial data via HTTP as fallback
+      this.webAccountService.getAllLastTram(idCompteWeb).subscribe({
+        next: (realtimes) => {
+          this.updateState({ realtimes, loading: false, useWebSocket: true });
+          this.calculateStats();
+        },
+        error: (err) => {
+          this.updateState({ loading: false, error: 'Failed to load real-time data' });
+        }
+      });
+    } else {
+      // Use HTTP polling
+      this.webSocketService.connect();
+      this.webAccountService.getAllLastTram(idCompteWeb).subscribe({
+        next: (realtimes) => {
+          this.updateState({ realtimes, loading: false, useWebSocket: false });
+          this.calculateStats();
+        },
+        error: (err) => {
+          this.updateState({ loading: false, error: 'Failed to load real-time data' });
+        }
+      });
+    }
+  }
+
+  private setupWebSocketUpdates() {
+    // Subscribe to vehicle position updates with debouncing
+    this.vehiclePositionSubscription = this.webSocketService.getVehiclePositions()
+      .pipe(
+        debounceTime(REALTIME_CONSTANTS.UPDATE_DEBOUNCE_MS),
+        distinctUntilChanged((prev, curr) => 
+          JSON.stringify(prev) === JSON.stringify(curr)
+        )
+      )
+      .subscribe({
+        next: (realtimes) => {
+          this.updateState({ realtimes, loading: false });
+          this.calculateStats();
+        },
+        error: (err) => {
+          console.error('WebSocket vehicle position error:', err);
+          // Fall back to HTTP polling on error
+          this.updateState({ useWebSocket: false });
+          const compte = this.state().selectedCompteWeb;
+          if (compte) {
+            this.loadRealtimes(compte.idCompteClientWeb);
+          }
+        }
+      });
+
+    // Monitor connection status
+    this.connectionStatusSubscription = this.webSocketService.getConnectionStatus()
+      .subscribe(isConnected => {
+        if (!isConnected && this.state().useWebSocket) {
+          console.log('WebSocket disconnected, falling back to HTTP');
+          this.updateState({ useWebSocket: false });
+        }
+      });
+  }
+
+  private loadInstallationEvolution(idCompteWeb: number) {
+    const currentGranularity = this.state().granularity;
+    this.webAccountService.getDeviceInstallationEvolution(idCompteWeb, currentGranularity).subscribe({
+      next: (evolutionData) => {
+        this.updateState({ installationEvolution: evolutionData });
       },
       error: (err) => {
-        this.updateState({ loading: false, error: 'Failed to load real-time data' });
+        console.error('Failed to load installation evolution data', err);
       }
     });
+  }
+
+  setGranularity(granularity: string) {
+    this.updateState({ granularity });
+    const compte = this.state().selectedCompteWeb;
+    if (compte) {
+      this.loadInstallationEvolution(compte.idCompteClientWeb);
+    }
   }
 
   private calculateStats() {
@@ -92,5 +180,10 @@ export class DashboardStore {
 
   private updateState(partial: Partial<DashboardState>) {
     this.state.update(current => ({ ...current, ...partial }));
+  }
+
+  ngOnDestroy() {
+    this.vehiclePositionSubscription?.unsubscribe();
+    this.connectionStatusSubscription?.unsubscribe();
   }
 }

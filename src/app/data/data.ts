@@ -374,3 +374,9 @@ export class InterventionInfo {
   verifiedAt!: Date;
   verified!: boolean;
 }
+
+export interface DeviceInstallationEvolution {
+  periodLabel: string;
+  cumulativeCount: number;
+  newInstallations: number;
+}

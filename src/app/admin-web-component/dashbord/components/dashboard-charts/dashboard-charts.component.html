@@ -1,3 +1,21 @@
+<!-- Device Installation Evolution Chart - Full Width -->
+<div class="evolution-chart-container">
+  <div class="chart-card chart-card-full">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h3 class="m-0">Device Installation Evolution</h3>
+      <select class="form-select form-select-sm" style="width: auto;" (change)="onGranularityChange($event)">
+        <option value="month" [selected]="granularity() === 'month'">Month</option>
+        <option value="trimester" [selected]="granularity() === 'trimester'">Trimester</option>
+        <option value="year" [selected]="granularity() === 'year'">Year</option>
+      </select>
+    </div>
+    <div class="chart-wrapper">
+      <canvas #evolutionChart></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- Other 4 Charts in Grid -->
 <div class="charts-container">
   <div class="chart-card">
     <h3>Vehicle Status</h3>

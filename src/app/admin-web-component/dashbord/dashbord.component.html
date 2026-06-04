@@ -106,7 +106,7 @@
       <!-- ── Charts Row ── -->
       <div class="row mt-3" *ngIf="!fullscreenMap()">
         <div class="col-12">
-          <app-dashboard-charts [realtimes]="realtimes()" [stats]="stats()"></app-dashboard-charts>
+          <app-dashboard-charts [realtimes]="realtimes()" [stats]="stats()" [installationEvolution]="store.installationEvolution()" [granularity]="store.granularity()"></app-dashboard-charts>
         </div>
       </div>
 

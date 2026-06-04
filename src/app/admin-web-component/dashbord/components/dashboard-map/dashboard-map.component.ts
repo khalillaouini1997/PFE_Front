@@ -1,7 +1,7 @@
 import { Component, input, output, viewChild, inject, AfterViewInit, OnDestroy, ElementRef, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RealTime } from '../../../../data/data';
-import { MAP_CONSTANTS, CAR_STYLES, VALID_ANGLES, TIMEOUTS } from '../../../../shared/constants/app.constants';
+import { MAP_CONSTANTS, CAR_STYLES, VALID_ANGLES, TIMEOUTS, REALTIME_CONSTANTS } from '../../../../shared/constants/app.constants';
 import { ChangeDetectorRef } from '@angular/core';
 
 declare const L: any;
@@ -21,7 +21,10 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
   map?: any;
   private markerClusterGroup?: any;
   private deviceIconMap = new Map<number, string>();
+  private markerMap = new Map<number, any>();
+  private previousPositions = new Map<number, { lat: number; lng: number }>();
   private cdr = inject(ChangeDetectorRef);
+  private animationFrameId?: number;
 
   constructor() {
     effect(() => {
@@ -35,8 +38,13 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    if (this.animationFrameId) {
+      cancelAnimationFrame(this.animationFrameId);
+    }
     this.map?.remove();
     this.markerClusterGroup?.clearLayers();
+    this.markerMap.clear();
+    this.previousPositions.clear();
   }
 
   private initMap() {
@@ -65,7 +73,6 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
   private updateMarkers() {
     if (!this.map || !this.markerClusterGroup) return;
 
-    this.markerClusterGroup.clearLayers();
     const bounds: any[] = [];
     
     const newFleetHash = this.realtimes().map(t => t.deviceid).sort().join(',');
@@ -73,21 +80,31 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
 
     this.realtimes().forEach(tram => {
       if (tram.latitude && tram.longitude) {
-        const marker = L.marker([tram.latitude, tram.longitude], { icon: this.getCarIcon(tram) })
-          .bindPopup(`
-            <div style="font-family:'Public Sans',sans-serif">
-              <b style="color:#2b3674;font-size:14px">${tram.matricule}</b><br>
-              <span style="color:#a3aed0">ID:</span> ${tram.deviceid}<br>
-              <span style="color:#a3aed0">Vitesse:</span> <b>${tram.speed} km/h</b><br>
-              <span style="color:#a3aed0">Status:</span> ${tram.status}
-            </div>
-          `)
-          .on('click', () => this.locateDevice.emit(tram));
+        const deviceId = tram.deviceid;
+        const prevPos = this.previousPositions.get(deviceId);
         
-        this.markerClusterGroup!.addLayer(marker);
+        if (prevPos) {
+          // Animate existing marker to new position
+          this.animateMarkerPosition(deviceId, tram.latitude, tram.longitude);
+        } else {
+          // Create new marker
+          this.createMarker(tram);
+        }
+        
+        this.previousPositions.set(deviceId, { lat: tram.latitude, lng: tram.longitude });
         bounds.push([tram.latitude, tram.longitude]);
       }
     });
+
+    // Remove markers for vehicles no longer in the list
+    const currentDeviceIds = new Set(this.realtimes().map(t => t.deviceid));
+    for (const [deviceId, marker] of this.markerMap) {
+      if (!currentDeviceIds.has(deviceId)) {
+        this.markerClusterGroup.removeLayer(marker);
+        this.markerMap.delete(deviceId);
+        this.previousPositions.delete(deviceId);
+      }
+    }
 
     if (bounds.length && fleetChanged) {
       this.currentFleetHash = newFleetHash;
@@ -104,6 +121,62 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
         }
       }, 100);
     }
+  }
+
+  private createMarker(tram: RealTime) {
+    const marker = L.marker([tram.latitude, tram.longitude], { 
+      icon: this.getCarIcon(tram),
+      animate: true
+    })
+      .bindPopup(`
+        <div style="font-family:'Public Sans',sans-serif">
+          <b style="color:#2b3674;font-size:14px">${tram.matricule}</b><br>
+          <span style="color:#a3aed0">ID:</span> ${tram.deviceid}<br>
+          <span style="color:#a3aed0">Vitesse:</span> <b>${tram.speed} km/h</b><br>
+          <span style="color:#a3aed0">Status:</span> ${tram.status}
+        </div>
+      `)
+      .on('click', () => this.locateDevice.emit(tram));
+    
+    this.markerClusterGroup.addLayer(marker);
+    this.markerMap.set(tram.deviceid, marker);
+  }
+
+  private animateMarkerPosition(deviceId: number, newLat: number, newLng: number) {
+    const marker = this.markerMap.get(deviceId);
+    if (!marker) return;
+
+    const prevPos = this.previousPositions.get(deviceId);
+    if (!prevPos) return;
+
+    const startTime = performance.now();
+    const duration = REALTIME_CONSTANTS.ANIMATION_DURATION_MS;
+    const startLat = prevPos.lat;
+    const startLng = prevPos.lng;
+
+    const animate = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      // Ease-in-out function for smooth animation
+      const easeProgress = progress < 0.5
+        ? 2 * progress * progress
+        : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+
+      const currentLat = startLat + (newLat - startLat) * easeProgress;
+      const currentLng = startLng + (newLng - startLng) * easeProgress;
+
+      marker.setLatLng([currentLat, currentLng]);
+
+      if (progress < 1) {
+        this.animationFrameId = requestAnimationFrame(animate);
+      }
+    };
+
+    if (this.animationFrameId) {
+      cancelAnimationFrame(this.animationFrameId);
+    }
+    this.animationFrameId = requestAnimationFrame(animate);
   }
 
   private getCarIcon(tram: RealTime) {

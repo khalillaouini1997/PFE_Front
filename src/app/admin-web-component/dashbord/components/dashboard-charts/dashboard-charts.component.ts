@@ -1,9 +1,10 @@
 import { Component, input, viewChild, inject, AfterViewInit, OnDestroy, ElementRef, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RealTime } from '../../../../data/data';
+import { RealTime, DeviceInstallationEvolution } from '../../../../data/data';
 import { CHART_CONSTANTS, SPEED_BANDS, SIM_CARD_PREFIXES, STATUS_TYPES } from '../../../../shared/constants/app.constants';
 import { TranslateService } from '@ngx-translate/core';
 import { Chart, registerables } from 'chart.js';
+import { DashboardStore } from '../../../../shared/stores';
 
 Chart.register(...registerables);
 
@@ -23,24 +24,36 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
     moving: 0
   });
 
+  installationEvolution = input<DeviceInstallationEvolution[]>([]);
+  granularity = input<string>('month');
+
   statusChart = viewChild<ElementRef>('statusChart');
   speedChart = viewChild<ElementRef>('speedChart');
   puceChart = viewChild<ElementRef>('puceChart');
 
   signalChart = viewChild<ElementRef>('signalChart');
+  evolutionChart = viewChild<ElementRef>('evolutionChart');
 
   private stateChart?: Chart;
   private speedChartInstance?: Chart;
   private puceChartInstance?: Chart;
 
   private signalChartInstance?: Chart;
+  private evolutionChartInstance?: Chart;
+
   private translate = inject(TranslateService);
+  private readonly store = inject(DashboardStore);
 
   constructor() {
     effect(() => {
       this.realtimes();
       this.stats();
       this.updateCharts();
+    });
+
+    effect(() => {
+      this.installationEvolution();
+      this.updateEvolutionChart();
     });
   }
 
@@ -54,6 +67,7 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
     this.puceChartInstance?.destroy();
 
     this.signalChartInstance?.destroy();
+    this.evolutionChartInstance?.destroy();
   }
 
   updateCharts() {
@@ -245,5 +259,58 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
         }
       });
     }
+  }
+
+  private updateEvolutionChart() {
+    const canvas = this.evolutionChart();
+    if (!canvas) return;
+
+    const evolutionData = this.installationEvolution();
+    const labels = evolutionData.map(d => d.periodLabel);
+    const cumulativeData = evolutionData.map(d => d.cumulativeCount);
+
+    const data = {
+      labels,
+      datasets: [{
+        label: 'Cumulative Devices',
+        data: cumulativeData,
+        borderColor: CHART_CONSTANTS.COLORS.PRIMARY,
+        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+        fill: true,
+        tension: 0.4
+      }]
+    };
+
+    if (this.evolutionChartInstance) {
+      this.evolutionChartInstance.data = data;
+      this.evolutionChartInstance.update('none');
+    } else {
+      this.evolutionChartInstance = new Chart(canvas.nativeElement, {
+        type: 'line',
+        data,
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: { display: false }
+            },
+            x: {
+              grid: { display: false }
+            }
+          }
+        }
+      });
+    }
+  }
+
+  onGranularityChange(event: Event) {
+    const select = event.target as HTMLSelectElement;
+    this.store.setGranularity(select.value);
   }
 }

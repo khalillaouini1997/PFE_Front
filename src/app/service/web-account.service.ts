@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { CompteClientWebInfoDTO, OptionInfoDTO, PageResponse, RealTime } from '../data/data';
+import { CompteClientWebInfoDTO, DeviceInstallationEvolution, OptionInfoDTO, PageResponse, RealTime } from '../data/data';
 import { AuthService } from './auth.service';
 
 @Injectable({
@@ -85,5 +85,9 @@ export class WebAccountService {
 
     associateCompteWebToCompteServer(idWeb: number, idServer: number): Observable<any> {
         return this.http.put<any>(`${environment.apiBaseUrl}compteWeb/${idWeb}/compteServer/${idServer}`, null);
+    }
+
+    getDeviceInstallationEvolution(idCompteWeb: number, granularity: string = 'month'): Observable<DeviceInstallationEvolution[]> {
+        return this.http.get<DeviceInstallationEvolution[]>(`${environment.apiBaseUrl}compteWeb/${idCompteWeb}/device-installation-evolution?granularity=${granularity}`);
     }
 }

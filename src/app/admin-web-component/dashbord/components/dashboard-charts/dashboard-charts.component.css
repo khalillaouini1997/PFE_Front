@@ -1,3 +1,7 @@
+.evolution-chart-container {
+  margin-top: 20px;
+}
+
 .charts-container {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -28,6 +32,10 @@
   flex-direction: column;
   height: 320px;
   flex-shrink: 0;
+}
+
+.chart-card-full {
+  height: 400px;
 }
 
 .chart-card h3 {
