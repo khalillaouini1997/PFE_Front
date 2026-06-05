@@ -2,7 +2,8 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { Archive, Boitier, BoitierRealTime, DeviceOpt, DeviceSetting, PageResponse, PathConfigPayload, raws, RecalculatePayload, VehiculeSetting } from '../data/data';
+import { Archive, Boitier, BoitierRealTime, DeviceOpt, DeviceSetting, PageResponse, PathConfigPayload, raws, RecalculatePayload, VehiculeSetting, BoitierAnalysis } from '../data/data';
+
 
 @Injectable({
     providedIn: 'root'
@@ -122,4 +123,9 @@ export class BoitierService {
     getDeviceIdImei(url: string, imei: number): Observable<any> {
         return this.http.get<any>(url + imei);
     }
+
+    getBoitierAnalysis(numBoitier: number, days: number = 30): Observable<BoitierAnalysis> {
+        return this.http.get<BoitierAnalysis>(`${environment.apiBaseUrl}boities/${numBoitier}/analysis?days=${days}`);
+    }
 }
+

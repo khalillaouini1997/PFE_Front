@@ -1,7 +1,8 @@
 import { CommonModule, DatePipe, DecimalPipe, Location, NgClass } from '@angular/common';
 import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Archive, raws } from "../../data/data";
+import { Archive, raws, BoitierAnalysis } from "../../data/data";
+
 import { BoitierService } from "../../service/boitier.service";
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { TableModule } from 'primeng/table';
@@ -20,6 +21,11 @@ export class ArchiveComponent implements OnInit {
   rawData = signal<raws>(new raws());
   numBoitier = signal<number>(0);
   archiveForm!: FormGroup;
+
+  analysisData = signal<BoitierAnalysis | null>(null);
+  isAnalyzing = signal<boolean>(false);
+  analysisDays = signal<number>(30);
+
 
   constructor(
     private readonly _location: Location,
@@ -90,4 +96,24 @@ export class ArchiveComponent implements OnInit {
       this.archives.set(archs);
     });
   }
+
+  getAiAnalysis() {
+    this.isAnalyzing.set(true);
+    this.boitierService.getBoitierAnalysis(this.numBoitier(), this.analysisDays()).subscribe({
+      next: (data) => {
+        this.analysisData.set(data);
+        this.isAnalyzing.set(false);
+      },
+      error: (err) => {
+        console.error('Error fetching AI analysis', err);
+        this.isAnalyzing.set(false);
+      }
+    });
+  }
+
+  changeDays(days: number) {
+    this.analysisDays.set(days);
+    this.getAiAnalysis();
+  }
 }
+

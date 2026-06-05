@@ -35,7 +35,9 @@
             <p-tablist>
                 <p-tab value="0">{{ 'ARCHIVE.TERMINAL_ARCHIVE' | translate }}</p-tab>
                 <p-tab value="1" (click)="getAllRaws()" (keydown.enter)="getAllRaws()">{{ 'ARCHIVE.RAW_DATA' | translate }}</p-tab>
+                <p-tab value="2" (click)="getAiAnalysis()" (keydown.enter)="getAiAnalysis()"><i class="fa fa-brain me-1 text-primary"></i> AI Prediction Panel</p-tab>
             </p-tablist>
+
             <p-tabpanels>
                 <p-tabpanel value="0">
                     <p-table [value]="archives()" 
@@ -121,7 +123,158 @@
                         </ng-template>
                     </p-table>
                 </p-tabpanel>
+                
+                <p-tabpanel value="2">
+                    <div class="ai-panel p-4 bg-light bg-opacity-10">
+                        <!-- Header / Days selector -->
+                        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+                            <div>
+                                <h4 class="m-0 fw-bold text-dark"><i class="fa fa-brain me-2 text-primary"></i>AI Telemetry Intelligence</h4>
+                                <small class="text-muted">Predictive failure forecasting and historical telemetry analysis</small>
+                            </div>
+                            <div class="btn-group shadow-sm">
+                                <button type="button" class="btn btn-sm btn-outline-primary" [class.active]="analysisDays() === 7" (click)="changeDays(7)">7 Days</button>
+                                <button type="button" class="btn btn-sm btn-outline-primary" [class.active]="analysisDays() === 30" (click)="changeDays(30)">30 Days</button>
+                                <button type="button" class="btn btn-sm btn-outline-primary" [class.active]="analysisDays() === 90" (click)="changeDays(90)">90 Days</button>
+                            </div>
+                        </div>
+
+                        <!-- Loading State -->
+                        <div *ngIf="isAnalyzing()" class="text-center py-5">
+                            <div class="spinner-border text-primary mb-3" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <h5 class="text-muted">Analyzing telemetry frames, power levels, and GSM trends...</h5>
+                        </div>
+
+                        <!-- Analysis Content -->
+                        <div *ngIf="!isAnalyzing() && analysisData() as data" class="row g-4">
+                            <!-- Left: Health Score Card & KPI summaries -->
+                            <div class="col-lg-4">
+                                <div class="premium-card p-4 text-center h-100 shadow-sm border bg-white">
+                                    <h5 class="fw-bold mb-4 text-secondary">Device Health Score</h5>
+                                    
+                                    <!-- Health Circular Indicator -->
+                                    <div class="health-score-container position-relative d-inline-block mb-3">
+                                        <svg class="health-ring" width="160" height="160">
+                                            <circle class="ring-bg" cx="80" cy="80" r="70" fill="transparent" stroke="#f1f3f5" stroke-width="12"></circle>
+                                            <circle class="ring-bar" cx="80" cy="80" r="70" fill="transparent" 
+                                                [attr.stroke]="data.healthScore >= 85 ? '#2ec4b6' : (data.healthScore >= 60 ? '#ff9f1c' : '#e71d36')" 
+                                                stroke-width="12" 
+                                                [attr.stroke-dasharray]="440" 
+                                                [attr.stroke-dashoffset]="440 - (440 * data.healthScore / 100)"
+                                                stroke-linecap="round"></circle>
+                                        </svg>
+                                        <div class="health-score-label position-absolute top-50 start-50 translate-middle">
+                                            <span class="score-value display-5 fw-bold" [style.color]="data.healthScore >= 85 ? '#2ec4b6' : (data.healthScore >= 60 ? '#ff9f1c' : '#e71d36')">{{data.healthScore}}</span>
+                                            <span class="score-percent text-muted fs-4">%</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="mt-2">
+                                        <span class="badge px-3 py-2 fs-6" 
+                                            [ngClass]="data.healthScore >= 85 ? 'bg-success bg-opacity-10 text-success' : (data.healthScore >= 60 ? 'bg-warning bg-opacity-10 text-warning' : 'bg-danger bg-opacity-10 text-danger')">
+                                            {{ data.healthScore >= 85 ? 'Excellent Health' : (data.healthScore >= 60 ? 'Moderate Health' : 'Critical Warning') }}
+                                        </span>
+                                    </div>
+
+                                    <hr class="my-4">
+
+                                    <!-- Key Metrics Grid -->
+                                    <div class="row g-3 text-start">
+                                        <div class="col-6">
+                                            <small class="text-muted d-block">Uptime Ratio</small>
+                                            <span class="fw-bold text-dark fs-5">{{data.uptimePercentage}}%</span>
+                                        </div>
+                                        <div class="col-6">
+                                            <small class="text-muted d-block">Failure Risk</small>
+                                            <span class="fw-bold fs-5" [style.color]="data.failureProbability30Days >= 0.5 ? '#e71d36' : (data.failureProbability30Days >= 0.2 ? '#ff9f1c' : '#2ec4b6')">
+                                                {{(data.failureProbability30Days * 100).toFixed(0)}}%
+                                            </span>
+                                        </div>
+                                        <div class="col-6">
+                                            <small class="text-muted d-block">Signal Strength</small>
+                                            <span class="fw-bold text-dark fs-5">
+                                                <i class="fa fa-signal me-1 text-primary"></i> {{data.signalTrend.avgSignal}} / 31
+                                            </span>
+                                        </div>
+                                        <div class="col-6">
+                                            <small class="text-muted d-block">Signal Trend</small>
+                                            <span class="badge text-white" 
+                                                [ngClass]="data.signalTrend.trend === 'IMPROVING' ? 'bg-success' : (data.signalTrend.trend === 'DEGRADING' ? 'bg-danger' : 'bg-secondary')">
+                                                {{data.signalTrend.trend}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right: Prediction & Gaps List -->
+                            <div class="col-lg-8 d-flex flex-column gap-4">
+                                <!-- Prediction Card -->
+                                <div class="premium-card p-4 shadow-sm border bg-white prediction-glow-card" 
+                                    [style.border-left-color]="data.healthScore >= 85 ? '#2ec4b6' : (data.healthScore >= 60 ? '#ff9f1c' : '#e71d36')"
+                                    style="border-left-width: 6px;">
+                                    <h5 class="fw-bold text-dark mb-3"><i class="fa fa-magic me-2 text-primary"></i>AI Uptime Prediction & Forecast</h5>
+                                    <p class="fs-5 lh-base text-dark bg-light p-3 rounded border border-light opacity-90">{{data.prediction}}</p>
+                                    <div class="d-flex align-items-center gap-3 mt-3 flex-wrap">
+                                        <span class="text-muted">Analyzed frames: <strong class="text-dark">{{data.totalReceivedFrames}}</strong> / {{data.totalExpectedFrames}} expected</span>
+                                        <span class="text-muted">|</span>
+                                        <span class="text-muted">Analysis Window: <strong class="text-dark">{{data.analyzedDays}} Days</strong></span>
+                                    </div>
+                                </div>
+
+                                <!-- Gaps List -->
+                                <div class="premium-card p-4 shadow-sm border bg-white flex-grow-1">
+                                    <h5 class="fw-bold text-dark mb-3"><i class="fa fa-history me-2 text-primary"></i>Detected Transmission Outages (Gaps > 10m)</h5>
+                                    
+                                    <div *ngIf="data.offlineGaps.length === 0" class="alert alert-success d-flex align-items-center gap-3 mb-0" role="alert">
+                                        <i class="fa fa-check-circle fs-4"></i>
+                                        <div>
+                                            <strong>No outages detected!</strong> The tracker remained consistently connected during the entire analysis window.
+                                        </div>
+                                    </div>
+
+                                    <div *ngIf="data.offlineGaps.length > 0" class="table-responsive" style="max-height: 250px; overflow-y: auto;">
+                                        <table class="table table-hover align-middle table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">Outage Start</th>
+                                                    <th scope="col">Connection Restore</th>
+                                                    <th scope="col">Outage Duration</th>
+                                                    <th scope="col">Probable Primary Cause</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let gap of data.offlineGaps">
+                                                    <td class="text-nowrap small text-secondary">{{gap.startTime}}</td>
+                                                    <td class="text-nowrap small text-secondary">{{gap.endTime}}</td>
+                                                    <td>
+                                                        <span class="badge bg-dark bg-opacity-75">{{gap.durationMinutes}} mins</span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="badge rounded-pill" 
+                                                            [ngClass]="gap.probableCause.includes('Power') ? 'bg-danger bg-opacity-10 text-danger' : (gap.probableCause.includes('Signal') ? 'bg-warning bg-opacity-10 text-warning' : 'bg-secondary bg-opacity-10 text-secondary')">
+                                                            <i class="fa" [ngClass]="gap.probableCause.includes('Power') ? 'fa-plug' : (gap.probableCause.includes('Signal') ? 'fa-signal' : 'fa-info-circle')"></i> {{gap.probableCause}}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- No Data State -->
+                        <div *ngIf="!isAnalyzing() && !analysisData()" class="text-center py-5">
+                            <i class="fa fa-info-circle text-muted display-4 mb-3"></i>
+                            <h5 class="text-muted">No analysis telemetry available. Click a tab or refresh.</h5>
+                        </div>
+                    </div>
+                </p-tabpanel>
             </p-tabpanels>
+
         </p-tabs>
     </div>
 </div>

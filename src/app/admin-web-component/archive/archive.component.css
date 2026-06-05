@@ -83,3 +83,51 @@ th {
     color: #ffffff;
     text-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
+
+/* AI Telemetry Panel Styles */
+.ai-panel {
+    border-radius: 12px;
+}
+
+.health-score-container {
+    width: 160px;
+    height: 160px;
+}
+
+.health-ring {
+    transform: rotate(-90deg);
+}
+
+.ring-bar {
+    transition: stroke-dashoffset 0.8s ease-in-out;
+}
+
+.prediction-glow-card {
+    transition: all 0.3s ease;
+    border-radius: 12px;
+}
+
+.prediction-glow-card:hover {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08) !important;
+    transform: translateY(-2px);
+}
+
+.table-responsive::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+    background: #dee2e6;
+    border-radius: 4px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+    background: #ced4da;
+}
+
