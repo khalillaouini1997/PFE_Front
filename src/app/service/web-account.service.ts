@@ -84,7 +84,7 @@ export class WebAccountService {
     }
 
     associateCompteWebToCompteServer(idWeb: number, idServer: number): Observable<any> {
-        return this.http.put<any>(`${environment.apiBaseUrl}compteWeb/${idWeb}/compteServer/${idServer}`, null);
+        return this.http.post<any>(`${environment.apiBaseUrl}compteWeb/${idWeb}/compteServer/${idServer}`, null);
     }
 
     getDeviceInstallationEvolution(idCompteWeb: number, granularity: string = 'month'): Observable<DeviceInstallationEvolution[]> {

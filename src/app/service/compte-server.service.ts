@@ -44,7 +44,7 @@ export class CompteServerService {
   }
 
   extendIntervalOfBoitiers(idCompteServer: number): Observable<any> {
-    return this.http.put<any>(`${environment.apiBaseUrl}compteServer/${idCompteServer}/newInterval`, null);
+    return this.http.post<any>(`${environment.apiBaseUrl}compteServer/${idCompteServer}/newInterval`, null);
   }
 
   // Web Admin perspective
