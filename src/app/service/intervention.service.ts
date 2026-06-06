@@ -15,6 +15,6 @@ export class InterventionService {
     }
 
     updateIntervention(intervention: Intervention, idTenant: number): Observable<boolean> {
-        return this.http.post<boolean>(`${environment.apiBaseUrl}help/update/?tenantId=${idTenant}`, intervention);
+        return this.http.put<boolean>(`${environment.apiBaseUrl}help/update/?tenantId=${idTenant}`, intervention);
     }
 }

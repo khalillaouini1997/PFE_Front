@@ -22,8 +22,8 @@ export class CompteServerService {
     return this.http.put<any>(`${environment.apiBaseUrl}compteServer/${id}`, compteServer);
   }
 
-  deleteCompteServer(id: number): Observable<any> {
-    return this.http.delete<any>(`${environment.apiBaseUrl}compteServer/${id}`);
+  deleteCompteServer(id: number): Observable<void> {
+    return this.http.delete<void>(`${environment.apiBaseUrl}compteServer/${id}`);
   }
 
   getAllServerCompte(keyword: string, page: number, size: number): Observable<any> {

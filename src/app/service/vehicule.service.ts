@@ -15,6 +15,6 @@ export class VehiculeService {
     }
 
     updateTechnicianIntervention(deviceId: number, date: Date): Observable<boolean> {
-        return this.http.post<boolean>(`${environment.apiBaseUrl}vehicule/update/${deviceId}`, date);
+        return this.http.put<boolean>(`${environment.apiBaseUrl}vehicule/update/${deviceId}`, date);
     }
 }
