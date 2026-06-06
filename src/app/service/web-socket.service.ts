@@ -58,7 +58,9 @@ export class WebSocketService {
     }
 
     private getSocketUrl(): string {
-        const baseUrl = environment.apiBaseUrl;
+        // WebSocket endpoint is not under /api/v1 prefix
+        // Use the base URL without /api/v1 for WebSocket connections
+        const baseUrl = environment.apiBaseUrl.replace('/api/v1/', '');
         // SockJS expects the base HTTP/HTTPS URL
         // Append 'socket' as per previous working configuration
         return `${baseUrl}socket`;
