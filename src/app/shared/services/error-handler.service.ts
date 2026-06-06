@@ -8,6 +8,8 @@ export interface ErrorContext {
   component?: string;
   action?: string;
   userMessage?: string;
+  timestamp?: Date;
+  errorType?: 'network' | 'validation' | 'business' | 'system';
 }
 
 @Injectable({
@@ -20,9 +22,14 @@ export class ErrorHandlerService {
   readonly errors$ = this.errors.asReadonly();
 
   handleError(context: ErrorContext) {
+    // Auto-categorize error type if not provided
+    if (!context.errorType) {
+      context.errorType = this.categorizeError(context.error);
+    }
+
     console.error('[ErrorHandler]', context);
 
-    // Add to error log
+    // Add to error log with timestamp
     this.errors.update(errors => [...errors, { ...context, timestamp: new Date() }]);
 
     // Show user-friendly message
@@ -33,12 +40,31 @@ export class ErrorHandlerService {
       this.router.navigate(['/error'], { 
         queryParams: { 
           message: userMessage,
-          component: context.component 
+          component: context.component,
+          type: context.errorType
         }
       });
     }
 
     return throwError(() => context.error);
+  }
+
+  private categorizeError(error: Error | HttpErrorResponse): 'network' | 'validation' | 'business' | 'system' {
+    if (error instanceof HttpErrorResponse) {
+      if (error.status === 0 || error.status >= 500) {
+        return 'network';
+      }
+      if (error.status >= 400 && error.status < 500) {
+        return 'validation';
+      }
+    }
+    if (error.message?.includes('network') || error.message?.includes('connection')) {
+      return 'network';
+    }
+    if (error.message?.includes('validation') || error.message?.includes('invalid')) {
+      return 'validation';
+    }
+    return 'system';
   }
 
   private isCriticalError(error: Error | HttpErrorResponse): boolean {
@@ -70,5 +96,13 @@ export class ErrorHandlerService {
 
   clearErrors() {
     this.errors.set([]);
+  }
+
+  getErrorsByType(errorType: 'network' | 'validation' | 'business' | 'system'): ErrorContext[] {
+    return this.errors().filter(e => e.errorType === errorType);
+  }
+
+  getRecentErrors(count: number = 10): ErrorContext[] {
+    return this.errors().slice(-count);
   }
 }

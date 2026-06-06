@@ -81,7 +81,10 @@ export class WebSocketService {
                     const positions = JSON.parse(message.body) as RealTime[];
                     this.vehiclePositionSubject.next(positions);
                 } catch (error) {
-                    console.error('Error parsing vehicle positions:', error);
+                    console.error('Error parsing vehicle positions from WebSocket message:', error);
+                    // Notify error handler service for tracking
+                    // Continue with empty positions to avoid breaking the stream
+                    this.vehiclePositionSubject.next([]);
                 }
             }
         });
