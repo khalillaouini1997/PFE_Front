@@ -103,7 +103,7 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
       this.compteServer = res;
       this.intervalFrom = res.intervaleStart;
       this.intervalTo = res.intervaleEnd;
-      this.BOITIER_NOT_INSTALLED = res.intervaleEnd - res.intervaleStart + 1;
+      this.BOITIER_NOT_INSTALLED = res.availableSlotsCount;
       if (res.installedBoitiersCount !== undefined) {
         this.BOITIER_INSTALLED = res.installedBoitiersCount;
       }

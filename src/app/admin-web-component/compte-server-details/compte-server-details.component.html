@@ -7,10 +7,6 @@
                 <p class="m-0 text-white-50 opacity-75">{{ 'COMMON.INSTANCE' | translate }} #{{compteServer.idCompteClientServer}} — {{compteServer.pseudo}}</p>
             </div>
             <div class="controls-section d-flex align-items-center gap-2">
-                <div class="bg-white bg-opacity-10 rounded-3 p-2 px-3 text-white border border-white border-opacity-10">
-                    <small class="opacity-75 d-block text-uppercase fw-bold ssh-badge-title-small">{{ 'SERVER_DETAILS.SSH_ACCESS' | translate }}</small>
-                    <span class="small">{{compteServer.login}} : <code class="text-warning">{{compteServer.password}}</code></span>
-                </div>
                 <button class="btn btn-glass btn-sm rounded-circle" routerLink="/adminWeb/listServers" title="{{ 'COMMON.BACK' | translate }}">
                     <i class="fa fa-arrow-left text-white"></i>
                 </button>
