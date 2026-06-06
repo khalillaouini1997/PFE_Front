@@ -67,6 +67,7 @@ export class ComptesWebComponentComponent implements OnInit {
       pool: ['']
     });
     this.loadAvailablePools();
+    this.loadWebAccounts();
   }
 
   loadWebAccounts(event?: any) {
@@ -90,6 +91,7 @@ export class ComptesWebComponentComponent implements OnInit {
 
     this.webAccountService.getAllWebAccountByKeyWord(keyWord, page, size, region, pool).subscribe({
       next: (res: any) => {
+        const totalElements = res.page?.totalElements || res.totalElements || 0;
         const loaded = res.content || [];
 
         for (const compte of loaded) {
@@ -103,7 +105,7 @@ export class ComptesWebComponentComponent implements OnInit {
         }
 
         this.comptesWeb = loaded;
-        this.bigTotalItems = res.totalElements || 0;
+        this.bigTotalItems = totalElements;
         this.loading = false;
         this.loadingInProgress = false;
         this.cdr.detectChanges();
@@ -143,15 +145,9 @@ export class ComptesWebComponentComponent implements OnInit {
   }
 
   loadAvailablePools() {
-    this.webAccountService.getAllWebAccountSummary().subscribe({
-      next: (accounts: any[]) => {
-        const pools = new Set<number>();
-        accounts.forEach(account => {
-          if (account.pool !== null && account.pool !== undefined) {
-            pools.add(account.pool);
-          }
-        });
-        this.availablePools = Array.from(pools).sort((a, b) => a - b);
+    this.webAccountService.getDistinctPools().subscribe({
+      next: (pools: number[]) => {
+        this.availablePools = pools.sort((a, b) => a - b);
       },
       error: (err) => {
         console.error('Error loading pools:', err);

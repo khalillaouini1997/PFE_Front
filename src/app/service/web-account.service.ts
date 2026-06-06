@@ -90,4 +90,8 @@ export class WebAccountService {
     getDeviceInstallationEvolution(idCompteWeb: number, granularity: string = 'month'): Observable<DeviceInstallationEvolution[]> {
         return this.http.get<DeviceInstallationEvolution[]>(`${environment.apiBaseUrl}compteWeb/${idCompteWeb}/device-installation-evolution?granularity=${granularity}`);
     }
+
+    getDistinctPools(): Observable<number[]> {
+        return this.http.get<number[]>(`${environment.apiBaseUrl}compteWeb/pools`);
+    }
 }
