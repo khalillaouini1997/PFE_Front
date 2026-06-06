@@ -177,8 +177,8 @@ export class ConfigurationWebComponentComponent implements OnInit {
             this.options.set(opts);
           });
           this.compteWeb.set(_compteWeb);
-          this.serverAccount.set(_compteWeb.compteClientServer);
-          this.selected.set(_compteWeb.options);
+          this.serverAccount.set(_compteWeb.compteClientServer || new CompteServer());
+          this.selected.set(_compteWeb.options || []);
 
           this.mainConfigForm.patchValue({
             login: _compteWeb.login,
@@ -194,13 +194,13 @@ export class ConfigurationWebComponentComponent implements OnInit {
             area: _compteWeb.area,
             notificationSubquery: _compteWeb.notificationSubquery,
             mobileNotif: _compteWeb.mobileNotif,
-            idCompteServer: _compteWeb.compteClientServer?.idCompteClientServer
+            idCompteServer: _compteWeb.compteClientServer?.idCompteClientServer || null
           });
 
           const currentServer = this.serverAccount();
-          if (Date.now() < currentServer.date_Expiration) {
+          if (currentServer && currentServer.date_Expiration && Date.now() < currentServer.date_Expiration) {
             this.serverAccount.update(s => ({ ...s, expired: false, during: true }));
-          } else {
+          } else if (currentServer) {
             this.serverAccount.update(s => ({ ...s, expired: true, during: false }));
           }
         });
@@ -371,6 +371,10 @@ export class ConfigurationWebComponentComponent implements OnInit {
   }
 
   showDevises(idServer: number) {
+    if (!idServer || idServer <= 0) {
+      this.toastr.warning('Invalid server ID', 'Warning');
+      return;
+    }
     this.selectedServerId.set(idServer);
     this.boitierService.getAllBoitierofIdcompte(idServer).subscribe(boitiers => {
       this.boitiers.set(boitiers);
