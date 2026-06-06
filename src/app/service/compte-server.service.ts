@@ -49,15 +49,15 @@ export class CompteServerService {
 
   // Web Admin perspective
   getAllServerAccount(keyWord: string, page: number, size: number): Observable<any> {
-    return this.http.get<any>(`${environment.apiBaseUrl}compteServerWeb?keyWord=${keyWord}&page=${page}&size=${size}&userName=${this.authService.getCurrentUserName()}`);
+    return this.http.get<any>(`${environment.apiBaseUrl}compteServer?keyWord=${keyWord}&page=${page}&size=${size}&userName=${this.authService.getCurrentUserName()}`);
   }
 
   getServerAccountById(id: number): Observable<any> {
-    return this.http.get<any>(`${environment.apiBaseUrl}compteServerWeb/${id}`);
+    return this.http.get<any>(`${environment.apiBaseUrl}compteServer/${id}`);
   }
 
   getAllServerAccountForForm(): Observable<any[]> {
-    return this.http.get<any[]>(`${environment.apiBaseUrl}compteServerWeb/AllNames?userName=${this.authService.getCurrentUserName()}`);
+    return this.http.get<any[]>(`${environment.apiBaseUrl}compteServer/AllNames?userName=${this.authService.getCurrentUserName()}`);
   }
 
   createServerComptewithBoitier(compteServer: CompteServer, nbrBoitiers: number): Observable<any> {
@@ -74,6 +74,6 @@ export class CompteServerService {
   }
 
   ExportListComptesServer(comptesServer: CompteServer[]): Observable<Blob> {
-    return this.http.post(`${environment.apiBaseUrl}compteServerWeb/export`, comptesServer, { responseType: 'blob' });
+    return this.http.post(`${environment.apiBaseUrl}compteServer/export`, comptesServer, { responseType: 'blob' });
   }
 }
