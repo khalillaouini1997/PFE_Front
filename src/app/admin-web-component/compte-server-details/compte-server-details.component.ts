@@ -7,6 +7,7 @@ import { AuthService } from "../../service/auth.service";
 import { ToastrService } from "ngx-toastr";
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TableModule } from 'primeng/table';
+import { PaginatorModule } from 'primeng/paginator';
 import { CommonModule, DatePipe, DecimalPipe, NgClass } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
@@ -15,7 +16,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
     standalone: true,
     templateUrl: './compte-server-details.component.html',
     styleUrls: ['./compte-server-details.component.css'],
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, TableModule, DatePipe, DecimalPipe, NgClass, RouterModule, TranslateModule]
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, TableModule, PaginatorModule, DatePipe, DecimalPipe, NgClass, RouterModule, TranslateModule]
 })
 export class CompteServerDetailsComponent implements OnInit, OnDestroy {
   addForm!: FormGroup;
@@ -44,6 +45,7 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
   public bigTotalItems: number = 0;
   public bigCurrentPage: number = 1;
   itemsPerPage = 15;
+  private loadingInProgress: boolean = false;
 
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
@@ -65,7 +67,8 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
     this.route.params.subscribe((params: Params) => {
       this.ID_COMPTE = +params['idCompteClientServer'];
       this.loadCompteDetails();
-      // loadBoitierList() is called by PrimeNG table's onLazyLoad event
+      this.loadingInProgress = false; // Reset guard for route change
+      this.loadBoitierList();
     });
 
     this.refreshInterval = setInterval(() => {
@@ -107,21 +110,42 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
       if (res.installedBoitiersCount !== undefined) {
         this.BOITIER_INSTALLED = res.installedBoitiersCount;
       }
-      this.cdr.markForCheck();
+      this.cdr.detectChanges();
     });
   }
 
-  private loadBoitierList() {
-    const keyword = this.searchForm.get('searchBoitier')?.value;
-    this.boitierService.getBoitierOfAccount(this.ID_COMPTE, keyword, this.bigCurrentPage - 1, this.itemsPerPage).subscribe(res => {
-      this.boitiers = res.content.map((b: Boitier) => ({
-        ...b,
-        stat: b.etatBoitier === 'INSTALLED'
-      }));
-      this.bigTotalItems = res.totalElements;
-      // Do not overwrite BOITIER_INSTALLED here, as res.totalElements is the search result count!
-      this.refreshBoitierArchives();
-      this.cdr.markForCheck();
+  loadBoitierList(event?: any) {
+    if (this.loadingInProgress) return;
+    this.loadingInProgress = true;
+    this.cdr.detectChanges();
+
+    // Extract pagination parameters from the PrimeNG table event
+    let page = 0;
+    let size = this.itemsPerPage;
+
+    if (event) {
+      page = event.first ? Math.floor(event.first / event.rows) : 0;
+      size = event.rows || this.itemsPerPage;
+    }
+
+    const keyword = (this.searchForm.get('searchBoitier')?.value || "").trim();
+    this.boitierService.getBoitierOfAccount(this.ID_COMPTE, keyword, page, size).subscribe({
+      next: (res: any) => {
+        this.boitiers = res.content.map((b: Boitier) => ({
+          ...b,
+          stat: b.etatBoitier === 'INSTALLED'
+        }));
+        this.bigTotalItems = res.page?.totalElements || res.totalElements || 0;
+        // Do not overwrite BOITIER_INSTALLED here, as res.totalElements is the search result count!
+        this.refreshBoitierArchives();
+        this.loadingInProgress = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error loading boitiers:', err);
+        this.loadingInProgress = false;
+        this.cdr.detectChanges();
+      }
     });
   }
 
@@ -162,22 +186,13 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
         boitier.vitesse = arch.vitesse;
         boitier.gpsLastTrame = arch.gpsLastTrame;
         boitier.gsmLastTrame = arch.gsmLastTrame;
-        this.cdr.markForCheck();
+        this.cdr.detectChanges();
       });
     });
   }
 
-  public pageChanged(event: any): void {
-    if (event.first !== undefined && event.rows !== undefined) {
-      this.bigCurrentPage = (event.first / event.rows) + 1;
-      this.itemsPerPage = event.rows;
-      this.loadBoitierList();
-    }
-  }
-
   searchBoitiers() {
-    this.bigCurrentPage = 1;
-    this.paginationForm.get('bigCurrentPage')?.setValue(1, { emitEvent: false });
+    this.loadingInProgress = false; // Reset guard for search
     this.loadBoitierList();
   }
 
@@ -210,14 +225,14 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
           this.translate.instant('COMMON.SUCCESS')
         );
         this.closeUpdateModal();
-        this.cdr.markForCheck();
+        this.cdr.detectChanges();
       },
       error: () => {
         this.toastr.error(
           this.translate.instant('COMMON.ERROR_OCCURRED'), 
           this.translate.instant('COMMON.ERROR')
         );
-        this.cdr.markForCheck();
+        this.cdr.detectChanges();
       }
     });
   }
@@ -244,7 +259,7 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
           this.translate.instant('COMMON.SUCCESS')
         );
         this.addForm.reset({ nbrBoitiers: 0 });
-        this.cdr.markForCheck();
+        this.cdr.detectChanges();
       },
       error: (err) => {
         this.mode = true;
@@ -253,7 +268,7 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
           this.translate.instant('COMMON.ERROR_OCCURRED'), 
           this.translate.instant('COMMON.ERROR')
         );
-        this.cdr.markForCheck();
+        this.cdr.detectChanges();
       }
     });
   }
@@ -274,7 +289,7 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
           this.translate.instant('SERVER_DETAILS.INTERVAL_EXTENDED'), 
           this.translate.instant('COMMON.SUCCESS')
         );
-        this.cdr.markForCheck();
+        this.cdr.detectChanges();
       });
     }
   }
@@ -293,14 +308,14 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
           this.translate.instant('SERVER_DETAILS.DEVICE_INSTALLED'), 
           this.translate.instant('COMMON.SUCCESS')
         );
-        this.cdr.markForCheck();
+        this.cdr.detectChanges();
       },
       error: () => {
         this.toastr.error(
           this.translate.instant('SERVER_DETAILS.TABLE_NOT_EXIST'), 
           this.translate.instant('COMMON.ERROR')
         );
-        this.cdr.markForCheck();
+        this.cdr.detectChanges();
       }
     });
   }

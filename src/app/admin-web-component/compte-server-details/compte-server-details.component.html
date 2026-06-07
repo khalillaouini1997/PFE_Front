@@ -97,11 +97,13 @@
             </form>
         </div>
         
-        <p-table [value]="boitiers" [lazy]="true" (onLazyLoad)="pageChanged($event)" 
+        <p-table [value]="boitiers" [lazy]="true" (onLazyLoad)="loadBoitierList($event)"
             [paginator]="true" [rows]="itemsPerPage" [totalRecords]="bigTotalItems" 
-            [rowsPerPageOptions]="[10,15,30,50]"
+            [rowsPerPageOptions]="[10,15,30,50,60]"
             styleClass="p-datatable-sm p-datatable-gridlines premium-table-custom"
-            responsiveLayout="scroll">
+            responsiveLayout="scroll"
+            paginatorPosition="bottom"
+            (onPage)="loadBoitierList($event)">
             
             <ng-template pTemplate="header">
                 <tr>

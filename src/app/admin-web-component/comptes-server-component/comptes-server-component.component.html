@@ -33,14 +33,15 @@
 
     <!-- Table Section -->
     <div class="premium-card p-0 overflow-hidden shadow-sm">
-        <p-table [value]="comptesServer" [lazy]="true" (onLazyLoad)="pageChanged($event)" 
-            [paginator]="true" [rows]="itemsPerPage" [totalRecords]="bigTotalItems" 
-            [rowsPerPageOptions]="[10,15,30,50]"
+        <p-table [value]="comptesServer" [lazy]="true" (onLazyLoad)="loadComptesServer($event)"
+            [paginator]="true" [rows]="itemsPerPage" [totalRecords]="bigTotalItems"
+            [rowsPerPageOptions]="[10,15,30,50,60]"
             [loading]="loading"
-            stateStorage="session" stateKey="comptes-server-state"
             [reorderableColumns]="true" [resizableColumns]="true" columnResizeMode="expand"
             styleClass="p-datatable-sm p-datatable-gridlines premium-table-custom"
-            responsiveLayout="scroll">
+            responsiveLayout="scroll"
+            paginatorPosition="bottom"
+            (onPage)="loadComptesServer($event)">
             
             <ng-template pTemplate="header">
                 <tr>

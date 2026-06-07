@@ -12,13 +12,14 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { TableModule } from 'primeng/table';
+import { PaginatorModule } from 'primeng/paginator';
 
 @Component({
   selector: 'app-comptes-server-component',
   standalone: true,
   templateUrl: './comptes-server-component.component.html',
   styleUrls: ['./comptes-server-component.component.css'],
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, TableModule, DatePickerModule, TranslateModule]
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, TableModule, PaginatorModule, DatePickerModule, TranslateModule]
 })
 export class ComptesServerComponentComponent implements OnInit {
   private readonly cdr = inject(ChangeDetectorRef);
@@ -31,6 +32,7 @@ export class ComptesServerComponentComponent implements OnInit {
   itemsPerPage = 30;
   comptesServer: CompteServer[] = [];
   loading: boolean = false;
+  private loadingInProgress: boolean = false;
   dt: Date = new Date();
   mode: boolean = false;
   messageError: string = "";
@@ -49,12 +51,8 @@ export class ComptesServerComponentComponent implements OnInit {
   private readonly translate = inject(TranslateService);
 
   ngOnInit() {
-    this.initForms();
     if (this.authService.isAuthenticated()) {
-      this.ipAddressService.getAllIps().subscribe(res => {
-        this.ips = res;
-        this.cdr.markForCheck();
-      });
+      this.initForms();
     } else {
       this.router.navigate(['/error']);
     }
@@ -72,42 +70,56 @@ export class ComptesServerComponentComponent implements OnInit {
       password: ['', Validators.required],
       idIpAdresse: [null, Validators.required]
     });
+
+    this.ipAddressService.getAllIps().subscribe(res => {
+      this.ips = res;
+      this.cdr.detectChanges();
+    });
+    this.loadComptesServer();
   }
 
-  public pageChanged(event: any): void {
-    if (event.first !== undefined && event.rows !== undefined) {
-      this.bigCurrentPage = (event.first / event.rows) + 1;
-      this.itemsPerPage = event.rows;
-      this.getAllcompteServer(this.searchForm.get('keyWord')?.value || "", this.bigCurrentPage - 1, this.itemsPerPage);
-    }
-  }
-
-  getAllcompteServer(keyWord: string, page: number, size: number) {
+  loadComptesServer(event?: any) {
+    if (this.loadingInProgress) return;
+    this.loadingInProgress = true;
     this.loading = true;
     this.comptesServer = [];
-    this.cdr.markForCheck();
+    this.cdr.detectChanges();
+
+    // Extract pagination parameters from the PrimeNG table event
+    let page = 0;
+    let size = this.itemsPerPage;
+
+    if (event) {
+      page = event.first ? Math.floor(event.first / event.rows) : 0;
+      size = event.rows || this.itemsPerPage;
+    }
+
+    const keyWord = (this.searchForm?.get('keyWord')?.value || '').trim();
+
     this.compteServerService.getAllServerAccount(keyWord, page, size).subscribe({
-      next: (_comptesServer) => {
-        this.comptesServer = _comptesServer.content;
+      next: (_comptesServer: any) => {
+        this.comptesServer = _comptesServer.content || [];
         const now = Date.now();
         this.comptesServer.forEach(s => {
           s.expired = now >= s.date_Expiration;
           s.during = !s.expired;
         });
-        this.bigTotalItems = _comptesServer.totalElements;
+        this.bigTotalItems = _comptesServer.page?.totalElements || _comptesServer.totalElements || 0;
         this.loading = false;
-        this.cdr.markForCheck();
+        this.loadingInProgress = false;
+        this.cdr.detectChanges();
       },
       error: () => {
         this.loading = false;
-        this.cdr.markForCheck();
+        this.loadingInProgress = false;
+        this.cdr.detectChanges();
       }
     });
   }
 
   searchAccount() {
-    this.bigCurrentPage = 1;
-    this.getAllcompteServer(this.searchForm.get('keyWord')?.value || "", this.bigCurrentPage - 1, this.itemsPerPage);
+    this.loadingInProgress = false; // Reset guard for explicit user search
+    this.loadComptesServer();
   }
 
   onExport() {
@@ -158,10 +170,12 @@ export class ComptesServerComponentComponent implements OnInit {
           this.translate.instant('COMMON.SUCCESS')
         );
         this.closeUpdateModal();
+        this.cdr.detectChanges();
       },
       error: (error) => {
         this.mode = true;
         this.messageError = error.error?.message || this.translate.instant('COMMON.AN_ERROR_OCCURRED');
+        this.cdr.detectChanges();
       }
     });
   }
