@@ -6,6 +6,7 @@ import { environment } from './environments/environment';
 import { authInterceptor } from './app/utils/security/auth.interceptor';
 import { httpErrorInterceptor } from './app/utils/security/http-error.interceptor';
 import { tokenRefreshInterceptor } from './app/utils/security/token-refresh.interceptor';
+import { apiResponseInterceptor } from './app/utils/security/api-response.interceptor';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { routes } from './app/app.routes';
 import { NgOptimizedImage } from '@angular/common';

@@ -47,11 +47,11 @@ export class DashboardStore implements OnDestroy {
   });
 
   // Computed selectors
-  readonly comptesWeb = computed(() => this.state().comptesWeb);
-  readonly realtimes = computed(() => this.state().realtimes);
+  readonly comptesWeb = computed(() => Array.isArray(this.state().comptesWeb) ? this.state().comptesWeb : []);
+  readonly realtimes = computed(() => Array.isArray(this.state().realtimes) ? this.state().realtimes : []);
   readonly selectedCompteWeb = computed(() => this.state().selectedCompteWeb);
   readonly stats = computed(() => this.state().stats);
-  readonly installationEvolution = computed(() => this.state().installationEvolution);
+  readonly installationEvolution = computed(() => Array.isArray(this.state().installationEvolution) ? this.state().installationEvolution : []);
   readonly granularity = computed(() => this.state().granularity);
   readonly loading = computed(() => this.state().loading);
   readonly error = computed(() => this.state().error);
