@@ -71,8 +71,9 @@ export class ComptesServerComponentComponent implements OnInit {
       idIpAdresse: [null, Validators.required]
     });
 
-    this.ipAddressService.getAllIps().subscribe(res => {
-      this.ips = res;
+    this.ipAddressService.getAllIps().subscribe((res: any) => {
+      const responseData = res?.data || res;
+      this.ips = Array.isArray(responseData) ? responseData : (responseData?.content || []);
       this.cdr.detectChanges();
     });
     this.loadComptesServer();
@@ -98,13 +99,15 @@ export class ComptesServerComponentComponent implements OnInit {
 
     this.compteServerService.getAllServerAccount(keyWord, page, size).subscribe({
       next: (_comptesServer: any) => {
-        this.comptesServer = _comptesServer.content || [];
+        const responseData = _comptesServer?.data || _comptesServer;
+        const content = responseData?.content || responseData || [];
+        this.comptesServer = Array.isArray(content) ? content : [];
         const now = Date.now();
         this.comptesServer.forEach(s => {
           s.expired = now >= s.date_Expiration;
           s.during = !s.expired;
         });
-        this.bigTotalItems = _comptesServer.page?.totalElements || _comptesServer.totalElements || 0;
+        this.bigTotalItems = responseData?.page?.totalElements || responseData?.totalElements || 0;
         this.loading = false;
         this.loadingInProgress = false;
         this.cdr.detectChanges();

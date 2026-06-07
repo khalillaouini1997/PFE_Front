@@ -56,9 +56,11 @@ export class CompteAdminComponent implements OnInit {
 
     this.adminAccountService.getAllAdminComptesByKeyWord(keyWord, page, size)
       .subscribe({
-        next: (res) => {
-          this.adminComptes = res.content;
-          this.bigTotalItems = res.totalElements;
+        next: (res: any) => {
+          const responseData = res?.data || res;
+          const content = responseData?.content || responseData || [];
+          this.adminComptes = Array.isArray(content) ? content : [];
+          this.bigTotalItems = responseData?.totalElements || responseData?.page?.totalElements || 0;
           this.loading = false;
           this.loadingInProgress = false;
           this.cdr.detectChanges();

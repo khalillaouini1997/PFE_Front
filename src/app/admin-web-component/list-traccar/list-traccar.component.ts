@@ -42,13 +42,15 @@ export class ListTraccarComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.traccarService.getLisTraccar(keyword).subscribe({
       next: (traccarDto: any) => {
-        if (!traccarDto || traccarDto.length === 0) {
+        const responseData = traccarDto?.data || traccarDto;
+        const data = Array.isArray(responseData) ? responseData : (responseData?.content || []);
+        if (!data || data.length === 0) {
           this.traccarDtos = [];
           this.totalRecords = 0;
           this.toastr.warning('Aucun Traccar configuré pour cet utilisateur', 'Information');
         } else {
-          this.traccarDtos = traccarDto;
-          this.totalRecords = traccarDto?.length || 0;
+          this.traccarDtos = data;
+          this.totalRecords = data?.length || 0;
         }
         this.loading = false;
         this.cdr.markForCheck();

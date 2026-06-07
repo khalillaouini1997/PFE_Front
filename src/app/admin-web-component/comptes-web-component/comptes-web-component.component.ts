@@ -91,8 +91,9 @@ export class ComptesWebComponentComponent implements OnInit {
 
     this.webAccountService.getAllWebAccountByKeyWord(keyWord, page, size, region, pool).subscribe({
       next: (res: any) => {
-        const totalElements = res.page?.totalElements || res.totalElements || 0;
-        const loaded = res.content || [];
+        const responseData = res?.data || res;
+        const totalElements = responseData?.page?.totalElements || responseData?.totalElements || 0;
+        const loaded = responseData?.content || [];
 
         for (const compte of loaded) {
           if (Date.now() < new Date(compte.date_expiration).getTime()) {
@@ -146,8 +147,10 @@ export class ComptesWebComponentComponent implements OnInit {
 
   loadAvailablePools() {
     this.webAccountService.getDistinctPools().subscribe({
-      next: (pools: number[]) => {
-        this.availablePools = pools.sort((a, b) => a - b);
+      next: (pools: any) => {
+        const responseData = pools?.data || pools;
+        const poolsArray = Array.isArray(responseData) ? responseData : (responseData?.content || []);
+        this.availablePools = poolsArray.sort((a, b) => a - b);
       },
       error: (err) => {
         console.error('Error loading pools:', err);

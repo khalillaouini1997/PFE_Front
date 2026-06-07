@@ -58,10 +58,12 @@ export class AccessLogComponent implements OnInit {
     this.loading = true;
     this.accessLogs = [];
     this.accessLogService.getAllAccessLog(keyWord, page, size).subscribe({
-      next: (_accessLogs) => {
+      next: (_accessLogs: any) => {
+        const responseData = _accessLogs?.data || _accessLogs;
+        const content = responseData?.content || responseData || [];
+        this.accessLogs = Array.isArray(content) ? content : [];
+        this.bigTotalItems = responseData?.totalElements || responseData?.page?.totalElements || 0;
         this.loading = false;
-        this.accessLogs = _accessLogs.content;
-        this.bigTotalItems = _accessLogs.totalElements;
         this.cdr.detectChanges();
       },
       error: () => {
