@@ -2,6 +2,7 @@ import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { throwError } from 'rxjs';
+import { ProblemDetail, isProblemDetail } from '../models/problem-detail.model';
 
 export interface ErrorContext {
   error: Error | HttpErrorResponse;
@@ -76,6 +77,17 @@ export class ErrorHandlerService {
 
   private getDefaultErrorMessage(error: Error | HttpErrorResponse): string {
     if (error instanceof HttpErrorResponse) {
+      // Check for ProblemDetail format (RFC 7807)
+      if (error.error && isProblemDetail(error.error)) {
+        const problemDetail = error.error as ProblemDetail;
+        return problemDetail.detail || problemDetail.title || 'An error occurred.';
+      }
+
+      // Check for ApiResponse format (legacy)
+      if (error.error && error.error.message) {
+        return error.error.message;
+      }
+
       switch (error.status) {
         case 0:
           return 'Network error. Please check your connection.';
