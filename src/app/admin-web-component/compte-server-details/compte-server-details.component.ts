@@ -103,12 +103,14 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
 
   private loadCompteDetails() {
     this.compteServerService.getCompteServerById(this.ID_COMPTE).subscribe(res => {
-      this.compteServer = res;
-      this.intervalFrom = res.intervaleStart;
-      this.intervalTo = res.intervaleEnd;
-      this.BOITIER_NOT_INSTALLED = res.availableSlotsCount;
-      if (res.installedBoitiersCount !== undefined) {
-        this.BOITIER_INSTALLED = res.installedBoitiersCount;
+      // Handle nested response structure
+      const data = res.data || res;
+      this.compteServer = data;
+      this.intervalFrom = data.intervaleStart;
+      this.intervalTo = data.intervaleEnd;
+      this.BOITIER_NOT_INSTALLED = data.availableSlotsCount;
+      if (data.installedBoitiersCount !== undefined) {
+        this.BOITIER_INSTALLED = data.installedBoitiersCount;
       }
       this.cdr.detectChanges();
     });
@@ -126,16 +128,42 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
     if (event) {
       page = event.first ? Math.floor(event.first / event.rows) : 0;
       size = event.rows || this.itemsPerPage;
+    } else {
+      // When called without event (e.g., from ngOnInit), use current page from form
+      page = this.bigCurrentPage - 1; // Convert to 0-based
     }
 
     const keyword = (this.searchForm.get('searchBoitier')?.value || "").trim();
     this.boitierService.getBoitierOfAccount(this.ID_COMPTE, keyword, page, size).subscribe({
       next: (res: any) => {
-        this.boitiers = res.content.map((b: Boitier) => ({
-          ...b,
-          stat: b.etatBoitier === 'INSTALLED'
-        }));
-        this.bigTotalItems = res.page?.totalElements || res.totalElements || 0;
+        // Handle different response structures
+        let content = res.content;
+        let pageData = res.page;
+        
+        // Handle nested data structure: { success: true, data: { content: [...], page: {...} } }
+        if (!content && res.data) {
+          content = res.data.content || res.data;
+          pageData = res.data.page || res.data;
+        }
+        // Handle direct array response
+        if (!content && Array.isArray(res)) {
+          content = res;
+        }
+        // Default to empty array
+        if (!content) {
+          content = [];
+        }
+        
+        if (!Array.isArray(content)) {
+          console.error('Unexpected API response structure:', res);
+          this.boitiers = [];
+        } else {
+          this.boitiers = content.map((b: Boitier) => ({
+            ...b,
+            stat: b.etatBoitier === 'INSTALLED'
+          }));
+        }
+        this.bigTotalItems = pageData?.totalElements || res.totalElements || res.total || (res.data?.totalElements || res.data?.total || content.length || 0);
         // Do not overwrite BOITIER_INSTALLED here, as res.totalElements is the search result count!
         this.refreshBoitierArchives();
         this.loadingInProgress = false;
@@ -151,27 +179,36 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
 
   private refreshBoitierArchives() {
     this.boitiers.forEach(boitier => {
-      this.boitierService.lastArchiveOfBoitier(boitier.numBoitier).subscribe((arch: BoitierRealTime) => {
+      this.boitierService.lastArchiveOfBoitier(boitier.numBoitier).subscribe((res: any) => {
+        // Handle nested response structure
+        const arch = res.data || res;
+        
         // Handle dateLastTrame - could be timestamp (number) or string
         if (arch.dateLastTrame) {
           if (typeof arch.dateLastTrame === 'number') {
             // It's a timestamp
             boitier.dateLastTrame = new Date(arch.dateLastTrame);
           } else if (typeof arch.dateLastTrame === 'string') {
-            // Parse date from DD-MM-YYYY HH:mm:ss format to Date object
-            const parts = arch.dateLastTrame.split(' ');
-            if (parts.length === 2) {
-              const dateParts = parts[0].split('-');
-              const timeParts = parts[1].split(':');
-              if (dateParts.length === 3 && timeParts.length === 3) {
-                boitier.dateLastTrame = new Date(
-                  parseInt(dateParts[2]), // year
-                  parseInt(dateParts[1]) - 1, // month (0-indexed)
-                  parseInt(dateParts[0]), // day
-                  parseInt(timeParts[0]), // hours
-                  parseInt(timeParts[1]), // minutes
-                  parseInt(timeParts[2]) // seconds
-                );
+            // Parse date from DD-MM-YYYY HH:mm:ss format or ISO format to Date object
+            if (arch.dateLastTrame.includes('T')) {
+              // ISO format
+              boitier.dateLastTrame = new Date(arch.dateLastTrame);
+            } else {
+              // DD-MM-YYYY HH:mm:ss format
+              const parts = arch.dateLastTrame.split(' ');
+              if (parts.length === 2) {
+                const dateParts = parts[0].split('-');
+                const timeParts = parts[1].split(':');
+                if (dateParts.length === 3 && timeParts.length === 3) {
+                  boitier.dateLastTrame = new Date(
+                    parseInt(dateParts[2]), // year
+                    parseInt(dateParts[1]) - 1, // month (0-indexed)
+                    parseInt(dateParts[0]), // day
+                    parseInt(timeParts[0]), // hours
+                    parseInt(timeParts[1]), // minutes
+                    parseInt(timeParts[2]) // seconds
+                  );
+                }
               }
             }
           }

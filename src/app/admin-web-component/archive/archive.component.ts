@@ -56,9 +56,11 @@ export class ArchiveComponent implements OnInit {
   getAllRaws() {
     const limit = this.archiveForm.get('limit')?.value || 200;
     this.boitierService.getRaws(this.numBoitier(), limit).subscribe((_raws: any) => {
+      // Handle nested response structure
+      const rawData = _raws.data || _raws;
       const updatedRaws = new raws();
-      updatedRaws.raws = _raws.raws;
-      updatedRaws.count = _raws.count;
+      updatedRaws.raws = rawData.raws || [];
+      updatedRaws.count = rawData.count || 0;
       this.rawData.set(updatedRaws);
     });
   }
@@ -66,7 +68,17 @@ export class ArchiveComponent implements OnInit {
   getArchives() {
     const limit = this.archiveForm.get('limit')?.value || 200;
     this.boitierService.getArchiveOfBoitier(this.numBoitier(), limit).subscribe(_archives => {
-      const archs = (_archives as any[]).map(a => {
+      // Handle different response structures
+      let archivesData: any = _archives;
+      if (_archives && typeof _archives === 'object' && !Array.isArray(_archives)) {
+        archivesData = (_archives as any).data || (_archives as any).content || [];
+      }
+      if (!Array.isArray(archivesData)) {
+        console.error('Unexpected API response structure:', _archives);
+        archivesData = [];
+      }
+      
+      const archs = archivesData.map(a => {
         // Parse date from DD-MM-YYYY HH:mm:ss format to Date object
         let parsedDate = a.date;
         if (a.date && typeof a.date === 'string') {
