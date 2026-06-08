@@ -179,7 +179,14 @@ export class ConfigurationWebComponentComponent implements OnInit {
             this.options.set(opts);
           });
           this.compteWeb.set(_compteWeb);
-          this.serverAccount.set(_compteWeb.compteClientServer || new CompteServer());
+          const serverData = _compteWeb.compteClientServer || new CompteServer();
+          // Map backend DTO field names to frontend model field names
+          const mappedServer = {
+            ...serverData,
+            date_creation: serverData.dateCreation || serverData.date_creation,
+            date_Expiration: serverData.dateExpiration || serverData.date_Expiration
+          };
+          this.serverAccount.set(mappedServer);
           this.selected.set(_compteWeb.options || []);
 
           this.mainConfigForm.patchValue({
@@ -229,8 +236,13 @@ export class ConfigurationWebComponentComponent implements OnInit {
 
 
   getAllIps() {
-    this.ipAddressService.getAllIps().subscribe(res => {
-      this.ipAddresses.set(res);
+    this.ipAddressService.getAllIps().subscribe({
+      next: (res) => {
+        this.ipAddresses.set(Array.isArray(res) ? res : []);
+      },
+      error: () => {
+        this.ipAddresses.set([]);
+      }
     });
   }
 
@@ -378,9 +390,15 @@ export class ConfigurationWebComponentComponent implements OnInit {
       return;
     }
     this.selectedServerId.set(idServer);
-    this.boitierService.getAllBoitierofIdcompte(idServer).subscribe(boitiers => {
-      this.boitiers.set(boitiers);
-      this.boitiersClicked.set(true);
+    this.boitierService.getAllBoitierofIdcompte(idServer).subscribe({
+      next: (boitiers) => {
+        this.boitiers.set(Array.isArray(boitiers) ? boitiers : []);
+        this.boitiersClicked.set(true);
+      },
+      error: () => {
+        this.boitiers.set([]);
+        this.boitiersClicked.set(true);
+      }
     });
   }
 
@@ -744,7 +762,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
     this.boitierService.getLastId(this.ID_COMPTE(), numBoitier)
       .subscribe({
         next: (res) => {
-          this.lastIdForm.patchValue({ lastIdValue: res?.lastId ?? 0 });
+          this.lastIdForm.patchValue({ lastIdValue: 0 });
         },
         error: () => {
           this.lastIdForm.patchValue({ lastIdValue: 0 });

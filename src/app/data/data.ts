@@ -192,6 +192,8 @@ export interface OptionInfoDTO {
 export interface CompteClientWebInfoDTO {
   idCompteClientWeb: number;
   login: string;
+  password: string;
+  rawPassword: string;
   date_creation: Date;
   date_expiration: Date;
   code_pays: string;
@@ -201,8 +203,14 @@ export interface CompteClientWebInfoDTO {
   telephone: number;
   email: string;
   area: string;
-  options: OptionInfoDTO[];
+  notificationSubquery: string;
   mobileNotif: boolean;
+  deviceFeeByDay: number;
+  accountFeeByMonth: number;
+  deviceFeePerMonth: number;
+  simCardFeePerMonth: number;
+  options: OptionInfoDTO[];
+  compteClientServer: CompteServer;
 }
 
 export class IpAddress {

@@ -350,33 +350,35 @@
 
                             <div class="row g-3">
                             <div class="col-6" *ngIf="dateBoolean">
-                              <label class="form-label text-secondary fw-bold text-uppercase mb-2"
-                                     style="font-size: 0.75rem; letter-spacing: 0.5px;">{{ 'WEB_CONFIG.START_DATE' | translate }}</label>
-                              <div class="custom-datepicker-container">
+                              <div class="bg-light rounded-3 overflow-hidden shadow-sm border-0 p-3">
+                                <label class="form-label text-secondary fw-bold text-uppercase mb-2"
+                                       style="font-size: 0.75rem; letter-spacing: 0.5px;">{{ 'WEB_CONFIG.START_DATE' | translate }}</label>
                                 <p-datepicker formControlName="datestart"
-                                              dateFormat="dd-mm-yy" [showIcon]="true" [appendTo]="configModal" [showTime]="true"
+                                              dateFormat="dd-mm-yy" [showIcon]="true" [appendTo]="'body'" [showTime]="true"
                                               [maxDate]="maxDate"
                                               [showOnFocus]="false"
                                               styleClass="w-100"
-                                              inputStyleClass="form-control bg-light border-0 shadow-sm fs-6 px-3 py-2 text-dark w-100">
+                                              inputStyleClass="form-control bg-white border-0 shadow-sm fs-6 px-3 py-2 text-dark w-100">
                                 </p-datepicker>
                               </div>
                             </div>
 
                             <div class="col-6">
-                              <label class="form-label text-secondary fw-bold text-uppercase mb-2"
-                                     style="font-size: 0.75rem; letter-spacing: 0.5px;">{{ 'WEB_CONFIG.RECALC_NATURE' | translate }}</label>
-                              <div class="input-group input-group-lg bg-light rounded-3 overflow-hidden shadow-sm border-0">
-                                <span class="input-group-text bg-transparent border-0 text-muted px-3"><i class="fa fa-list-ul"></i></span>
-                                <select formControlName="typeRecalcule"
-                                        class="form-select bg-transparent border-0 shadow-none fs-6 px-0 fw-medium text-dark cursor-pointer"
-                                        [title]="'WEB_CONFIG.RECALC_NATURE' | translate">
-                                  <option value="recalcule trajet">{{ 'RECALC.PATH' | translate }}</option>
-                                  <option value="recalcule boitier">{{ 'RECALC.BOX' | translate }}</option>
-                                  <option value="recalcule carburant">{{ 'RECALC.FUEL' | translate }}</option>
-                                  <option value="recalcule alert">{{ 'RECALC.ALERT' | translate }}</option>
-                                  <option value="recalcule Temps reel">{{ 'RECALC.REAL_TIME' | translate }}</option>
-                                </select>
+                              <div class="bg-light rounded-3 overflow-hidden shadow-sm border-0 p-3">
+                                <label class="form-label text-secondary fw-bold text-uppercase mb-2"
+                                       style="font-size: 0.75rem; letter-spacing: 0.5px;">{{ 'WEB_CONFIG.RECALC_NATURE' | translate }}</label>
+                                <div class="input-group input-group-lg">
+                                  <span class="input-group-text bg-transparent border-0 text-muted px-3"><i class="fa fa-list-ul"></i></span>
+                                  <select formControlName="typeRecalcule"
+                                          class="form-select bg-transparent border-0 shadow-none fs-6 px-0 fw-medium text-dark cursor-pointer"
+                                          [title]="'WEB_CONFIG.RECALC_NATURE' | translate">
+                                    <option value="recalcule trajet">{{ 'RECALC.PATH' | translate }}</option>
+                                    <option value="recalcule boitier">{{ 'RECALC.BOX' | translate }}</option>
+                                    <option value="recalcule carburant">{{ 'RECALC.FUEL' | translate }}</option>
+                                    <option value="recalcule alert">{{ 'RECALC.ALERT' | translate }}</option>
+                                    <option value="recalcule Temps reel">{{ 'RECALC.REAL_TIME' | translate }}</option>
+                                  </select>
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -413,7 +415,7 @@
                             </h6>
 
                             <div class="row g-2 mb-4 flex-grow-1">
-                              @for (opt of ['useIgnition', 'useFuel', 'useTemp', 'useFms', 'useJ1708', 'useIdDriver', 'useStop']; track opt) {
+                              @for (opt of ['useIgnition', 'useFuel', 'useTemp', 'useFms', 'useJ1708', 'useIdDriver', 'useStop', 'useDoor', 'useDoor2']; track opt) {
                                 <div class="col-md-4 col-sm-6">
                                   <div class="bg-light rounded-3 px-3 py-2 border border-secondary border-opacity-10 shadow-sm d-flex justify-content-between align-items-center h-100">
         <span class="fw-bold text-dark m-0 cursor-pointer text-capitalize"
@@ -439,16 +441,7 @@
                                 </button>
 
                                 <div class="row g-3 mt-2">
-                                    <div class="col-sm-6">
-                                        <label class="form-label text-secondary fw-bold text-uppercase mb-1" style="font-size: 0.7rem;">Odomètre</label>
-                                        <button type="button"
-                                            class="btn btn-sm btn-light w-100 rounded-3 text-secondary border shadow-sm transition-all py-1"
-                                            (click)="resetOdometre()" [disabled]="loadingResetOdometre()"
-                                            [title]="'WEB_CONFIG.RESET_ODO' | translate">
-                                            <i class="fa fa-history me-1"></i> {{ 'WEB_CONFIG.RESET_ODO' | translate }}
-                                        </button>
-                                    </div>
-                                    <div class="col-sm-6" [formGroup]="lastIdForm">
+                                    <div class="col-sm-12" [formGroup]="lastIdForm">
                                         <label class="form-label text-secondary fw-bold text-uppercase mb-1" style="font-size: 0.7rem;">ID</label>
                                         <div class="input-group input-group-sm bg-light rounded-3 shadow-sm border border-secondary border-opacity-10 overflow-hidden">
                                             <input type="number" class="form-control bg-white border-0 px-2 text-dark shadow-none"

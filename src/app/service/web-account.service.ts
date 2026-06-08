@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { CompteClientWebInfoDTO, DeviceInstallationEvolution, OptionInfoDTO, PageResponse, RealTime } from '../data/data';
@@ -35,7 +35,9 @@ export class WebAccountService {
     }
 
     getWebAccountById(id: number): Observable<CompteClientWebInfoDTO> {
-        return this.http.get<CompteClientWebInfoDTO>(`${environment.apiBaseUrl}compteWeb/${id}?userName=${this.authService.getCurrentUserName()}`);
+        return this.http.get<any>(`${environment.apiBaseUrl}compteWeb/${id}?userName=${this.authService.getCurrentUserName()}`).pipe(
+            map(response => response.data)
+        );
     }
 
     updateWebAccount(idCompteWeb: number, newCompteWeb: any): Observable<CompteClientWebInfoDTO> {
@@ -71,7 +73,9 @@ export class WebAccountService {
     }
 
     getAllOptions(): Observable<OptionInfoDTO[]> {
-        return this.http.get<OptionInfoDTO[]>(`${environment.apiBaseUrl}options`);
+        return this.http.get<any>(`${environment.apiBaseUrl}options`).pipe(
+            map(response => response.data)
+        );
     }
 
     getAllWebAccountSummary(): Observable<any[]> {

@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Archive, Boitier, BoitierRealTime, DeviceOpt, DeviceSetting, PageResponse, PathConfigPayload, raws, RecalculatePayload, VehiculeSetting, BoitierAnalysis } from '../data/data';
@@ -29,7 +30,9 @@ export class BoitierService {
     }
 
     getAllBoitierofIdcompte(idCompteServer: number): Observable<Boitier[]> {
-        return this.http.get<Boitier[]>(`${environment.apiBaseUrl}compteServer/${idCompteServer}/listBoitiers`);
+        return this.http.get<any>(`${environment.apiBaseUrl}compteServer/${idCompteServer}/listBoitiers`).pipe(
+            map(response => response.data)
+        );
     }
 
     // CRUD & Updates
@@ -85,15 +88,21 @@ export class BoitierService {
 
     // Configuration & Settings
     getDeviceOptionConfig(idCompteWeb: number, idBoitier: number): Observable<DeviceOpt[]> {
-        return this.http.get<DeviceOpt[]>(`${environment.apiBaseUrl}boities/${idCompteWeb}/options/${idBoitier}`);
+        return this.http.get<any>(`${environment.apiBaseUrl}boities/${idCompteWeb}/options/${idBoitier}`).pipe(
+            map(response => response.data)
+        );
     }
 
     getPathConfig(idCompteWeb: number, idBoitier: number): Observable<PathConfigPayload> {
-        return this.http.get<PathConfigPayload>(`${environment.apiBaseUrl}boities/${idCompteWeb}/pathconfig/${idBoitier}`);
+        return this.http.get<any>(`${environment.apiBaseUrl}boities/${idCompteWeb}/pathconfig/${idBoitier}`).pipe(
+            map(response => response.data)
+        );
     }
 
     getDeviceSettings(idCompteWeb: number, idBoitier: number): Observable<DeviceSetting[]> {
-        return this.http.get<DeviceSetting[]>(`${environment.apiBaseUrl}boities/${idCompteWeb}/devicesettings/${idBoitier}`);
+        return this.http.get<any>(`${environment.apiBaseUrl}boities/${idCompteWeb}/devicesettings/${idBoitier}`).pipe(
+            map(response => response.data)
+        );
     }
 
     editDeviceOptionConfig(idCompteWeb: number, deviceOpt: DeviceOpt): Observable<void> {
