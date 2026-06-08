@@ -143,7 +143,9 @@ export class ConfigurationWebComponentComponent implements OnInit {
       useFms: [false],
       useJ1708: [false],
       useIdDriver: [false],
-      useStop: [false]
+      useStop: [false],
+      useDoor: [false],
+      useDoor2: [false]
     });
 
     this.pathConfigForm = this.fb.group({
@@ -421,7 +423,9 @@ export class ConfigurationWebComponentComponent implements OnInit {
                 useFms: !!data.useFms,
                 useJ1708: !!data.useJ1708,
                 useIdDriver: !!data.useIdDriver,
-                useStop: !!data.useStop
+                useStop: !!data.useStop,
+                useDoor: !!data.useDoor,
+                useDoor2: !!data.useDoor2
               });
             }
           }

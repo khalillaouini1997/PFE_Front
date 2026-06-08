@@ -271,6 +271,8 @@ export class DeviceOpt {
   useJ1708: boolean = false;
   useIdDriver: boolean = false;
   useStop: boolean = false;
+  useDoor: boolean = false;
+  useDoor2: boolean = false;
 }
 
 export interface DeviceSettingDTO {
