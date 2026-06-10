@@ -29,25 +29,21 @@ export const httpErrorInterceptor: HttpInterceptorFn = (req, next) => {
 
       if (error.status === 404) {
         // Resource not found
-        console.error(`Resource not found: ${req.url}`, errorMessage);
         return throwError(() => error);
       }
 
       if (error.status >= 500) {
         // Server error
-        console.error('Server error:', error, errorMessage);
         return throwError(() => error);
       }
 
       // Network error
       if (!error.status && error.error instanceof ProgressEvent) {
-        console.error('Network error - check your connection');
         return throwError(() => new Error('Network error. Please check your connection.'));
       }
 
       // Other errors with message
       if (errorMessage) {
-        console.error('Error:', errorMessage);
       }
 
       return throwError(() => error);

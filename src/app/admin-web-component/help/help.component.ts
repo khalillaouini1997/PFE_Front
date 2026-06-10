@@ -65,7 +65,8 @@ export class HelpComponent implements OnInit {
   public loadClient() {
     this.webAccountService.getAllCompteClientWeb().subscribe({
       next: (res: any) => {
-        this.comptesWeb.set(res);
+        const responseData = res?.data || res;
+        this.comptesWeb.set(Array.isArray(responseData) ? responseData : []);
       }
     });
   }
@@ -81,8 +82,9 @@ export class HelpComponent implements OnInit {
     this.searchForm.get('type')?.setValue(null, { emitEvent: false });
     this.interventionService.getIntervention(this.selectedCompteWebId).subscribe({
       next: (res: any) => {
-        this.interventions.set(res);
-        this.interventionsFilter.set(res);
+        const responseData = res?.data || res;
+        this.interventions.set(Array.isArray(responseData) ? responseData : []);
+        this.interventionsFilter.set(Array.isArray(responseData) ? responseData : []);
         this.loading.set(false);
       },
       error: () => {

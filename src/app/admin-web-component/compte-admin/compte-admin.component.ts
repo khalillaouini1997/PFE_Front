@@ -66,7 +66,6 @@ export class CompteAdminComponent implements OnInit {
           this.cdr.detectChanges();
         },
         error: (error) => {
-          console.error('Error occurred while fetching adminComptes:', error);
           this.loading = false;
           this.loadingInProgress = false;
           this.cdr.detectChanges();

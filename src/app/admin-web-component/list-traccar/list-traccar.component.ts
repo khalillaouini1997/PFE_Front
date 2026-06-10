@@ -59,7 +59,6 @@ export class ListTraccarComponent implements OnInit, OnDestroy {
         this.toastr.error('Erreur lors du chargement des Traccars', 'Erreur');
         this.loading = false;
         this.cdr.markForCheck();
-        console.error('Error loading traccars:', error);
       }
     });
   }

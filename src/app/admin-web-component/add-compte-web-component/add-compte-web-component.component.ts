@@ -21,7 +21,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 export class AddCompteWebComponentComponent implements OnInit {
 
   webForm!: FormGroup;
-  serverAccounts = signal<CompteServer[]>([]);
+  serverAccounts = signal<any[]>([]);
   codesPays = signal<any[]>([]);
   ipAddresses = signal<IpAddress[]>([]);
   regions = ['Tunis', 'Sfax', 'Sousse'];
@@ -70,8 +70,13 @@ export class AddCompteWebComponentComponent implements OnInit {
       return;
     }
 
-    this.compteServerService.getAllServerAccountForForm().subscribe(res => {
-      this.serverAccounts.set(res);
+    this.webAccountService.getAllWebAccountNames().subscribe({
+      next: (res: any) => {
+        const responseData = res?.data || res;
+        this.serverAccounts.set(Array.isArray(responseData) ? responseData : []);
+      },
+      error: (err) => {
+      }
     });
 
     this.codesPays.set(this.webAccountService.codesPays);
@@ -97,7 +102,7 @@ export class AddCompteWebComponentComponent implements OnInit {
     };
 
     const idCompteServer = formValue.idCompte;
-    const selectedServer = this.serverAccounts().find(s => s.idCompteClientServer == idCompteServer);
+    const selectedServer = this.serverAccounts().find(s => s.idCompteClientWeb == idCompteServer);
     if (selectedServer) {
       compteWeb.compteClientServer = selectedServer;
     }

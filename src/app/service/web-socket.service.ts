@@ -20,7 +20,6 @@ export class WebSocketService {
             webSocketFactory: () => new SockJS(this.getSocketUrl()),
             connectHeaders: {},
             debug: (str) => {
-                console.log(new Date(), str);
             },
             reconnectDelay: REALTIME_CONSTANTS.WEBSOCKET_RECONNECT_DELAY,
             heartbeatIncoming: 4000,
@@ -28,19 +27,15 @@ export class WebSocketService {
         });
 
         this.client.onConnect = (frame) => {
-            console.log('Connected to WebSocket');
             this.connectionStatusSubject.next(true);
             this.subscribeToNotifications();
             this.subscribeToVehiclePositions();
         };
 
         this.client.onStompError = (frame) => {
-            console.error('Broker reported error: ' + frame.headers['message']);
-            console.error('Additional details: ' + frame.body);
         };
 
         this.client.onDisconnect = () => {
-            console.log('Disconnected from WebSocket');
             this.connectionStatusSubject.next(false);
         };
     }
@@ -81,7 +76,6 @@ export class WebSocketService {
                     const positions = JSON.parse(message.body) as RealTime[];
                     this.vehiclePositionSubject.next(positions);
                 } catch (error) {
-                    console.error('Error parsing vehicle positions from WebSocket message:', error);
                     // Notify error handler service for tracking
                     // Continue with empty positions to avoid breaking the stream
                     this.vehiclePositionSubject.next([]);

@@ -60,8 +60,9 @@ export class DashboardStore implements OnDestroy {
   loadComptesWeb() {
     this.updateState({ loading: true, error: null });
     this.webAccountService.getAllWebAccountNames().subscribe({
-      next: (comptes) => {
-        this.updateState({ comptesWeb: comptes, loading: false });
+      next: (res: any) => {
+        const comptes = res?.data || res;
+        this.updateState({ comptesWeb: Array.isArray(comptes) ? comptes : [], loading: false });
       },
       error: (err) => {
         this.updateState({ loading: false, error: 'Failed to load web accounts' });
@@ -79,14 +80,15 @@ export class DashboardStore implements OnDestroy {
 
   private loadRealtimes(idCompteWeb: number) {
     this.updateState({ loading: true, error: null });
-    
+
     // Try WebSocket first if connected
     if (this.webSocketService.isConnected()) {
       this.setupWebSocketUpdates();
       // Load initial data via HTTP as fallback
       this.webAccountService.getAllLastTram(idCompteWeb).subscribe({
-        next: (realtimes) => {
-          this.updateState({ realtimes, loading: false, useWebSocket: true });
+        next: (res: any) => {
+          const realtimes = res?.data || res;
+          this.updateState({ realtimes: Array.isArray(realtimes) ? realtimes : [], loading: false, useWebSocket: true });
           this.calculateStats();
         },
         error: (err) => {
@@ -97,8 +99,9 @@ export class DashboardStore implements OnDestroy {
       // Use HTTP polling
       this.webSocketService.connect();
       this.webAccountService.getAllLastTram(idCompteWeb).subscribe({
-        next: (realtimes) => {
-          this.updateState({ realtimes, loading: false, useWebSocket: false });
+        next: (res: any) => {
+          const realtimes = res?.data || res;
+          this.updateState({ realtimes: Array.isArray(realtimes) ? realtimes : [], loading: false, useWebSocket: false });
           this.calculateStats();
         },
         error: (err) => {
@@ -123,7 +126,6 @@ export class DashboardStore implements OnDestroy {
           this.calculateStats();
         },
         error: (err) => {
-          console.error('WebSocket vehicle position error:', err);
           // Fall back to HTTP polling on error
           this.updateState({ useWebSocket: false });
           const compte = this.state().selectedCompteWeb;
@@ -137,7 +139,6 @@ export class DashboardStore implements OnDestroy {
     this.connectionStatusSubscription = this.webSocketService.getConnectionStatus()
       .subscribe(isConnected => {
         if (!isConnected && this.state().useWebSocket) {
-          console.log('WebSocket disconnected, falling back to HTTP');
           this.updateState({ useWebSocket: false });
         }
       });
@@ -146,11 +147,11 @@ export class DashboardStore implements OnDestroy {
   private loadInstallationEvolution(idCompteWeb: number) {
     const currentGranularity = this.state().granularity;
     this.webAccountService.getDeviceInstallationEvolution(idCompteWeb, currentGranularity).subscribe({
-      next: (evolutionData) => {
-        this.updateState({ installationEvolution: evolutionData });
+      next: (res: any) => {
+        const evolutionData = res?.data || res;
+        this.updateState({ installationEvolution: Array.isArray(evolutionData) ? evolutionData : [] });
       },
       error: (err) => {
-        console.error('Failed to load installation evolution data', err);
       }
     });
   }

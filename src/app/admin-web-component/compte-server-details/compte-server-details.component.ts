@@ -155,7 +155,6 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
         }
         
         if (!Array.isArray(content)) {
-          console.error('Unexpected API response structure:', res);
           this.boitiers = [];
         } else {
           this.boitiers = content.map((b: Boitier) => ({
@@ -170,7 +169,6 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error('Error loading boitiers:', err);
         this.loadingInProgress = false;
         this.cdr.detectChanges();
       }

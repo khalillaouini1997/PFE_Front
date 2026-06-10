@@ -73,7 +73,7 @@ export class AddCompteServerComponent implements OnInit {
     }
 
     this.ipAddressService.getAllIps().subscribe(res => {
-      this.ipAddresses = res;
+      this.ipAddresses = Array.isArray(res) ? res : [];
     });
   }
 
@@ -128,7 +128,7 @@ export class AddCompteServerComponent implements OnInit {
     const pseudo = this.serverForm.get('pseudo')?.value;
     if (!pseudo) return;
     this.compteServerService.isExistPseudo(pseudo).subscribe(res => {
-      this.isExistPseudo = res;
+      this.isExistPseudo = res?.data !== undefined ? res.data : res;
     });
   }
 
@@ -136,7 +136,7 @@ export class AddCompteServerComponent implements OnInit {
     const login = this.serverForm.get('login')?.value;
     if (!login) return;
     this.compteServerService.isExistLogin(login).subscribe(res => {
-      this.isExistLogin = res;
+      this.isExistLogin = res?.data !== undefined ? res.data : res;
     });
   }
 

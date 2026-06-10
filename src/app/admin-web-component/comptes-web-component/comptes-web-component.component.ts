@@ -153,7 +153,6 @@ export class ComptesWebComponentComponent implements OnInit {
         this.availablePools = poolsArray.sort((a, b) => a - b);
       },
       error: (err) => {
-        console.error('Error loading pools:', err);
       }
     });
   }

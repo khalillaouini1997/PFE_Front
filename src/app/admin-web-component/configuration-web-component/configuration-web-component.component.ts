@@ -174,7 +174,8 @@ export class ConfigurationWebComponentComponent implements OnInit {
     if (this.authService.isAuthenticated()) {
       this.route.params.subscribe((params: Params) => {
         this.ID_COMPTE.set(+params['idCompteClientWeb']);
-        this.webAccountService.getWebAccountById(this.ID_COMPTE()).subscribe(async (_compteWeb: any) => {
+        this.webAccountService.getWebAccountById(this.ID_COMPTE()).subscribe(async (res: any) => {
+          const _compteWeb = res?.data || res;
           this.webAccountService.getAllOptions().subscribe(opts => {
             this.options.set(opts);
           });
@@ -215,8 +216,9 @@ export class ConfigurationWebComponentComponent implements OnInit {
         });
       });
       this.codesPays.set(this.webAccountService.codesPays);
-      this.compteServerService.getAllServerAccountForForm().subscribe(res => {
-        this.serverAccounts.set(res);
+      this.compteServerService.getAllServerAccountForForm().subscribe((res: any) => {
+        const responseData = res?.data || res;
+        this.serverAccounts.set(Array.isArray(responseData) ? responseData : []);
       });
     } else {
       this.router.navigate(['/error']);
@@ -238,7 +240,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
   getAllIps() {
     this.ipAddressService.getAllIps().subscribe({
       next: (res) => {
-        this.ipAddresses.set(Array.isArray(res) ? res : []);
+        this.ipAddresses.set(res);
       },
       error: () => {
         this.ipAddresses.set([]);
@@ -391,8 +393,9 @@ export class ConfigurationWebComponentComponent implements OnInit {
     }
     this.selectedServerId.set(idServer);
     this.boitierService.getAllBoitierofIdcompte(idServer).subscribe({
-      next: (boitiers) => {
-        this.boitiers.set(Array.isArray(boitiers) ? boitiers : []);
+      next: (res: any) => {
+        const responseData = res?.data || res;
+        this.boitiers.set(Array.isArray(responseData) ? responseData : []);
         this.boitiersClicked.set(true);
       },
       error: () => {
@@ -430,9 +433,10 @@ export class ConfigurationWebComponentComponent implements OnInit {
   getDeviceOptionConfig(numBoitier: number) {
     this.boitierService.getDeviceOptionConfig(this.ID_COMPTE(), numBoitier)
       .subscribe({
-        next: (res) => {
+        next: (res: any) => {
           if (res) {
-            const data = Array.isArray(res) ? res[0] : res;
+            const responseData = res?.data || res;
+            const data = Array.isArray(responseData) ? responseData[0] : responseData;
             if (data) {
               this.deviceOptForm.patchValue({
                 useIgnition: !!data.useIgnition,
@@ -456,9 +460,10 @@ export class ConfigurationWebComponentComponent implements OnInit {
   getPathConfig(numBoitier: number) {
     this.boitierService.getPathConfig(this.ID_COMPTE(), numBoitier)
       .subscribe({
-        next: (res) => {
+        next: (res: any) => {
           if (res) {
-            const data = Array.isArray(res) ? res[0] : res;
+            const responseData = res?.data || res;
+            const data = Array.isArray(responseData) ? responseData[0] : responseData;
             if (data) {
               this.pathConfigForm.patchValue(data);
             }
@@ -472,9 +477,10 @@ export class ConfigurationWebComponentComponent implements OnInit {
   getDeviceSettings(numBoitier: number) {
     this.boitierService.getDeviceSettings(this.ID_COMPTE(), numBoitier)
       .subscribe({
-        next: (res) => {
+        next: (res: any) => {
           if (res) {
-            const data = Array.isArray(res) ? res[0] : res;
+            const responseData = res?.data || res;
+            const data = Array.isArray(responseData) ? responseData[0] : responseData;
             if (data) {
               this.deviceSettingForm.patchValue({
                 idIpAdresse: data.idIpAdresse,
@@ -727,8 +733,9 @@ export class ConfigurationWebComponentComponent implements OnInit {
     const idIpAdresse = this.deviceSettingForm.get('idIpAdresse')?.value;
     const url = this.ipAddresses().find(ip => ip.idIpAdresse == idIpAdresse)?.urlGetId;
     if (url) {
-      this.boitierService.getDeviceIdImei(url, Number.parseInt(imei)).subscribe(res => {
-        this.deviceSettingForm.patchValue({ streamId: res.id });
+      this.boitierService.getDeviceIdImei(url, Number.parseInt(imei)).subscribe((res: any) => {
+        const responseData = res?.data || res;
+        this.deviceSettingForm.patchValue({ streamId: responseData?.id });
       });
     }
   }
@@ -761,8 +768,9 @@ export class ConfigurationWebComponentComponent implements OnInit {
   loadLastId(numBoitier: number) {
     this.boitierService.getLastId(this.ID_COMPTE(), numBoitier)
       .subscribe({
-        next: (res) => {
-          this.lastIdForm.patchValue({ lastIdValue: 0 });
+        next: (res: any) => {
+          const responseData = res?.data || res;
+          this.lastIdForm.patchValue({ lastIdValue: responseData?.lastId || 0 });
         },
         error: () => {
           this.lastIdForm.patchValue({ lastIdValue: 0 });

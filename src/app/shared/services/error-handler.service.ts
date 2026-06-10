@@ -28,8 +28,6 @@ export class ErrorHandlerService {
       context.errorType = this.categorizeError(context.error);
     }
 
-    console.error('[ErrorHandler]', context);
-
     // Add to error log with timestamp
     this.errors.update(errors => [...errors, { ...context, timestamp: new Date() }]);
 

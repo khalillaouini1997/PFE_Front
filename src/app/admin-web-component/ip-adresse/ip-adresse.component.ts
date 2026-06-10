@@ -60,9 +60,10 @@ export class IpAdresseComponent implements OnInit {
 
   getAllIpAddresse(keyWord: string, page: number, size: number) {
     this.ipAddressService.getAllIpAddresses(keyWord, page, size).subscribe({
-      next: (res) => {
-        this.ips = res.content;
-        this.bigTotalItems = res.totalElements;
+      next: (res: any) => {
+        const responseData = res?.data || res;
+        this.ips = responseData?.content || [];
+        this.bigTotalItems = responseData?.page?.totalElements || responseData?.totalElements || 0;
       }
     });
   }
@@ -78,7 +79,6 @@ export class IpAdresseComponent implements OnInit {
       this.ipAddressService.deleteIpAddress(id)
         .pipe(
           catchError(error => {
-            console.error('Error occurred while deleting IP address:', error);
             return of('Failed to delete IP address: ' + error.message);
           })
         )

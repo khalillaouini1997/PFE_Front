@@ -77,7 +77,6 @@ export class AddAdminCompteComponent implements OnInit {
           this.adminForm.reset({ role: 'WEBADMIN', idTraccar: 0, useFcm: false });
         }),
         catchError(error => {
-          console.error('Error adding admin compte:', error);
           this.toastr.error(
             this.translate.instant('ADMIN_ACCOUNTS.ADD_ERROR'), 
             this.translate.instant('COMMON.ERROR')

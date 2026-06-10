@@ -117,11 +117,9 @@ export class DashbordComponent implements OnInit, OnDestroy {
 
   locateOnMap(data: RealTime) {
     // This will be handled by the DashboardMapComponent
-    console.log('Locate on map:', data.deviceid);
   }
 
   openDetails(data: RealTime) {
-    console.log('Details for device', data.deviceid, data);
   }
 
   // ── Utilities ─────────────────────────────────────────────────────────────

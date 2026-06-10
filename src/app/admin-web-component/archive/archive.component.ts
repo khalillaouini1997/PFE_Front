@@ -74,7 +74,6 @@ export class ArchiveComponent implements OnInit {
         archivesData = (_archives as any).data || (_archives as any).content || [];
       }
       if (!Array.isArray(archivesData)) {
-        console.error('Unexpected API response structure:', _archives);
         archivesData = [];
       }
       
@@ -117,7 +116,6 @@ export class ArchiveComponent implements OnInit {
         this.isAnalyzing.set(false);
       },
       error: (err) => {
-        console.error('Error fetching AI analysis', err);
         this.isAnalyzing.set(false);
       }
     });
