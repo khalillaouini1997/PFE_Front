@@ -86,6 +86,7 @@ export class DashbordComponent implements OnInit, OnDestroy {
     if (localStorage.getItem(STORAGE_KEYS.IS_RELOADING) === 'true') {
       localStorage.removeItem(STORAGE_KEYS.IS_RELOADING);
       globalThis.location.reload();
+      return;
     }
 
     if (this.authService.isAuthenticated()) {

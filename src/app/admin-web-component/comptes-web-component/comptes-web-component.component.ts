@@ -8,6 +8,7 @@ import { AuthService } from 'src/app/service/auth.service';
 import { WebAccountService } from 'src/app/service/web-account.service';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { STORAGE_KEYS } from 'src/app/shared/constants';
 
 
 import { TableModule } from 'primeng/table';
@@ -53,6 +54,11 @@ export class ComptesWebComponentComponent implements OnInit {
   private readonly cdr = inject(ChangeDetectorRef);
 
   ngOnInit() {
+    if (localStorage.getItem(STORAGE_KEYS.IS_RELOADING) === 'true') {
+      localStorage.removeItem(STORAGE_KEYS.IS_RELOADING);
+      globalThis.location.reload();
+      return;
+    }
     if (this.authService.isAuthenticated()) {
       this.initForms();
     } else {

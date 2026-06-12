@@ -29,6 +29,7 @@ export class SidebarComponent implements OnInit {
   isActiveTraccar: boolean = false;
   isActiveAdminCompte: boolean = false;
   isActiveAddAdminCompte: boolean = false;
+  isActiveBilling: boolean = false;
   owner: string = "TDS";
   notificationCount: number = 0;
 
@@ -102,6 +103,7 @@ export class SidebarComponent implements OnInit {
     this.isActiveListWeb = menu === 'listWeb';
     this.isActiveAccessLog = menu === 'logs';
     this.isActiveTraccar = menu === 'traccar';
+    this.isActiveBilling = menu === 'billing';
   }
 
   changeLanguage(lang: string) {

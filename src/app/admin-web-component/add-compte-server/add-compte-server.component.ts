@@ -1,8 +1,7 @@
 import { Component, OnInit, inject, ViewChild, ElementRef } from '@angular/core';
-import { CompteServer, IpAddress } from 'src/app/data/data';
+import { CompteServer } from 'src/app/data/data';
 import { CompteServerService } from "../../service/compte-server.service";
 import { AuthService } from "../../service/auth.service";
-import { IpAddressService } from "../../service/ip-address.service";
 import { DatePickerModule } from 'primeng/datepicker';
 import { ToastrService } from 'ngx-toastr';
 import { catchError } from "rxjs/operators";
@@ -23,7 +22,6 @@ export class AddCompteServerComponent implements OnInit {
 
   serverForm!: FormGroup;
   @ViewChild('progressModal') progressModal!: ElementRef<HTMLDialogElement>;
-  ipAddresses: IpAddress[] = [];
   public loading = false;
   mode: boolean = false;
   messageError: string = "";
@@ -37,7 +35,6 @@ export class AddCompteServerComponent implements OnInit {
   }
 
   private readonly compteServerService = inject(CompteServerService);
-  private readonly ipAddressService = inject(IpAddressService);
   private readonly authService = inject(AuthService);
   // Removed BsLocaleService as PrimeNG handles its own localization
   private readonly toastr = inject(ToastrService);
@@ -55,7 +52,6 @@ export class AddCompteServerComponent implements OnInit {
       login: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmationPassword: ['', Validators.required],
-      ipAdresse: [''],
       date_Expiration: [new Date(), Validators.required],
       numberBoitier: [0, [Validators.required, Validators.min(0)]]
     }, { validators: this.passwordMatchValidator });
@@ -71,10 +67,6 @@ export class AddCompteServerComponent implements OnInit {
       this.router.navigate(['/error']);
       return;
     }
-
-    this.ipAddressService.getAllIps().subscribe(res => {
-      this.ipAddresses = Array.isArray(res) ? res : [];
-    });
   }
 
   addCompteServer() {

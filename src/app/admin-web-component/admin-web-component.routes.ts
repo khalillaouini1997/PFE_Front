@@ -73,6 +73,10 @@ export const ADMIN_WEB_ROUTES: Routes = [{
     {
       path: 'traccar',
       loadComponent: () => import('./list-traccar/list-traccar.component').then(m => m.ListTraccarComponent)
+    },
+    {
+      path: 'billing',
+      loadComponent: () => import('./billing/billing.component').then(m => m.BillingComponent)
     }
   ],
 }];

@@ -1,0 +1,138 @@
+<div class="billing-container">
+  <h2>{{ 'BILLING.TITLE' | translate }}</h2>
+
+  <div class="billing-form">
+    <form [formGroup]="billingForm">
+      <div class="form-group">
+        <label for="accountId">{{ 'BILLING.SELECT_ACCOUNT' | translate }}</label>
+        <select 
+          id="accountId" 
+          formControlName="accountId" 
+          class="form-control"
+        >
+          <option value="">{{ loadingAccounts ? ('BILLING.LOADING_ACCOUNTS' | translate) : ('BILLING.SELECT_ACCOUNT' | translate) }}</option>
+          <option *ngFor="let account of webAccounts" [value]="account.idCompteClientWeb">
+            {{ account.login }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="year">{{ 'BILLING.YEAR' | translate }}</label>
+          <input 
+            type="number" 
+            id="year" 
+            formControlName="year" 
+            class="form-control"
+            min="2000"
+            max="2100"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="month">{{ 'BILLING.MONTH' | translate }}</label>
+          <input 
+            type="number" 
+            id="month" 
+            formControlName="month" 
+            class="form-control"
+            min="1"
+            max="12"
+          />
+        </div>
+      </div>
+
+      <div class="button-group">
+        <button 
+          type="button" 
+          (click)="calculateBilling()" 
+          [disabled]="loading"
+          class="btn btn-primary"
+        >
+          {{ 'BILLING.CALCULATE' | translate }}
+        </button>
+
+        <button 
+          type="button" 
+          (click)="refreshBilling()" 
+          [disabled]="loading || !billingResult"
+          class="btn btn-secondary"
+        >
+          {{ 'BILLING.REFRESH' | translate }}
+        </button>
+
+        <button 
+          type="button" 
+          (click)="downloadPdf()" 
+          [disabled]="loading || !billingResult"
+          class="btn btn-success"
+        >
+          {{ 'BILLING.DOWNLOAD_PDF' | translate }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div *ngIf="loading" class="loading-spinner">
+    <div class="spinner"></div>
+    <p>{{ 'BILLING.LOADING' | translate }}</p>
+  </div>
+
+  <div *ngIf="billingResult && !loading" class="billing-result">
+    <div class="billing-summary">
+      <h3>{{ 'BILLING.SUMMARY' | translate }}</h3>
+      <div class="summary-row">
+        <span>{{ 'BILLING.ACCOUNT_NAME' | translate }}:</span>
+        <strong>{{ billingResult.accountName }}</strong>
+      </div>
+      <div class="summary-row">
+        <span>{{ 'BILLING.BILLING_PERIOD' | translate }}:</span>
+        <strong>{{ billingResult.billingPeriod }}</strong>
+      </div>
+      <div class="summary-row">
+        <span>{{ 'BILLING.SUBTOTAL' | translate }}:</span>
+        <strong>{{ formatCurrency(billingResult.subtotal) }}</strong>
+      </div>
+      <div class="summary-row">
+        <span>{{ 'BILLING.TVA' | translate }} (19%):</span>
+        <strong>{{ formatCurrency(billingResult.tvaAmount) }}</strong>
+      </div>
+      <div class="summary-row total">
+        <span>{{ 'BILLING.TOTAL' | translate }}:</span>
+        <strong>{{ formatCurrency(billingResult.totalAmount) }}</strong>
+      </div>
+    </div>
+
+    <div class="device-breakdown" *ngIf="billingResult.deviceBreakdown && billingResult.deviceBreakdown.length > 0">
+      <h3>{{ 'BILLING.DEVICE_BREAKDOWN' | translate }}</h3>
+      <table class="billing-table">
+        <thead>
+          <tr>
+            <th>{{ 'BILLING.DEVICE_ID' | translate }}</th>
+            <th>{{ 'BILLING.DEVICE_LABEL' | translate }}</th>
+            <th>{{ 'BILLING.WORKING_DAYS' | translate }}</th>
+            <th>{{ 'BILLING.FEES' | translate }}</th>
+            <th>{{ 'BILLING.SUBTOTAL' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let device of billingResult.deviceBreakdown">
+            <td>{{ device.deviceId }}</td>
+            <td>{{ device.deviceLabel }}</td>
+            <td>{{ device.workingDays }}</td>
+            <td>{{ formatCurrency(device.accountFeeByMonth + device.simCardFeePerMonth) }}</td>
+            <td>{{ formatCurrency(device.subtotal) }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="calculation-details">
+      <h3>{{ 'BILLING.CALCULATION_DETAILS' | translate }}</h3>
+      <p>{{ 'BILLING.FORMULA' | translate }}: ({{ 'BILLING.ACCOUNT_FEE' | translate }} + {{ 'BILLING.SIM_CARD_FEE' | translate }}) × {{ 'BILLING.WORKING_DAYS' | translate }}</p>
+      <p>{{ 'BILLING.TVA_RATE' | translate }}: 19%</p>
+      <p>{{ 'BILLING.GENERATED_AT' | translate }}: {{ billingResult.generatedAt }}</p>
+    </div>
+  </div>
+</div>

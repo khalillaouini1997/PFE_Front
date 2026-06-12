@@ -69,6 +69,12 @@
             </li>
 
             <li class="nav-section-title">{{ 'SIDEBAR.SYSTEM' | translate }}</li>
+            <li [class.active]="isActiveBilling">
+                <a routerLink="/adminWeb/billing" (click)="setMenu('billing')" [title]="isCollapsed() ? ('SIDEBAR.BILLING' | translate) : ''">
+                    <i class="material-icons">receipt_long</i>
+                    <p>{{ 'SIDEBAR.BILLING' | translate }}</p>
+                </a>
+            </li>
             <li [class.active]="isActiveAccessLog">
                 <a routerLink="/adminWeb/accessLog" (click)="setMenu('logs')" [title]="isCollapsed() ? ('SIDEBAR.ACCESS_LOG' | translate) : ''">
                     <i class="material-icons">history</i>

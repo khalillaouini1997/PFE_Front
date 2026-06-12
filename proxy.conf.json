@@ -4,7 +4,6 @@
     "secure": false,
     "changeOrigin": true,
     "ws": true,
-    "xfwd": true,
     "logLevel": "debug",
     "pathRewrite": {
       "^/ws_webadmin": ""
