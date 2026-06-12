@@ -142,7 +142,12 @@
     "STATE_VALID": "Valid",
     "STATE_ISSUE": "Tech Issue",
     "STATE_NON_VALID": "Non Valid",
-    "VEHICLES": "Vehicles"
+    "VEHICLES": "Vehicles",
+    "DEVICE_INSTALLATION_EVOLUTION": "Device Installation Evolution",
+    "VEHICLE_STATUS": "Vehicle Status",
+    "SPEED_DISTRIBUTION": "Speed Distribution",
+    "SIM_CARD_PROVIDERS": "Sim Card Providers",
+    "SIGNAL_QUALITY": "Signal Quality"
   },
   "ARCHIVE": {
     "TITLE": "Archives & Raw",

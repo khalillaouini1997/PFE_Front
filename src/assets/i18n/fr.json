@@ -142,7 +142,12 @@
     "STATE_VALID": "Valide",
     "STATE_ISSUE": "Problème Tech",
     "STATE_NON_VALID": "Non Valide",
-    "VEHICLES": "Véhicules"
+    "VEHICLES": "Véhicules",
+    "DEVICE_INSTALLATION_EVOLUTION": "Évolution de l'Installation des Dispositifs",
+    "VEHICLE_STATUS": "Statut du Véhicule",
+    "SPEED_DISTRIBUTION": "Distribution de la Vitesse",
+    "SIM_CARD_PROVIDERS": "Fournisseurs de Cartes SIM",
+    "SIGNAL_QUALITY": "Qualité du Signal"
   },
   "ARCHIVE": {
     "TITLE": "Archives & Brutes",
