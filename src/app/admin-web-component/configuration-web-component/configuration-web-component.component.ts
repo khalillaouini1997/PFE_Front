@@ -78,6 +78,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
 
   // UI & Modal State
   showConfigModal = signal<boolean>(false);
+  activeTab = signal<string>('recalculate');
   loadingRecalculate = signal<boolean>(false);
   loadingEditDeviceOption = signal<boolean>(false);
   loadingEditPathConfig = signal<boolean>(false);
@@ -85,6 +86,26 @@ export class ConfigurationWebComponentComponent implements OnInit {
   loadingResetLastId = signal<boolean>(false);
   loadingDeviceSetting = signal<boolean>(false);
   dropdownSettings: IDropdownSettings = { defaultOpen: false };
+
+  readonly optionsList = [
+    { key: 'useIgnition', label: 'Ignition', icon: 'fa-key' },
+    { key: 'useFuel', label: 'Fuel', icon: 'fa-gas-pump' },
+    { key: 'useTemp', label: 'Temperature', icon: 'fa-thermometer-half' },
+    { key: 'useFms', label: 'FMS (CAN)', icon: 'fa-bus' },
+    { key: 'useJ1708', label: 'J1708 Bus', icon: 'fa-link' },
+    { key: 'useIdDriver', label: 'Driver ID', icon: 'fa-user' },
+    { key: 'useStop', label: 'Stop Detection', icon: 'fa-stop-circle' },
+    { key: 'useDoor', label: 'Door 1', icon: 'fa-door-closed' },
+    { key: 'useDoor2', label: 'Door 2', icon: 'fa-door-closed' }
+  ];
+
+  readonly recalculateTypes = [
+    { value: 'recalcule trajet', label: 'RECALC.PATH' },
+    { value: 'recalcule boitier', label: 'RECALC.BOX' },
+    { value: 'recalcule carburant', label: 'RECALC.FUEL' },
+    { value: 'recalcule alert', label: 'RECALC.ALERT' },
+    { value: 'recalcule Temps reel', label: 'RECALC.REAL_TIME' }
+  ];
 
 
   date = computed(() => this.mainConfigForm.get('date_expiration')?.value as Date | null);
@@ -133,7 +154,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
 
     this.recalculateForm = this.fb.group({
       datestart: [new Date(), Validators.required],
-      typeRecalcule: ['', Validators.required]
+      typeRecalcule: ['recalcule trajet', Validators.required]
     });
 
     this.deviceOptForm = this.fb.group({
@@ -405,18 +426,24 @@ export class ConfigurationWebComponentComponent implements OnInit {
     });
   }
 
-
   editBoitier(boitier: Boitier) {
     this.selectedBoitierId.set(boitier.numBoitier); // Use numBoitier for config operations
-    this.recalculateForm.reset({ datestart: new Date(), typeRecalcule: '' });
     this.notifications.set([]);
-    this.recalculeP.update(p => ({ ...p, idBoitier: boitier.numBoitier })); 
-    
+    this.recalculeP.update(p => ({ ...p, idBoitier: boitier.numBoitier }));
+    this.activeTab.set('recalculate');
+
+    // Set form values
+    this.recalculateForm.patchValue({
+      datestart: new Date(),
+      typeRecalcule: 'recalcule trajet'
+    });
+
     this.getDeviceOptionConfig(boitier.numBoitier);
     this.getPathConfig(boitier.numBoitier);
     this.getDeviceSettings(boitier.numBoitier);
     this.loadLastId(boitier.numBoitier);
     this.showConfigModal.set(true);
+
     if (this.configModal) {
       this.configModal.nativeElement.showModal();
     }

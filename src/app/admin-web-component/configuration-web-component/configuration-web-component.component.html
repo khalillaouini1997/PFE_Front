@@ -314,78 +314,95 @@
             <div class="header-gradient border-0 px-4 py-3 d-flex justify-content-between align-items-center flex-shrink-0"
                 style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);">
                 <div class="text-white d-flex flex-column gap-1">
-                    <h4 class="m-0 fw-bold fs-5"><i class="fa fa-cogs me-2"></i>{{ 'WEB_CONFIG.RECALC_TITLE' | translate
-                        }}</h4>
-                    <p class="m-0 small text-white-50">{{ 'SERVER_DETAILS.TERMINAL' | translate }}: <span
-                            class="fw-bold text-white">{{selectedBoitierId()}}</span></p>
+                    <h4 class="m-0 fw-bold fs-5"><i class="fa fa-cogs me-2"></i>{{ 'WEB_CONFIG.RECALC_TITLE' | translate }}</h4>
+                    <p class="m-0 small text-white-50">{{ 'SERVER_DETAILS.TERMINAL' | translate }}: <span class="fw-bold text-white">{{selectedBoitierId()}}</span></p>
                 </div>
                 <button type="button" class="btn-close btn-close-white opacity-75" (click)="closeConfigModal()"
                     aria-label="Close"></button>
             </div>
 
+            <!-- Tab Navigation Bar -->
+            <div class="bg-white border-bottom px-4 py-2 d-flex gap-2 flex-shrink-0 tab-nav-container overflow-x-auto">
+                <button type="button" class="tab-nav-btn" [class.active]="activeTab() === 'recalculate'" (click)="activeTab.set('recalculate')">
+                    <i class="fa fa-history me-2"></i>{{ 'WEB_CONFIG.HISTORIC_RECALC' | translate }}
+                </button>
+                <button type="button" class="tab-nav-btn" [class.active]="activeTab() === 'options'" (click)="activeTab.set('options')">
+                    <i class="fa fa-toggle-on me-2"></i>{{ 'WEB_CONFIG.DEVICE_OPTIONS' | translate }}
+                </button>
+                <button type="button" class="tab-nav-btn" [class.active]="activeTab() === 'bdd'" (click)="activeTab.set('bdd')">
+                    <i class="fa fa-filter me-2"></i>{{ 'WEB_CONFIG.BDD_CONFIG_FILTER' | translate }}
+                </button>
+                <button type="button" class="tab-nav-btn" [class.active]="activeTab() === 'stream'" (click)="activeTab.set('stream')">
+                    <i class="fa fa-rss me-2"></i>{{ 'WEB_CONFIG.STREAM_SETTINGS' | translate }}
+                </button>
+                <button type="button" class="tab-nav-btn position-relative" [class.active]="activeTab() === 'logs'" (click)="activeTab.set('logs')">
+                    <i class="fa fa-terminal me-2"></i>{{ 'WEB_CONFIG.CONSOLE_STREAM' | translate }}
+                    @if (notifications().length > 0) {
+                        <span class="badge-dot" [class.bg-danger]="getNumberOfNotificationErrors() > 0" [class.bg-success]="getNumberOfNotificationErrors() === 0"></span>
+                    }
+                </button>
+            </div>
+
+            <!-- Scrollable Content Area -->
             <div class="p-4 bg-light overflow-y-auto flex-grow-1">
                 @if (selectedBoitiersIds().length > 0) {
-                <div
-                    class="bg-white rounded-4 p-3 mb-4 shadow-sm border border-secondary border-opacity-10 d-flex align-items-center gap-3">
-                    <label class="small fw-bold text-secondary text-uppercase m-0">{{ 'WEB_CONFIG.MULTI_DEVICE_APP' |
-                        translate }} ({{selectedBoitiersIds().length}})</label>
+                <div class="bg-white rounded-4 p-3 mb-4 shadow-sm border border-secondary border-opacity-10 d-flex align-items-center gap-3">
+                    <label class="small fw-bold text-secondary text-uppercase m-0">{{ 'WEB_CONFIG.MULTI_DEVICE_APP' | translate }} ({{selectedBoitiersIds().length}})</label>
                     <div class="d-flex flex-wrap gap-2">
                         @for (id of selectedBoitiersIds(); track id) {
-                        <span
-                            class="badge bg-indigo-50 text-indigo border border-indigo-200 rounded-pill px-3 py-2 text-primary"
+                        <span class="badge bg-indigo-50 text-indigo border border-indigo-200 rounded-pill px-3 py-2 text-primary"
                             style="background: #eef2ff; color: #4f46e5;">{{id}}</span>
                         }
                     </div>
                 </div>
                 }
 
-                <div class="row g-4">
-                    <!-- Recalcule Form side -->
-                    <div class="col-lg-6" [formGroup]="recalculateForm">
-                        <div class="bg-white h-100 rounded-4 shadow-sm border border-secondary border-opacity-10 p-4">
+                <!-- TAB 1: RECALCULATE -->
+                <div class="row justify-content-center fade-in" [hidden]="activeTab() !== 'recalculate'">
+                    <div class="col-md-10 col-lg-8" [formGroup]="recalculateForm">
+                        <div class="bg-white rounded-4 shadow-sm border border-secondary border-opacity-10 p-4">
                             <h6 class="fw-bold mb-4 text-dark fs-6 d-flex align-items-center">
                                 <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-2 me-3 d-inline-flex">
-                                    <i class="fa fa-history"></i></div> {{ 'WEB_CONFIG.HISTORIC_RECALC' | translate }}
+                                    <i class="fa fa-history"></i>
+                                </div>
+                                {{ 'WEB_CONFIG.HISTORIC_RECALC' | translate }}
                             </h6>
 
                             <div class="row g-3">
-                            <div class="col-6" *ngIf="dateBoolean">
-                              <div class="bg-light rounded-3 overflow-hidden shadow-sm border-0 p-3">
-                                <label class="form-label text-secondary fw-bold text-uppercase mb-2"
-                                       style="font-size: 0.75rem; letter-spacing: 0.5px;">{{ 'WEB_CONFIG.START_DATE' | translate }}</label>
-                                <p-datepicker formControlName="datestart"
-                                              dateFormat="dd-mm-yy" [showIcon]="true" [appendTo]="'body'" [showTime]="true"
-                                              [maxDate]="maxDate"
-                                              [showOnFocus]="false"
-                                              styleClass="w-100"
-                                              inputStyleClass="form-control bg-white border-0 shadow-sm fs-6 px-3 py-2 text-dark w-100">
-                                </p-datepicker>
-                              </div>
-                            </div>
-
-                            <div class="col-6">
-                              <div class="bg-light rounded-3 overflow-hidden shadow-sm border-0 p-3">
-                                <label class="form-label text-secondary fw-bold text-uppercase mb-2"
-                                       style="font-size: 0.75rem; letter-spacing: 0.5px;">{{ 'WEB_CONFIG.RECALC_NATURE' | translate }}</label>
-                                <div class="input-group input-group-lg">
-                                  <span class="input-group-text bg-transparent border-0 text-muted px-3"><i class="fa fa-list-ul"></i></span>
-                                  <select formControlName="typeRecalcule"
-                                          class="form-select bg-transparent border-0 shadow-none fs-6 px-0 fw-medium text-dark cursor-pointer"
-                                          [title]="'WEB_CONFIG.RECALC_NATURE' | translate">
-                                    <option value="recalcule trajet">{{ 'RECALC.PATH' | translate }}</option>
-                                    <option value="recalcule boitier">{{ 'RECALC.BOX' | translate }}</option>
-                                    <option value="recalcule carburant">{{ 'RECALC.FUEL' | translate }}</option>
-                                    <option value="recalcule alert">{{ 'RECALC.ALERT' | translate }}</option>
-                                    <option value="recalcule Temps reel">{{ 'RECALC.REAL_TIME' | translate }}</option>
-                                  </select>
+                                <div class="col-sm-6" *ngIf="dateBoolean">
+                                    <div class="bg-light rounded-3 overflow-hidden shadow-sm border-0 p-3">
+                                        <label class="form-label text-secondary fw-bold text-uppercase mb-2"
+                                               style="font-size: 0.75rem; letter-spacing: 0.5px;">{{ 'WEB_CONFIG.START_DATE' | translate }}</label>
+                                        <p-datepicker formControlName="datestart"
+                                                      dateFormat="dd-mm-yy" [showIcon]="true" [appendTo]="'body'" [showTime]="true"
+                                                      [maxDate]="maxDate"
+                                                      [showOnFocus]="true"
+                                                      styleClass="w-100"
+                                                      inputStyleClass="form-control bg-white border-0 shadow-sm fs-6 px-3 py-2 text-dark w-100"
+                                                      [readonlyInput]="false">
+                                        </p-datepicker>
+                                    </div>
                                 </div>
-                              </div>
+
+                                <div [class.col-sm-6]="dateBoolean" [class.col-sm-12]="!dateBoolean">
+                                    <div class="bg-light rounded-3 overflow-hidden shadow-sm border-0 p-3">
+                                        <label class="form-label text-secondary fw-bold text-uppercase mb-2"
+                                               style="font-size: 0.75rem; letter-spacing: 0.5px;">{{ 'WEB_CONFIG.RECALC_NATURE' | translate }}</label>
+                                        <div class="input-group input-group-lg">
+                                            <span class="input-group-text bg-transparent border-0 text-muted px-3"><i class="fa fa-list-ul"></i></span>
+                                            <select formControlName="typeRecalcule"
+                                                    class="form-select bg-white border-0 shadow-sm fs-6 px-3 py-2 fw-medium text-dark cursor-pointer"
+                                                    [title]="'WEB_CONFIG.RECALC_NATURE' | translate">
+                                                <option *ngFor="let type of recalculateTypes" [value]="type.value">{{ type.label | translate }}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                          </div>
 
                             <button type="button"
-                                class="btn btn-lg w-100 fw-bold rounded-3 text-white transition-all border-0 shadow-sm mt-4"
-                                style="background: #a855f7;" [disabled]="recalculateForm.invalid"
+                                class="btn btn-lg w-100 fw-bold rounded-3 text-white transition-all border-0 shadow-sm mt-4 btn-purple"
+                                [disabled]="recalculateForm.invalid"
                                 (click)="recalculate()">
                                 <i class="fa me-2" [class.fa-retweet]="!loadingRecalculate()"
                                     [class.fa-spinner]="loadingRecalculate()"
@@ -394,9 +411,9 @@
                             </button>
 
                             @if(showSqlBox) {
-                            <div class="sql-query-box mt-4">
+                            <div class="sql-query-box mt-4 animate-slide-up">
                                 <h6 class="sql-query-title">
-                                    <i class="fa fa-code"></i>
+                                    <i class="fa fa-code text-primary"></i>
                                     Requêtes SQL
                                 </h6>
                                 <pre class="sql-query-content">{{sqlQuery}}</pre>
@@ -404,124 +421,134 @@
                             }
                         </div>
                     </div>
+                </div>
 
-                    <!-- Device Options Form side -->
-                    <div class="col-lg-6" [formGroup]="deviceOptForm">
-                        <div
-                            class="bg-white h-100 rounded-4 shadow-sm border border-secondary border-opacity-10 p-4 d-flex flex-column">
+                <!-- TAB 2: DEVICE OPTIONS -->
+                @if (activeTab() === 'options') {
+                <div class="row justify-content-center fade-in" [formGroup]="deviceOptForm">
+                    <div class="col-md-11" style="max-width: 800px;">
+                        <div class="bg-white rounded-4 shadow-sm border border-secondary border-opacity-10 p-4">
                             <h6 class="fw-bold mb-4 text-dark fs-6 d-flex align-items-center">
-                                <div class="bg-info bg-opacity-10 text-info rounded-circle p-2 me-3 d-inline-flex"><i
-                                        class="fa fa-toggle-on"></i></div> {{ 'WEB_CONFIG.DEVICE_OPTIONS' | translate }}
+                                <div class="bg-info bg-opacity-10 text-info rounded-circle p-2 me-3 d-inline-flex"><i class="fa fa-toggle-on"></i></div> {{ 'WEB_CONFIG.DEVICE_OPTIONS' | translate }}
                             </h6>
 
-                            <div class="row g-2 mb-4 flex-grow-1">
-                              @for (opt of ['useIgnition', 'useFuel', 'useTemp', 'useFms', 'useJ1708', 'useIdDriver', 'useStop', 'useDoor', 'useDoor2']; track opt) {
+                            <div class="row g-3 mb-4">
+                                @for (opt of optionsList; track opt.key) {
                                 <div class="col-md-4 col-sm-6">
-                                  <div class="bg-light rounded-3 px-3 py-2 border border-secondary border-opacity-10 shadow-sm d-flex justify-content-between align-items-center h-100">
-        <span class="fw-bold text-dark m-0 cursor-pointer text-capitalize"
-              style="font-size: 0.8rem;">
-            {{opt.replace('use', '')}}
-        </span>
-                                    <div class="form-check form-switch p-0 m-0 d-flex align-items-center">
-                                      <input class="form-check-input cursor-pointer m-0 ms-0"
-                                             style="width: 2.2em; height: 1.1em;" type="checkbox" role="switch"
-                                             [formControlName]="opt" [id]="'opt'+opt" [title]="opt">
-                                    </div>
-                                  </div>
-                                </div>
-                              }
-                            </div>
-
-                            <div
-                                class="d-flex flex-column gap-3 mt-auto pt-3 border-top border-secondary border-opacity-10">
-                                <button type="button"
-                                    class="btn btn-dark text-white rounded-3 py-2 fw-bold w-100 shadow-sm border-0 transition-all"
-                                    (click)="editDeviceOptionConfig()" [disabled]="loadingEditDeviceOption()">
-                                    <i class="fa fa-save me-2"></i> {{ 'WEB_CONFIG.SAVE_OPTIONS' | translate }}
-                                </button>
-
-                                <div class="row g-3 mt-2">
-                                    <div class="col-sm-12" [formGroup]="lastIdForm">
-                                        <label class="form-label text-secondary fw-bold text-uppercase mb-1" style="font-size: 0.7rem;">ID</label>
-                                        <div class="input-group input-group-sm bg-light rounded-3 shadow-sm border border-secondary border-opacity-10 overflow-hidden">
-                                            <input type="number" class="form-control bg-white border-0 px-2 text-dark shadow-none"
-                                                formControlName="lastIdValue" placeholder="0" [title]="'WEB_CONFIG.LAST_ID' | translate">
-                                            <button type="button" class="btn btn-primary btn-sm border-0 rounded-0 px-3 transition-all"
-                                                (click)="resetLastId()" [disabled]="loadingResetLastId()">
-                                                <i class="fa" [class.fa-save]="!loadingResetLastId()"
-                                                    [class.fa-spinner]="loadingResetLastId()" [class.fa-spin]="loadingResetLastId()"></i>
-                                            </button>
+                                    <div class="option-card-premium" [class.active]="deviceOptForm.get(opt.key)?.value">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="option-icon-container">
+                                                <i class="fa {{opt.icon}}"></i>
+                                            </div>
+                                            <span class="option-label text-dark fw-bold">{{opt.label}}</span>
+                                        </div>
+                                        <div class="form-check form-switch p-0 m-0 d-flex align-items-center">
+                                            <input class="form-check-input cursor-pointer m-0 ms-0"
+                                                style="width: 2.2em; height: 1.1em;" type="checkbox" role="switch"
+                                                [formControlName]="opt.key" [id]="'opt'+opt.key" [title]="opt.label">
                                         </div>
                                     </div>
                                 </div>
+                                }
                             </div>
+
+                            <button type="button"
+                                class="btn btn-dark text-white rounded-3 py-3 fw-bold w-100 shadow-sm border-0 transition-all"
+                                (click)="editDeviceOptionConfig()" [disabled]="loadingEditDeviceOption()">
+                                <i class="fa fa-save me-2"></i> {{ 'WEB_CONFIG.SAVE_OPTIONS' | translate }}
+                            </button>
                         </div>
                     </div>
+                </div>
+                }
 
-                    <!-- BDD Configuration -->
-                    <div class="col-12" [formGroup]="pathConfigForm">
+                <!-- TAB 3: BDD CONFIG -->
+                @if (activeTab() === 'bdd') {
+                <div class="row justify-content-center fade-in" [formGroup]="pathConfigForm">
+                    <div class="col-md-11" style="max-width: 800px;">
                         <div class="bg-white rounded-4 shadow-sm border border-secondary border-opacity-10 p-4">
                             <h6 class="fw-bold mb-4 text-dark fs-6 d-flex align-items-center">
-                                <div
-                                    class="bg-success bg-opacity-10 text-success rounded-circle p-2 me-3 d-inline-flex">
-                                    <i class="fa fa-filter"></i></div> {{ 'WEB_CONFIG.BDD_CONFIG_FILTER' | translate }}
+                                <div class="bg-success bg-opacity-10 text-success rounded-circle p-2 me-3 d-inline-flex">
+                                    <i class="fa fa-filter"></i>
+                                </div>
+                                {{ 'WEB_CONFIG.BDD_CONFIG_FILTER' | translate }}
                             </h6>
 
-                            <div class="row g-4 align-items-end">
-                                <div class="col-sm-6 col-md-4 col-lg-2">
-                                    <label class="form-label text-secondary fw-bold text-uppercase mb-2"
-                                        style="font-size: 0.7rem; letter-spacing: 0.5px;">Path Min (sec)</label>
-                                    <select
-                                        class="form-select form-select-lg bg-light border-0 shadow-sm rounded-3 fs-6 fw-medium cursor-pointer"
-                                        formControlName="pathMinSec" title="Path Min (sec)">
-                                        @for (t of [30,60,90,120,150,180,210,240,270,300]; track t) { <option
-                                            [value]="t">{{t}}s</option> }
-                                    </select>
+                            <div class="row g-3">
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="bg-light p-3 rounded-3 border border-secondary border-opacity-10 shadow-sm h-100">
+                                        <div class="d-flex align-items-center gap-2 mb-2">
+                                            <i class="fa fa-route text-primary"></i>
+                                            <label class="form-label text-secondary fw-bold text-uppercase m-0" style="font-size: 0.75rem;">Path Min</label>
+                                        </div>
+                                        <select class="form-select bg-white border border-secondary border-opacity-25 shadow-none w-100" formControlName="pathMinSec" title="Path Min (sec)">
+                                            @for (t of [30,60,90,120,150,180,210,240,270,300]; track t) {
+                                                <option [value]="t">{{t}}s</option>
+                                            }
+                                        </select>
+                                    </div>
                                 </div>
-                                <div class="col-sm-6 col-md-4 col-lg-2">
-                                    <label class="form-label text-secondary fw-bold text-uppercase mb-2"
-                                        style="font-size: 0.7rem; letter-spacing: 0.5px;">Stop Min (sec)</label>
-                                    <select
-                                        class="form-select form-select-lg bg-light border-0 shadow-sm rounded-3 fs-6 fw-medium cursor-pointer"
-                                        formControlName="stopMinSec" title="Stop Min (sec)">
-                                        @for (t of [30,60,90,120,150,180,210,240,270,300]; track t) { <option
-                                            [value]="t">{{t}}s</option> }
-                                    </select>
+
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="bg-light p-3 rounded-3 border border-secondary border-opacity-10 shadow-sm h-100">
+                                        <div class="d-flex align-items-center gap-2 mb-2">
+                                            <i class="fa fa-stop-circle text-danger"></i>
+                                            <label class="form-label text-secondary fw-bold text-uppercase m-0" style="font-size: 0.75rem;">Stop Min</label>
+                                        </div>
+                                        <select class="form-select bg-white border border-secondary border-opacity-25 shadow-none w-100" formControlName="stopMinSec" title="Stop Min (sec)">
+                                            @for (t of [30,60,90,120,150,180,210,240,270,300]; track t) {
+                                                <option [value]="t">{{t}}s</option>
+                                            }
+                                        </select>
+                                    </div>
                                 </div>
-                                <div class="col-sm-6 col-md-4 col-lg-2">
-                                    <label class="form-label text-secondary fw-bold text-uppercase mb-2"
-                                        style="font-size: 0.7rem; letter-spacing: 0.5px;">Pause Min (sec)</label>
-                                    <select
-                                        class="form-select form-select-lg bg-light border-0 shadow-sm rounded-3 fs-6 fw-medium cursor-pointer"
-                                        formControlName="pauseMinSec" title="Pause Min (sec)">
-                                        @for (t of [30,60,90,120,150,180,210,240,270,300]; track t) { <option
-                                            [value]="t">{{t}}s</option> }
-                                    </select>
+
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="bg-light p-3 rounded-3 border border-secondary border-opacity-10 shadow-sm h-100">
+                                        <div class="d-flex align-items-center gap-2 mb-2">
+                                            <i class="fa fa-pause-circle text-warning"></i>
+                                            <label class="form-label text-secondary fw-bold text-uppercase m-0" style="font-size: 0.75rem;">Pause Min</label>
+                                        </div>
+                                        <select class="form-select bg-white border border-secondary border-opacity-25 shadow-none w-100" formControlName="pauseMinSec" title="Pause Min (sec)">
+                                            @for (t of [30,60,90,120,150,180,210,240,270,300]; track t) {
+                                                <option [value]="t">{{t}}s</option>
+                                            }
+                                        </select>
+                                    </div>
                                 </div>
-                                <div class="col-sm-6 col-md-6 col-lg-3">
-                                    <label class="form-label text-secondary fw-bold text-uppercase mb-2"
-                                        style="font-size: 0.7rem; letter-spacing: 0.5px;">Distance Min (m)</label>
-                                    <select
-                                        class="form-select form-select-lg bg-light border-0 shadow-sm rounded-3 fs-6 fw-medium cursor-pointer"
-                                        formControlName="distanceMinMeter" title="Distance Min (m)">
-                                        @for (d of [5,10,20,50,100,300,500,1000]; track d) { <option [value]="d">{{d}}m
-                                        </option> }
-                                    </select>
+
+                                <div class="col-md-6 col-lg-6">
+                                    <div class="bg-light p-3 rounded-3 border border-secondary border-opacity-10 shadow-sm h-100">
+                                        <div class="d-flex align-items-center gap-2 mb-2">
+                                            <i class="fa fa-arrows-alt-h text-info"></i>
+                                            <label class="form-label text-secondary fw-bold text-uppercase m-0" style="font-size: 0.75rem;">Distance Min (m)</label>
+                                        </div>
+                                        <select class="form-select bg-white border border-secondary border-opacity-25 shadow-none w-100" formControlName="distanceMinMeter" title="Distance Min (m)">
+                                            @for (d of [5,10,20,50,100,300,500,1000]; track d) {
+                                                <option [value]="d">{{d}}m</option>
+                                            }
+                                        </select>
+                                    </div>
                                 </div>
-                                <div class="col-sm-12 col-md-6 col-lg-3">
-                                    <label class="form-label text-secondary fw-bold text-uppercase mb-2"
-                                        style="font-size: 0.7rem; letter-spacing: 0.5px;">Vitesse Min (km/h)</label>
-                                    <select
-                                        class="form-select form-select-lg bg-light border-0 shadow-sm rounded-3 fs-6 fw-medium cursor-pointer"
-                                        formControlName="pathMinSpeed" title="Vitesse Min (km/h)">
-                                        @for (s of [1,5,10,15,20]; track s) { <option [value]="s">{{s}} km/h</option> }
-                                    </select>
+
+                                <div class="col-md-12 col-lg-6">
+                                    <div class="bg-light p-3 rounded-3 border border-secondary border-opacity-10 shadow-sm h-100">
+                                        <div class="d-flex align-items-center gap-2 mb-2">
+                                            <i class="fa fa-tachometer-alt text-success"></i>
+                                            <label class="form-label text-secondary fw-bold text-uppercase m-0" style="font-size: 0.75rem;">Vitesse Min (km/h)</label>
+                                        </div>
+                                        <select class="form-select bg-white border border-secondary border-opacity-25 shadow-none w-100" formControlName="pathMinSpeed" title="Vitesse Min (km/h)">
+                                            @for (s of [1,5,10,15,20]; track s) {
+                                                <option [value]="s">{{s}} km/h</option>
+                                            }
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
 
                             <button type="button"
-                                class="btn btn-lg w-100 mt-4 text-white fw-bold rounded-3 shadow-sm border-0 transition-all"
-                                style="background: #8b5cf6;" (click)="editPathConfig()"
+                                class="btn btn-lg w-100 mt-4 text-white fw-bold rounded-3 shadow-sm border-0 transition-all btn-purple"
+                                (click)="editPathConfig()"
                                 [disabled]="pathConfigForm.invalid || loadingEditPathConfig()">
                                 <i class="fa me-2" [class.fa-check]="!loadingEditPathConfig()"
                                     [class.fa-spinner]="loadingEditPathConfig()"
@@ -530,54 +557,154 @@
                             </button>
                         </div>
                     </div>
-                    <!-- Technical Settings (Stream) -->
-                    <div class="col-12" [formGroup]="deviceSettingForm">
-                        <div class="bg-white rounded-4 shadow-sm border border-secondary border-opacity-10 p-4 mt-2">
+                </div>
+                }
+
+                <!-- TAB 4: STREAM & RESET SETTINGS -->
+                @if (activeTab() === 'stream') {
+                <div class="row justify-content-center fade-in">
+                    <div class="col-md-11" style="max-width: 800px;">
+                        
+                        <!-- Stream settings form -->
+                        <div class="bg-white rounded-4 shadow-sm border border-secondary border-opacity-10 p-4 mb-4" [formGroup]="deviceSettingForm">
                             <h6 class="fw-bold mb-4 text-dark fs-6 d-flex align-items-center">
                                 <div class="bg-info bg-opacity-10 text-info rounded-circle p-2 me-3 d-inline-flex"><i class="fa fa-rss"></i></div> {{ 'WEB_CONFIG.STREAM_SETTINGS' | translate }}
                             </h6>
 
-                          <div class="row g-3">
-                            <div class="col-12">
-                              <div class="d-flex bg-light border border-secondary border-opacity-10 rounded-3 shadow-sm overflow-hidden">
-                                <div class="d-flex flex-column px-3 py-2 flex-grow-1 border-end border-secondary border-opacity-25">
-                                  <span class="fw-bold text-secondary text-uppercase mb-1" style="font-size: 0.7rem;">Rawstream Id</span>
-                                  <select class="form-select form-select-sm bg-transparent border-0 shadow-none p-0 text-dark fw-medium"
-                                          style="height: 38px;"
-                                          formControlName="idIpAdresse" title="Rawstream IP">
-                                    @for (ip of ipAddresses(); track ip.idIpAdresse) {
-                                      <option [ngValue]="ip.idIpAdresse">{{ip.label}}</option>
-                                    }
-                                  </select>
+                            <div class="row g-3">
+                                <div class="col-md-8">
+                                    <div class="bg-light p-3 rounded-3 border border-secondary border-opacity-10 shadow-sm h-100">
+                                        <label class="form-label text-secondary fw-bold text-uppercase mb-2" style="font-size: 0.7rem;">Rawstream IP Address</label>
+                                        <select class="form-select bg-white border border-secondary border-opacity-25 shadow-none w-100"
+                                                formControlName="idIpAdresse" title="Rawstream IP">
+                                            @for (ip of ipAddresses(); track ip.idIpAdresse) {
+                                                <option [ngValue]="ip.idIpAdresse">{{ip.label}} ({{ip.value}})</option>
+                                            }
+                                        </select>
+                                    </div>
                                 </div>
-                                <div class="d-flex flex-column px-3 py-2 border-end border-secondary border-opacity-25" style="width: 160px;">
-                                  <span class="fw-bold text-secondary text-uppercase mb-1" style="font-size: 0.7rem;">Stream Id</span>
-                                  <input type="number" class="form-control form-control-sm bg-transparent border-0 shadow-none p-0 text-dark fw-medium"
-                                         formControlName="streamId" placeholder="0" title="Stream ID">
+                                <div class="col-md-4">
+                                    <div class="bg-light p-3 rounded-3 border border-secondary border-opacity-10 shadow-sm h-100">
+                                        <label class="form-label text-secondary fw-bold text-uppercase mb-2" style="font-size: 0.7rem;">Stream ID</label>
+                                        <input type="number" class="form-control bg-white border border-secondary border-opacity-25 shadow-none w-100"
+                                                formControlName="streamId" placeholder="0" title="Stream ID">
+                                    </div>
                                 </div>
-                                <button type="button" class="btn btn-success fw-bold border-0 px-4 rounded-0"
-                                        (click)="editDeviceSetting()" [disabled]="loadingDeviceSetting()">
-                                  <i class="fa me-2"
-                                     [class.fa-check]="!loadingDeviceSetting()"
-                                     [class.fa-spinner]="loadingDeviceSetting()"
-                                     [class.fa-spin]="loadingDeviceSetting()"></i>
-                                  {{ 'WEB_CONFIG.SAVE_OPTIONS' | translate }}
-                                </button>
-                              </div>
                             </div>
-                          </div>
 
+                            <button type="button" class="btn btn-success fw-bold border-0 py-3 rounded-3 w-100 mt-4 shadow-sm transition-all"
+                                    (click)="editDeviceSetting()" [disabled]="loadingDeviceSetting()">
+                                <i class="fa me-2"
+                                    [class.fa-check]="!loadingDeviceSetting()"
+                                    [class.fa-spinner]="loadingDeviceSetting()"
+                                    [class.fa-spin]="loadingDeviceSetting()"></i>
+                                {{ 'WEB_CONFIG.SAVE_OPTIONS' | translate }}
+                            </button>
+                        </div>
+
+                        <!-- Reset operations card -->
+                        <div class="bg-white rounded-4 shadow-sm border border-secondary border-opacity-10 p-4">
+                            <h6 class="fw-bold mb-4 text-dark fs-6 d-flex align-items-center">
+                                <div class="bg-danger bg-opacity-10 text-danger rounded-circle p-2 me-3 d-inline-flex"><i class="fa fa-history"></i></div> Reset Controls
+                            </h6>
+
+                            <div class="row g-4">
+                                <div class="col-sm-6" [formGroup]="lastIdForm">
+                                    <div class="bg-light p-3 rounded-3 border border-secondary border-opacity-10 shadow-sm">
+                                        <label class="form-label text-secondary fw-bold text-uppercase mb-2" style="font-size: 0.7rem;">{{ 'WEB_CONFIG.LAST_ID' | translate }}</label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control bg-white border border-secondary border-opacity-25 px-3 py-2 text-dark shadow-none"
+                                                formControlName="lastIdValue" placeholder="0" [title]="'WEB_CONFIG.LAST_ID' | translate">
+                                            <button type="button" class="btn btn-primary px-3 transition-all"
+                                                (click)="resetLastId()" [disabled]="loadingResetLastId()">
+                                                <i class="fa me-2" [class.fa-save]="!loadingResetLastId()"
+                                                    [class.fa-spinner]="loadingResetLastId()" [class.fa-spin]="loadingResetLastId()"></i>
+                                                {{ 'COMMON.SAVE' | translate }}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="bg-light p-3 rounded-3 border border-secondary border-opacity-10 shadow-sm h-100 d-flex flex-column justify-content-between">
+                                        <div>
+                                            <label class="form-label text-secondary fw-bold text-uppercase mb-2" style="font-size: 0.7rem;">Odometer Reset</label>
+                                        </div>
+                                        <button type="button" class="btn btn-outline-danger w-100 py-2 rounded-3 transition-all fw-bold"
+                                            (click)="resetOdometre()" [disabled]="loadingResetOdometre()">
+                                            <i class="fa me-2" [class.fa-tachometer-alt]="!loadingResetOdometre()"
+                                                [class.fa-spinner]="loadingResetOdometre()" [class.fa-spin]="loadingResetOdometre()"></i>
+                                            {{ 'WEB_CONFIG.RESET_ODO' | translate }}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                }
+
+                <!-- TAB 5: CONSOLE LOGS -->
+                @if (activeTab() === 'logs') {
+                <div class="row justify-content-center fade-in">
+                    <div class="col-md-11" style="max-width: 800px;">
+                        <div class="console-terminal rounded-4 shadow-lg overflow-hidden border border-dark">
+                            <!-- Terminal Header -->
+                            <div class="console-terminal-header bg-dark px-4 py-2 border-bottom border-secondary border-opacity-25 d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="console-terminal-dot bg-danger"></span>
+                                    <span class="console-terminal-dot bg-warning"></span>
+                                    <span class="console-terminal-dot bg-success"></span>
+                                    <span class="text-secondary small ms-2 font-monospace">system_logs.sh</span>
+                                </div>
+                                <div class="d-flex gap-2">
+                                    @if (getNumberOfNotificationErrors() > 0) {
+                                    <span class="text-danger small fw-bold bg-danger bg-opacity-15 px-3 py-1 rounded-pill"><i
+                                            class="fa fa-times-circle me-1"></i> {{getNumberOfNotificationErrors()}} {{ 'COMMON.ERRORS' | translate }}</span>
+                                    } @else {
+                                    <span class="text-success small fw-bold bg-success bg-opacity-15 px-3 py-1 rounded-pill"><i
+                                            class="fa fa-check-circle me-1"></i> {{ 'COMMON.OK' | translate }}</span>
+                                    }
+                                </div>
+                            </div>
+
+                            <!-- Terminal Content -->
+                            <div class="console-terminal-body p-4 bg-dark text-white font-monospace overflow-y-auto" style="height: 380px;">
+                                @if (notifications().length === 0) {
+                                <div class="text-secondary opacity-50 py-5 text-center">
+                                    <i class="fa fa-terminal fa-2x mb-3"></i>
+                                    <p class="m-0">Console is idle. Active log events will appear here.</p>
+                                </div>
+                                }
+                                @for (n of notifications(); track $index) {
+                                <div class="small mb-2 d-flex gap-2 align-items-start p-2 rounded-2 transition-all hover-bg-terminal-line">
+                                    <i class="fa mt-1 flex-shrink-0" [class.fa-check-circle]="n.status"
+                                        [class.text-success]="n.status" [class.fa-exclamation-circle]="!n.status"
+                                        [class.text-danger]="!n.status"></i>
+                                    <span class="text-secondary flex-shrink-0">[{{$index+1}}]</span>
+                                    <span class="text-light fw-medium text-break">{{n.value}}</span>
+                                </div>
+                                }
+                            </div>
                         </div>
                     </div>
                 </div>
+                }
             </div>
 
-            <div class="modal-footer p-3 bg-white border-top border-secondary border-opacity-10 rounded-bottom-4">
+            <!-- Footer status bar + actions -->
+            <div class="modal-footer p-3 bg-white border-top border-secondary border-opacity-10 rounded-bottom-4 flex-shrink-0">
                 <div class="w-100 d-flex justify-content-between align-items-center">
-                    <div
-                        class="notification-count px-3 py-2 bg-light rounded-pill small fw-bold text-secondary border-0 shadow-sm d-flex align-items-center gap-2">
-                        <i class="fa fa-bell text-warning"></i>
-                        <span>{{notifications().length}} Logs</span>
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="notification-count px-3 py-2 bg-light rounded-pill small fw-bold text-secondary border-0 shadow-sm d-flex align-items-center gap-2 cursor-pointer"
+                            (click)="activeTab.set('logs')">
+                            <i class="fa fa-bell" [class.text-warning]="notifications().length > 0" [class.text-secondary]="notifications().length === 0"></i>
+                            <span>{{notifications().length}} Logs</span>
+                        </div>
+                        <div class="badge bg-indigo bg-opacity-10 text-indigo px-3 py-2 rounded-pill border border-indigo border-opacity-10">
+                            {{ 'SERVER_DETAILS.TERMINAL' | translate }}: {{selectedBoitierId()}}
+                        </div>
                     </div>
                     <button type="button"
                         class="btn btn-light px-4 py-2 fw-bold shadow-sm rounded-pill text-dark border border-secondary border-opacity-10 hover-bg-secondary transition-all"
@@ -585,34 +712,6 @@
                 </div>
             </div>
 
-            @if (notifications().length > 0) {
-            <div class="notifications-panel p-4 bg-dark text-white rounded-bottom-4 shadow-inner">
-                <div class="d-flex justify-content-between mb-3 border-bottom border-light border-opacity-10 pb-2">
-                    <span class="small fw-bold text-uppercase text-white-50"><i class="fa fa-terminal me-2"></i>{{
-                        'WEB_CONFIG.CONSOLE_STREAM' | translate }}</span>
-                    @if (getNumberOfNotificationErrors() > 0) {
-                    <span class="text-danger small fw-bold bg-danger bg-opacity-10 px-2 py-1 rounded-2"><i
-                            class="fa fa-times-circle me-1"></i> {{getNumberOfNotificationErrors()}} {{ 'COMMON.ERRORS'
-                        | translate }}</span>
-                    } @else {
-                    <span class="text-success small fw-bold bg-success bg-opacity-10 px-2 py-1 rounded-2"><i
-                            class="fa fa-check-circle me-1"></i> {{ 'COMMON.OK' | translate }}</span>
-                    }
-                </div>
-                <div class="notification-scroll" style="max-height: 200px; overflow-y: auto;">
-                    @for (n of notifications(); track $index) {
-                    <div
-                        class="small mb-2 d-flex gap-2 align-items-start p-2 rounded-2 hover-bg-light hover-bg-opacity-10 transition-all">
-                        <i class="fa mt-1 flex-shrink-0" [class.fa-check-circle]="n.status"
-                            [class.text-success]="n.status" [class.fa-exclamation-circle]="!n.status"
-                            [class.text-danger]="!n.status"></i>
-                        <span class="text-white-50 font-monospace flex-shrink-0">[{{$index+1}}]</span>
-                        <span class="text-white fw-medium text-break">{{n.value}}</span>
-                    </div>
-                    }
-                </div>
-            </div>
-            }
         </div>
     </div>
 </dialog>
