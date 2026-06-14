@@ -9,13 +9,16 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angul
 
 
 import { TableModule } from 'primeng/table';
+import { TranslateModule } from '@ngx-translate/core';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
+import { EmptyTableComponent } from '../../shared/components/empty-table/empty-table.component';
 
 @Component({
   selector: 'app-vehicule-info',
   standalone: true,
   templateUrl: './vehicule-info.component.html',
   styleUrls: ['./vehicule-info.component.css'],
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, TableModule, DatePipe]
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TableModule, DatePipe, TranslateModule, PageHeaderComponent, EmptyTableComponent]
 })
 export class VehiculeInfoComponent implements OnInit {
 

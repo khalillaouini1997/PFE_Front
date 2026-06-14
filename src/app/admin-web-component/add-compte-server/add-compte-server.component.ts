@@ -87,7 +87,7 @@ export class AddCompteServerComponent {
     };
     const numberBoitier = formValue.numberBoitier;
 
-    this.compteServerService.createServerComptewithBoitier(compteServer, numberBoitier)
+    withToast(this.compteServerService.createServerComptewithBoitier(compteServer, numberBoitier), this.toastr, this.translate, 'SERVER_ACCOUNTS.UPDATE_SUCCESS')
       .pipe(
         catchError(error => {
           this.mode = true;
@@ -100,10 +100,6 @@ export class AddCompteServerComponent {
         next: () => {
           this.mode = false;
           this.loading = false;
-          this.toastr.success(
-            this.translate.instant('SERVER_ACCOUNTS.UPDATE_SUCCESS'), 
-            this.translate.instant('COMMON.SUCCESS')
-          );
           this.router.navigate(['/adminWeb/listWebs']);
         }
       });

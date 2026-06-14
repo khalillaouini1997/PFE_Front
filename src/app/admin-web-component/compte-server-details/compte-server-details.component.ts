@@ -11,13 +11,15 @@ import { TableModule } from 'primeng/table';
 import { PaginatorModule } from 'primeng/paginator';
 import { CommonModule, DatePipe, DecimalPipe, NgClass } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
+import { EmptyTableComponent } from '../../shared/components/empty-table/empty-table.component';
 
 @Component({
     selector: 'app-compte-server-details',
     standalone: true,
     templateUrl: './compte-server-details.component.html',
     styleUrls: ['./compte-server-details.component.css'],
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, TableModule, PaginatorModule, DatePipe, DecimalPipe, NgClass, RouterModule, TranslateModule]
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, TableModule, PaginatorModule, DatePipe, DecimalPipe, NgClass, RouterModule, TranslateModule, PageHeaderComponent, EmptyTableComponent]
 })
 export class CompteServerDetailsComponent implements OnInit, OnDestroy {
   addForm!: FormGroup;

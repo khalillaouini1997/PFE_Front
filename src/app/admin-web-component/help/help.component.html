@@ -1,38 +1,30 @@
 <div class="main-panel p-4">
-    <!-- Header Section -->
-    <div class="premium-card mb-4 header-gradient shadow-sm">
-        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3" [formGroup]="searchForm">
-            <div class="title-section text-white">
-                <h2 class="m-0 fw-bold">Demandes Clients</h2>
-                <p class="m-0 text-white-50 opacity-75">Gestion des tickets et interventions</p>
+    <app-page-header titleKey="Demandes Clients" subtitleKey="Gestion des tickets et interventions">
+        <div class="d-flex align-items-center gap-3 flex-wrap">
+            <div class="form-floating filter-select-small">
+                <select class="form-select border-0 bg-white bg-opacity-10 text-white" [formGroup]="searchForm" formControlName="type" id="typeFilter">
+                    @for (type of types; track type.name) {
+                        <option [value]="type.name">{{type.label}}</option>
+                    }
+                    <option hidden [value]="'null'"></option>
+                </select>
+                <label for="typeFilter" class="text-white-50">État</label>
             </div>
             
-            <div class="controls-section d-flex align-items-center gap-3 flex-wrap">
-                <div class="form-floating filter-select-small">
-                    <select class="form-select border-0 bg-white bg-opacity-10 text-white" formControlName="type" id="typeFilter">
-                        @for (type of types; track type.name) {
-                            <option [value]="type.name">{{type.label}}</option>
-                        }
-                        <option hidden [value]="'null'"></option>
-                    </select>
-                    <label for="typeFilter" class="text-white-50">État</label>
-                </div>
-                
-                <div class="form-floating filter-select-medium">
-                    <select class="form-select border-0 bg-white bg-opacity-10 text-white" formControlName="compteWebId" id="clientFilter">
-                        @for (CompteWeb of comptesWeb(); track CompteWeb.idCompteClientWeb) {
-                            <option [value]="CompteWeb.idCompteClientWeb">{{CompteWeb.login}}</option>
-                        }
-                    </select>
-                    <label for="clientFilter" class="text-white-50">Client</label>
-                </div>
-                
-                <button type="button" class="btn btn-white shadow-sm btn-search-white" (click)="onSearchClient()">
-                    <i class="fa fa-search me-2"></i> Rechercher
-                </button>
+            <div class="form-floating filter-select-medium">
+                <select class="form-select border-0 bg-white bg-opacity-10 text-white" [formGroup]="searchForm" formControlName="compteWebId" id="clientFilter">
+                    @for (CompteWeb of comptesWeb(); track CompteWeb.idCompteClientWeb) {
+                        <option [value]="CompteWeb.idCompteClientWeb">{{CompteWeb.login}}</option>
+                    }
+                </select>
+                <label for="clientFilter" class="text-white-50">Client</label>
             </div>
+            
+            <button type="button" class="btn btn-white shadow-sm btn-search-white" (click)="onSearchClient()">
+                <i class="fa fa-search me-2"></i> Rechercher
+            </button>
         </div>
-    </div>
+    </app-page-header>
 
     <!-- Table Content -->
     <div class="premium-card p-0 overflow-hidden shadow-sm">
@@ -97,12 +89,7 @@
                     }
                     
                     @if (!loading() && interventionsFilter().length === 0) {
-                        <tr>
-                            <td colspan="8" class="text-center py-5">
-                                <i class="fa fa-inbox fa-3x opacity-25 mb-2"></i>
-                                <p class="text-secondary m-0">Aucune demande trouvée</p>
-                            </td>
-                        </tr>
+                        <app-empty-table [colspan]="8" icon="fa-inbox" messageKey="Aucune demande trouvée" />
                     }
                 </tbody>
             </table>

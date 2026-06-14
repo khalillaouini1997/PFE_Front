@@ -1,22 +1,14 @@
 <div class="main-panel p-4">
-    <div class="premium-card mb-4 header-gradient shadow-sm p-4">
-        <div class="row align-items-center">
-            <div class="col-sm-8">
-                <h4 class="title text-white m-0 fw-bold"><i class="fa fa-wrench me-2"></i> Les interventions</h4>
-                <p class="m-0 text-white-50 small opacity-75">Suivi et gestion des interventions techniques</p>
-            </div>
-            <div class="col-sm-4">
-                <form [formGroup]="vehiculeForm" class="d-flex align-items-center gap-2 justify-content-end">
-                    <span class="text-white small opacity-75 fw-bold">ÉTAT:</span>
-                    <select formControlName="selectedState" class="form-select form-select-sm border-0 shadow-sm w-auto bg-white bg-opacity-10 text-white" (change)='onSelectState()' title="Filtrer par état">
-                        @for (state of states; track state.name) {
-                            <option [value]="state.name" class="text-dark">{{state.label}}</option>
-                        }
-                    </select>
-                </form>
-            </div>
-        </div>
-    </div>
+    <app-page-header titleKey="Les interventions" subtitleKey="Suivi et gestion des interventions techniques">
+        <form [formGroup]="vehiculeForm" class="d-flex align-items-center gap-2">
+            <span class="text-white small opacity-75 fw-bold">ÉTAT:</span>
+            <select formControlName="selectedState" class="form-select form-select-sm border-0 shadow-sm w-auto bg-white bg-opacity-10 text-white" (change)='onSelectState()' title="Filtrer par état">
+                @for (state of states; track state.name) {
+                    <option [value]="state.name" class="text-dark">{{state.label}}</option>
+                }
+            </select>
+        </form>
+    </app-page-header>
 
     <div class="premium-card p-0 overflow-hidden shadow-sm">
         <p-table [value]="vehiculeInfosFiltered" [lazy]="true" (onLazyLoad)="onPageChanged($event)"
@@ -79,14 +71,7 @@
                 </tr>
             </ng-template>
 
-            <ng-template pTemplate="emptymessage">
-                <tr>
-                    <td colspan="7" class="text-center py-5 text-secondary">
-                        <i class="fa fa-check-square fa-3x opacity-25 mb-2"></i>
-                        <p>Aucune intervention trouvée</p>
-                    </td>
-                </tr>
-            </ng-template>
+            <app-empty-table [colspan]="7" icon="fa-check-square" messageKey="Aucune intervention trouvée" />
         </p-table>
     </div>
 </div>
