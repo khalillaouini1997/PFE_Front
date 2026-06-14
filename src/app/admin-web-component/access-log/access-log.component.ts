@@ -4,8 +4,7 @@ import { AccessLog } from 'src/app/data/data';
 import { AccessLogService } from 'src/app/service/access-log.service';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { AdminAccountService } from 'src/app/service/admin-account.service';
-import { AuthService } from 'src/app/service/auth.service';
-import { Router } from '@angular/router';
+
 import { TableModule } from 'primeng/table';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -28,16 +27,12 @@ export class AccessLogComponent implements OnInit {
 
   private readonly accessLogService = inject(AccessLogService);
   private readonly adminAccountService = inject(AdminAccountService);
-  private readonly authService = inject(AuthService);
-  private readonly router = inject(Router);
+
   private readonly fb = inject(FormBuilder);
   private readonly cdr = inject(ChangeDetectorRef);
 
   ngOnInit() {
     this.initForms();
-    if (!this.authService.isAuthenticated()) {
-      this.router.navigate(['/error']);
-    }
   }
 
   initForms() {

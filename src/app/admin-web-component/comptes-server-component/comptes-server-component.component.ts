@@ -4,10 +4,10 @@ import { ToastrService } from 'ngx-toastr';
 import { CompteServer, IpAddress } from 'src/app/data/data';
 import { CompteServerService } from "../../service/compte-server.service";
 import { IpAddressService } from "../../service/ip-address.service";
-import { AuthService } from "../../service/auth.service";
+
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { DatePickerModule } from 'primeng/datepicker';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
@@ -41,21 +41,15 @@ export class ComptesServerComponentComponent implements OnInit {
   searchForm!: FormGroup;
   updateServerForm!: FormGroup;
 
-  private readonly router = inject(Router);
   private readonly toastr = inject(ToastrService);
   private readonly route = inject(ActivatedRoute);
   private readonly compteServerService = inject(CompteServerService);
   private readonly ipAddressService = inject(IpAddressService);
-  private readonly authService = inject(AuthService);
   private readonly fb = inject(FormBuilder);
   private readonly translate = inject(TranslateService);
 
   ngOnInit() {
-    if (this.authService.isAuthenticated()) {
-      this.initForms();
-    } else {
-      this.router.navigate(['/error']);
-    }
+    this.initForms();
   }
 
   initForms() {

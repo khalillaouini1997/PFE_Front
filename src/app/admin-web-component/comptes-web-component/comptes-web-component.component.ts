@@ -4,7 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CompteWeb, createCompteWeb } from 'src/app/data/data';
 import { environment } from '../../../environments/environment';
-import { AuthService } from 'src/app/service/auth.service';
+
 import { WebAccountService } from 'src/app/service/web-account.service';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -45,7 +45,6 @@ export class ComptesWebComponentComponent implements OnInit {
 
   owner: string = environment.owner;
 
-  private readonly authService = inject(AuthService);
   private readonly webAccountService = inject(WebAccountService);
   private readonly router = inject(Router);
   private readonly toastr = inject(ToastrService);
@@ -59,11 +58,7 @@ export class ComptesWebComponentComponent implements OnInit {
       globalThis.location.reload();
       return;
     }
-    if (this.authService.isAuthenticated()) {
-      this.initForms();
-    } else {
-      this.router.navigate(['/error']);
-    }
+    this.initForms();
   }
 
   initForms() {

@@ -1,8 +1,8 @@
 import { Router } from '@angular/router';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CompteServer, CompteWeb, IpAddress } from 'src/app/data/data';
 import { WebAccountService } from "../../service/web-account.service";
-import { AuthService } from "../../service/auth.service";
+
 import { CompteServerService } from "../../service/compte-server.service";
 import { IpAddressService } from "../../service/ip-address.service";
 import { ToastrService } from "ngx-toastr";
@@ -18,7 +18,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
     styleUrls: ['./add-compte-web-component.component.css'],
     imports: [ReactiveFormsModule, DatePickerModule, TranslateModule]
 })
-export class AddCompteWebComponentComponent implements OnInit {
+export class AddCompteWebComponentComponent {
 
   webForm!: FormGroup;
   serverAccounts = signal<any[]>([]);
@@ -32,7 +32,7 @@ export class AddCompteWebComponentComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly toastr = inject(ToastrService);
   private readonly webAccountService = inject(WebAccountService);
-  private readonly authService = inject(AuthService);
+
   private readonly ipAddressService = inject(IpAddressService);
   private readonly compteServerService = inject(CompteServerService);
   private readonly fb = inject(FormBuilder);
@@ -65,10 +65,7 @@ export class AddCompteWebComponentComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (!this.authService.isAuthenticated()) {
-      this.router.navigate(['/error']);
-      return;
-    }
+
 
     this.webAccountService.getAllWebAccountNames().subscribe({
       next: (res: any) => {

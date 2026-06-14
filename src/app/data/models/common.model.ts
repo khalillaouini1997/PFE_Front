@@ -31,12 +31,6 @@ export function createRecalculatePayload(): RecalculatePayload {
   };
 }
 
-export interface RecalculatePayloadDTO {
-  start: Date;
-  end: Date;
-  devices: number[];
-}
-
 export interface DeviceOptDTO {
   idBoitier: number;
   optionId: number;

@@ -1,7 +1,7 @@
-import { Component, OnInit, inject, ViewChild, ElementRef } from '@angular/core';
+import { Component, inject, ViewChild, ElementRef } from '@angular/core';
 import { CompteServer } from 'src/app/data/data';
 import { CompteServerService } from "../../service/compte-server.service";
-import { AuthService } from "../../service/auth.service";
+
 import { DatePickerModule } from 'primeng/datepicker';
 import { ToastrService } from 'ngx-toastr';
 import { catchError } from "rxjs/operators";
@@ -18,7 +18,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
     templateUrl: './add-compte-server.component.html',
     imports: [ReactiveFormsModule, DatePickerModule, TranslateModule]
 })
-export class AddCompteServerComponent implements OnInit {
+export class AddCompteServerComponent {
 
   serverForm!: FormGroup;
   @ViewChild('progressModal') progressModal!: ElementRef<HTMLDialogElement>;
@@ -35,7 +35,7 @@ export class AddCompteServerComponent implements OnInit {
   }
 
   private readonly compteServerService = inject(CompteServerService);
-  private readonly authService = inject(AuthService);
+
   // Removed BsLocaleService as PrimeNG handles its own localization
   private readonly toastr = inject(ToastrService);
   private readonly router = inject(Router);
@@ -62,12 +62,7 @@ export class AddCompteServerComponent implements OnInit {
       ? null : { 'mismatch': true };
   }
 
-  ngOnInit() {
-    if (!this.authService.isAuthenticated()) {
-      this.router.navigate(['/error']);
-      return;
-    }
-  }
+
 
   addCompteServer() {
     if (this.serverForm.invalid) {

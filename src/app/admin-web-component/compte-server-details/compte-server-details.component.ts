@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy, inject, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
-import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Params, RouterModule } from '@angular/router';
 import { Boitier, BoitierRealTime, CompteServer, createCompteServer, createBoitier } from 'src/app/data/data';
 import { CompteServerService } from "../../service/compte-server.service";
 import { BoitierService } from "../../service/boitier.service";
-import { AuthService } from "../../service/auth.service";
+
 import { ToastrService } from "ngx-toastr";
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TableModule } from 'primeng/table';
@@ -48,10 +48,8 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
   private loadingInProgress: boolean = false;
 
   private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
   private readonly compteServerService = inject(CompteServerService);
   private readonly boitierService = inject(BoitierService);
-  private readonly authService = inject(AuthService);
   private readonly toastr = inject(ToastrService);
   private readonly fb = inject(FormBuilder);
   private readonly cdr = inject(ChangeDetectorRef);
@@ -59,10 +57,7 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.initForms();
-    if (!this.authService.isAuthenticated()) {
-      this.router.navigate(['/error']);
-      return;
-    }
+
 
     this.route.params.subscribe((params: Params) => {
       this.ID_COMPTE = +params['idCompteClientServer'];

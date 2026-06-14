@@ -1,8 +1,8 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, inject } from '@angular/core';
+
 import { AdministratorCompte } from 'src/app/data/data';
 import { AdminAccountService } from 'src/app/service/admin-account.service';
-import { AuthService } from 'src/app/service/auth.service';
+
 import { catchError } from "rxjs/operators";
 import { of, tap } from "rxjs";
 import { ToastrService } from "ngx-toastr";
@@ -17,7 +17,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
     styleUrls: ['./add-admin-compte.component.css'],
     imports: [ReactiveFormsModule, TranslateModule]
 })
-export class AddAdminCompteComponent implements OnInit {
+export class AddAdminCompteComponent {
 
   adminForm!: FormGroup;
   roles = ['GLOBALADMINDESC', 'WEBADMIN', 'AGENT'];
@@ -25,9 +25,9 @@ export class AddAdminCompteComponent implements OnInit {
   messageError: string = "";
   mode: boolean = false;
 
-  private readonly router = inject(Router);
+
   private readonly adminAccountService = inject(AdminAccountService);
-  private readonly authService = inject(AuthService);
+
   private readonly toastr = inject(ToastrService);
   private readonly fb = inject(FormBuilder);
   private readonly translate = inject(TranslateService);
@@ -51,11 +51,7 @@ export class AddAdminCompteComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-    if (!this.authService.isAuthenticated()) {
-      this.router.navigate(['/error']);
-    }
-  }
+
 
   addAdminCompte() {
     if (this.adminForm.invalid) {

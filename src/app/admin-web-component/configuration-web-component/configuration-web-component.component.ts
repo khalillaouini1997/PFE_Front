@@ -1,4 +1,5 @@
 import { Component, OnInit, inject, signal, computed, ViewChild, ElementRef } from '@angular/core';
+import { Observable } from 'rxjs';
 import {
   Boitier,
   CompteServer,
@@ -10,11 +11,11 @@ import {
   createRecalculatePayload,
   createVehiculeSetting,
 } from "../../data/data";
-import { ActivatedRoute, Params, Router } from "@angular/router";
+import { ActivatedRoute, Params } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
 import { WebSocketService } from "../../service/web-socket.service";
 import { WebAccountService } from "../../service/web-account.service";
-import { AuthService } from "../../service/auth.service";
+
 import { BoitierService } from "../../service/boitier.service";
 import { IpAddressService } from "../../service/ip-address.service";
 import { CompteServerService } from "../../service/compte-server.service";
@@ -49,10 +50,8 @@ export class ConfigurationWebComponentComponent implements OnInit {
   @ViewChild('configModal') configModal!: ElementRef<HTMLDialogElement>;
 
   private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
   private readonly toastr = inject(ToastrService);
   private readonly webAccountService = inject(WebAccountService);
-  private readonly authService = inject(AuthService);
   private readonly boitierService = inject(BoitierService);
   private readonly ipAddressService = inject(IpAddressService);
   private readonly compteServerService = inject(CompteServerService);
@@ -195,58 +194,53 @@ export class ConfigurationWebComponentComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (this.authService.isAuthenticated()) {
-      this.route.params.subscribe((params: Params) => {
-        this.ID_COMPTE.set(+params['idCompteClientWeb']);
-        this.webAccountService.getWebAccountById(this.ID_COMPTE()).subscribe(async (res: any) => {
-          const _compteWeb = res?.data || res;
-          this.webAccountService.getAllOptions().subscribe(opts => {
-            this.options.set(opts);
-          });
-          this.compteWeb.set(_compteWeb);
-          const serverData = _compteWeb.compteClientServer || createCompteServer();
-          // Map backend DTO field names to frontend model field names
-          const mappedServer = {
-            ...serverData,
-            date_creation: serverData.dateCreation || serverData.date_creation,
-            date_Expiration: serverData.dateExpiration || serverData.date_Expiration
-          };
-          this.serverAccount.set(mappedServer);
-          this.selected.set(_compteWeb.options || []);
-
-          this.mainConfigForm.patchValue({
-            login: _compteWeb.login,
-            password: _compteWeb.rawPassword,
-            code_pays: _compteWeb.code_pays,
-            date_expiration: new Date(_compteWeb.date_expiration),
-            options: _compteWeb.options,
-            pool: _compteWeb.pool,
-            firstname: _compteWeb.firstname,
-            lastname: _compteWeb.lastname,
-            email: _compteWeb.email,
-            telephone: _compteWeb.telephone,
-            area: _compteWeb.area,
-            notificationSubquery: _compteWeb.notificationSubquery,
-            mobileNotif: _compteWeb.mobileNotif,
-            idCompteServer: _compteWeb.compteClientServer?.idCompteClientServer || null
-          });
-
-          const currentServer = this.serverAccount();
-          if (currentServer && currentServer.date_Expiration && Date.now() < currentServer.date_Expiration) {
-            this.serverAccount.update(s => ({ ...s, expired: false, during: true }));
-          } else if (currentServer) {
-            this.serverAccount.update(s => ({ ...s, expired: true, during: false }));
-          }
+    this.route.params.subscribe((params: Params) => {
+      this.ID_COMPTE.set(+params['idCompteClientWeb']);
+      this.webAccountService.getWebAccountById(this.ID_COMPTE()).subscribe(async (res: any) => {
+        const _compteWeb = res?.data || res;
+        this.webAccountService.getAllOptions().subscribe(opts => {
+          this.options.set(opts);
         });
+        this.compteWeb.set(_compteWeb);
+        const serverData = _compteWeb.compteClientServer || createCompteServer();
+        const mappedServer = {
+          ...serverData,
+          date_creation: serverData.dateCreation || serverData.date_creation,
+          date_Expiration: serverData.dateExpiration || serverData.date_Expiration
+        };
+        this.serverAccount.set(mappedServer);
+        this.selected.set(_compteWeb.options || []);
+
+        this.mainConfigForm.patchValue({
+          login: _compteWeb.login,
+          password: _compteWeb.rawPassword,
+          code_pays: _compteWeb.code_pays,
+          date_expiration: new Date(_compteWeb.date_expiration),
+          options: _compteWeb.options,
+          pool: _compteWeb.pool,
+          firstname: _compteWeb.firstname,
+          lastname: _compteWeb.lastname,
+          email: _compteWeb.email,
+          telephone: _compteWeb.telephone,
+          area: _compteWeb.area,
+          notificationSubquery: _compteWeb.notificationSubquery,
+          mobileNotif: _compteWeb.mobileNotif,
+          idCompteServer: _compteWeb.compteClientServer?.idCompteClientServer || null
+        });
+
+        const currentServer = this.serverAccount();
+        if (currentServer && currentServer.date_Expiration && Date.now() < currentServer.date_Expiration) {
+          this.serverAccount.update(s => ({ ...s, expired: false, during: true }));
+        } else if (currentServer) {
+          this.serverAccount.update(s => ({ ...s, expired: true, during: false }));
+        }
       });
-      this.codesPays.set(this.webAccountService.codesPays);
-      this.compteServerService.getAllServerAccountForForm().subscribe((res: any) => {
-        const responseData = res?.data || res;
-        this.serverAccounts.set(Array.isArray(responseData) ? responseData : []);
-      });
-    } else {
-      this.router.navigate(['/error']);
-    }
+    });
+    this.codesPays.set(this.webAccountService.codesPays);
+    this.compteServerService.getAllServerAccountForForm().subscribe((res: any) => {
+      const responseData = res?.data || res;
+      this.serverAccounts.set(Array.isArray(responseData) ? responseData : []);
+    });
     this.getAllIps();
     this.dropdownSettings = {
       singleSelection: false,
@@ -551,136 +545,54 @@ export class ConfigurationWebComponentComponent implements OnInit {
 
 
   recalculeFuel() {
-    this.notifications.set([]);
-    if (confirm(this.translate.instant('WEB_CONFIG.HISTORIC_RECALC'))) {
-      this.loadingRecalculate.set(true);
-      const recalculePayload = createRecalculatePayload();
-      recalculePayload.recalculeStartDate = this.datestart()?.getTime() ?? 0;
-      recalculePayload.idBoitiers = [...this.selectedBoitiersIds()];
-      if (!this.isCheckedBoitier(this.recalculeP().idBoitier)) {
-        recalculePayload.idBoitiers.push(this.recalculeP().idBoitier);
-      }
-
-      this.boitierService.recalculeFuel(this.ID_COMPTE(), recalculePayload)
-        .subscribe({
-          next: () => this.loadingRecalculate.set(false),
-          error: (error) => {
-            this.loadingRecalculate.set(false);
-            this.notifications.update(n => [...n, { value: error, status: false }]);
-          }
-        });
-    }
+    this.executeRecalculate('WEB_CONFIG.HISTORIC_RECALC', (id, payload) => this.boitierService.recalculeFuel(id, payload));
   }
-
 
   recalculeHistorique() {
-    this.notifications.set([]);
-    if (confirm(this.translate.instant('WEB_CONFIG.HISTORIC_RECALC'))) {
-      this.loadingRecalculate.set(true);
-      const recalculePayload = createRecalculatePayload();
-      recalculePayload.recalculeStartDate = this.datestart()?.getTime() ?? 0;
-      recalculePayload.idBoitiers = [...this.selectedBoitiersIds()];
-      if (!this.isCheckedBoitier(this.recalculeP().idBoitier)) {
-        recalculePayload.idBoitiers.push(this.recalculeP().idBoitier);
-      }
-
-      this.boitierService.recalculeHistorique(this.ID_COMPTE(), recalculePayload)
-        .subscribe({
-          next: () => this.loadingRecalculate.set(false),
-          error: (error) => {
-            this.loadingRecalculate.set(false);
-            this.notifications.update(n => [...n, { value: error, status: false }]);
-          }
-        });
-    }
+    this.executeRecalculate('WEB_CONFIG.HISTORIC_RECALC', (id, payload) => this.boitierService.recalculeHistorique(id, payload));
   }
-
 
   public recalculeAlert() {
-    this.notifications.set([]);
-    if (confirm(this.translate.instant('WEB_CONFIG.HISTORIC_RECALC'))) {
-      this.loadingRecalculate.set(true);
-      const recalculePayload = createRecalculatePayload();
-      recalculePayload.recalculeStartDate = this.datestart()?.getTime() ?? 0;
-      recalculePayload.idBoitiers = [...this.selectedBoitiersIds()];
-      if (!this.isCheckedBoitier(this.recalculeP().idBoitier)) {
-        recalculePayload.idBoitiers.push(this.recalculeP().idBoitier);
-      }
-
-      this.boitierService.recalculeAlert(this.ID_COMPTE(), recalculePayload)
-        .subscribe({
-          next: () => this.loadingRecalculate.set(false),
-          error: (error) => {
-            this.loadingRecalculate.set(false);
-            this.notifications.update(n => [...n, { value: error, status: false }]);
-          }
-        });
-    }
+    this.executeRecalculate('WEB_CONFIG.HISTORIC_RECALC', (id, payload) => this.boitierService.recalculeAlert(id, payload));
   }
 
-
   recalculePaths() {
-    this.notifications.set([]);
-    if (confirm(this.translate.instant('WEB_CONFIG.HISTORIC_RECALC'))) {
-      this.loadingRecalculate.set(true);
-      const recalculePayload = createRecalculatePayload();
-      recalculePayload.recalculeStartDate = this.datestart()?.getTime() ?? 0;
-      recalculePayload.idBoitiers = [...this.selectedBoitiersIds()];
-      if (!this.isCheckedBoitier(this.recalculeP().idBoitier)) {
-        recalculePayload.idBoitiers.push(this.recalculeP().idBoitier);
-      }
-
-      this.boitierService.recalculePaths(this.ID_COMPTE(), recalculePayload)
-        .subscribe({
-          next: () => this.loadingRecalculate.set(false),
-          error: (error) => {
-            this.loadingRecalculate.set(false);
-            this.notifications.update(n => [...n, { value: error, status: false }]);
-          }
-        });
-    }
+    this.executeRecalculate('WEB_CONFIG.HISTORIC_RECALC', (id, payload) => this.boitierService.recalculePaths(id, payload));
   }
 
   recalculeBoitier() {
-    this.notifications.set([]);
-    if (confirm(this.translate.instant('WEB_CONFIG.HISTORIC_RECALC'))) {
-      this.loadingRecalculate.set(true);
-      const recalculePayload = createRecalculatePayload();
-      recalculePayload.idBoitiers = [...this.selectedBoitiersIds()];
-      if (!this.isCheckedBoitier(this.recalculeP().idBoitier)) {
-        recalculePayload.idBoitiers.push(this.recalculeP().idBoitier);
-      }
-
-      this.boitierService.recalculeBoitier(this.ID_COMPTE(), recalculePayload)
-        .subscribe({
-          next: () => this.loadingRecalculate.set(false),
-          error: (error) => {
-            this.loadingRecalculate.set(false);
-            this.notifications.update(n => [...n, { value: error, status: false }]);
-          }
-        });
-    }
+    this.executeRecalculate('WEB_CONFIG.HISTORIC_RECALC', (id, payload) => this.boitierService.recalculeBoitier(id, payload), true);
   }
 
-
   resetRT() {
+    this.executeRecalculate('COMMON.CONFIRM', (id, payload) => this.boitierService.resetRT(id, payload), true);
+  }
+
+  private executeRecalculate(
+    confirmKey: string,
+    serviceCall: (id: number, payload: RecalculatePayload) => Observable<void>,
+    useSelectedBoitierId = false
+  ) {
     this.notifications.set([]);
-    if (confirm(this.translate.instant('COMMON.CONFIRM'))) {
+    if (confirm(this.translate.instant(confirmKey))) {
       this.loadingRecalculate.set(true);
       const recalculePayload = createRecalculatePayload();
+      if (!useSelectedBoitierId) {
+        recalculePayload.recalculeStartDate = this.datestart()?.getTime() ?? 0;
+      }
       recalculePayload.idBoitiers = [...this.selectedBoitiersIds()];
-      if (!this.isCheckedBoitier(this.selectedBoitierId())) {
-        recalculePayload.idBoitiers.push(this.selectedBoitierId());
+      const boitierId = useSelectedBoitierId ? this.selectedBoitierId() : this.recalculeP().idBoitier;
+      if (!this.isCheckedBoitier(boitierId)) {
+        recalculePayload.idBoitiers.push(boitierId);
       }
 
-      this.boitierService.resetRT(this.ID_COMPTE(), recalculePayload)
-        .subscribe({
-          next: () => this.loadingRecalculate.set(false),
-          error: (error) => {
-            this.loadingRecalculate.set(false);
-            this.notifications.update(n => [...n, { value: error, status: false }]);
-          }
-        });
+      serviceCall(this.ID_COMPTE(), recalculePayload).subscribe({
+        next: () => this.loadingRecalculate.set(false),
+        error: (error) => {
+          this.loadingRecalculate.set(false);
+          this.notifications.update(n => [...n, { value: error, status: false }]);
+        }
+      });
     }
   }
 

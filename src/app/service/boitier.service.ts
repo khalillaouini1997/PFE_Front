@@ -29,21 +29,7 @@ export class BoitierService {
         return this.http.get<PageResponse<Boitier>>(`${environment.apiBaseUrl}compteServer/${id}/Boitiers?keyWord=${keyword}&page=${page}&size=${size}`);
     }
 
-    getAllBoitierofIdcompte(idCompteServer: number): Observable<Boitier[]> {
-        return this.http.get<any>(`${environment.apiBaseUrl}compteServer/${idCompteServer}/listBoitiers`).pipe(
-            map(response => response.data)
-        );
-    }
-
     // CRUD & Updates
-    addBoitiers(idCompteServer: number, nbrBoitiers: number): Observable<void> {
-        return this.http.post<void>(`${environment.apiBaseUrl}compteServer/${idCompteServer}?nombreBoitier=${nbrBoitiers}`, null);
-    }
-
-    deleteCompteServer(id: number): Observable<void> {
-        return this.http.delete<void>(`${environment.apiBaseUrl}compteServer/${id}`);
-    }
-
     updateBoitier(boitier: Boitier, idServer: number, updateType: string): Observable<Boitier> {
         return this.http.put<Boitier>(`${environment.apiBaseUrl}boities?idServer=${idServer}&updateType=${updateType}`, boitier);
     }
