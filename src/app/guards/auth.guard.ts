@@ -1,9 +1,9 @@
 import { inject } from '@angular/core';
-import { Router, CanMatchFn, Route, UrlSegment } from '@angular/router';
+import { Router, CanMatchFn, Route, UrlSegment, UrlTree } from '@angular/router';
 import { Observable, map, catchError, of } from 'rxjs';
 import { AuthService } from '../service/auth.service';
 
-export const authGuard: CanMatchFn = (route: Route, segments: UrlSegment[]): Observable<boolean> => {
+export const authGuard: CanMatchFn = (route: Route, segments: UrlSegment[]): Observable<boolean | UrlTree> => {
     const router = inject(Router);
     const authService = inject(AuthService);
 
