@@ -12,7 +12,7 @@ export const ADMIN_WEB_ROUTES: Routes = [{
     },
     {
       path: 'dashboard',
-      loadComponent: () => import('./dashbord/dashbord.component').then(m => m.DashbordComponent)
+      loadComponent: () => import('./dashboard/dashboard.component').then(m => m.DashboardComponent)
     },
     {
       path: 'adminCompte',

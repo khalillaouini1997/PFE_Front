@@ -21,10 +21,10 @@ import { STORAGE_KEYS } from 'src/app/shared/constants';
 import { DashboardStore } from 'src/app/shared/stores';
 
 @Component({
-  selector: 'app-dashbord',
+  selector: 'app-dashboard',
   standalone: true,
-  templateUrl: './dashbord.component.html',
-  styleUrls: ['./dashbord.component.css'],
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.css'],
   imports: [
     CommonModule,
     FormsModule,
@@ -45,7 +45,7 @@ import { DashboardStore } from 'src/app/shared/stores';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DashbordComponent implements OnInit, OnDestroy {
+export class DashboardComponent implements OnInit, OnDestroy {
   protected readonly Math = Math;
 
   // ── Store ────────────────────────────────────────────────────────────────
