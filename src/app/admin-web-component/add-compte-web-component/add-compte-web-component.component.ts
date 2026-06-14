@@ -7,9 +7,11 @@ import { CompteServerService } from "../../service/compte-server.service";
 import { IpAddressService } from "../../service/ip-address.service";
 import { ToastrService } from "ngx-toastr";
 import { NOTIFICATION_SUBQUERIES } from '../../shared/constants';
+import { withToast } from '../../utils/toast.helpers';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DatePickerModule } from 'primeng/datepicker';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 
 
 @Component({
@@ -17,7 +19,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
     standalone: true,
     templateUrl: './add-compte-web-component.component.html',
     styleUrls: ['./add-compte-web-component.component.css'],
-    imports: [ReactiveFormsModule, DatePickerModule, TranslateModule]
+    imports: [ReactiveFormsModule, DatePickerModule, TranslateModule, PageHeaderComponent]
 })
 export class AddCompteWebComponentComponent {
 

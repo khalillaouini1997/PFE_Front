@@ -9,6 +9,7 @@ import { ToastrService } from "ngx-toastr";
 import { NOTIFICATION_SUBQUERIES } from '../../shared/constants';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 
 
 @Component({
@@ -16,7 +17,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
     standalone: true,
     templateUrl: './add-admin-compte.component.html',
     styleUrls: ['./add-admin-compte.component.css'],
-    imports: [ReactiveFormsModule, TranslateModule]
+    imports: [ReactiveFormsModule, TranslateModule, PageHeaderComponent]
 })
 export class AddAdminCompteComponent {
 

@@ -8,6 +8,7 @@ import { catchError } from "rxjs/operators";
 import { Router } from "@angular/router";
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 
 
 // PrimeNG DatePicker replaces bsDatepicker
@@ -16,7 +17,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
     selector: 'app-add-compte-server',
     standalone: true,
     templateUrl: './add-compte-server.component.html',
-    imports: [ReactiveFormsModule, DatePickerModule, TranslateModule]
+    imports: [ReactiveFormsModule, DatePickerModule, TranslateModule, PageHeaderComponent]
 })
 export class AddCompteServerComponent {
 

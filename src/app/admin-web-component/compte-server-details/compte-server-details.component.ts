@@ -270,31 +270,24 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
   }
 
   private addBoitierAfterConfirmation(nbrBoitiersToAdd: number) {
-    this.compteServerService.addBoitiers(this.ID_COMPTE, nbrBoitiersToAdd).subscribe({
-      next: (res: any) => {
-        this.mode = false;
-        this.BOITIER_NOT_INSTALLED = res.compteServer.intervaleEnd - res.compteServer.intervaleStart + 1;
-        this.intervalFrom = res.compteServer.intervaleStart;
-        this.intervalTo = res.compteServer.intervaleEnd;
-        this.loadCompteDetails();
-        this.loadBoitierList();
-        this.toastr.success(
-          nbrBoitiersToAdd + ' ' + this.translate.instant('SERVER_DETAILS.DEVICES_ADDED'), 
-          this.translate.instant('COMMON.SUCCESS')
-        );
-        this.addForm.reset({ nbrBoitiers: 0 });
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        this.mode = true;
-        this.messageError = err.error?.message || this.translate.instant('COMMON.ERROR_OCCURRED');
-        this.toastr.error(
-          this.translate.instant('COMMON.ERROR_OCCURRED'), 
-          this.translate.instant('COMMON.ERROR')
-        );
-        this.cdr.detectChanges();
-      }
-    });
+    withToast(this.compteServerService.addBoitiers(this.ID_COMPTE, nbrBoitiersToAdd), this.toastr, this.translate, 'SERVER_DETAILS.DEVICES_ADDED')
+      .subscribe({
+        next: (res: any) => {
+          this.mode = false;
+          this.BOITIER_NOT_INSTALLED = res.compteServer.intervaleEnd - res.compteServer.intervaleStart + 1;
+          this.intervalFrom = res.compteServer.intervaleStart;
+          this.intervalTo = res.compteServer.intervaleEnd;
+          this.loadCompteDetails();
+          this.loadBoitierList();
+          this.addForm.reset({ nbrBoitiers: 0 });
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          this.mode = true;
+          this.messageError = err.error?.message || this.translate.instant('COMMON.ERROR_OCCURRED');
+          this.cdr.detectChanges();
+        }
+      });
   }
 
   extendIntervalOfBoitiers() {
@@ -320,27 +313,20 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
 
   changeBoitierStatus(boitier: Boitier) {
     const updatedBoitier = { ...boitier, etatBoitier: 'INSTALLED' };
-    this.boitierService.updateBoitier(updatedBoitier, this.ID_COMPTE, "etat").subscribe({
-      next: () => {
-        const index = this.boitiers.findIndex(x => x.idBoitier === boitier.idBoitier);
-        if (index !== -1) {
-          this.boitiers[index].etatBoitier = 'INSTALLED';
-          this.boitiers[index].stat = true;
+    withToast(this.boitierService.updateBoitier(updatedBoitier, this.ID_COMPTE, "etat"), this.toastr, this.translate, 'SERVER_DETAILS.DEVICE_INSTALLED')
+      .subscribe({
+        next: () => {
+          const index = this.boitiers.findIndex(x => x.idBoitier === boitier.idBoitier);
+          if (index !== -1) {
+            this.boitiers[index].etatBoitier = 'INSTALLED';
+            this.boitiers[index].stat = true;
+          }
+          this.BOITIER_INSTALLED++;
+          this.cdr.detectChanges();
+        },
+        error: () => {
+          this.cdr.detectChanges();
         }
-        this.BOITIER_INSTALLED++;
-        this.toastr.success(
-          this.translate.instant('SERVER_DETAILS.DEVICE_INSTALLED'), 
-          this.translate.instant('COMMON.SUCCESS')
-        );
-        this.cdr.detectChanges();
-      },
-      error: () => {
-        this.toastr.error(
-          this.translate.instant('SERVER_DETAILS.TABLE_NOT_EXIST'), 
-          this.translate.instant('COMMON.ERROR')
-        );
-        this.cdr.detectChanges();
-      }
-    });
+      });
   }
 }

@@ -5,6 +5,7 @@ import { CompteServer, IpAddress } from 'src/app/data/data';
 import { CompteServerService } from "../../service/compte-server.service";
 import { IpAddressService } from "../../service/ip-address.service";
 import { createPaginationState, pageChanged } from '../../shared/components/pagination-base';
+import { withToast } from '../../utils/toast.helpers';
 
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -137,50 +138,39 @@ export class ComptesServerComponentComponent implements OnInit {
   deleteCompteServer() {
     const selectedId = this.updateServerForm.get('idCompteClientServer')?.value;
     if (selectedId && confirm(this.translate.instant('WEB_ACCOUNTS.DELETE_CONFIRM'))) {
-      this.compteServerService.deleteCompteServer(selectedId).subscribe({
-        next: () => {
-          this.comptesServer = this.comptesServer.filter(x => x.idCompteClientServer !== selectedId);
-          this.toastr.success(
-            this.translate.instant('SERVER_ACCOUNTS.DELETE_SUCCESS'), 
-            this.translate.instant('COMMON.SUCCESS')
-          );
-        },
-        error: () => {
-          this.toastr.error(
-            this.translate.instant('SERVER_ACCOUNTS.DELETE_ERROR'), 
-            this.translate.instant('COMMON.ERROR')
-          );
-        }
-      });
+      withToast(this.compteServerService.deleteCompteServer(selectedId), this.toastr, this.translate, 'SERVER_ACCOUNTS.DELETE_SUCCESS')
+        .subscribe({
+          next: () => {
+            this.comptesServer = this.comptesServer.filter(x => x.idCompteClientServer !== selectedId);
+          },
+          error: () => {}
+        });
     }
   }
 
   updateCompteServer() {
     const updatedCompte = { ...this.updateServerForm.value, date_Expiration: this.dt.getTime() };
-    this.compteServerService.updateServerCompte(updatedCompte.idCompteClientServer, updatedCompte).subscribe({
-      next: (_compteUp: any) => {
-        this.mode = false;
-        const now = Date.now();
-        _compteUp.expired = now >= _compteUp.date_Expiration;
-        _compteUp.during = !_compteUp.expired;
+    withToast(this.compteServerService.updateServerCompte(updatedCompte.idCompteClientServer, updatedCompte), this.toastr, this.translate, 'SERVER_ACCOUNTS.UPDATE_SUCCESS')
+      .subscribe({
+        next: (_compteUp: any) => {
+          this.mode = false;
+          const now = Date.now();
+          _compteUp.expired = now >= _compteUp.date_Expiration;
+          _compteUp.during = !_compteUp.expired;
 
-        const index = this.comptesServer.findIndex(x => x.idCompteClientServer === _compteUp.idCompteClientServer);
-        if (index !== -1) {
-          this.comptesServer[index] = _compteUp;
+          const index = this.comptesServer.findIndex(x => x.idCompteClientServer === _compteUp.idCompteClientServer);
+          if (index !== -1) {
+            this.comptesServer[index] = _compteUp;
+          }
+          this.closeUpdateModal();
+          this.cdr.detectChanges();
+        },
+        error: (error) => {
+          this.mode = true;
+          this.messageError = error.error?.message || this.translate.instant('COMMON.AN_ERROR_OCCURRED');
+          this.cdr.detectChanges();
         }
-        this.toastr.success(
-          this.translate.instant('SERVER_ACCOUNTS.UPDATE_SUCCESS'), 
-          this.translate.instant('COMMON.SUCCESS')
-        );
-        this.closeUpdateModal();
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        this.mode = true;
-        this.messageError = error.error?.message || this.translate.instant('COMMON.AN_ERROR_OCCURRED');
-        this.cdr.detectChanges();
-      }
-    });
+      });
   }
 
   onSelect(compteServer: CompteServer) {

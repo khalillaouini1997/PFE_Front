@@ -4,13 +4,14 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 
 import { ToastrService } from 'ngx-toastr';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 
 @Component({
     selector: 'app-add-adresse-ip',
     standalone: true,
     templateUrl: './add-adresse-ip.component.html',
     styleUrls: ['./add-adresse-ip.component.css'],
-    imports: [ReactiveFormsModule, TranslateModule]
+    imports: [ReactiveFormsModule, TranslateModule, PageHeaderComponent]
 })
 export class AddAdresseIpComponent implements OnInit {
 

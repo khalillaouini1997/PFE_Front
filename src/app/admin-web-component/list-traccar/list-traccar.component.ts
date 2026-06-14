@@ -6,13 +6,16 @@ import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateModule } from '@ngx-translate/core';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
+import { SearchInputComponent } from '../../shared/components/search-input/search-input.component';
+import { EmptyTableComponent } from '../../shared/components/empty-table/empty-table.component';
 
 @Component({
     selector: 'app-list-traccar',
     standalone: true,
     templateUrl: './list-traccar.component.html',
     styleUrls: ['./list-traccar.component.css'],
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, TableModule, TranslateModule],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, TableModule, TranslateModule, PageHeaderComponent, SearchInputComponent, EmptyTableComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListTraccarComponent implements OnInit, OnDestroy {
@@ -63,8 +66,7 @@ export class ListTraccarComponent implements OnInit, OnDestroy {
     });
   }
 
-  searchWebAccount() {
-    const keyword = this.searchForm.get('keyWord')?.value || '';
+  searchWebAccount(keyword: string = '') {
     this.getLisTraccar(keyword);
   }
 

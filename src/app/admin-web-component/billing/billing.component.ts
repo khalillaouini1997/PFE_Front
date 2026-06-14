@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { withToast } from '../../utils/toast.helpers';
 import { BillingService } from 'src/app/service/billing.service';
 import { WebAccountService } from 'src/app/service/web-account.service';
 
@@ -80,23 +81,16 @@ export class BillingComponent implements OnInit {
     }
 
     this.loading = true;
-    this.billingService.calculateMonthlyBilling(accountId, year, month).subscribe({
-      next: (res: any) => {
-        this.billingResult = res?.data || res;
-        this.loading = false;
-        this.toastr.success(
-          this.translate.instant('BILLING.CALCULATION_SUCCESS'),
-          this.translate.instant('COMMON.SUCCESS')
-        );
-      },
-      error: (err) => {
-        this.loading = false;
-        this.toastr.error(
-          this.translate.instant('BILLING.CALCULATION_ERROR'),
-          this.translate.instant('COMMON.ERROR')
-        );
-      }
-    });
+    withToast(this.billingService.calculateMonthlyBilling(accountId, year, month), this.toastr, this.translate, 'BILLING.CALCULATION_SUCCESS')
+      .subscribe({
+        next: (res: any) => {
+          this.billingResult = res?.data || res;
+          this.loading = false;
+        },
+        error: (err) => {
+          this.loading = false;
+        }
+      });
   }
 
   refreshBilling() {
@@ -110,23 +104,16 @@ export class BillingComponent implements OnInit {
     }
 
     this.loading = true;
-    this.billingService.refreshMonthlyBilling(accountId, year, month).subscribe({
-      next: (res: any) => {
-        this.billingResult = res?.data || res;
-        this.loading = false;
-        this.toastr.success(
-          this.translate.instant('BILLING.REFRESH_SUCCESS'),
-          this.translate.instant('COMMON.SUCCESS')
-        );
-      },
-      error: (err) => {
-        this.loading = false;
-        this.toastr.error(
-          this.translate.instant('BILLING.REFRESH_ERROR'),
-          this.translate.instant('COMMON.ERROR')
-        );
-      }
-    });
+    withToast(this.billingService.refreshMonthlyBilling(accountId, year, month), this.toastr, this.translate, 'BILLING.REFRESH_SUCCESS')
+      .subscribe({
+        next: (res: any) => {
+          this.billingResult = res?.data || res;
+          this.loading = false;
+        },
+        error: (err) => {
+          this.loading = false;
+        }
+      });
   }
 
   downloadPdf() {
@@ -140,30 +127,23 @@ export class BillingComponent implements OnInit {
     }
 
     this.loading = true;
-    this.billingService.downloadPdfReport(accountId, year, month).subscribe({
-      next: (blob: Blob) => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `billing_report_${accountId}_${year}-${month}.pdf`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
-        this.loading = false;
-        this.toastr.success(
-          this.translate.instant('BILLING.PDF_DOWNLOAD_SUCCESS'),
-          this.translate.instant('COMMON.SUCCESS')
-        );
-      },
-      error: (err) => {
-        this.loading = false;
-        this.toastr.error(
-          this.translate.instant('BILLING.PDF_DOWNLOAD_ERROR'),
-          this.translate.instant('COMMON.ERROR')
-        );
-      }
-    });
+    withToast(this.billingService.downloadPdfReport(accountId, year, month), this.toastr, this.translate, 'BILLING.PDF_DOWNLOAD_SUCCESS')
+      .subscribe({
+        next: (blob: Blob) => {
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `billing_report_${accountId}_${year}-${month}.pdf`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(url);
+          this.loading = false;
+        },
+        error: (err) => {
+          this.loading = false;
+        }
+      });
   }
 
   formatCurrency(amount: number): string {

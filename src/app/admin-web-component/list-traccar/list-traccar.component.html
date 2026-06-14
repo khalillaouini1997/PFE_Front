@@ -1,23 +1,7 @@
 <div class="main-panel p-4">
-    <div class="premium-card mb-4 header-gradient shadow-sm p-4">
-        <div class="row align-items-center">
-            <div class="col-sm-6">
-                <h4 class="title text-white m-0 fw-bold"><i class="fa fa-server me-2"></i> {{ 'TRACCAR.TITLE' | translate }}</h4>
-                <p class="m-0 text-white-50 small opacity-75">{{ 'TRACCAR.SUBTITLE' | translate }}</p>
-            </div>
-            <div class="col-sm-6">
-                <form [formGroup]="searchForm" (ngSubmit)="searchWebAccount()" class="d-flex justify-content-end gap-2">
-                    <div class="input-group input-group-sm w-auto">
-                        <input type="text" class="form-control border-0 shadow-sm px-3 bg-white bg-opacity-10 text-white search-input-fancy"
-                            formControlName="keyWord" placeholder="{{ 'TRACCAR.SEARCH_PLACEHOLDER' | translate }}">
-                        <button class="btn btn-glass px-3 border-0" type="submit" title="{{ 'COMMON.SEARCH' | translate }}">
-                            <i class="fa fa-search"></i>
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+    <app-page-header titleKey="TRACCAR.TITLE" subtitleKey="TRACCAR.SUBTITLE">
+        <app-search-input placeholder="TRACCAR.SEARCH_PLACEHOLDER" (search)="searchWebAccount($event)" />
+    </app-page-header>
 
     <div class="premium-card p-0 overflow-hidden shadow-sm">
         @if(loading) {
@@ -73,14 +57,7 @@
                 </tr>
             </ng-template>
 
-            <ng-template pTemplate="emptymessage">
-                <tr>
-                    <td colspan="12" class="text-center py-5 text-secondary">
-                        <i class="fa fa-search fa-3x opacity-25 mb-2"></i>
-                        <p>{{ 'TRACCAR.NO_DATA' | translate }}</p>
-                    </td>
-                </tr>
-            </ng-template>
+            <app-empty-table [colspan]="12" icon="fa-search" messageKey="TRACCAR.NO_DATA" />
         </p-table>
         }
     </div>
