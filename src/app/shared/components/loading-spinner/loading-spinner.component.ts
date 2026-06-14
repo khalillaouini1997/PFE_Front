@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -11,4 +11,6 @@ import { CommonModule } from '@angular/common';
 export class LoadingSpinnerComponent {
   isLoading = input<boolean>(false);
   message = input<string>('Loading...');
+  size = input<'small' | 'medium' | 'large'>('medium');
+  overlay = input<boolean>(true);
 }

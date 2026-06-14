@@ -69,6 +69,8 @@ export class ListTraccarComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // Cleanup logic if needed in the future
+    this.searchForm?.reset();
+    this.traccarDtos = [];
+    this.totalRecords = 0;
   }
 }

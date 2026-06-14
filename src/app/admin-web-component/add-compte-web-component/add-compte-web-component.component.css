@@ -107,16 +107,15 @@ h5.mt-4 {
 }
 
 .btn-save-premium {
-    background: linear-gradient(135deg, #868CFF 0%, #4318FF 100%);
+    background: var(--primary-600);
     border: none;
     border-radius: 12px;
     padding: 12px 30px;
-    transition: all 0.3s ease;
+    transition: all var(--transition-fast) var(--ease-default);
 }
 
 .btn-save-premium:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px -5px rgba(67, 24, 255, 0.4);
+    background: var(--primary-700);
 }
 
 .btn-cancel-premium {

@@ -3,11 +3,11 @@
         <div class="logo-section d-flex align-items-center justify-content-between px-2">
             <div class="logo" [class.d-none]="isCollapsed()">
                 @if (owner==='TRACI') {
-                    <img alt="Traci" Src="http://traci.tn/images/logo_traci.png" class="mx-auto d-block w-50 h-auto opacity-75">
+                    <img alt="Traci" src="http://traci.tn/images/logo_traci.png" class="mx-auto d-block w-50 h-auto opacity-75" loading="lazy">
                 } @else if (owner==='TDS' || owner==='SLAMA') {
-                    <img alt="tds" Src="http://fleet.tn/images/logotds.png" class="mx-auto d-block w-50 h-auto">
+                    <img alt="TDS" src="http://fleet.tn/images/logotds.png" class="mx-auto d-block w-50 h-auto" loading="lazy">
                 } @else if (owner==='FINEK') {
-                    <img alt="finek" Src="https://finek.com.tn/images/loginfinek.png" class="mx-auto d-block w-75 h-auto">
+                    <img alt="FINEK" src="https://finek.com.tn/images/loginfinek.png" class="mx-auto d-block w-75 h-auto" loading="lazy">
                 }
             </div>
             <button class="toggle-sidebar-btn desktop-only" (click)="toggleSidebar()" type="button">
@@ -100,10 +100,10 @@
                 </div>
             </li>
             <li class="logout-item mt-2">
-                <a (click)="logout()" class="text-danger opacity-75" [title]="isCollapsed() ? ('SIDEBAR.LOGOUT' | translate) : ''">
+                <button type="button" class="btn btn-link text-danger opacity-75 w-100 text-start d-flex align-items-center gap-2 px-3 py-2" (click)="logout()" [attr.aria-label]="'SIDEBAR.LOGOUT' | translate" [title]="isCollapsed() ? ('SIDEBAR.LOGOUT' | translate) : ''">
                     <i class="material-icons">power_settings_new</i>
-                    <p>{{ 'SIDEBAR.LOGOUT' | translate }}</p>
-                </a>
+                    <span>{{ 'SIDEBAR.LOGOUT' | translate }}</span>
+                </button>
             </li>
         </ul>
     </div>

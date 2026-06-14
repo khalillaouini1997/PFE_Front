@@ -1,4 +1,4 @@
-import { Component, input, output, viewChild, inject, AfterViewInit, OnDestroy, ElementRef, effect } from '@angular/core';
+import { Component, input, output, viewChild, inject, AfterViewInit, OnDestroy, ElementRef, effect, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RealTime } from '../../../../data/data';
 import { MAP_CONSTANTS, CAR_STYLES, VALID_ANGLES, TIMEOUTS, REALTIME_CONSTANTS } from '../../../../shared/constants/app.constants';
@@ -25,6 +25,11 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
   private previousPositions = new Map<number, { lat: number; lng: number }>();
   private cdr = inject(ChangeDetectorRef);
   private animationFrameId?: number;
+  
+  // Map error state
+  mapError = signal<string | null>(null);
+  isMapLoading = signal<boolean>(true);
+  hasMapError = computed(() => this.mapError() !== null);
 
   constructor() {
     effect(() => {
@@ -51,21 +56,67 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
     const container = this.mapContainer()?.nativeElement;
     if (!container) return;
 
+    this.isMapLoading.set(true);
+    this.mapError.set(null);
 
+    try {
+      this.map = L.map(container).setView(
+        [MAP_CONSTANTS.DEFAULT_CENTER.lat, MAP_CONSTANTS.DEFAULT_CENTER.lng],
+        MAP_CONSTANTS.DEFAULT_ZOOM
+      );
 
-    this.map = L.map(container).setView(
-      [MAP_CONSTANTS.DEFAULT_CENTER.lat, MAP_CONSTANTS.DEFAULT_CENTER.lng],
-      MAP_CONSTANTS.DEFAULT_ZOOM
-    );
+      const tileLayer = L.tileLayer(MAP_CONSTANTS.TILE_LAYER_URL, {
+        attribution: MAP_CONSTANTS.ATTRIBUTION,
+        errorTileUrl: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjU2IiBoZWlnaHQ9IjI1NiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjU2IiBoZWlnaHQ9IjI1NiIgZmlsbD0iI2YxZjVmOSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjE0IiBmaWxsPSIjNjQ3NDhiIj5NYXAgVW5hdmFpbGFibGU8L3RleHQ+PC9zdmc+',
+        maxRetries: 3,
+        retryTimeout: 2000
+      });
 
-    L.tileLayer(MAP_CONSTANTS.TILE_LAYER_URL, {
-      attribution: MAP_CONSTANTS.ATTRIBUTION
-    }).addTo(this.map);
+      // Handle tile loading errors
+      tileLayer.on('tileerror', (event: any) => {
+        console.error('Map tile error:', event);
+        this.mapError.set('Map tiles failed to load. Check your internet connection.');
+        this.isMapLoading.set(false);
+      });
 
-    this.markerClusterGroup = L.markerClusterGroup();
-    this.map.addLayer(this.markerClusterGroup);
+      // Handle successful tile loading
+      tileLayer.on('load', () => {
+        this.isMapLoading.set(false);
+        this.mapError.set(null);
+      });
 
-    this.updateMarkers();
+      tileLayer.addTo(this.map);
+
+      this.markerClusterGroup = L.markerClusterGroup();
+      this.map.addLayer(this.markerClusterGroup);
+
+      this.updateMarkers();
+      
+      // Set loading to false after a timeout even if tiles don't load
+      setTimeout(() => {
+        if (this.isMapLoading()) {
+          this.isMapLoading.set(false);
+        }
+      }, 10000);
+      
+    } catch (error) {
+      console.error('Map initialization error:', error);
+      this.mapError.set('Failed to initialize map. Please refresh the page.');
+      this.isMapLoading.set(false);
+    }
+  }
+
+  retryMapLoad() {
+    this.mapError.set(null);
+    this.isMapLoading.set(true);
+    
+    if (this.map) {
+      this.map.remove();
+    }
+    
+    setTimeout(() => {
+      this.initMap();
+    }, 100);
   }
 
   private currentFleetHash = '';

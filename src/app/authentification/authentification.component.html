@@ -6,29 +6,37 @@
         </div>
         <h1 class="display1">Administration Web</h1>
         <p class="subhead">Administration Web</p>
-        <form #authentificationFrom="ngForm" (ngSubmit)="onSubmit()">
+        <form #authentificationFrom="ngForm" (ngSubmit)="onSubmit()" novalidate [attr.aria-busy]="loading">
             <div id="form-login-username" class="form-group">
+                <label for="username" class="visually-hidden">Username</label>
                 <input id="username" class="form-control" name="username" placeholder="Login" [(ngModel)]="login"
-                    type="text" alt="login" required />
+                    type="text" autocomplete="username" required #usernameInput="ngModel"
+                    [attr.aria-invalid]="usernameInput.invalid && (usernameInput.dirty || usernameInput.touched)"
+                    (ngModelChange)="errorVisible = false" />
                 <span class="form-highlight"></span>
                 <span class="form-bar"></span>
             </div>
             <div id="form-login-password" class="form-group">
+                <label for="passwd" class="visually-hidden">Password</label>
                 <input id="passwd" class="form-control" name="password" placeholder="Mot de passe"
-                    [(ngModel)]="password" type="password" alt="password" required>
+                    [(ngModel)]="password" type="password" autocomplete="current-password" required
+                    #passwordInput="ngModel" [attr.aria-invalid]="passwordInput.invalid && (passwordInput.dirty || passwordInput.touched)"
+                    (ngModelChange)="errorVisible = false">
                 <span class="form-highlight"></span>
                 <span class="form-bar"></span>
             </div>
             @if (errorVisible) {
-            <div class="alert alert-danger alert-dismissible" role="alert">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+            <div class="alert alert-danger alert-dismissible" role="alert" aria-live="assertive">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="errorVisible = false"><span
                         aria-hidden="true">&times;</span></button>
-                <strong>Danger!</strong> {{errorMessage}}
+                <strong>Login failed.</strong> {{errorMessage}}
             </div>
             }
             <div>
-                <button type="submit" [disabled]="!authentificationFrom.form.valid"
-                    class="btn btn-block btn-info ripple-effect" alt="sign in">Login</button>
+                <button type="submit" [disabled]="!authentificationFrom.form.valid || loading"
+                    class="btn btn-block btn-info ripple-effect" aria-label="Sign in to the admin area">
+                    {{ loading ? 'Signing in…' : 'Login' }}
+                </button>
             </div>
 
 

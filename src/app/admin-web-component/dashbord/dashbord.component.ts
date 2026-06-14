@@ -97,7 +97,7 @@ export class DashbordComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // Cleanup handled by sub-components
+    this.store.ngOnDestroy();
   }
 
   // ── Forms ─────────────────────────────────────────────────────────────────

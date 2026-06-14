@@ -60,11 +60,11 @@
 
                     <div class="col-12">
                         <div class="mb-3 px-1">
-                            <label class="small fw-bold text-secondary text-uppercase mb-2">{{
+                            <label for="configOptions" class="small fw-bold text-secondary text-uppercase mb-2">{{
                                 'WEB_CONFIG.ACCOUNT_OPTIONS' | translate }}</label>
-                            <ng-multiselect-dropdown [placeholder]="'WEB_CONFIG.SELECT_OPTIONS' | translate"
+                            <ng-multiselect-dropdown id="configOptions" [placeholder]="'WEB_CONFIG.SELECT_OPTIONS' | translate"
                                 [settings]="dropdownSettings" [data]="options()" formControlName="options"
-                                class="premium-multiselect">
+                                class="premium-multiselect" aria-label="{{ 'WEB_CONFIG.ACCOUNT_OPTIONS' | translate }}">
                             </ng-multiselect-dropdown>
                         </div>
                     </div>
@@ -347,7 +347,7 @@
             <div class="p-4 bg-light overflow-y-auto flex-grow-1">
                 @if (selectedBoitiersIds().length > 0) {
                 <div class="bg-white rounded-4 p-3 mb-4 shadow-sm border border-secondary border-opacity-10 d-flex align-items-center gap-3">
-                    <label class="small fw-bold text-secondary text-uppercase m-0">{{ 'WEB_CONFIG.MULTI_DEVICE_APP' | translate }} ({{selectedBoitiersIds().length}})</label>
+                    <span class="small fw-bold text-secondary text-uppercase m-0">{{ 'WEB_CONFIG.MULTI_DEVICE_APP' | translate }} ({{selectedBoitiersIds().length}})</span>
                     <div class="d-flex flex-wrap gap-2">
                         @for (id of selectedBoitiersIds(); track id) {
                         <span class="badge bg-indigo-50 text-indigo border border-indigo-200 rounded-pill px-3 py-2 text-primary"
@@ -371,9 +371,9 @@
                             <div class="row g-3">
                                 <div class="col-sm-6" *ngIf="dateBoolean">
                                     <div class="bg-light rounded-3 overflow-hidden shadow-sm border-0 p-3">
-                                        <label class="form-label text-secondary fw-bold text-uppercase mb-2"
+                                        <label for="recalculateStartDate" class="form-label text-secondary fw-bold text-uppercase mb-2"
                                                style="font-size: 0.75rem; letter-spacing: 0.5px;">{{ 'WEB_CONFIG.START_DATE' | translate }}</label>
-                                        <p-datepicker formControlName="datestart"
+                                        <p-datepicker id="recalculateStartDate" formControlName="datestart"
                                                       dateFormat="dd-mm-yy" [showIcon]="true" [appendTo]="'body'" [showTime]="true"
                                                       [maxDate]="maxDate"
                                                       [showOnFocus]="true"
@@ -386,11 +386,11 @@
 
                                 <div [class.col-sm-6]="dateBoolean" [class.col-sm-12]="!dateBoolean">
                                     <div class="bg-light rounded-3 overflow-hidden shadow-sm border-0 p-3">
-                                        <label class="form-label text-secondary fw-bold text-uppercase mb-2"
+                                        <label for="recalculateType" class="form-label text-secondary fw-bold text-uppercase mb-2"
                                                style="font-size: 0.75rem; letter-spacing: 0.5px;">{{ 'WEB_CONFIG.RECALC_NATURE' | translate }}</label>
                                         <div class="input-group input-group-lg">
                                             <span class="input-group-text bg-transparent border-0 text-muted px-3"><i class="fa fa-list-ul"></i></span>
-                                            <select formControlName="typeRecalcule"
+                                            <select id="recalculateType" formControlName="typeRecalcule"
                                                     class="form-select bg-white border-0 shadow-sm fs-6 px-3 py-2 fw-medium text-dark cursor-pointer"
                                                     [title]="'WEB_CONFIG.RECALC_NATURE' | translate">
                                                 <option *ngFor="let type of recalculateTypes" [value]="type.value">{{ type.label | translate }}</option>
@@ -479,9 +479,9 @@
                                     <div class="bg-light p-3 rounded-3 border border-secondary border-opacity-10 shadow-sm h-100">
                                         <div class="d-flex align-items-center gap-2 mb-2">
                                             <i class="fa fa-route text-primary"></i>
-                                            <label class="form-label text-secondary fw-bold text-uppercase m-0" style="font-size: 0.75rem;">Path Min</label>
+                                            <label for="pathMinSec" class="form-label text-secondary fw-bold text-uppercase m-0" style="font-size: 0.75rem;">Path Min</label>
                                         </div>
-                                        <select class="form-select bg-white border border-secondary border-opacity-25 shadow-none w-100" formControlName="pathMinSec" title="Path Min (sec)">
+                                        <select id="pathMinSec" class="form-select bg-white border border-secondary border-opacity-25 shadow-none w-100" formControlName="pathMinSec" title="Path Min (sec)">
                                             @for (t of [30,60,90,120,150,180,210,240,270,300]; track t) {
                                                 <option [value]="t">{{t}}s</option>
                                             }
@@ -493,9 +493,9 @@
                                     <div class="bg-light p-3 rounded-3 border border-secondary border-opacity-10 shadow-sm h-100">
                                         <div class="d-flex align-items-center gap-2 mb-2">
                                             <i class="fa fa-stop-circle text-danger"></i>
-                                            <label class="form-label text-secondary fw-bold text-uppercase m-0" style="font-size: 0.75rem;">Stop Min</label>
+                                            <label for="stopMinSec" class="form-label text-secondary fw-bold text-uppercase m-0" style="font-size: 0.75rem;">Stop Min</label>
                                         </div>
-                                        <select class="form-select bg-white border border-secondary border-opacity-25 shadow-none w-100" formControlName="stopMinSec" title="Stop Min (sec)">
+                                        <select id="stopMinSec" class="form-select bg-white border border-secondary border-opacity-25 shadow-none w-100" formControlName="stopMinSec" title="Stop Min (sec)">
                                             @for (t of [30,60,90,120,150,180,210,240,270,300]; track t) {
                                                 <option [value]="t">{{t}}s</option>
                                             }
@@ -507,9 +507,9 @@
                                     <div class="bg-light p-3 rounded-3 border border-secondary border-opacity-10 shadow-sm h-100">
                                         <div class="d-flex align-items-center gap-2 mb-2">
                                             <i class="fa fa-pause-circle text-warning"></i>
-                                            <label class="form-label text-secondary fw-bold text-uppercase m-0" style="font-size: 0.75rem;">Pause Min</label>
+                                            <label for="pauseMinSec" class="form-label text-secondary fw-bold text-uppercase m-0" style="font-size: 0.75rem;">Pause Min</label>
                                         </div>
-                                        <select class="form-select bg-white border border-secondary border-opacity-25 shadow-none w-100" formControlName="pauseMinSec" title="Pause Min (sec)">
+                                        <select id="pauseMinSec" class="form-select bg-white border border-secondary border-opacity-25 shadow-none w-100" formControlName="pauseMinSec" title="Pause Min (sec)">
                                             @for (t of [30,60,90,120,150,180,210,240,270,300]; track t) {
                                                 <option [value]="t">{{t}}s</option>
                                             }
@@ -521,9 +521,9 @@
                                     <div class="bg-light p-3 rounded-3 border border-secondary border-opacity-10 shadow-sm h-100">
                                         <div class="d-flex align-items-center gap-2 mb-2">
                                             <i class="fa fa-arrows-alt-h text-info"></i>
-                                            <label class="form-label text-secondary fw-bold text-uppercase m-0" style="font-size: 0.75rem;">Distance Min (m)</label>
+                                            <label for="distanceMinMeter" class="form-label text-secondary fw-bold text-uppercase m-0" style="font-size: 0.75rem;">Distance Min (m)</label>
                                         </div>
-                                        <select class="form-select bg-white border border-secondary border-opacity-25 shadow-none w-100" formControlName="distanceMinMeter" title="Distance Min (m)">
+                                        <select id="distanceMinMeter" class="form-select bg-white border border-secondary border-opacity-25 shadow-none w-100" formControlName="distanceMinMeter" title="Distance Min (m)">
                                             @for (d of [5,10,20,50,100,300,500,1000]; track d) {
                                                 <option [value]="d">{{d}}m</option>
                                             }
@@ -535,9 +535,9 @@
                                     <div class="bg-light p-3 rounded-3 border border-secondary border-opacity-10 shadow-sm h-100">
                                         <div class="d-flex align-items-center gap-2 mb-2">
                                             <i class="fa fa-tachometer-alt text-success"></i>
-                                            <label class="form-label text-secondary fw-bold text-uppercase m-0" style="font-size: 0.75rem;">Vitesse Min (km/h)</label>
+                                            <label for="pathMinSpeed" class="form-label text-secondary fw-bold text-uppercase m-0" style="font-size: 0.75rem;">Vitesse Min (km/h)</label>
                                         </div>
-                                        <select class="form-select bg-white border border-secondary border-opacity-25 shadow-none w-100" formControlName="pathMinSpeed" title="Vitesse Min (km/h)">
+                                        <select id="pathMinSpeed" class="form-select bg-white border border-secondary border-opacity-25 shadow-none w-100" formControlName="pathMinSpeed" title="Vitesse Min (km/h)">
                                             @for (s of [1,5,10,15,20]; track s) {
                                                 <option [value]="s">{{s}} km/h</option>
                                             }
@@ -574,8 +574,8 @@
                             <div class="row g-3">
                                 <div class="col-md-8">
                                     <div class="bg-light p-3 rounded-3 border border-secondary border-opacity-10 shadow-sm h-100">
-                                        <label class="form-label text-secondary fw-bold text-uppercase mb-2" style="font-size: 0.7rem;">Rawstream IP Address</label>
-                                        <select class="form-select bg-white border border-secondary border-opacity-25 shadow-none w-100"
+                                        <label for="rawstreamIpAddress" class="form-label text-secondary fw-bold text-uppercase mb-2" style="font-size: 0.7rem;">Rawstream IP Address</label>
+                                        <select id="rawstreamIpAddress" class="form-select bg-white border border-secondary border-opacity-25 shadow-none w-100"
                                                 formControlName="idIpAdresse" title="Rawstream IP">
                                             @for (ip of ipAddresses(); track ip.idIpAdresse) {
                                                 <option [ngValue]="ip.idIpAdresse">{{ip.label}} ({{ip.value}})</option>
@@ -585,8 +585,8 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="bg-light p-3 rounded-3 border border-secondary border-opacity-10 shadow-sm h-100">
-                                        <label class="form-label text-secondary fw-bold text-uppercase mb-2" style="font-size: 0.7rem;">Stream ID</label>
-                                        <input type="number" class="form-control bg-white border border-secondary border-opacity-25 shadow-none w-100"
+                                        <label for="streamIdInput" class="form-label text-secondary fw-bold text-uppercase mb-2" style="font-size: 0.7rem;">Stream ID</label>
+                                        <input id="streamIdInput" type="number" class="form-control bg-white border border-secondary border-opacity-25 shadow-none w-100"
                                                 formControlName="streamId" placeholder="0" title="Stream ID">
                                     </div>
                                 </div>
@@ -611,9 +611,9 @@
                             <div class="row g-4">
                                 <div class="col-sm-6" [formGroup]="lastIdForm">
                                     <div class="bg-light p-3 rounded-3 border border-secondary border-opacity-10 shadow-sm">
-                                        <label class="form-label text-secondary fw-bold text-uppercase mb-2" style="font-size: 0.7rem;">{{ 'WEB_CONFIG.LAST_ID' | translate }}</label>
+                                        <label for="lastIdValue" class="form-label text-secondary fw-bold text-uppercase mb-2" style="font-size: 0.7rem;">{{ 'WEB_CONFIG.LAST_ID' | translate }}</label>
                                         <div class="input-group">
-                                            <input type="number" class="form-control bg-white border border-secondary border-opacity-25 px-3 py-2 text-dark shadow-none"
+                                            <input id="lastIdValue" type="number" class="form-control bg-white border border-secondary border-opacity-25 px-3 py-2 text-dark shadow-none"
                                                 formControlName="lastIdValue" placeholder="0" [title]="'WEB_CONFIG.LAST_ID' | translate">
                                             <button type="button" class="btn btn-primary px-3 transition-all"
                                                 (click)="resetLastId()" [disabled]="loadingResetLastId()">
@@ -628,7 +628,7 @@
                                 <div class="col-sm-6">
                                     <div class="bg-light p-3 rounded-3 border border-secondary border-opacity-10 shadow-sm h-100 d-flex flex-column justify-content-between">
                                         <div>
-                                            <label class="form-label text-secondary fw-bold text-uppercase mb-2" style="font-size: 0.7rem;">Odometer Reset</label>
+                                            <span class="form-label text-secondary fw-bold text-uppercase mb-2" style="font-size: 0.7rem;">Odometer Reset</span>
                                         </div>
                                         <button type="button" class="btn btn-outline-danger w-100 py-2 rounded-3 transition-all fw-bold"
                                             (click)="resetOdometre()" [disabled]="loadingResetOdometre()">
@@ -697,11 +697,11 @@
             <div class="modal-footer p-3 bg-white border-top border-secondary border-opacity-10 rounded-bottom-4 flex-shrink-0">
                 <div class="w-100 d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center gap-3">
-                        <div class="notification-count px-3 py-2 bg-light rounded-pill small fw-bold text-secondary border-0 shadow-sm d-flex align-items-center gap-2 cursor-pointer"
-                            (click)="activeTab.set('logs')">
+                        <button type="button" class="notification-count px-3 py-2 bg-light rounded-pill small fw-bold text-secondary border-0 shadow-sm d-flex align-items-center gap-2 cursor-pointer"
+                            (click)="activeTab.set('logs')" (keydown.enter)="activeTab.set('logs')" (keydown.space)="activeTab.set('logs'); $event.preventDefault()" aria-label="Open logs tab">
                             <i class="fa fa-bell" [class.text-warning]="notifications().length > 0" [class.text-secondary]="notifications().length === 0"></i>
                             <span>{{notifications().length}} Logs</span>
-                        </div>
+                        </button>
                         <div class="badge bg-indigo bg-opacity-10 text-indigo px-3 py-2 rounded-pill border border-indigo border-opacity-10">
                             {{ 'SERVER_DETAILS.TERMINAL' | translate }}: {{selectedBoitierId()}}
                         </div>

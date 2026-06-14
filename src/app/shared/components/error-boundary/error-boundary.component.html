@@ -1,16 +1,33 @@
-<div class="error-boundary" *ngIf="error()">
+<div class="error-boundary" *ngIf="error()" [class.severity-error]="getSeverity() === 'error'" [class.severity-warning]="getSeverity() === 'warning'" [class.severity-info]="getSeverity() === 'info'" role="alert" aria-live="assertive" tabindex="-1" (keydown)="onKeydown($event)">
   <div class="error-content">
-    <div class="error-icon">⚠️</div>
-    <h2 class="error-title">Something went wrong</h2>
-    <p class="error-message">{{ error()?.message || 'An unexpected error occurred' }}</p>
-    <div class="error-actions">
-      <button class="btn-primary" (click)="onRetry()">Retry</button>
-      <button class="btn-secondary" (click)="onGoHome()">Go to Dashboard</button>
+    <div class="error-icon-wrapper">
+      <i class="material-icons error-icon">{{ getIcon() }}</i>
     </div>
-    <details class="error-details" *ngIf="showDetails">
-      <summary>Error Details</summary>
-      <pre>{{ error() | json }}</pre>
-    </details>
+    <div class="error-text-content">
+      <h2 class="error-title">Something went wrong</h2>
+      <p class="error-message">{{ errorContext()?.message || 'An unexpected error occurred' }}</p>
+      @if (errorContext()?.suggestedAction) {
+        <p class="error-suggestion">{{ errorContext()?.suggestedAction }}</p>
+      }
+    </div>
+    <div class="error-actions">
+      @if (errorContext()?.retryable) {
+        <button class="btn-primary" (click)="onRetry()" type="button">
+          <i class="material-icons">refresh</i>
+          <span>Retry</span>
+        </button>
+      }
+      <button class="btn-secondary" (click)="onGoHome()" type="button">
+        <i class="material-icons">home</i>
+        <span>Go to Dashboard</span>
+      </button>
+    </div>
+    @if (showDetails) {
+      <details class="error-details">
+        <summary>Error Details</summary>
+        <pre>{{ error() | json }}</pre>
+      </details>
+    }
   </div>
 </div>
 <ng-content *ngIf="!error()"></ng-content>

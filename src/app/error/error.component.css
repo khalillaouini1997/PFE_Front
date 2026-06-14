@@ -3,7 +3,7 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--slate-800);
   padding: 20px;
 }
 
@@ -55,25 +55,23 @@
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-fast) var(--ease-default);
 }
 
 .btn-primary {
-  background: #667eea;
+  background: var(--primary-600);
   color: white;
 }
 
 .btn-primary:hover {
-  background: #5a67d8;
-  transform: translateY(-1px);
+  background: var(--primary-700);
 }
 
 .btn-secondary {
-  background: #e2e8f0;
-  color: #2d3748;
+  background: var(--slate-200);
+  color: var(--slate-800);
 }
 
 .btn-secondary:hover {
-  background: #cbd5e0;
-  transform: translateY(-1px);
+  background: var(--slate-300);
 }

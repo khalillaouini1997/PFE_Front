@@ -232,18 +232,17 @@ table>thead>tr>th,
 }
 
 .header-gradient {
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  background: var(--primary-600);
 }
 
 .btn-purple {
-  background: #7c3aed;
+  background: var(--primary-600);
   color: white;
-  transition: all 0.3s ease;
+  transition: all var(--transition-fast) var(--ease-default);
 }
 
 .btn-purple:hover {
-  background: #6d28d9;
-  transform: translateY(-1px);
+  background: var(--primary-700);
 }
 
 .scale-110 {

@@ -47,7 +47,12 @@
               "node_modules/leaflet.markercluster/dist/leaflet.markercluster.js"
             ],
             "browser": "src/main.ts",
-            "serviceWorker": "ngsw-config.json"
+            "serviceWorker": "ngsw-config.json",
+            "allowedCommonJsDependencies": [
+              "file-saver",
+              "sockjs-client",
+              "@stomp/stompjs"
+            ]
           },
           "configurations": {
             "production": {

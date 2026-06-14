@@ -10,7 +10,7 @@
 
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://maxcdn.bootstrapcdn.com http://maxcdn.bootstrapcdn.com https://fonts.googleapis.com http://fonts.googleapis.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com https://maxcdn.bootstrapcdn.com; img-src 'self' data: https: http://fleet.tn; connect-src 'self' http://localhost:8080 ws://localhost:8080;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' http://localhost:8400; style-src 'self' 'unsafe-inline' https://maxcdn.bootstrapcdn.com http://maxcdn.bootstrapcdn.com https://fonts.googleapis.com http://fonts.googleapis.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com https://maxcdn.bootstrapcdn.com; img-src 'self' data: https: http://fleet.tn blob:; connect-src 'self' http://localhost:8080 ws://localhost:8080 http://localhost:8400;" data-impeccable-csp-original="ZGVmYXVsdC1zcmMgJ3NlbGYnOyBzY3JpcHQtc3JjICdzZWxmJyAndW5zYWZlLWlubGluZScgJ3Vuc2FmZS1ldmFsJzsgc3R5bGUtc3JjICdzZWxmJyAndW5zYWZlLWlubGluZScgaHR0cHM6Ly9tYXhjZG4uYm9vdHN0cmFwY2RuLmNvbSBodHRwOi8vbWF4Y2RuLmJvb3RzdHJhcGNkbi5jb20gaHR0cHM6Ly9mb250cy5nb29nbGVhcGlzLmNvbSBodHRwOi8vZm9udHMuZ29vZ2xlYXBpcy5jb20gaHR0cHM6Ly9jZG5qcy5jbG91ZGZsYXJlLmNvbSBodHRwczovL2Nkbi5qc2RlbGl2ci5uZXQ7IGZvbnQtc3JjICdzZWxmJyBodHRwczovL2ZvbnRzLmdzdGF0aWMuY29tIGh0dHBzOi8vY2RuanMuY2xvdWRmbGFyZS5jb20gaHR0cHM6Ly9tYXhjZG4uYm9vdHN0cmFwY2RuLmNvbTsgaW1nLXNyYyAnc2VsZicgZGF0YTogaHR0cHM6IGh0dHA6Ly9mbGVldC50bjsgY29ubmVjdC1zcmMgJ3NlbGYnIGh0dHA6Ly9sb2NhbGhvc3Q6ODA4MCB3czovL2xvY2FsaG9zdDo4MDgwOw==">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="theme-color" content="#1976d2">
@@ -31,6 +31,9 @@
 <body>
   <app-root></app-root>
   <noscript>Please enable JavaScript to continue using this application.</noscript>
+<!-- impeccable-live-start -->
+<script src="http://localhost:8400/live.js"></script>
+<!-- impeccable-live-end -->
 </body>
 
 </html>

@@ -1,0 +1,44 @@
+@if (isVisible()) {
+  <div 
+    class="error-banner" 
+    [class.severity-error]="getSeverity() === 'error'"
+    [class.severity-warning]="getSeverity() === 'warning'"
+    [class.severity-info]="getSeverity() === 'info'"
+    role="alert"
+    aria-live="assertive"
+    tabindex="-1"
+    (keydown)="onKeydown($event)"
+  >
+    <div class="error-banner-content">
+      <div class="error-banner-icon">
+        <i class="material-icons">{{ getIcon() }}</i>
+      </div>
+      <div class="error-banner-message">
+        <p class="error-banner-text">{{ error()?.message }}</p>
+      </div>
+      <div class="error-banner-actions">
+        @if (error()?.retryAction) {
+          <button 
+            class="error-banner-btn retry-btn" 
+            (click)="onRetry()"
+            type="button"
+            aria-label="Retry"
+          >
+            <i class="material-icons">refresh</i>
+            <span>Retry</span>
+          </button>
+        }
+        @if (error()?.dismissible !== false) {
+          <button 
+            class="error-banner-btn dismiss-btn" 
+            (click)="dismiss()"
+            type="button"
+            aria-label="Dismiss"
+          >
+            <i class="material-icons">close</i>
+          </button>
+        }
+      </div>
+    </div>
+  </div>
+}
