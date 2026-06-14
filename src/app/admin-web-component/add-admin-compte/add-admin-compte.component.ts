@@ -66,23 +66,16 @@ export class AddAdminCompteComponent {
     }
 
     const payload: AdministratorCompte = this.adminForm.value;
-    this.adminAccountService.addAdminCompte(payload)
+    withToast(this.adminAccountService.addAdminCompte(payload), this.toastr, this.translate, 'ADMIN_ACCOUNTS.ADD_SUCCESS')
       .pipe(
-        tap(() => {
-          this.toastr.success(
-            this.translate.instant('ADMIN_ACCOUNTS.ADD_SUCCESS'), 
-            this.translate.instant('COMMON.SUCCESS')
-          );
-          this.adminForm.reset({ role: 'WEBADMIN', idTraccar: 0, useFcm: false });
-        }),
-        catchError(error => {
-          this.toastr.error(
-            this.translate.instant('ADMIN_ACCOUNTS.ADD_ERROR'), 
-            this.translate.instant('COMMON.ERROR')
-          );
+        catchError(() => {
           return of(null);
         })
       )
-      .subscribe();
+      .subscribe({
+        next: () => {
+          this.adminForm.reset({ role: 'WEBADMIN', idTraccar: 0, useFcm: false });
+        }
+      });
   }
 }

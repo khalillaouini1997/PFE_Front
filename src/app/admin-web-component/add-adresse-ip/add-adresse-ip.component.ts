@@ -4,6 +4,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 
 import { ToastrService } from 'ngx-toastr';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { withToast } from '../../utils/toast.helpers';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 
 @Component({
@@ -52,20 +53,12 @@ export class AddAdresseIpComponent implements OnInit {
       return;
     }
 
-    this.ipAddressService.saveIpAddress(this.ipForm.value).subscribe({
-      next: () => {
-        this.toastr.success(
-          this.translate.instant('IP_ADDRESS.SAVED'), 
-          this.translate.instant('COMMON.SUCCESS')
-        );
-        this.ipForm.reset({ typeConnection: 'SSH' });
-      },
-      error: () => {
-        this.toastr.error(
-          this.translate.instant('IP_ADDRESS.ERROR_SAVING'), 
-          this.translate.instant('COMMON.ERROR')
-        );
-      }
-    });
+    withToast(this.ipAddressService.saveIpAddress(this.ipForm.value), this.toastr, this.translate, 'IP_ADDRESS.SAVED')
+      .subscribe({
+        next: () => {
+          this.ipForm.reset({ typeConnection: 'SSH' });
+        },
+        error: () => {}
+      });
   }
 }

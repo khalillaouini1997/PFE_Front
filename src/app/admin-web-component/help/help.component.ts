@@ -6,13 +6,16 @@ import { InterventionService } from "../../service/intervention.service";
 import { TooltipModule } from 'primeng/tooltip';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DatePipe, CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
+import { EmptyTableComponent } from '../../shared/components/empty-table/empty-table.component';
 
 @Component({
     selector: 'app-help',
     standalone: true,
     templateUrl: './help.component.html',
     styleUrls: ['./help.component.css'],
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, DatePipe, TooltipModule]
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, DatePipe, TooltipModule, TranslateModule, PageHeaderComponent, EmptyTableComponent]
 })
 export class HelpComponent implements OnInit {
 

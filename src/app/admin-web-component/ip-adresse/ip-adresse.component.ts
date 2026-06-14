@@ -5,6 +5,7 @@ import { IpAddressService } from 'src/app/service/ip-address.service';
 import { createPaginationState, pageChanged } from '../../shared/components/pagination-base';
 import { catchError } from "rxjs/operators";
 import { of } from "rxjs";
+import { withToast } from '../../utils/toast.helpers';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
@@ -83,17 +84,24 @@ export class IpAdresseComponent implements OnInit {
             return of('Failed to delete IP address: ' + error.message);
           })
         )
-        .subscribe({
-          next: () => {
+        .pipe(
+          tap(() => {
             this.toastr.success(
               this.translate.instant('WEB_ACCOUNTS.DELETE_SUCCESS'), 
               this.translate.instant('COMMON.SUCCESS')
             );
-            this.getAllIpAddresse(this.searchForm.get('keyWord')?.value, this.pagination.bigCurrentPage - 1, this.pagination.itemsPerPage);
+          })
+        )
+        .subscribe({
+          next: () => {
+            this.getAllIpAddresse(this.searchForm.get('keyWord')?.value, this.bigCurrentPage - 1, this.itemsPerPage);
           },
           error: (error) => {
             this.toastr.error(this.translate.instant('COMMON.ERROR'), this.translate.instant('COMMON.ERROR'));
           }
+        });
+    }
+  }
         });
     }
   }

@@ -10,6 +10,7 @@ import { createPaginationState, pageChanged } from '../../shared/components/pagi
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { STORAGE_KEYS } from 'src/app/shared/constants';
+import { withToast } from '../../utils/toast.helpers';
 
 
 import { TableModule } from 'primeng/table';
@@ -167,22 +168,14 @@ export class ComptesWebComponentComponent implements OnInit {
   deleteWebAccount() {
     const res = confirm(this.translate.instant('WEB_ACCOUNTS.DELETE_CONFIRM'));
     if (res) {
-      this.webAccountService.deleteWebAccount(this.selectedWebAccount.idCompteClientWeb).subscribe({
-        next: () => {
-          this.toastr.success(
-            this.translate.instant('WEB_ACCOUNTS.DELETE_SUCCESS'), 
-            this.translate.instant('COMMON.SUCCESS')
-          );
-          this.loadingInProgress = false; // Reset guard for reload after delete
-          this.loadWebAccounts();
-        },
-        error: () => {
-          this.toastr.error(
-            this.translate.instant('WEB_ACCOUNTS.DELETE_ERROR'), 
-            this.translate.instant('COMMON.ERROR')
-          );
-        }
-      });
+      withToast(this.webAccountService.deleteWebAccount(this.selectedWebAccount.idCompteClientWeb), this.toastr, this.translate, 'WEB_ACCOUNTS.DELETE_SUCCESS')
+        .subscribe({
+          next: () => {
+            this.loadingInProgress = false;
+            this.loadWebAccounts();
+          },
+          error: () => {}
+        });
     }
   }
 }
