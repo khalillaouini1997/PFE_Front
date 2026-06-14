@@ -10,14 +10,15 @@ export class TrapFocusDirective {
   constructor(private el: ElementRef<HTMLElement>) {}
 
   @HostListener('keydown.tab', ['$event'])
-  onTab(event: KeyboardEvent) {
+  onTab(event: Event) {
     if (!this.enabled()) return;
 
+    const keyboardEvent = event as KeyboardEvent;
     const focusableElements = this.getFocusableElements();
     const firstElement = focusableElements[0];
     const lastElement = focusableElements[focusableElements.length - 1];
 
-    if (event.shiftKey) {
+    if (keyboardEvent.shiftKey) {
       if (document.activeElement === firstElement) {
         event.preventDefault();
         lastElement.focus();

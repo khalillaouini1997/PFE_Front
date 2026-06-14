@@ -15,4 +15,8 @@ export class SkeletonComponent {
   lines = input<number>(3);
   count = input<number>(1);
   className = input<string>('');
+
+  getArray(count: number): number[] {
+    return Array(count);
+  }
 }

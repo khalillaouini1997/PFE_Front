@@ -155,22 +155,9 @@
 }
 
 /* ===== Dark Mode Tokens ===== */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --card-bg: var(--slate-800);
-    --card-border: 1px solid var(--slate-700);
-    
-    --slate-50: #0f172a;
-    --slate-100: #1e293b;
-    --slate-200: #334155;
-    --slate-300: #475569;
-    --slate-400: #64748b;
-    --slate-500: #94a3b8;
-    --slate-600: #cbd5e1;
-    --slate-700: #e2e8f0;
-    --slate-800: #f1f5f9;
-    --slate-900: #f8fafc;
-  }
+[data-theme='dark'] {
+  --card-bg: var(--slate-800);
+  --card-border: 1px solid var(--slate-700);
 }
 
 /* ===== Accessibility: High Contrast Mode ===== */

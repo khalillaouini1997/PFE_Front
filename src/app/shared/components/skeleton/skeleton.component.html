@@ -1,4 +1,4 @@
-@for (i of count(); track i) {
+@for (i of getArray(count()); track $index) {
   <div 
     class="skeleton skeleton-{{ variant() }}" 
     [class]="className()"
@@ -6,8 +6,8 @@
     [style.height]="typeof height() === 'number' ? height() + 'px' : height()"
   >
     @if (variant() === 'text') {
-      @for (line of lines(); track line) {
-        <div class="skeleton-line" [style.width]="line === lines() ? '70%' : '100%'"></div>
+      @for (line of getArray(lines()); track $index) {
+        <div class="skeleton-line" [style.width]="$index === lines() - 1 ? '70%' : '100%'"></div>
       }
     }
     @if (variant() === 'card') {

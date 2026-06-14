@@ -34,8 +34,6 @@
             "styles": [
               "src/styles.scss",
               "node_modules/primeicons/primeicons.css",
-              "src/assets/css/yaozl.css",
-              "src/assets/css/style.css",
               "src/assets/css/ng2-toastr.min.css",
               "node_modules/ngx-toastr/toastr.css",
               "node_modules/leaflet/dist/leaflet.css",
