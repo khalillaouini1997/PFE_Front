@@ -6,25 +6,26 @@ import { CompteWeb, createCompteWeb } from 'src/app/data/data';
 import { environment } from '../../../environments/environment';
 
 import { WebAccountService } from 'src/app/service/web-account.service';
+import { createPaginationState, pageChanged } from '../../shared/components/pagination-base';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { STORAGE_KEYS } from 'src/app/shared/constants';
 
 
 import { TableModule } from 'primeng/table';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
+import { SearchInputComponent } from '../../shared/components/search-input/search-input.component';
+import { EmptyTableComponent } from '../../shared/components/empty-table/empty-table.component';
 
 @Component({
   selector: 'app-comptes-web-component',
   standalone: true,
   templateUrl: './comptes-web-component.component.html',
   styleUrls: ['./comptes-web-component.component.css'],
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, TableModule, DatePipe, TranslateModule]
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, TableModule, DatePipe, TranslateModule, PageHeaderComponent, SearchInputComponent, EmptyTableComponent]
 })
 export class ComptesWebComponentComponent implements OnInit {
-  itemsPerPage = 30;
-  public bigTotalItems: number = 0;
-  public bigCurrentPage: number = 1;
-  public maxSize: number = 5;
+  pagination = createPaginationState();
   comptesWeb: CompteWeb[] = [];
   loading: boolean = false;
   private loadingInProgress: boolean = false;
@@ -77,13 +78,12 @@ export class ComptesWebComponentComponent implements OnInit {
     this.loading = true;
     this.cdr.detectChanges();
 
-    // Extract pagination parameters from the PrimeNG table event
     let page = 0;
-    let size = this.itemsPerPage;
+    let size = this.pagination.itemsPerPage;
 
     if (event) {
       page = event.first ? Math.floor(event.first / event.rows) : 0;
-      size = event.rows || this.itemsPerPage;
+      size = event.rows || this.pagination.itemsPerPage;
     }
 
     const keyWord = (this.searchForm?.get('keyWord')?.value || '').trim();
@@ -107,7 +107,7 @@ export class ComptesWebComponentComponent implements OnInit {
         }
 
         this.comptesWeb = loaded;
-        this.bigTotalItems = totalElements;
+        this.pagination.bigTotalItems = totalElements;
         this.loading = false;
         this.loadingInProgress = false;
         this.cdr.detectChanges();
@@ -124,11 +124,17 @@ export class ComptesWebComponentComponent implements OnInit {
     });
   }
 
+  onPageChanged(event: any): void {
+    pageChanged(event, this.pagination);
+    this.loadingInProgress = false;
+    this.loadWebAccounts();
+  }
+
   getDateLogF(username: string) {
     this.webAccountService.getDateLog(username).subscribe();
   }
 
-  searchWebAccount() {
+  searchWebAccount(keyWord: string = '') {
     this.loadingInProgress = false; // Reset guard for explicit user action
     this.loadWebAccounts();
   }

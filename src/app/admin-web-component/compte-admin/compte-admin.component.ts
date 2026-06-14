@@ -3,26 +3,27 @@ import { CommonModule } from '@angular/common';
 
 import { AdministratorCompte } from 'src/app/data/data';
 import { AdminAccountService } from 'src/app/service/admin-account.service';
+import { createPaginationState, pageChanged } from '../../shared/components/pagination-base';
 
 
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
 
 import { TableModule } from 'primeng/table';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
+import { SearchInputComponent } from '../../shared/components/search-input/search-input.component';
+import { EmptyTableComponent } from '../../shared/components/empty-table/empty-table.component';
 
 @Component({
   selector: 'app-compte-admin',
   standalone: true,
   templateUrl: './compte-admin.component.html',
   styleUrls: ['./compte-admin.component.css'],
-  imports: [FormsModule, ReactiveFormsModule, TableModule, CommonModule, TranslateModule]
+  imports: [FormsModule, ReactiveFormsModule, TableModule, CommonModule, TranslateModule, PageHeaderComponent, SearchInputComponent, EmptyTableComponent]
 })
 export class CompteAdminComponent implements OnInit {
-  public maxSize: number = 5;
-  public bigTotalItems: number = 0;
-  public bigCurrentPage: number = 1;
-  itemsPerPage = 30;
+  pagination = createPaginationState();
   adminComptes: AdministratorCompte[] = [];
   loading: boolean = false;
   private loadingInProgress: boolean = false;
@@ -56,7 +57,7 @@ export class CompteAdminComponent implements OnInit {
           const responseData = res?.data || res;
           const content = responseData?.content || responseData || [];
           this.adminComptes = Array.isArray(content) ? content : [];
-          this.bigTotalItems = responseData?.totalElements || responseData?.page?.totalElements || 0;
+          this.pagination.bigTotalItems = responseData?.totalElements || responseData?.page?.totalElements || 0;
           this.loading = false;
           this.loadingInProgress = false;
           this.cdr.detectChanges();
@@ -70,17 +71,14 @@ export class CompteAdminComponent implements OnInit {
   }
 
   searchWebAccount() {
-    this.bigCurrentPage = 1;
-    this.loadingInProgress = false; // Reset guard for explicit user action
-    this.getAllAdminComptes(this.searchForm.get('keyWord')?.value, this.bigCurrentPage - 1, this.itemsPerPage);
+    this.pagination.bigCurrentPage = 1;
+    this.loadingInProgress = false;
+    this.getAllAdminComptes(this.searchForm.get('keyWord')?.value, this.pagination.bigCurrentPage - 1, this.pagination.itemsPerPage);
   }
 
-  public pageChanged(event: any): void {
-    if (event.first !== undefined && event.rows !== undefined) {
-      this.bigCurrentPage = (event.first / event.rows) + 1;
-      this.itemsPerPage = event.rows;
-      this.loadingInProgress = false; // Reset guard for pagination
-      this.getAllAdminComptes(this.searchForm.get('keyWord')?.value, this.bigCurrentPage - 1, this.itemsPerPage);
-    }
+  onPageChanged(event: any): void {
+    pageChanged(event, this.pagination);
+    this.loadingInProgress = false;
+    this.getAllAdminComptes(this.searchForm.get('keyWord')?.value, this.pagination.bigCurrentPage - 1, this.pagination.itemsPerPage);
   }
 }

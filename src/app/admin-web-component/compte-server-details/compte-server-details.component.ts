@@ -5,6 +5,7 @@ import { CompteServerService } from "../../service/compte-server.service";
 import { BoitierService } from "../../service/boitier.service";
 
 import { ToastrService } from "ngx-toastr";
+import { withToast } from '../../utils/toast.helpers';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { PaginatorModule } from 'primeng/paginator';
@@ -244,27 +245,20 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
 
   updateBoitier() {
     this.selectedBoitier.label = this.updateForm.get('label')?.value;
-    this.boitierService.updateBoitier(this.selectedBoitier, this.ID_COMPTE, "label").subscribe({
-      next: (res) => {
-        const index = this.boitiers.findIndex(x => x.idBoitier === this.selectedBoitier.idBoitier);
-        if (index !== -1) {
-          this.boitiers[index] = { ...this.boitiers[index], label: res.label };
+    withToast(this.boitierService.updateBoitier(this.selectedBoitier, this.ID_COMPTE, "label"), this.toastr, this.translate, 'SERVER_DETAILS.UPDATE_SUCCESS')
+      .subscribe({
+        next: (res) => {
+          const index = this.boitiers.findIndex(x => x.idBoitier === this.selectedBoitier.idBoitier);
+          if (index !== -1) {
+            this.boitiers[index] = { ...this.boitiers[index], label: res.label };
+          }
+          this.closeUpdateModal();
+          this.cdr.detectChanges();
+        },
+        error: () => {
+          this.cdr.detectChanges();
         }
-        this.toastr.success(
-          this.translate.instant('SERVER_DETAILS.UPDATE_SUCCESS'), 
-          this.translate.instant('COMMON.SUCCESS')
-        );
-        this.closeUpdateModal();
-        this.cdr.detectChanges();
-      },
-      error: () => {
-        this.toastr.error(
-          this.translate.instant('COMMON.ERROR_OCCURRED'), 
-          this.translate.instant('COMMON.ERROR')
-        );
-        this.cdr.detectChanges();
-      }
-    });
+      });
   }
 
   addBoitiers() {
@@ -276,7 +270,7 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
   }
 
   private addBoitierAfterConfirmation(nbrBoitiersToAdd: number) {
-    this.boitierService.addBoitiers(this.ID_COMPTE, nbrBoitiersToAdd).subscribe({
+    this.compteServerService.addBoitiers(this.ID_COMPTE, nbrBoitiersToAdd).subscribe({
       next: (res: any) => {
         this.mode = false;
         this.BOITIER_NOT_INSTALLED = res.compteServer.intervaleEnd - res.compteServer.intervaleStart + 1;

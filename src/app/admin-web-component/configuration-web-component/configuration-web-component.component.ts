@@ -19,9 +19,11 @@ import { WebAccountService } from "../../service/web-account.service";
 import { BoitierService } from "../../service/boitier.service";
 import { IpAddressService } from "../../service/ip-address.service";
 import { CompteServerService } from "../../service/compte-server.service";
-import { of, tap } from "rxjs";
+import { of } from "rxjs";
 import { catchError } from "rxjs/operators";
+import { NOTIFICATION_SUBQUERIES } from '../../shared/constants';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { withToast } from '../../utils/toast.helpers';
 
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
@@ -121,7 +123,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
 
 
   readonly regions = ['Tunis', 'Sfax', 'Sousse'];
-  readonly notifSubs = ['date_sub(NOW(), INTERVAL 6 hour)', 'date_sub(NOW(), INTERVAL 1 DAY)', 'date_sub(NOW(), INTERVAL 2 DAY)'];
+  readonly notifSubs = NOTIFICATION_SUBQUERIES;
   dateBoolean: boolean = true;
   readonly maxDate: Date = new Date();
   sqlQuery: string = '';
@@ -287,11 +289,9 @@ export class ConfigurationWebComponentComponent implements OnInit {
       options: formValue.options
     };
 
-    this.webAccountService.updateWebAccount(this.ID_COMPTE(), updatedCompte)
+    withToast(this.webAccountService.updateWebAccount(this.ID_COMPTE(), updatedCompte), this.toastr, this.translate, 'WEB_ACCOUNTS.ADD_SUCCESS')
       .pipe(
-        tap(() => this.toastr.success(this.translate.instant('WEB_ACCOUNTS.ADD_SUCCESS'), this.translate.instant('COMMON.SUCCESS'))),
         catchError(() => {
-          this.toastr.error(this.translate.instant('COMMON.AN_ERROR_OCCURRED'), this.translate.instant('COMMON.ERROR'));
           return of(null);
         })
       )
@@ -313,11 +313,9 @@ export class ConfigurationWebComponentComponent implements OnInit {
     this.compteWeb.update(c => ({ ...c, options: this.mainConfigForm.value.options }));
 
     const currentCompte = this.compteWeb();
-    this.webAccountService.updateWebAccount(currentCompte.idCompteClientWeb, currentCompte)
+    withToast(this.webAccountService.updateWebAccount(currentCompte.idCompteClientWeb, currentCompte), this.toastr, this.translate, 'WEB_ACCOUNTS.ADD_SUCCESS')
       .pipe(
-        tap(() => this.toastr.success(this.translate.instant('WEB_ACCOUNTS.ADD_SUCCESS'), this.translate.instant('COMMON.SUCCESS'))),
         catchError(() => {
-          this.toastr.error(this.translate.instant('COMMON.AN_ERROR_OCCURRED'), this.translate.instant('COMMON.ERROR'));
           return of(null);
         })
       )
@@ -355,34 +353,29 @@ export class ConfigurationWebComponentComponent implements OnInit {
       boitiersId: selectedBoitiersId
     };
 
-    this.boitierService.editPathConfig(this.selectedServerId(), pathConfigPayload)
-      .pipe(
-        tap(() => {
+    withToast(this.boitierService.editPathConfig(this.selectedServerId(), pathConfigPayload), this.toastr, this.translate, 'WEB_CONFIG.INIT_CONFIG')
+      .subscribe({
+        next: () => {
           this.loadingEditPathConfig.set(false);
-          this.toastr.success(this.translate.instant('WEB_CONFIG.INIT_CONFIG'), this.translate.instant('COMMON.SUCCESS'));
-        }),
-        catchError(error => {
+        },
+        error: () => {
           this.loadingEditPathConfig.set(false);
-          this.toastr.error(this.translate.instant('COMMON.AN_ERROR_OCCURRED'), this.translate.instant('COMMON.ERROR'));
-          throw error;
-        })
-      )
-      .subscribe();
+        }
+      });
   }
 
   prepareDBForSingleDevice(idBoitier: number) {
-    this.boitierService.prepareDBForSingleDevise(this.selectedServerId(), idBoitier)
+    withToast(this.boitierService.prepareDBForSingleDevise(this.selectedServerId(), idBoitier), this.toastr, this.translate, 'WEB_CONFIG.PREPARE')
       .pipe(
-        tap(() => {
-          this.toastr.success(this.translate.instant('WEB_CONFIG.PREPARE') + " " + idBoitier, this.translate.instant('COMMON.SUCCESS'));
-          this.updateBoitierState(idBoitier);
-        }),
         catchError(() => {
-          this.toastr.error(this.translate.instant('COMMON.AN_ERROR_OCCURRED'), this.translate.instant('COMMON.ERROR'));
           return of(null);
         })
       )
-      .subscribe();
+      .subscribe({
+        next: () => {
+          this.updateBoitierState(idBoitier);
+        }
+      });
   }
 
   updateBoitierState(idBoitier: number) {
@@ -396,12 +389,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
 
 
   prepareDB(idServer: number) {
-    this.boitierService.prepareDBForAllDevises(idServer).subscribe({
-      next: () => {
-        this.toastr.success(this.translate.instant('WEB_CONFIG.PREPARE'), this.translate.instant('COMMON.SUCCESS'));
-      },
-      error: () => this.toastr.error(this.translate.instant('COMMON.AN_ERROR_OCCURRED'), this.translate.instant('COMMON.ERROR'))
-    });
+    withToast(this.boitierService.prepareDBForAllDevises(idServer), this.toastr, this.translate, 'WEB_CONFIG.PREPARE').subscribe();
   }
 
   showDevises(idServer: number) {
@@ -410,7 +398,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
       return;
     }
     this.selectedServerId.set(idServer);
-    this.boitierService.getAllBoitierofIdcompte(idServer).subscribe({
+    this.compteServerService.getAllBoitierofIdcompte(idServer).subscribe({
       next: (res: any) => {
         const responseData = res?.data || res;
         this.boitiers.set(Array.isArray(responseData) ? responseData : []);
@@ -530,15 +518,13 @@ export class ConfigurationWebComponentComponent implements OnInit {
       idBoitiers: selectedBoitiersIdList
     };
 
-    this.boitierService.editDeviceOptionConfig(this.ID_COMPTE(), deviceOptPayload)
+    withToast(this.boitierService.editDeviceOptionConfig(this.ID_COMPTE(), deviceOptPayload), this.toastr, this.translate, 'WEB_CONFIG.SAVE_OPTIONS')
       .subscribe({
         next: () => {
           this.loadingEditDeviceOption.set(false);
-          this.toastr.success(this.translate.instant('WEB_CONFIG.SAVE_OPTIONS'), this.translate.instant('COMMON.SUCCESS'));
         },
         error: () => {
           this.loadingEditDeviceOption.set(false);
-          this.toastr.error(this.translate.instant('COMMON.AN_ERROR_OCCURRED'), this.translate.instant('COMMON.ERROR'));
         }
       });
   }
@@ -657,17 +643,16 @@ export class ConfigurationWebComponentComponent implements OnInit {
     if (!deviceSetting.streamId || deviceSetting.streamId == 0)
       deviceSetting.streamId = deviceSetting.idBoitiers[0];
 
-    this.boitierService.editDeviceSetting(this.ID_COMPTE(), deviceSetting).subscribe({
-      next: () => {
-        this.showDevises(this.serverAccount().idCompteClientServer);
-        this.loadingDeviceSetting.set(false);
-        this.toastr.success(this.translate.instant('COMMON.SUCCESS'), this.translate.instant('COMMON.SUCCESS'));
-      },
-      error: () => {
-        this.loadingDeviceSetting.set(false);
-        this.toastr.error(this.translate.instant('COMMON.AN_ERROR_OCCURRED'), this.translate.instant('COMMON.ERROR'));
-      }
-    });
+    withToast(this.boitierService.editDeviceSetting(this.ID_COMPTE(), deviceSetting), this.toastr, this.translate, 'COMMON.SUCCESS')
+      .subscribe({
+        next: () => {
+          this.showDevises(this.serverAccount().idCompteClientServer);
+          this.loadingDeviceSetting.set(false);
+        },
+        error: () => {
+          this.loadingDeviceSetting.set(false);
+        }
+      });
   }
 
 
@@ -693,16 +678,14 @@ export class ConfigurationWebComponentComponent implements OnInit {
     }
     this.vehiculeSetting.update(s => ({ ...s, idBoitiers: selectedBoitiersIdList }));
 
-    this.boitierService.resetOdometre(this.ID_COMPTE(), this.vehiculeSetting())
+    withToast(this.boitierService.resetOdometre(this.ID_COMPTE(), this.vehiculeSetting()), this.toastr, this.translate, 'WEB_CONFIG.RESET_ODO')
       .subscribe({
         next: () => {
           this.showDevises(this.serverAccount().idCompteClientServer);
           this.loadingResetOdometre.set(false);
-          this.toastr.success(this.translate.instant('WEB_CONFIG.RESET_ODO'), this.translate.instant('COMMON.SUCCESS'));
         },
         error: () => {
           this.loadingResetOdometre.set(false);
-          this.toastr.error(this.translate.instant('COMMON.AN_ERROR_OCCURRED'), this.translate.instant('COMMON.ERROR'));
         }
       });
   }
@@ -731,15 +714,13 @@ export class ConfigurationWebComponentComponent implements OnInit {
     setting.idBoitiers = selectedBoitiersIdList;
     setting.lastId = this.lastIdForm.get('lastIdValue')?.value ?? 0;
 
-    this.boitierService.resetLastId(this.ID_COMPTE(), setting)
+    withToast(this.boitierService.resetLastId(this.ID_COMPTE(), setting), this.toastr, this.translate, 'WEB_CONFIG.LAST_ID')
       .subscribe({
         next: () => {
           this.loadingResetLastId.set(false);
-          this.toastr.success(this.translate.instant('WEB_CONFIG.LAST_ID'), this.translate.instant('COMMON.SUCCESS'));
         },
         error: () => {
           this.loadingResetLastId.set(false);
-          this.toastr.error(this.translate.instant('COMMON.AN_ERROR_OCCURRED'), this.translate.instant('COMMON.ERROR'));
         }
       });
   }

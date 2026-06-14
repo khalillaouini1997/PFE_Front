@@ -6,6 +6,7 @@ import { AdminAccountService } from 'src/app/service/admin-account.service';
 import { catchError } from "rxjs/operators";
 import { of, tap } from "rxjs";
 import { ToastrService } from "ngx-toastr";
+import { NOTIFICATION_SUBQUERIES } from '../../shared/constants';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
@@ -21,7 +22,7 @@ export class AddAdminCompteComponent {
 
   adminForm!: FormGroup;
   roles = ['GLOBALADMINDESC', 'WEBADMIN', 'AGENT'];
-  notifSubs = ['date_sub(NOW(), INTERVAL 6 hour)', 'date_sub(NOW(), INTERVAL 1 DAY)', 'date_sub(NOW(), INTERVAL 2 DAY)'];
+  notifSubs = NOTIFICATION_SUBQUERIES;
   messageError: string = "";
   mode: boolean = false;
 

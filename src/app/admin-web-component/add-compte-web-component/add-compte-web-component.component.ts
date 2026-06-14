@@ -6,6 +6,7 @@ import { WebAccountService } from "../../service/web-account.service";
 import { CompteServerService } from "../../service/compte-server.service";
 import { IpAddressService } from "../../service/ip-address.service";
 import { ToastrService } from "ngx-toastr";
+import { NOTIFICATION_SUBQUERIES } from '../../shared/constants';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DatePickerModule } from 'primeng/datepicker';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -25,7 +26,7 @@ export class AddCompteWebComponentComponent {
   codesPays = signal<any[]>([]);
   ipAddresses = signal<IpAddress[]>([]);
   regions = ['Tunis', 'Sfax', 'Sousse'];
-  notifSubs = ['date_sub(NOW(), INTERVAL 6 hour)', 'date_sub(NOW(), INTERVAL 1 DAY)', 'date_sub(NOW(), INTERVAL 2 DAY)'];
+  notifSubs = NOTIFICATION_SUBQUERIES;
   checked = signal<boolean>(false);
 
 

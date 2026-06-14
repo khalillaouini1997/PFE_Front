@@ -1,29 +1,10 @@
 <div class="main-panel p-4">
-    <!-- Header Section -->
-    <div class="premium-card mb-4 header-gradient shadow-sm p-4">
-        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-            <div class="title-section text-white">
-                <h2 class="m-0 fw-bold">{{ 'SERVER_ACCOUNTS.TITLE' | translate }}</h2>
-                <p class="m-0 text-white-50 opacity-75">{{ 'SERVER_ACCOUNTS.SUBTITLE' | translate }}</p>
-            </div>
-            
-            <div class="controls-section d-flex align-items-center gap-3">
-                <form class="d-flex align-items-center" [formGroup]="searchForm" (ngSubmit)="searchAccount()">
-                    <div class="input-group shadow-sm search-container-premium">
-                        <input type="text" class="form-control border-0 px-3 search-input-premium bg-white bg-opacity-10 text-white" 
-                            formControlName="keyWord" placeholder="{{ 'SERVER_ACCOUNTS.SEARCH_PLACEHOLDER' | translate }}" 
-                            title="{{ 'SERVER_ACCOUNTS.SEARCH_PLACEHOLDER' | translate }}">
-                        <button class="btn btn-glass border-0" type="submit" title="{{ 'COMMON.SEARCH' | translate }}">
-                            <i class="fa fa-search"></i>
-                        </button>
-                    </div>
-                </form>
-                <button class="btn btn-glass btn-sm rounded-circle" routerLink="/adminWeb/addCompteServer" title="{{ 'SERVER_ACCOUNTS.ADD' | translate }}">
-                    <i class="fa fa-plus"></i>
-                </button>
-            </div>
-        </div>
-    </div>
+    <app-page-header titleKey="SERVER_ACCOUNTS.TITLE" subtitleKey="SERVER_ACCOUNTS.SUBTITLE">
+        <app-search-input placeholder="SERVER_ACCOUNTS.SEARCH_PLACEHOLDER" (search)="searchAccount($event)" />
+        <button class="btn btn-glass btn-sm rounded-circle" routerLink="/adminWeb/addCompteServer" title="{{ 'SERVER_ACCOUNTS.ADD' | translate }}">
+            <i class="fa fa-plus"></i>
+        </button>
+    </app-page-header>
 
     @if (mode) {
         <div class="alert alert-danger border-0 shadow-sm mb-4 fade-in" role="alert">
@@ -34,14 +15,14 @@
     <!-- Table Section -->
     <div class="premium-card p-0 overflow-hidden shadow-sm">
         <p-table [value]="comptesServer" [lazy]="true" (onLazyLoad)="loadComptesServer($event)"
-            [paginator]="true" [rows]="itemsPerPage" [totalRecords]="bigTotalItems"
+            [paginator]="true" [rows]="pagination.itemsPerPage" [totalRecords]="pagination.bigTotalItems"
             [rowsPerPageOptions]="[10,15,30,50,60]"
             [loading]="loading"
             [reorderableColumns]="true" [resizableColumns]="true" columnResizeMode="expand"
             styleClass="p-datatable-sm p-datatable-gridlines premium-table-custom"
             responsiveLayout="scroll"
             paginatorPosition="bottom"
-            (onPage)="loadComptesServer($event)">
+            (onPage)="onPageChanged($event)">
             
             <ng-template pTemplate="header">
                 <tr>
@@ -72,14 +53,7 @@
                 </tr>
             </ng-template>
 
-            <ng-template pTemplate="emptymessage">
-                <tr>
-                    <td colspan="4" class="text-center py-5 text-secondary">
-                        <i class="fa fa-server fa-3x opacity-25 mb-2"></i>
-                        <p>{{ 'SERVER_ACCOUNTS.NO_DATA' | translate }}</p>
-                    </td>
-                </tr>
-            </ng-template>
+            <app-empty-table [colspan]="4" icon="fa-server" messageKey="SERVER_ACCOUNTS.NO_DATA" />
         </p-table>
     </div>
 </div>

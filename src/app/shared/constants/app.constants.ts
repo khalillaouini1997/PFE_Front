@@ -69,3 +69,9 @@ export const STATUS_TYPES = {
   TECHNICAL_ISSUE: 'TECHNICAL_ISSUE',
   NON_VALID: 'NON_VALID'
 } as const;
+
+export const NOTIFICATION_SUBQUERIES = [
+  'date_sub(NOW(), INTERVAL 6 hour)',
+  'date_sub(NOW(), INTERVAL 1 DAY)',
+  'date_sub(NOW(), INTERVAL 2 DAY)'
+] as const;

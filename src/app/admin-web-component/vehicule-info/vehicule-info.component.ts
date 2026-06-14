@@ -3,6 +3,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { InterventionInfo } from "../../data/data";
 import { ToastrService } from "ngx-toastr";
 import { VehiculeService } from "../../service/vehicule.service";
+import { createPaginationState, pageChanged } from '../../shared/components/pagination-base';
 import { finalize } from "rxjs";
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 
@@ -18,11 +19,8 @@ import { TableModule } from 'primeng/table';
 })
 export class VehiculeInfoComponent implements OnInit {
 
-  public maxSize: number = 5;
-  public bigTotalItems: number = 0;
-  public bigCurrentPage: number = 1;
+  pagination = createPaginationState();
   public numPages: number = 0;
-  itemsPerPage = 30;
   selectedState: string = 'ALL';
   states = [{ name: 'ALL', label: 'tous' }, { name: 'untreated', label: 'non traité' }, { name: 'treated', label: 'traité' }];
 
@@ -37,7 +35,7 @@ export class VehiculeInfoComponent implements OnInit {
 
   ngOnInit() {
     this.initForms();
-    this.getVehiculeInfo(this.bigCurrentPage - 1, this.itemsPerPage);
+    this.getVehiculeInfo(this.pagination.bigCurrentPage - 1, this.pagination.itemsPerPage);
   }
 
   initForms() {
@@ -59,18 +57,15 @@ export class VehiculeInfoComponent implements OnInit {
       .subscribe({
         next: (resp) => {
           this.vehiculeInfos = resp.content;
-          this.bigTotalItems = resp.totalElements;
+          this.pagination.bigTotalItems = resp.totalElements;
           this.vehiculeInfosFiltered = resp.content;
         }
       });
   }
 
-  public pageChanged(event: any): void {
-    if (event.first !== undefined && event.rows !== undefined) {
-      this.bigCurrentPage = (event.first / event.rows) + 1;
-      this.itemsPerPage = event.rows;
-      this.getVehiculeInfo(this.bigCurrentPage - 1, this.itemsPerPage);
-    }
+  onPageChanged(event: any): void {
+    pageChanged(event, this.pagination);
+    this.getVehiculeInfo(this.pagination.bigCurrentPage - 1, this.pagination.itemsPerPage);
   }
 
   updateIntervention(vehiculeInfo: InterventionInfo) {

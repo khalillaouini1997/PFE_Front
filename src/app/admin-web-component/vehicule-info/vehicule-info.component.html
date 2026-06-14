@@ -19,8 +19,8 @@
     </div>
 
     <div class="premium-card p-0 overflow-hidden shadow-sm">
-        <p-table [value]="vehiculeInfosFiltered" [lazy]="true" (onLazyLoad)="pageChanged($event)"
-            [paginator]="true" [rows]="itemsPerPage" [totalRecords]="bigTotalItems"
+        <p-table [value]="vehiculeInfosFiltered" [lazy]="true" (onLazyLoad)="onPageChanged($event)"
+            [paginator]="true" [rows]="pagination.itemsPerPage" [totalRecords]="pagination.bigTotalItems"
             [loading]="loading" [rowsPerPageOptions]="[10,20,30,50]"
             [scrollable]="true" scrollHeight="500px"
             [virtualScroll]="true" [virtualScrollItemSize]="60"

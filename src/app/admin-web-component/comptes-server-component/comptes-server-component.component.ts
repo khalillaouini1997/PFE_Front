@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { CompteServer, IpAddress } from 'src/app/data/data';
 import { CompteServerService } from "../../service/compte-server.service";
 import { IpAddressService } from "../../service/ip-address.service";
+import { createPaginationState, pageChanged } from '../../shared/components/pagination-base';
 
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -13,23 +14,23 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { TableModule } from 'primeng/table';
 import { PaginatorModule } from 'primeng/paginator';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
+import { SearchInputComponent } from '../../shared/components/search-input/search-input.component';
+import { EmptyTableComponent } from '../../shared/components/empty-table/empty-table.component';
 
 @Component({
   selector: 'app-comptes-server-component',
   standalone: true,
   templateUrl: './comptes-server-component.component.html',
   styleUrls: ['./comptes-server-component.component.css'],
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, TableModule, PaginatorModule, DatePickerModule, TranslateModule]
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, TableModule, PaginatorModule, DatePickerModule, TranslateModule, PageHeaderComponent, SearchInputComponent, EmptyTableComponent]
 })
 export class ComptesServerComponentComponent implements OnInit {
   private readonly cdr = inject(ChangeDetectorRef);
   @ViewChild('updateModal') updateModal!: ElementRef<HTMLDialogElement>;
 
   keyWord: string = "";
-  public maxSize: number = 5;
-  public bigTotalItems: number = 0;
-  public bigCurrentPage: number = 1;
-  itemsPerPage = 30;
+  pagination = createPaginationState();
   comptesServer: CompteServer[] = [];
   loading: boolean = false;
   private loadingInProgress: boolean = false;
@@ -80,13 +81,12 @@ export class ComptesServerComponentComponent implements OnInit {
     this.comptesServer = [];
     this.cdr.detectChanges();
 
-    // Extract pagination parameters from the PrimeNG table event
     let page = 0;
-    let size = this.itemsPerPage;
+    let size = this.pagination.itemsPerPage;
 
     if (event) {
       page = event.first ? Math.floor(event.first / event.rows) : 0;
-      size = event.rows || this.itemsPerPage;
+      size = event.rows || this.pagination.itemsPerPage;
     }
 
     const keyWord = (this.searchForm?.get('keyWord')?.value || '').trim();
@@ -101,7 +101,7 @@ export class ComptesServerComponentComponent implements OnInit {
           s.expired = now >= s.date_Expiration;
           s.during = !s.expired;
         });
-        this.bigTotalItems = responseData?.page?.totalElements || responseData?.totalElements || 0;
+        this.pagination.bigTotalItems = responseData?.page?.totalElements || responseData?.totalElements || 0;
         this.loading = false;
         this.loadingInProgress = false;
         this.cdr.detectChanges();
@@ -114,7 +114,13 @@ export class ComptesServerComponentComponent implements OnInit {
     });
   }
 
-  searchAccount() {
+  onPageChanged(event: any): void {
+    pageChanged(event, this.pagination);
+    this.loadingInProgress = false;
+    this.loadComptesServer();
+  }
+
+  searchAccount(keyWord: string = '') {
     this.loadingInProgress = false; // Reset guard for explicit user search
     this.loadComptesServer();
   }
