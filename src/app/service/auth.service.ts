@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, map, catchError, of } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { AdministratorCompte } from '../data/data';
@@ -34,6 +34,24 @@ export class AuthService {
         localStorage.removeItem(STORAGE_KEYS.AUTH_STATUS);
         this.currentUser = null;
         this.webSocketService.disconnect();
+    }
+
+    checkAuth(): Observable<boolean> {
+        return this.http.get<any>(`${environment.apiBaseUrl}auth/me`).pipe(
+            map(res => {
+                if (res?.user) {
+                    this.currentUser = res;
+                    localStorage.setItem(STORAGE_KEYS.AUTH_STATUS, 'true');
+                    localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(res));
+                    return true;
+                }
+                return false;
+            }),
+            catchError(() => {
+                this.logout();
+                return of(false);
+            })
+        );
     }
 
     getToken(): string | null {

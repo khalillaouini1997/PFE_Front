@@ -1,15 +1,21 @@
 import { inject } from '@angular/core';
 import { Router, CanMatchFn, Route, UrlSegment } from '@angular/router';
-import { STORAGE_KEYS } from '../shared/constants';
+import { Observable, map, catchError, of } from 'rxjs';
+import { AuthService } from '../service/auth.service';
 
-export const authGuard: CanMatchFn = (route: Route, segments: UrlSegment[]) => {
+export const authGuard: CanMatchFn = (route: Route, segments: UrlSegment[]): Observable<boolean> => {
     const router = inject(Router);
+    const authService = inject(AuthService);
 
-    const isAuthenticated = localStorage.getItem(STORAGE_KEYS.AUTH_STATUS) === 'true';
-
-    if (!isAuthenticated) {
-        return router.parseUrl('/authentification');
-    }
-
-    return true;
+    return authService.checkAuth().pipe(
+        map(isAuthenticated => {
+            if (isAuthenticated) {
+                return true;
+            }
+            return router.parseUrl('/authentification');
+        }),
+        catchError(() => {
+            return of(router.parseUrl('/authentification'));
+        })
+    );
 };
