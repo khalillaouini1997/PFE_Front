@@ -108,21 +108,13 @@ export class AddCompteWebComponentComponent {
     }
 
 
-    this.webAccountService.addCompteWeb(compteWeb).subscribe({
-      next: (_compteWeb) => {
-        this.webAccountService.associateCompteWebToCompteServer(_compteWeb.idCompteClientWeb, idCompteServer).subscribe();
-        this.toastr.success(
-          this.translate.instant('WEB_ACCOUNTS.ADD_SUCCESS'), 
-          this.translate.instant('COMMON.SUCCESS')
-        );
-        this.router.navigate(['/adminWeb/listWebs']);
-      },
-      error: () => {
-        this.toastr.error(
-          this.translate.instant('WEB_ACCOUNTS.ADD_ERROR'), 
-          this.translate.instant('COMMON.ERROR')
-        );
-      }
-    });
+    withToast(this.webAccountService.addCompteWeb(compteWeb), this.toastr, this.translate, 'WEB_ACCOUNTS.ADD_SUCCESS')
+      .subscribe({
+        next: (_compteWeb) => {
+          this.webAccountService.associateCompteWebToCompteServer(_compteWeb.idCompteClientWeb, idCompteServer).subscribe();
+          this.router.navigate(['/adminWeb/listWebs']);
+        },
+        error: () => {}
+      });
   }
 }

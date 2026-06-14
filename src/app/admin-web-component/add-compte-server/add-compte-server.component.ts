@@ -6,6 +6,7 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { ToastrService } from 'ngx-toastr';
 import { catchError } from "rxjs/operators";
 import { Router } from "@angular/router";
+import { withToast } from '../../utils/toast.helpers';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
@@ -92,10 +93,6 @@ export class AddCompteServerComponent {
           this.mode = true;
           this.messageError = error.error?.message || this.translate.instant('COMMON.AN_ERROR_OCCURRED');
           this.loading = false;
-          this.toastr.error(
-            this.translate.instant('SERVER_ACCOUNTS.ADD_ERROR'), 
-            this.translate.instant('COMMON.ERROR')
-          );
           throw error;
         })
       )
