@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { Archive, Boitier, BoitierRealTime, DeviceOpt, DeviceSetting, PageResponse, PathConfigPayload, raws, RecalculatePayload, VehiculeSetting, BoitierAnalysis } from '../data/data';
+import { Archive, Boitier, BoitierRealTime, DeviceOpt, DeviceSetting, PageResponse, PathConfigPayload, Raws, RecalculatePayload, VehiculeSetting, BoitierAnalysis } from '../data/data';
 
 
 @Injectable({
@@ -53,8 +53,8 @@ export class BoitierService {
         return this.http.get<BoitierRealTime>(`${environment.apiBaseUrl}boities/${numBoitier}/lastArchive`);
     }
 
-    getRaws(numBoitier: number, limit: number): Observable<raws> {
-        return this.http.get<raws>(`${environment.apiBaseUrl}boities/${numBoitier}/Raw/${limit}`);
+    getRaws(numBoitier: number, limit: number): Observable<Raws> {
+        return this.http.get<Raws>(`${environment.apiBaseUrl}boities/${numBoitier}/Raw/${limit}`);
     }
 
     getArchiveOfBoitier(numboitier: number, limit: number): Observable<Archive[]> {

@@ -2,7 +2,7 @@ import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { CompteWeb } from 'src/app/data/data';
+import { CompteWeb, createCompteWeb } from 'src/app/data/data';
 import { environment } from '../../../environments/environment';
 import { AuthService } from 'src/app/service/auth.service';
 import { WebAccountService } from 'src/app/service/web-account.service';
@@ -28,7 +28,7 @@ export class ComptesWebComponentComponent implements OnInit {
   comptesWeb: CompteWeb[] = [];
   loading: boolean = false;
   private loadingInProgress: boolean = false;
-  selectedWebAccount: CompteWeb = new CompteWeb();
+  selectedWebAccount: CompteWeb = createCompteWeb();
   dt: any;
   code_pays = [];
 

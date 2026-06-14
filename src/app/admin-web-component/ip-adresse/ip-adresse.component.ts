@@ -1,6 +1,6 @@
 import { Component, OnInit, inject, ViewChild, ElementRef } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { IpAddress } from 'src/app/data/data';
+import { IpAddress, createIpAddress } from 'src/app/data/data';
 import { IpAddressService } from 'src/app/service/ip-address.service';
 import { catchError } from "rxjs/operators";
 import { of } from "rxjs";
@@ -18,7 +18,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 })
 export class IpAdresseComponent implements OnInit {
 
-  ipAddressSelected: IpAddress = new IpAddress();
+  ipAddressSelected: IpAddress = createIpAddress();
   ips: IpAddress[] = [];
   public bigTotalItems: number = 0;
   public bigCurrentPage: number = 1;

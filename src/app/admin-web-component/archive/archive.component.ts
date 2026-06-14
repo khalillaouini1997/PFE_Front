@@ -1,7 +1,7 @@
 import { CommonModule, DatePipe, DecimalPipe, Location, NgClass } from '@angular/common';
 import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Archive, raws, BoitierAnalysis } from "../../data/data";
+import { Archive, Raws, BoitierAnalysis, createRaws } from "../../data/data";
 
 import { BoitierService } from "../../service/boitier.service";
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
@@ -18,7 +18,7 @@ import { TranslateModule } from '@ngx-translate/core';
 })
 export class ArchiveComponent implements OnInit {
   archives = signal<Archive[]>([]);
-  rawData = signal<raws>(new raws());
+  rawData = signal<Raws>(createRaws());
   numBoitier = signal<number>(0);
   archiveForm!: FormGroup;
 
@@ -58,7 +58,7 @@ export class ArchiveComponent implements OnInit {
     this.boitierService.getRaws(this.numBoitier(), limit).subscribe((_raws: any) => {
       // Handle nested response structure
       const rawData = _raws.data || _raws;
-      const updatedRaws = new raws();
+      const updatedRaws = createRaws();
       updatedRaws.raws = rawData.raws || [];
       updatedRaws.count = rawData.count || 0;
       this.rawData.set(updatedRaws);

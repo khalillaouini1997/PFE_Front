@@ -1,6 +1,6 @@
 import { Component, OnInit, signal, inject, ViewChild, ElementRef } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { CompteWeb, Intervention } from 'src/app/data/data';
+import { CompteWeb, Intervention, createIntervention } from 'src/app/data/data';
 import { WebAccountService } from "../../service/web-account.service";
 import { InterventionService } from "../../service/intervention.service";
 import { TooltipModule } from 'primeng/tooltip';
@@ -32,7 +32,7 @@ export class HelpComponent implements OnInit {
   selectedCompteWebId: number | null = null;
   interventions = signal<Intervention[]>([]);
   interventionsFilter = signal<Intervention[]>([]);
-  currentIntervention = new Intervention();
+  currentIntervention = createIntervention();
   loading = signal<boolean>(false);
 
   private readonly webAccountService = inject(WebAccountService);

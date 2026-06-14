@@ -91,7 +91,7 @@
                 <i class="fa fa-expand"></i>
               </button>
             </div>
-            <app-dashboard-map [realtimes]="realtimes()" (locateDevice)="locateOnMap($event)"></app-dashboard-map>
+            <app-dashboard-map [realtimes]="realtimes()"></app-dashboard-map>
           </div>
         </div>
       </div>
@@ -99,7 +99,7 @@
       <!-- Map fullscreen mode -->
       <div [class.col-12]="fullscreenMap()" [class.fullscreen-card]="fullscreenMap()" *ngIf="fullscreenMap()">
         <div class="premium-card overflow-hidden h-100" [class.fullscreen-map]="fullscreenMap()">
-          <app-dashboard-map [realtimes]="realtimes()" (locateDevice)="locateOnMap($event)"></app-dashboard-map>
+          <app-dashboard-map [realtimes]="realtimes()"></app-dashboard-map>
         </div>
       </div>
 

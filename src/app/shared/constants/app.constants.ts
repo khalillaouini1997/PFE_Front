@@ -59,6 +59,8 @@ export const REALTIME_CONSTANTS = {
 
 export const STORAGE_KEYS = {
   TOKEN: 'token',
+  USER: 'currentUser',
+  AUTH_STATUS: 'isAuthenticate',
   IS_RELOADING: 'isReloading'
 } as const;
 

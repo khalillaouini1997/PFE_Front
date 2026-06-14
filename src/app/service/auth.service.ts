@@ -4,6 +4,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { AdministratorCompte } from '../data/data';
 import { WebSocketService } from './web-socket.service';
+import { STORAGE_KEYS } from '../shared/constants';
 
 @Injectable({
     providedIn: 'root'
@@ -12,9 +13,6 @@ export class AuthService {
 
     private readonly http = inject(HttpClient);
     private readonly webSocketService = inject(WebSocketService);
-    private readonly TOKEN_KEY = 'token';
-    private readonly USER_KEY = 'currentUser';
-    private readonly AUTH_STATUS_KEY = 'isAuthenticate';
     private readonly TOKEN_PREFIX = 'rimtel ';
 
     currentUser: AdministratorCompte | null = null;
@@ -25,34 +23,30 @@ export class AuthService {
     }
 
     saveSession(authResponse: any) {
-        // Token is now stored in httpOnly cookie by the backend
-        // Only store user data and auth status in localStorage
-        localStorage.setItem(this.USER_KEY, JSON.stringify(authResponse));
-        localStorage.setItem(this.AUTH_STATUS_KEY, 'true');
+        localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(authResponse));
+        localStorage.setItem(STORAGE_KEYS.AUTH_STATUS, 'true');
         this.currentUser = authResponse;
     }
 
     logout() {
-        // Clear cookie by setting it to expire
         document.cookie = 'jwt_token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=Strict';
-        localStorage.removeItem(this.USER_KEY);
-        localStorage.removeItem(this.AUTH_STATUS_KEY);
+        localStorage.removeItem(STORAGE_KEYS.USER);
+        localStorage.removeItem(STORAGE_KEYS.AUTH_STATUS);
         this.currentUser = null;
         this.webSocketService.disconnect();
     }
 
     getToken(): string | null {
-        // Token is now in httpOnly cookie, not accessible from JavaScript
         return null;
     }
 
     isAuthenticated(): boolean {
-        return localStorage.getItem(this.AUTH_STATUS_KEY) === 'true';
+        return localStorage.getItem(STORAGE_KEYS.AUTH_STATUS) === 'true';
     }
 
     getCurrentUser(): any {
         if (this.currentUser) return this.currentUser;
-        const userStr = localStorage.getItem(this.USER_KEY);
+        const userStr = localStorage.getItem(STORAGE_KEYS.USER);
         if (userStr) {
             this.currentUser = JSON.parse(userStr);
             return this.currentUser;

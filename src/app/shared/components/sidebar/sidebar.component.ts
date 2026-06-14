@@ -2,7 +2,7 @@ import { Component, OnInit, inject, signal, Output, EventEmitter } from '@angula
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { AdministratorCompte } from 'src/app/data/data';
+import { AdministratorCompte, createAdministratorCompte } from 'src/app/data/data';
 import { AuthService } from 'src/app/service/auth.service';
 import { WebAccountService } from 'src/app/service/web-account.service';
 import { WebSocketService } from 'src/app/service/web-socket.service';
@@ -33,7 +33,7 @@ export class SidebarComponent implements OnInit {
   owner: string = "TDS";
   notificationCount: number = 0;
 
-  public currentUser: AdministratorCompte = new AdministratorCompte();
+  public currentUser: AdministratorCompte = createAdministratorCompte();
 
   @Output() sidebarToggle = new EventEmitter<boolean>();
 
@@ -44,7 +44,7 @@ export class SidebarComponent implements OnInit {
   private readonly translate = inject(TranslateService);
 
   constructor() {
-    this.currentUser = this.authService.getCurrentUser() || new AdministratorCompte();
+    this.currentUser = this.authService.getCurrentUser() || createAdministratorCompte();
   }
 
   ngOnInit() {

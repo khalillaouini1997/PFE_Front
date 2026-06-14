@@ -6,6 +6,9 @@ import {
   RecalculatePayload,
   IpAddress,
   VehiculeSetting,
+  createCompteServer,
+  createRecalculatePayload,
+  createVehiculeSetting,
 } from "../../data/data";
 import { ActivatedRoute, Params, Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
@@ -59,7 +62,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
 
   ID_COMPTE = signal<number>(0);
   compteWeb = signal<any>({});
-  serverAccount = signal<CompteServer>(new CompteServer());
+  serverAccount = signal<CompteServer>(createCompteServer());
   serverAccounts = signal<CompteServer[]>([]);
   selected = signal<any[]>([]);
   codesPays = signal<{ key: string; value: string; }[]>([]);
@@ -73,8 +76,8 @@ export class ConfigurationWebComponentComponent implements OnInit {
   ipAddresses = signal<IpAddress[]>([]);
   notifications = signal<{ value: string, status: boolean }[]>([]);
   selectedBoitiersIds = signal<number[]>([]);
-  recalculeP = signal<RecalculatePayload>(new RecalculatePayload());
-  vehiculeSetting = signal<VehiculeSetting>(new VehiculeSetting());
+  recalculeP = signal<RecalculatePayload>(createRecalculatePayload());
+  vehiculeSetting = signal<VehiculeSetting>(createVehiculeSetting());
 
   // UI & Modal State
   showConfigModal = signal<boolean>(false);
@@ -201,7 +204,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
             this.options.set(opts);
           });
           this.compteWeb.set(_compteWeb);
-          const serverData = _compteWeb.compteClientServer || new CompteServer();
+          const serverData = _compteWeb.compteClientServer || createCompteServer();
           // Map backend DTO field names to frontend model field names
           const mappedServer = {
             ...serverData,
@@ -551,7 +554,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
     this.notifications.set([]);
     if (confirm(this.translate.instant('WEB_CONFIG.HISTORIC_RECALC'))) {
       this.loadingRecalculate.set(true);
-      const recalculePayload = new RecalculatePayload();
+      const recalculePayload = createRecalculatePayload();
       recalculePayload.recalculeStartDate = this.datestart()?.getTime() ?? 0;
       recalculePayload.idBoitiers = [...this.selectedBoitiersIds()];
       if (!this.isCheckedBoitier(this.recalculeP().idBoitier)) {
@@ -574,7 +577,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
     this.notifications.set([]);
     if (confirm(this.translate.instant('WEB_CONFIG.HISTORIC_RECALC'))) {
       this.loadingRecalculate.set(true);
-      const recalculePayload = new RecalculatePayload();
+      const recalculePayload = createRecalculatePayload();
       recalculePayload.recalculeStartDate = this.datestart()?.getTime() ?? 0;
       recalculePayload.idBoitiers = [...this.selectedBoitiersIds()];
       if (!this.isCheckedBoitier(this.recalculeP().idBoitier)) {
@@ -597,7 +600,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
     this.notifications.set([]);
     if (confirm(this.translate.instant('WEB_CONFIG.HISTORIC_RECALC'))) {
       this.loadingRecalculate.set(true);
-      const recalculePayload = new RecalculatePayload();
+      const recalculePayload = createRecalculatePayload();
       recalculePayload.recalculeStartDate = this.datestart()?.getTime() ?? 0;
       recalculePayload.idBoitiers = [...this.selectedBoitiersIds()];
       if (!this.isCheckedBoitier(this.recalculeP().idBoitier)) {
@@ -620,7 +623,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
     this.notifications.set([]);
     if (confirm(this.translate.instant('WEB_CONFIG.HISTORIC_RECALC'))) {
       this.loadingRecalculate.set(true);
-      const recalculePayload = new RecalculatePayload();
+      const recalculePayload = createRecalculatePayload();
       recalculePayload.recalculeStartDate = this.datestart()?.getTime() ?? 0;
       recalculePayload.idBoitiers = [...this.selectedBoitiersIds()];
       if (!this.isCheckedBoitier(this.recalculeP().idBoitier)) {
@@ -642,7 +645,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
     this.notifications.set([]);
     if (confirm(this.translate.instant('WEB_CONFIG.HISTORIC_RECALC'))) {
       this.loadingRecalculate.set(true);
-      const recalculePayload = new RecalculatePayload();
+      const recalculePayload = createRecalculatePayload();
       recalculePayload.idBoitiers = [...this.selectedBoitiersIds()];
       if (!this.isCheckedBoitier(this.recalculeP().idBoitier)) {
         recalculePayload.idBoitiers.push(this.recalculeP().idBoitier);
@@ -664,7 +667,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
     this.notifications.set([]);
     if (confirm(this.translate.instant('COMMON.CONFIRM'))) {
       this.loadingRecalculate.set(true);
-      const recalculePayload = new RecalculatePayload();
+      const recalculePayload = createRecalculatePayload();
       recalculePayload.idBoitiers = [...this.selectedBoitiersIds()];
       if (!this.isCheckedBoitier(this.selectedBoitierId())) {
         recalculePayload.idBoitiers.push(this.selectedBoitierId());
@@ -812,7 +815,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
       selectedBoitiersIdList.push(this.recalculeP().idBoitier);
     }
 
-    const setting = new VehiculeSetting();
+    const setting = createVehiculeSetting();
     setting.idBoitiers = selectedBoitiersIdList;
     setting.lastId = this.lastIdForm.get('lastIdValue')?.value ?? 0;
 

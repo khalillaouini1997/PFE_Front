@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, inject, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
-import { Boitier, BoitierRealTime, CompteServer } from 'src/app/data/data';
+import { Boitier, BoitierRealTime, CompteServer, createCompteServer, createBoitier } from 'src/app/data/data';
 import { CompteServerService } from "../../service/compte-server.service";
 import { BoitierService } from "../../service/boitier.service";
 import { AuthService } from "../../service/auth.service";
@@ -26,12 +26,12 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
   @ViewChild('updateBoitierModal') updateBoitierModal!: ElementRef<HTMLDialogElement>;
 
   private refreshInterval: any;
-  compteServer: CompteServer = new CompteServer();
+  compteServer: CompteServer = createCompteServer();
   boitiers: Boitier[] = [];
   boitiersInvalid: Boitier[] = [];
   BOITIER_INSTALLED: number = 0;
   BOITIER_NOT_INSTALLED: number = 0;
-  selectedBoitier: Boitier = new Boitier();
+  selectedBoitier: Boitier = createBoitier();
   ID_COMPTE: number = 0;
   nbrBoitiers: number = 0;
   searchBoitier: string = "";

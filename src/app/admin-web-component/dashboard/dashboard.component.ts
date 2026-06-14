@@ -116,13 +116,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.mapOverlayOpen = !this.mapOverlayOpen;
   }
 
-  locateOnMap(data: RealTime) {
-    // This will be handled by the DashboardMapComponent
-  }
-
-  openDetails(data: RealTime) {
-  }
-
   // ── Utilities ─────────────────────────────────────────────────────────────
   diffHours(date: Date): number {
     return (Date.now() - new Date(date).getTime()) / (60 * 60 * 1000);
