@@ -61,6 +61,10 @@
   --shadow-premium: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 }
 
+html {
+  font-size: 13px !important;
+}
+
 body {
   font-family: var(--font-family-base);
   background: var(--bg-main);
@@ -359,6 +363,44 @@ body {
 [data-theme='dark'] .form-floating>.form-control:focus,
 [data-theme='dark'] .form-floating>.form-control:not(:placeholder-shown) {
   background: #1e293b;
+}
+
+/* Global font overrides - force smaller app-wide */
+html {
+  font-size: 13px !important;
+}
+
+/* PrimeNG table compact sizing */
+.p-datatable .p-datatable-thead > tr > th,
+.p-datatable .p-datatable-tbody > tr > td {
+  font-size: 0.8rem !important;
+  padding: 0.35rem 0.5rem !important;
+  line-height: 1.3 !important;
+}
+.p-datatable .p-datatable-header {
+  font-size: 0.85rem !important;
+  padding: 0.4rem 0.5rem !important;
+}
+.p-paginator {
+  font-size: 0.75rem !important;
+  padding: 0.3rem 0.4rem !important;
+}
+.p-paginator .p-paginator-page,
+.p-paginator .p-paginator-next,
+.p-paginator .p-paginator-prev,
+.p-paginator .p-paginator-first,
+.p-paginator .p-paginator-last {
+  min-width: 1.8rem !important;
+  height: 1.8rem !important;
+  font-size: 0.75rem !important;
+}
+
+/* Make header titles smaller */
+.page-header h1, .page-header h2, .page-header h3 {
+  font-size: 1.1rem !important;
+}
+.page-header p {
+  font-size: 0.8rem !important;
 }
 
 

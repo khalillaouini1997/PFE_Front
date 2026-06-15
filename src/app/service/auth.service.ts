@@ -54,10 +54,6 @@ export class AuthService {
         );
     }
 
-    getToken(): string | null {
-        return null;
-    }
-
     isAuthenticated(): boolean {
         return localStorage.getItem(STORAGE_KEYS.AUTH_STATUS) === 'true';
     }

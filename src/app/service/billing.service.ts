@@ -16,7 +16,7 @@ export class BillingService {
   }
 
   refreshMonthlyBilling(accountId: number, year: number, month: number): Observable<any> {
-    return this.http.get(`${this.apiBaseUrl}billing/account/${accountId}/${year}/${month}/refresh`);
+    return this.http.post(`${this.apiBaseUrl}billing/account/${accountId}/${year}/${month}/refresh`, null);
   }
 
   getAllAccountsBilling(year: number, month: number): Observable<any> {

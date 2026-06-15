@@ -13,7 +13,7 @@ export class IpAddressService {
 
     readonly typeConnection: { type: string; }[] = [
         { type: "jdbc" },
-        { type: "http " }
+        { type: "http" }
     ];
 
     getAllIps(): Observable<IpAddress[]> {

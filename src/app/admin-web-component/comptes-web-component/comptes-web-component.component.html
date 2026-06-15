@@ -55,10 +55,6 @@
                             </select>
                         </div>
                     </th>
-                    <th scope="col" pReorderableColumn pResizableColumn>{{ 'WEB_ACCOUNTS.DEVICE_FEE_DAY' | translate }}</th>
-                    <th scope="col" pReorderableColumn pResizableColumn>{{ 'WEB_ACCOUNTS.ACCOUNT_FEE_MONTH' | translate }}</th>
-                    <th scope="col" pReorderableColumn pResizableColumn>{{ 'WEB_ACCOUNTS.DEVICE_FEE_MONTH' | translate }}</th>
-                    <th scope="col" pReorderableColumn pResizableColumn>{{ 'WEB_ACCOUNTS.SIM_FEE_MONTH' | translate }}</th>
                     <th scope="col" class="text-end" style="width: 100px">{{ 'COMMON.ACTIONS' | translate }}</th>
                 </tr>
             </ng-template>
@@ -79,10 +75,6 @@
                     <td><span class="badge bg-info bg-opacity-10 text-info">{{compteWeb.area}}</span></td>
                     <td class="small">{{compteWeb.administratorCompte?.username}}</td>
                     <td class="text-center text-primary fw-bold">{{compteWeb.pool || 0}}</td>
-                    <td class="text-center">{{compteWeb.deviceFeeByDay}}</td>
-                    <td class="text-center">{{compteWeb.accountFeeByMonth}}</td>
-                    <td class="text-center">{{compteWeb.deviceFeePerMonth}}</td>
-                    <td class="text-center">{{compteWeb.simCardFeePerMonth}}</td>
                     <td class="text-end">
                         <div class="btn-group gap-1">
                             <button class="btn btn-sm btn-outline-primary border-0 p-1" 
@@ -98,7 +90,7 @@
                 </tr>
             </ng-template>
 
-            <app-empty-table [colspan]="15" icon="fa-globe" messageKey="WEB_ACCOUNTS.NO_DATA" />
+            <app-empty-table [colspan]="11" icon="fa-globe" messageKey="WEB_ACCOUNTS.NO_DATA" />
         </p-table>
     </div>
 </div>

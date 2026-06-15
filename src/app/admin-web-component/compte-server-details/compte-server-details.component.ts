@@ -276,9 +276,10 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (res: any) => {
           this.mode = false;
-          this.BOITIER_NOT_INSTALLED = res.compteServer.intervaleEnd - res.compteServer.intervaleStart + 1;
-          this.intervalFrom = res.compteServer.intervaleStart;
-          this.intervalTo = res.compteServer.intervaleEnd;
+          const data = res?.data || res;
+          this.BOITIER_NOT_INSTALLED = data.compteServer.intervaleEnd - data.compteServer.intervaleStart + 1;
+          this.intervalFrom = data.compteServer.intervaleStart;
+          this.intervalTo = data.compteServer.intervaleEnd;
           this.loadCompteDetails();
           this.loadBoitierList();
           this.addForm.reset({ nbrBoitiers: 0 });

@@ -78,10 +78,6 @@ export class WebAccountService {
         );
     }
 
-    getAllWebAccountSummary(): Observable<any[]> {
-        return this.http.get<any[]>(`${environment.apiBaseUrl}compteWeb/All?userName=${this.authService.getCurrentUserName()}`);
-    }
-
     // Lighter version for dropdowns — only returns {idCompteClientWeb, login}
     getAllWebAccountNames(): Observable<any[]> {
         const url = `${environment.apiBaseUrl}compteWeb/AllNames?userName=${this.authService.getCurrentUserName()}`;

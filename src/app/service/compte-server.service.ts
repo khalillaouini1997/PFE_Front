@@ -26,8 +26,8 @@ export class CompteServerService {
     return this.http.delete<void>(`${environment.apiBaseUrl}compteServer/${id}`);
   }
 
-  getAllServerCompte(keyword: string, page: number, size: number): Observable<any> {
-    return this.http.get<any>(`${environment.apiBaseUrl}compteServer?keyWord=${keyword}&page=${page}&size=${size}`);
+  getAllServerAccount(keyWord: string, page: number, size: number): Observable<any> {
+    return this.http.get<any>(`${environment.apiBaseUrl}compteServer?keyWord=${keyWord}&page=${page}&size=${size}&userName=${this.authService.getCurrentUserName()}`);
   }
 
   getCompteServerById(id: number): Observable<any> {
@@ -45,15 +45,6 @@ export class CompteServerService {
 
   extendIntervalOfBoitiers(idCompteServer: number): Observable<any> {
     return this.http.post<any>(`${environment.apiBaseUrl}compteServer/${idCompteServer}/newInterval`, null);
-  }
-
-  // Web Admin perspective
-  getAllServerAccount(keyWord: string, page: number, size: number): Observable<any> {
-    return this.http.get<any>(`${environment.apiBaseUrl}compteServer?keyWord=${keyWord}&page=${page}&size=${size}&userName=${this.authService.getCurrentUserName()}`);
-  }
-
-  getServerAccountById(id: number): Observable<any> {
-    return this.http.get<any>(`${environment.apiBaseUrl}compteServer/${id}`);
   }
 
   getAllServerAccountForForm(): Observable<any[]> {
