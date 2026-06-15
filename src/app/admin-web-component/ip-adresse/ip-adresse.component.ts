@@ -27,8 +27,8 @@ export class IpAdresseComponent implements OnInit {
   ips: IpAddress[] = [];
   pagination = createPaginationState({ itemsPerPage: 15 });
   typeConnection: { type: string; }[] = [];
+  private currentKeyWord: string = '';
 
-  searchForm!: FormGroup;
   updateIpForm!: FormGroup;
   @ViewChild('updateModal') updateModal!: ElementRef<HTMLDialogElement>;
 
@@ -39,15 +39,11 @@ export class IpAdresseComponent implements OnInit {
 
   ngOnInit() {
     this.initForms();
-    this.getAllIpAddresse(this.searchForm.get('keyWord')?.value || "", this.pagination.bigCurrentPage - 1, this.pagination.itemsPerPage);
+    this.getAllIpAddresse('', this.pagination.bigCurrentPage - 1, this.pagination.itemsPerPage);
     this.typeConnection = this.ipAddressService.typeConnection;
   }
 
   initForms() {
-    this.searchForm = this.fb.group({
-      keyWord: ['']
-    });
-
     this.updateIpForm = this.fb.group({
       idIpAdresse: [null],
       label: ['', Validators.required],
@@ -71,37 +67,24 @@ export class IpAdresseComponent implements OnInit {
   }
 
   searchIpAddress(keyWord: string = '') {
-    this.bigCurrentPage = 1;
-    this.getAllIpAddresse(keyWord, this.bigCurrentPage - 1, this.itemsPerPage);
+    this.currentKeyWord = keyWord;
+    this.pagination.bigCurrentPage = 1;
+    this.getAllIpAddresse(keyWord, this.pagination.bigCurrentPage - 1, this.pagination.itemsPerPage);
   }
 
   deleteIpAddress(id: number) {
     const res = confirm(this.translate.instant('WEB_ACCOUNTS.DELETE_CONFIRM'));
     if (res) {
-      this.ipAddressService.deleteIpAddress(id)
+      withToast(this.ipAddressService.deleteIpAddress(id), this.toastr, this.translate, 'WEB_ACCOUNTS.DELETE_SUCCESS')
         .pipe(
           catchError(error => {
-            return of('Failed to delete IP address: ' + error.message);
-          })
-        )
-        .pipe(
-          tap(() => {
-            this.toastr.success(
-              this.translate.instant('WEB_ACCOUNTS.DELETE_SUCCESS'), 
-              this.translate.instant('COMMON.SUCCESS')
-            );
+            return of(null);
           })
         )
         .subscribe({
           next: () => {
-            this.getAllIpAddresse(this.searchForm.get('keyWord')?.value, this.bigCurrentPage - 1, this.itemsPerPage);
-          },
-          error: (error) => {
-            this.toastr.error(this.translate.instant('COMMON.ERROR'), this.translate.instant('COMMON.ERROR'));
+            this.getAllIpAddresse(this.currentKeyWord, this.pagination.bigCurrentPage - 1, this.pagination.itemsPerPage);
           }
-        });
-    }
-  }
         });
     }
   }
@@ -123,15 +106,11 @@ export class IpAdresseComponent implements OnInit {
   updateIpAdress() {
     const updatedIp = this.updateIpForm.value;
     if (updatedIp.idIpAdresse !== null) {
-      this.ipAddressService.updateIpAddress(updatedIp.idIpAdresse, updatedIp)
+      withToast(this.ipAddressService.updateIpAddress(updatedIp.idIpAdresse, updatedIp), this.toastr, this.translate, 'IP_ADDRESS.UPDATE_TITLE')
         .subscribe({
           next: () => {
-            this.toastr.success(
-              this.translate.instant('IP_ADDRESS.UPDATE_TITLE') + ' ' + this.translate.instant('COMMON.SUCCESS'), 
-              this.translate.instant('COMMON.SUCCESS')
-            );
             this.closeUpdateModal();
-            this.getAllIpAddresse(this.searchForm.get('keyWord')?.value, this.pagination.bigCurrentPage - 1, this.pagination.itemsPerPage);
+            this.getAllIpAddresse(this.currentKeyWord, this.pagination.bigCurrentPage - 1, this.pagination.itemsPerPage);
           }
         });
     }
@@ -139,6 +118,6 @@ export class IpAdresseComponent implements OnInit {
 
   onPageChanged(event: any): void {
     pageChanged(event, this.pagination);
-    this.getAllIpAddresse(this.searchForm.get('keyWord')?.value, this.pagination.bigCurrentPage - 1, this.pagination.itemsPerPage);
+    this.getAllIpAddresse(this.currentKeyWord, this.pagination.bigCurrentPage - 1, this.pagination.itemsPerPage);
   }
 }

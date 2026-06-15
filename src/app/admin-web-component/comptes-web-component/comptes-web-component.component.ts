@@ -35,6 +35,7 @@ export class ComptesWebComponentComponent implements OnInit {
   code_pays = [];
 
   searchForm!: FormGroup;
+  private currentKeyWord: string = '';
   availablePools: number[] = [];
 
   get regionControl() {
@@ -65,7 +66,6 @@ export class ComptesWebComponentComponent implements OnInit {
 
   initForms() {
     this.searchForm = this.fb.group({
-      keyWord: [''],
       region: [''],
       pool: ['']
     });
@@ -87,7 +87,7 @@ export class ComptesWebComponentComponent implements OnInit {
       size = event.rows || this.pagination.itemsPerPage;
     }
 
-    const keyWord = (this.searchForm?.get('keyWord')?.value || '').trim();
+    const keyWord = this.currentKeyWord;
     const region = this.searchForm?.get('region')?.value || '';
     const pool = this.searchForm?.get('pool')?.value ? parseInt(this.searchForm?.get('pool')?.value) : undefined;
 
@@ -136,6 +136,7 @@ export class ComptesWebComponentComponent implements OnInit {
   }
 
   searchWebAccount(keyWord: string = '') {
+    this.currentKeyWord = keyWord;
     this.loadingInProgress = false; // Reset guard for explicit user action
     this.loadWebAccounts();
   }

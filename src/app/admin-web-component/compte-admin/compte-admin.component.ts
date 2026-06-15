@@ -5,10 +5,7 @@ import { AdministratorCompte } from 'src/app/data/data';
 import { AdminAccountService } from 'src/app/service/admin-account.service';
 import { createPaginationState, pageChanged } from '../../shared/components/pagination-base';
 
-
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-
 
 import { TableModule } from 'primeng/table';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
@@ -20,29 +17,19 @@ import { EmptyTableComponent } from '../../shared/components/empty-table/empty-t
   standalone: true,
   templateUrl: './compte-admin.component.html',
   styleUrls: ['./compte-admin.component.css'],
-  imports: [FormsModule, ReactiveFormsModule, TableModule, CommonModule, TranslateModule, PageHeaderComponent, SearchInputComponent, EmptyTableComponent]
+  imports: [CommonModule, TableModule, TranslateModule, PageHeaderComponent, SearchInputComponent, EmptyTableComponent]
 })
 export class CompteAdminComponent implements OnInit {
   pagination = createPaginationState();
   adminComptes: AdministratorCompte[] = [];
   loading: boolean = false;
   private loadingInProgress: boolean = false;
-  searchForm!: FormGroup;
 
   private readonly adminAccountService = inject(AdminAccountService);
-  private readonly fb = inject(FormBuilder);
   private readonly cdr = inject(ChangeDetectorRef);
 
   ngOnInit() {
-    this.initForms();
-
     // Initial load will be triggered by PrimeNG table's onLazyLoad
-  }
-
-  initForms() {
-    this.searchForm = this.fb.group({
-      keyWord: ['']
-    });
   }
 
   getAllAdminComptes(keyWord: string, page: number, size: number) {
@@ -70,15 +57,15 @@ export class CompteAdminComponent implements OnInit {
       });
   }
 
-  searchWebAccount() {
+  searchWebAccount(keyWord: string = '') {
     this.pagination.bigCurrentPage = 1;
     this.loadingInProgress = false;
-    this.getAllAdminComptes(this.searchForm.get('keyWord')?.value, this.pagination.bigCurrentPage - 1, this.pagination.itemsPerPage);
+    this.getAllAdminComptes(keyWord, this.pagination.bigCurrentPage - 1, this.pagination.itemsPerPage);
   }
 
   onPageChanged(event: any): void {
     pageChanged(event, this.pagination);
     this.loadingInProgress = false;
-    this.getAllAdminComptes(this.searchForm.get('keyWord')?.value, this.pagination.bigCurrentPage - 1, this.pagination.itemsPerPage);
+    this.getAllAdminComptes('', this.pagination.bigCurrentPage - 1, this.pagination.itemsPerPage);
   }
 }

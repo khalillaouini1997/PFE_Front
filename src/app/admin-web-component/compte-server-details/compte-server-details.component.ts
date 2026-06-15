@@ -302,14 +302,11 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
     }
 
     if (confirm(this.translate.instant('SERVER_DETAILS.CONFIRM_EXTEND_ACCOUNT'))) {
-      this.compteServerService.extendIntervalOfBoitiers(this.ID_COMPTE).subscribe(res => {
-        this.BOITIER_NOT_INSTALLED = res.intervaleEnd - res.intervaleStart + 1;
-        this.toastr.success(
-          this.translate.instant('SERVER_DETAILS.INTERVAL_EXTENDED'), 
-          this.translate.instant('COMMON.SUCCESS')
-        );
-        this.cdr.detectChanges();
-      });
+      withToast(this.compteServerService.extendIntervalOfBoitiers(this.ID_COMPTE), this.toastr, this.translate, 'SERVER_DETAILS.INTERVAL_EXTENDED')
+        .subscribe(res => {
+          this.BOITIER_NOT_INSTALLED = res.intervaleEnd - res.intervaleStart + 1;
+          this.cdr.detectChanges();
+        });
     }
   }
 

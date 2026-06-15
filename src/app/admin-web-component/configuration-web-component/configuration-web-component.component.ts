@@ -394,7 +394,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
 
   showDevises(idServer: number) {
     if (!idServer || idServer <= 0) {
-      this.toastr.warning('Invalid server ID', 'Warning');
+      this.toastr.warning(this.translate.instant('WEB_CONFIG.INVALID_SERVER_ID'), this.translate.instant('COMMON.WARNING'));
       return;
     }
     this.selectedServerId.set(idServer);
@@ -463,8 +463,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
               });
             }
           }
-        },
-        error: () => this.toastr.error(this.translate.instant('COMMON.AN_ERROR_OCCURRED'), this.translate.instant('COMMON.ERROR'))
+        }
       });
   }
 
@@ -480,8 +479,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
               this.pathConfigForm.patchValue(data);
             }
           }
-        },
-        error: () => this.toastr.error(this.translate.instant('COMMON.AN_ERROR_OCCURRED'), this.translate.instant('COMMON.ERROR'))
+        }
       });
   }
 
@@ -500,8 +498,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
               });
             }
           }
-        },
-        error: () => this.toastr.error(this.translate.instant('COMMON.AN_ERROR_OCCURRED'), this.translate.instant('COMMON.ERROR'))
+        }
       });
   }
 

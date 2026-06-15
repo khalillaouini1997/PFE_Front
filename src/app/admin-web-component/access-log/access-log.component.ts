@@ -3,8 +3,6 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { AccessLog } from 'src/app/data/data';
 import { AccessLogService } from 'src/app/service/access-log.service';
 import { createPaginationState, pageChanged } from '../../shared/components/pagination-base';
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
-import { AdminAccountService } from 'src/app/service/admin-account.service';
 
 import { TableModule } from 'primeng/table';
 import { TranslateModule } from '@ngx-translate/core';
@@ -17,34 +15,24 @@ import { EmptyTableComponent } from '../../shared/components/empty-table/empty-t
     standalone: true,
     templateUrl: './access-log.component.html',
     styleUrls: ['./access-log.component.css'],
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, TableModule, DatePipe, TranslateModule, PageHeaderComponent, SearchInputComponent, EmptyTableComponent]
+    imports: [CommonModule, TableModule, DatePipe, TranslateModule, PageHeaderComponent, SearchInputComponent, EmptyTableComponent]
 })
 export class AccessLogComponent implements OnInit {
 
   loading: boolean = false;
   accessLogs: AccessLog[] = [];
   pagination = createPaginationState({ itemsPerPage: 10 });
-  searchForm!: FormGroup;
+  private currentKeyWord: string = '';
 
   private readonly accessLogService = inject(AccessLogService);
-  private readonly adminAccountService = inject(AdminAccountService);
-
-  private readonly fb = inject(FormBuilder);
   private readonly cdr = inject(ChangeDetectorRef);
 
   ngOnInit() {
-    this.initForms();
-  }
-
-  initForms() {
-    this.searchForm = this.fb.group({
-      keyWord: ['']
-    });
   }
 
   onPageChanged(event: any): void {
     pageChanged(event, this.pagination);
-    this.getAllAccessLogs(this.searchForm.get('keyWord')?.value || "", this.pagination.bigCurrentPage - 1, this.pagination.itemsPerPage);
+    this.getAllAccessLogs(this.currentKeyWord, this.pagination.bigCurrentPage - 1, this.pagination.itemsPerPage);
   }
 
   getAllAccessLogs(keyWord: string, page: number, size: number) {
@@ -67,7 +55,8 @@ export class AccessLogComponent implements OnInit {
   }
 
   searchAccess(keyWord: string = '') {
-    this.bigCurrentPage = 1;
-    this.getAllAccessLogs(keyWord, this.bigCurrentPage - 1, this.itemsPerPage);
+    this.currentKeyWord = keyWord;
+    this.pagination.bigCurrentPage = 1;
+    this.getAllAccessLogs(keyWord, this.pagination.bigCurrentPage - 1, this.pagination.itemsPerPage);
   }
 }

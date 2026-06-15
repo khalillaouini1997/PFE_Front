@@ -6,7 +6,8 @@ import { InterventionService } from "../../service/intervention.service";
 import { TooltipModule } from 'primeng/tooltip';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DatePipe, CommonModule } from '@angular/common';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { withToast } from '../../utils/toast.helpers';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import { EmptyTableComponent } from '../../shared/components/empty-table/empty-table.component';
 
@@ -42,6 +43,7 @@ export class HelpComponent implements OnInit {
   private readonly interventionService = inject(InterventionService);
   private readonly toastr = inject(ToastrService);
   private readonly fb = inject(FormBuilder);
+  private readonly translate = inject(TranslateService);
 
   ngOnInit() {
     this.initForms();
@@ -83,18 +85,18 @@ export class HelpComponent implements OnInit {
     this.interventions.set([]);
     this.selectedType.set(null);
     this.searchForm.get('type')?.setValue(null, { emitEvent: false });
-    this.interventionService.getIntervention(this.selectedCompteWebId).subscribe({
-      next: (res: any) => {
-        const responseData = res?.data || res;
-        this.interventions.set(Array.isArray(responseData) ? responseData : []);
-        this.interventionsFilter.set(Array.isArray(responseData) ? responseData : []);
-        this.loading.set(false);
-      },
-      error: () => {
-        this.loading.set(false);
-        this.toastr.error("Failed to load interventions");
-      }
-    });
+    withToast(this.interventionService.getIntervention(this.selectedCompteWebId), this.toastr, this.translate, 'INTERVENTION.LOAD_ERROR', 'INTERVENTION.LOAD_ERROR')
+      .subscribe({
+        next: (res: any) => {
+          const responseData = res?.data || res;
+          this.interventions.set(Array.isArray(responseData) ? responseData : []);
+          this.interventionsFilter.set(Array.isArray(responseData) ? responseData : []);
+          this.loading.set(false);
+        },
+        error: () => {
+          this.loading.set(false);
+        }
+      });
   }
 
   public onSearchClient() {
@@ -107,19 +109,14 @@ export class HelpComponent implements OnInit {
     this.currentIntervention.type = this.updateForm.get('type')?.value;
     this.currentIntervention.response = this.updateForm.get('response')?.value;
 
-    this.interventionService.updateIntervention(this.currentIntervention, this.selectedCompteWebId).subscribe({
-      next: (res: any) => {
-        if (res) {
-          this.toastr.success('Success');
-          this.closeUpdateModal();
-        } else {
-          this.toastr.error("Echec");
+    withToast(this.interventionService.updateIntervention(this.currentIntervention, this.selectedCompteWebId), this.toastr, this.translate, 'INTERVENTION.UPDATE_SUCCESS', 'INTERVENTION.UPDATE_ERROR')
+      .subscribe({
+        next: (res: any) => {
+          if (res) {
+            this.closeUpdateModal();
+          }
         }
-      },
-      error: () => {
-        this.toastr.error("Echec");
-      }
-    });
+      });
   }
 
   onSelectState() {

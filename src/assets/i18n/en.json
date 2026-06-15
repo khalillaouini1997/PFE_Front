@@ -333,7 +333,8 @@
     "MIGRATE_IMEI": "Migrate / Search Traccar IMEI",
     "ASSOCIATED_SERVER": "Associated Server",
     "TERMINALS": "Terminals",
-    "COUNTRY_CODE": "Country Code"
+    "COUNTRY_CODE": "Country Code",
+    "INVALID_SERVER_ID": "Invalid server ID"
   },
   "RECALC": {
     "PATH": "recalculate path",
@@ -346,7 +347,14 @@
     "TITLE": "Traccar List",
     "SUBTITLE": "Manage Traccar instances",
     "SEARCH_PLACEHOLDER": "Search by name or IMEI...",
-    "NO_DATA": "No Traccar found"
+    "NO_DATA": "No Traccar found",
+    "NO_CONFIGURED": "No Traccar configured for this user",
+    "LOAD_ERROR": "Error loading Traccars"
+  },
+  "INTERVENTION": {
+    "LOAD_ERROR": "Failed to load interventions",
+    "UPDATE_SUCCESS": "Intervention updated successfully",
+    "UPDATE_ERROR": "Failed to update intervention"
   },
   "BILLING": {
     "TITLE": "Billing",

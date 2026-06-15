@@ -6,10 +6,10 @@ import { VehiculeService } from "../../service/vehicule.service";
 import { createPaginationState, pageChanged } from '../../shared/components/pagination-base';
 import { finalize } from "rxjs";
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
-
+import { withToast } from '../../utils/toast.helpers';
 
 import { TableModule } from 'primeng/table';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import { EmptyTableComponent } from '../../shared/components/empty-table/empty-table.component';
 
@@ -35,6 +35,7 @@ export class VehiculeInfoComponent implements OnInit {
   private readonly vehiculeService = inject(VehiculeService);
   private readonly toastr = inject(ToastrService);
   private readonly fb = inject(FormBuilder);
+  private readonly translate = inject(TranslateService);
 
   ngOnInit() {
     this.initForms();
@@ -72,13 +73,9 @@ export class VehiculeInfoComponent implements OnInit {
   }
 
   updateIntervention(vehiculeInfo: InterventionInfo) {
-    this.vehiculeService.updateTechnicianIntervention(vehiculeInfo.deviceId, vehiculeInfo.createdAt)
-      .subscribe(res => {
-        if (res) {
-          this.toastr.success('Modifié');
-        } else {
-          this.toastr.error('error');
-        }
+    withToast(this.vehiculeService.updateTechnicianIntervention(vehiculeInfo.deviceId, vehiculeInfo.createdAt), this.toastr, this.translate, 'INTERVENTION.UPDATE_SUCCESS')
+      .subscribe({
+        error: () => {}
       });
   }
 

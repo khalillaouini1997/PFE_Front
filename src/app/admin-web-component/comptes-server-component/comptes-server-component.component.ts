@@ -40,7 +40,7 @@ export class ComptesServerComponentComponent implements OnInit {
   messageError: string = "";
   ips: IpAddress[] = [];
 
-  searchForm!: FormGroup;
+  private currentKeyWord: string = '';
   updateServerForm!: FormGroup;
 
   private readonly toastr = inject(ToastrService);
@@ -55,10 +55,6 @@ export class ComptesServerComponentComponent implements OnInit {
   }
 
   initForms() {
-    this.searchForm = this.fb.group({
-      keyWord: ['']
-    });
-
     this.updateServerForm = this.fb.group({
       idCompteClientServer: [null],
       pseudo: ['', Validators.required],
@@ -90,7 +86,7 @@ export class ComptesServerComponentComponent implements OnInit {
       size = event.rows || this.pagination.itemsPerPage;
     }
 
-    const keyWord = (this.searchForm?.get('keyWord')?.value || '').trim();
+    const keyWord = this.currentKeyWord;
 
     this.compteServerService.getAllServerAccount(keyWord, page, size).subscribe({
       next: (_comptesServer: any) => {
@@ -122,6 +118,7 @@ export class ComptesServerComponentComponent implements OnInit {
   }
 
   searchAccount(keyWord: string = '') {
+    this.currentKeyWord = keyWord;
     this.loadingInProgress = false; // Reset guard for explicit user search
     this.loadComptesServer();
   }

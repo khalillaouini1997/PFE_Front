@@ -1,11 +1,10 @@
 import { Component, OnInit, OnDestroy, inject, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { TraccarDto } from 'src/app/data/data';
 import { TraccarService } from 'src/app/service/traccar.service';
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import { SearchInputComponent } from '../../shared/components/search-input/search-input.component';
 import { EmptyTableComponent } from '../../shared/components/empty-table/empty-table.component';
@@ -15,30 +14,22 @@ import { EmptyTableComponent } from '../../shared/components/empty-table/empty-t
     standalone: true,
     templateUrl: './list-traccar.component.html',
     styleUrls: ['./list-traccar.component.css'],
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, TableModule, TranslateModule, PageHeaderComponent, SearchInputComponent, EmptyTableComponent],
+    imports: [CommonModule, TableModule, TranslateModule, PageHeaderComponent, SearchInputComponent, EmptyTableComponent],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListTraccarComponent implements OnInit, OnDestroy {
 
   private readonly traccarService = inject(TraccarService);
-  private readonly fb = inject(FormBuilder);
   private readonly toastr = inject(ToastrService);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly translate = inject(TranslateService);
 
-  searchForm!: FormGroup;
   traccarDtos: TraccarDto[] = [];
   loading: boolean = false;
   totalRecords: number = 0;
 
   ngOnInit() {
-    this.initForms();
     this.getLisTraccar();
-  }
-
-  initForms() {
-    this.searchForm = this.fb.group({
-      keyWord: ['']
-    });
   }
 
   getLisTraccar(keyword: string = '') {
@@ -50,7 +41,7 @@ export class ListTraccarComponent implements OnInit, OnDestroy {
         if (!data || data.length === 0) {
           this.traccarDtos = [];
           this.totalRecords = 0;
-          this.toastr.warning('Aucun Traccar configuré pour cet utilisateur', 'Information');
+          this.toastr.warning(this.translate.instant('TRACCAR.NO_CONFIGURED'), this.translate.instant('COMMON.WARNING'));
         } else {
           this.traccarDtos = data;
           this.totalRecords = data?.length || 0;
@@ -58,8 +49,8 @@ export class ListTraccarComponent implements OnInit, OnDestroy {
         this.loading = false;
         this.cdr.markForCheck();
       },
-      error: (error) => {
-        this.toastr.error('Erreur lors du chargement des Traccars', 'Erreur');
+      error: () => {
+        this.toastr.error(this.translate.instant('TRACCAR.LOAD_ERROR'), this.translate.instant('COMMON.ERROR'));
         this.loading = false;
         this.cdr.markForCheck();
       }
@@ -71,7 +62,6 @@ export class ListTraccarComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.searchForm?.reset();
     this.traccarDtos = [];
     this.totalRecords = 0;
   }
