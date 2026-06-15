@@ -60,6 +60,11 @@ h5.mt-4 {
     overflow: hidden;
 }
 
+[data-theme='dark'] :host ::ng-deep .p-datepicker {
+    background-color: var(--slate-700) !important;
+    border-color: var(--slate-600) !important;
+}
+
 /* Standard input styling — separate from PrimeNG inner input */
 .premium-input {
     height: 55px !important;
@@ -71,6 +76,12 @@ h5.mt-4 {
     font-size: 1.1rem !important;
     box-shadow: none !important;
     outline: none !important;
+}
+
+[data-theme='dark'] .premium-input {
+    background-color: var(--slate-700) !important;
+    border-color: var(--slate-600) !important;
+    color: var(--slate-200) !important;
 }
 
 /* PrimeNG datepicker inner input only */

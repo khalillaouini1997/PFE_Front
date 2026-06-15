@@ -7,6 +7,10 @@
   min-height: 100vh;
 }
 
+[data-theme='dark'] :host {
+  background-color: var(--slate-900);
+}
+
 .limit-input-group {
     width: 150px;
 }
@@ -15,6 +19,11 @@
     border-radius: 10px;
     background: white;
     color: var(--primary-600);
+}
+
+[data-theme='dark'] .btn-refresh-archive {
+    background: var(--slate-700);
+    color: var(--primary-300);
 }
 
 .table-container-70vh {
@@ -27,6 +36,10 @@
 
 table tbody {
   background-color: white;
+}
+
+[data-theme='dark'] table tbody {
+  background-color: var(--slate-800);
 }
 table thead {
   background-color: #e9423e;

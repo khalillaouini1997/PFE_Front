@@ -20,6 +20,11 @@
     color: var(--primary-600);
 }
 
+[data-theme='dark'] .btn-search {
+    background: var(--slate-700);
+    color: var(--primary-300);
+}
+
 .log-table-container {
     max-height: 70vh;
 }

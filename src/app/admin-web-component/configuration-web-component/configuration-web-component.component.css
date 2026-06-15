@@ -6,6 +6,10 @@
   min-height: 100vh;
 }
 
+[data-theme='dark'] :host {
+  background-color: var(--slate-900);
+}
+
 .center {
   float: none;
   margin-left: auto;
@@ -264,6 +268,10 @@ table>thead>tr>th,
   z-index: 1;
 }
 
+[data-theme='dark'] .premium-card {
+  background-color: var(--slate-800) !important;
+}
+
 .premium-card-overflow {
     overflow: visible !important;
     z-index: 10 !important;
@@ -358,6 +366,11 @@ table>thead>tr>th,
   box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1) !important;
 }
 
+[data-theme='dark'] .modal-body select.form-select:focus,
+[data-theme='dark'] .modal-body input.form-control:focus {
+  background-color: var(--slate-700) !important;
+}
+
 .btn-reset-fixed-height,
 .input-group-fixed-height {
   height: 38px !important;
@@ -434,6 +447,10 @@ dialog::backdrop {
     gap: 8px;
     padding-top: 10px !important;
     padding-bottom: 10px !important;
+}
+
+[data-theme='dark'] .tab-nav-container {
+    background-color: var(--slate-800);
 }
 
 .tab-nav-btn {

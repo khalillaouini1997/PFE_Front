@@ -270,4 +270,13 @@
 
     .nav-toggle-btn span::before { top: -8px; }
     .nav-toggle-btn span::after { top: 8px; }
+
+    [data-theme='dark'] .nav-toggle-btn span {
+        background: var(--slate-200);
+    }
+
+    [data-theme='dark'] .nav-toggle-btn span::before,
+    [data-theme='dark'] .nav-toggle-btn span::after {
+        background: var(--slate-200);
+    }
 }

@@ -272,6 +272,10 @@
   transition: var(--transition-base) var(--ease-default);
 }
 
+[data-theme='dark'] .mini-toggle-slider::before {
+  background: var(--slate-200);
+}
+
 /* ── Widget Header ──────────────────────────────────── */
 .widget-header {
   padding: var(--spacing-lg) var(--spacing-xl);
@@ -432,6 +436,10 @@
   padding: 0;
   border-radius: 0;
   background: white;
+}
+
+[data-theme='dark'] .fullscreen-card {
+  background: var(--slate-900);
 }
 .fullscreen-map {
   height: 100vh !important;

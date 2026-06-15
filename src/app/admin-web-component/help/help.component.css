@@ -12,6 +12,11 @@
     color: var(--primary);
 }
 
+[data-theme='dark'] .btn-search-white {
+    background: var(--slate-700);
+    color: var(--primary-300);
+}
+
 .table-container-70vh {
     max-height: 70vh;
 }
@@ -42,6 +47,10 @@
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-sm);
     transition: all 0.2s ease;
+}
+
+[data-theme='dark'] .table-premium tbody tr {
+    background: var(--slate-800);
 }
 
 .table-premium tbody td {

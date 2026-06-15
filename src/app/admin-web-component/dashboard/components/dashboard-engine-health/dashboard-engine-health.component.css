@@ -10,6 +10,11 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
+[data-theme='dark'] .engine-health-card {
+  background: var(--slate-800);
+  color: var(--slate-200);
+}
+
 .engine-health-card h3 {
   font-family: 'Public Sans', sans-serif;
   font-size: 16px;

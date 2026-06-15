@@ -11,6 +11,11 @@
   overflow: hidden;
 }
 
+[data-theme='dark'] .activity-card {
+  background: var(--slate-800);
+  color: var(--slate-200);
+}
+
 .activity-card h3 {
   font-family: 'Public Sans', sans-serif;
   font-size: 16px;

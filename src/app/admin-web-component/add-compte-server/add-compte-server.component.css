@@ -39,6 +39,11 @@
     overflow: hidden;
 }
 
+[data-theme='dark'] :host ::ng-deep .p-datepicker {
+    background-color: var(--slate-700) !important;
+    border-color: var(--slate-600) !important;
+}
+
 .premium-input {
     height: 55px !important;
     width: 100% !important;
@@ -49,6 +54,12 @@
     font-size: 1.1rem !important;
     box-shadow: none !important;
     outline: none !important;
+}
+
+[data-theme='dark'] .premium-input {
+    background-color: var(--slate-700) !important;
+    border-color: var(--slate-600) !important;
+    color: var(--slate-200) !important;
 }
 
 /* PrimeNG datepicker inner input only — no border, fills the wrapper */
@@ -145,6 +156,10 @@ h5.mt-4 {
     background-clip: padding-box;
     border: 1px solid #999;
     border: 0px solid rgba(0,0,0,.2);}
+
+[data-theme='dark'] .modal-content {
+    background-color: var(--slate-800);
+}
 
     h1 {
          font-size: 2em; 
