@@ -78,7 +78,7 @@ export class ComptesServerComponentComponent implements OnInit {
     this.comptesServer = [];
     this.cdr.detectChanges();
 
-    let page = 0;
+    let page = this.pagination.bigCurrentPage - 1;
     let size = this.pagination.itemsPerPage;
 
     if (event) {
@@ -119,7 +119,8 @@ export class ComptesServerComponentComponent implements OnInit {
 
   searchAccount(keyWord: string = '') {
     this.currentKeyWord = keyWord;
-    this.loadingInProgress = false; // Reset guard for explicit user search
+    this.pagination.bigCurrentPage = 1;
+    this.loadingInProgress = false;
     this.loadComptesServer();
   }
 

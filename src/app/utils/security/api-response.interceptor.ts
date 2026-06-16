@@ -15,7 +15,7 @@ export const apiResponseInterceptor: HttpInterceptorFn = (req, next) => {
       if (event instanceof HttpResponse) {
         // Skip unwrapping for authentication endpoints to maintain compatibility
         // These endpoints return Map<String, Object> with user data directly
-        if (req.url.includes('/authenticate') || req.url.includes('/refresh') || req.url.includes('/register') || req.url.includes('/user')) {
+        if (req.url.includes('/authenticate') || req.url.includes('/refresh')) {
           return event;
         }
 

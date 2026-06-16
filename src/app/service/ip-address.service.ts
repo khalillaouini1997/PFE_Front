@@ -1,6 +1,5 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { IpAddress, PageResponse } from '../data/data';
@@ -17,9 +16,7 @@ export class IpAddressService {
     ];
 
     getAllIps(): Observable<IpAddress[]> {
-        return this.http.get<any>(`${environment.apiBaseUrl}ips`).pipe(
-            map(response => response.data)
-        );
+        return this.http.get<IpAddress[]>(`${environment.apiBaseUrl}ips`);
     }
 
     getAllIpAddresses(keyword: string, page: number, size: number): Observable<PageResponse<IpAddress>> {

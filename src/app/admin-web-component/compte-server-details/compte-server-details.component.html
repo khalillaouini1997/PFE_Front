@@ -90,14 +90,14 @@
         </div>
         
         <p-table [value]="boitiers" 
-            [paginator]="true" [rows]="itemsPerPage" [totalRecords]="bigTotalItems" 
+            [lazy]="true" [paginator]="true" [rows]="itemsPerPage" [totalRecords]="bigTotalItems" 
             [rowsPerPageOptions]="[10,15,30,50,60]"
             [showCurrentPageReport]="true"
             [currentPageReportTemplate]="'{first} - {last} of {totalRecords}'"
             styleClass="p-datatable-sm p-datatable-gridlines premium-table-custom"
             responsiveLayout="scroll"
             paginatorPosition="bottom"
-            (onPage)="loadBoitierList($event)">
+            (onLazyLoad)="loadBoitierList($event)">
             
             <ng-template pTemplate="header">
                 <tr>

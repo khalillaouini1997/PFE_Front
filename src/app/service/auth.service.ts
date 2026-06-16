@@ -22,6 +22,10 @@ export class AuthService {
         return this.http.post<any>(`${environment.apiBaseUrl}authenticate`, body);
     }
 
+    refreshToken(): Observable<any> {
+        return this.http.post<any>(`${environment.apiBaseUrl}refresh`, {});
+    }
+
     saveSession(authResponse: any) {
         localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(authResponse));
         localStorage.setItem(STORAGE_KEYS.AUTH_STATUS, 'true');

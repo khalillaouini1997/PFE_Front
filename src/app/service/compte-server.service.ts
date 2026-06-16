@@ -14,10 +14,6 @@ export class CompteServerService {
   private readonly authService = inject(AuthService);
 
   // Compte Server CRUD
-  createServerCompte(compteServer: CompteServer): Observable<any> {
-    return this.http.post<any>(`${environment.apiBaseUrl}compteServer`, compteServer);
-  }
-
   updateServerCompte(id: number, compteServer: CompteServer): Observable<any> {
     return this.http.put<any>(`${environment.apiBaseUrl}compteServer/${id}`, compteServer);
   }

@@ -99,9 +99,4 @@ export class WebSocketService {
     isConnected(): boolean {
         return this.client.connected;
     }
-
-    // Helper to send messages if needed in future
-    sendMessage(destination: string, body: any) {
-        this.client.publish({ destination, body: JSON.stringify(body) });
-    }
 }

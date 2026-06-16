@@ -48,11 +48,6 @@ export class ThemeService {
     localStorage.setItem(this.THEME_KEY, newTheme);
   }
   
-  setTheme(theme: Theme): void {
-    this.currentTheme.set(theme);
-    localStorage.setItem(this.THEME_KEY, theme);
-  }
-  
   private applyTheme(theme: Theme): void {
     const htmlElement = this.document.documentElement;
     

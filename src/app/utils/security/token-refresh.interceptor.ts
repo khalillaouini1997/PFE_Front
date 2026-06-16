@@ -10,7 +10,7 @@ export const tokenRefreshInterceptor: HttpInterceptorFn = (req: HttpRequest<unkn
   const authService = inject(AuthService);
 
   // Skip token refresh for auth endpoints
-  if (req.url.includes('/auth') || req.url.includes('/login') || req.url.includes('/authenticate')) {
+  if (req.url.includes('/auth') || req.url.includes('/login') || req.url.includes('/authenticate') || req.url.includes('/refresh')) {
     return next(req);
   }
 
@@ -20,11 +20,18 @@ export const tokenRefreshInterceptor: HttpInterceptorFn = (req: HttpRequest<unkn
       if (error.status === 401 && !isRefreshing) {
         isRefreshing = true;
 
-        // For now, just logout on 401 since refreshToken doesn't exist yet
-        // This can be enhanced when backend supports token refresh
-        isRefreshing = false;
-        authService.logout();
-        return throwError(() => error);
+        return authService.refreshToken().pipe(
+          switchMap(() => {
+            isRefreshing = false;
+            // Retry the original request
+            return next(req);
+          }),
+          catchError((refreshError) => {
+            isRefreshing = false;
+            authService.logout();
+            return throwError(() => refreshError);
+          })
+        );
       }
 
       return throwError(() => error);

@@ -19,22 +19,10 @@ export class BillingService {
     return this.http.post(`${this.apiBaseUrl}billing/account/${accountId}/${year}/${month}/refresh`, null);
   }
 
-  getAllAccountsBilling(year: number, month: number): Observable<any> {
-    return this.http.get(`${this.apiBaseUrl}billing/accounts/${year}/${month}`);
-  }
-
   downloadPdfReport(accountId: number, year: number, month: number): Observable<Blob> {
     return this.http.get(
       `${this.apiBaseUrl}billing/account/${accountId}/${year}/${month}/pdf`,
       { responseType: 'blob' }
     );
-  }
-
-  triggerScheduledBilling(): Observable<any> {
-    return this.http.post(`${this.apiBaseUrl}billing/schedule/trigger`, {});
-  }
-
-  triggerScheduledBillingForAccount(accountId: number): Observable<any> {
-    return this.http.post(`${this.apiBaseUrl}billing/schedule/trigger/${accountId}`, {});
   }
 }

@@ -140,20 +140,20 @@ export class ConfigurationWebComponentComponent implements OnInit {
 
   initForms() {
     this.mainConfigForm = this.fb.group({
-      login: ['', Validators.required],
-      password: ['', Validators.required],
-      code_pays: ['', Validators.required],
-      date_expiration: [new Date(), Validators.required],
+      login: [''],
+      password: [''],
+      code_pays: [''],
+      date_expiration: [new Date()],
       options: [[]],
-      pool: [0, [Validators.required, Validators.min(0), Validators.max(4)]],
-      firstname: ['', Validators.required],
-      lastname: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      telephone: ['', Validators.required],
-      area: ['', Validators.required],
+      pool: [0],
+      firstname: [''],
+      lastname: [''],
+      email: [''],
+      telephone: [''],
+      area: [''],
       notificationSubquery: [''],
       mobileNotif: [false],
-      idCompteServer: [null, Validators.required] // Added idCompteServer
+      idCompteServer: [null]
     });
 
     this.recalculateForm = this.fb.group({
@@ -215,7 +215,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
 
         this.mainConfigForm.patchValue({
           login: _compteWeb.login,
-          password: _compteWeb.rawPassword,
+          password: _compteWeb.rawPassword || '',
           code_pays: _compteWeb.code_pays,
           date_expiration: new Date(_compteWeb.date_expiration),
           options: _compteWeb.options,
@@ -281,13 +281,18 @@ export class ConfigurationWebComponentComponent implements OnInit {
       return;
     }
     const formValue = this.mainConfigForm.value;
-    const updatedCompte = {
+    const updatedCompte: any = {
       ...this.compteWeb(),
       ...formValue,
-      rawPassword: formValue.password,
       date_expiration: (formValue.date_expiration as Date).getTime(),
       options: formValue.options
     };
+    if (formValue.password) {
+      updatedCompte.rawPassword = formValue.password;
+    } else {
+      delete updatedCompte.rawPassword;
+      delete updatedCompte.password;
+    }
 
     withToast(this.webAccountService.updateWebAccount(this.ID_COMPTE(), updatedCompte), this.toastr, this.translate, 'WEB_ACCOUNTS.ADD_SUCCESS')
       .pipe(

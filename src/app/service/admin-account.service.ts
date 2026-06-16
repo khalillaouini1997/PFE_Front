@@ -27,12 +27,4 @@ export class AdminAccountService {
             return throwError(() => new Error("Not authorized to add administrator accounts."));
         }
     }
-
-    getAllAdministratorCompteService(keyWord: string, page: number, size: number): Observable<PageResponse<AdministratorCompte>> {
-        if (this.authService.isAgentAdmin()) {
-            return this.http.get<PageResponse<AdministratorCompte>>(`${environment.apiBaseUrl}adminCompteWeb?keyWord=${keyWord}&page=${page}&size=${size}`);
-        } else {
-            return throwError(() => new Error("Not authorized to access administrator accounts."));
-        }
-    }
 }

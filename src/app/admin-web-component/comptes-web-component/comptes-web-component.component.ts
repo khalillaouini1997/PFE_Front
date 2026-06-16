@@ -79,7 +79,7 @@ export class ComptesWebComponentComponent implements OnInit {
     this.loading = true;
     this.cdr.detectChanges();
 
-    let page = 0;
+    let page = this.pagination.bigCurrentPage - 1;
     let size = this.pagination.itemsPerPage;
 
     if (event) {
@@ -137,7 +137,8 @@ export class ComptesWebComponentComponent implements OnInit {
 
   searchWebAccount(keyWord: string = '') {
     this.currentKeyWord = keyWord;
-    this.loadingInProgress = false; // Reset guard for explicit user action
+    this.pagination.bigCurrentPage = 1;
+    this.loadingInProgress = false;
     this.loadWebAccounts();
   }
 
