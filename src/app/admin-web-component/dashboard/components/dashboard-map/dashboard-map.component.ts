@@ -74,7 +74,6 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
 
       // Handle tile loading errors
       tileLayer.on('tileerror', (event: any) => {
-        console.error('Map tile error:', event);
         this.mapError.set('Map tiles failed to load. Check your internet connection.');
         this.isMapLoading.set(false);
       });
@@ -100,7 +99,6 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
       }, 10000);
       
     } catch (error) {
-      console.error('Map initialization error:', error);
       this.mapError.set('Failed to initialize map. Please refresh the page.');
       this.isMapLoading.set(false);
     }

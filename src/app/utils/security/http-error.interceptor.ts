@@ -22,7 +22,6 @@ export const httpErrorInterceptor: HttpInterceptorFn = (req, next) => {
         const shouldRetry = isRetryableError(error);
         
         if (shouldRetry && retryCount <= MAX_RETRIES) {
-          console.log(`Retrying request (${retryCount}/${MAX_RETRIES}):`, req.url);
           return timer(RETRY_DELAY_MS * retryCount);
         }
         

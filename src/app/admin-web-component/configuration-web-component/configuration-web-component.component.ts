@@ -385,7 +385,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
 
   updateBoitierState(idBoitier: number) {
     this.boitiers.update(arr => arr.map(boitier => {
-      if (boitier.idBoitier == idBoitier) {
+      if (boitier.numBoitier == idBoitier) {
         return { ...boitier, etatBoitier: "INSTALLED" };
       }
       return boitier;

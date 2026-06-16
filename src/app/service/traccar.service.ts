@@ -13,11 +13,7 @@ export class TraccarService {
 
   getLisTraccar(keyword: string = ''): Observable<any> {
     const userObj = this.authService.getCurrentUser();
-    console.log('TRACCAR DEBUG: userObj =', JSON.stringify(userObj));
-    console.log('TRACCAR DEBUG: userObj?.user =', JSON.stringify(userObj?.user));
-    console.log('TRACCAR DEBUG: userObj?.user?.idTraccar =', userObj?.user?.idTraccar);
     const idTraccar = userObj?.user?.idTraccar ?? 0;
-    console.log('TRACCAR DEBUG: final idTraccar =', idTraccar);
     let url = `${environment.apiBaseUrl}traccar/${idTraccar}`;
     if (keyword) {
       url += `?keyword=${encodeURIComponent(keyword)}`;
