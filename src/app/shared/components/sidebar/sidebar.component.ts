@@ -24,7 +24,6 @@ export class SidebarComponent implements OnInit {
   isActiveListServer: boolean = false;
   isActiveListWeb: boolean = false;
   isActiveRequest: boolean = false;
-  isActiveIntervention: boolean = false;
   isActiveAccessLog: boolean = false;
   isActiveTraccar: boolean = false;
   isActiveAdminCompte: boolean = false;

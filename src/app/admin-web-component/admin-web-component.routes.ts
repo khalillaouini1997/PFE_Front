@@ -58,14 +58,7 @@ export const ADMIN_WEB_ROUTES: Routes = [{
       path: 'archiveBoitier/:numBoitier',
       loadComponent: () => import('./archive/archive.component').then(m => m.ArchiveComponent)
     },
-    {
-      path: 'intervention',
-      loadComponent: () => import('./help/help.component').then(m => m.HelpComponent)
-    },
-    {
-      path: 'technicianIntervention',
-      loadComponent: () => import('./vehicule-info/vehicule-info.component').then(m => m.VehiculeInfoComponent)
-    },
+
     {
       path: 'accessLog',
       loadComponent: () => import('./access-log/access-log.component').then(m => m.AccessLogComponent)
