@@ -63,9 +63,9 @@ export class ComptesServerComponentComponent implements OnInit {
       idIpAdresse: [null, Validators.required]
     });
 
-    this.ipAddressService.getAllIps().subscribe((res: any) => {
+    this.ipAddressService.getAllIpAddresses('', 0, 100).subscribe((res: any) => {
       const responseData = res?.data || res;
-      this.ips = Array.isArray(responseData) ? responseData : (responseData?.content || []);
+      this.ips = responseData?.content || (Array.isArray(responseData) ? responseData : []);
       this.cdr.detectChanges();
     });
     this.loadComptesServer();

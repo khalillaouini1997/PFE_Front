@@ -80,8 +80,9 @@ export class AddCompteWebComponentComponent {
     });
 
     this.codesPays.set(this.webAccountService.codesPays);
-    this.ipAddressService.getAllIps().subscribe(res => {
-      this.ipAddresses.set(res);
+    this.ipAddressService.getAllIpAddresses('', 0, 100).subscribe(res => {
+      const content = res?.content || res;
+      this.ipAddresses.set(Array.isArray(content) ? content : []);
     });
   }
 

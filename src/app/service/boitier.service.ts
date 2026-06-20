@@ -104,8 +104,8 @@ export class BoitierService {
         return this.http.put<void>(`${environment.apiBaseUrl}boities/${idCompteWeb}/resetLastId`, vehiculeSetting);
     }
 
-    getDeviceIdImei(url: string, imei: number): Observable<any> {
-        return this.http.get<any>(url + imei);
+    getDeviceIdImei(idIpAdresse: number, imei: number): Observable<any> {
+        return this.http.get<any>(`${environment.apiBaseUrl}boities/device-by-imei?idIpAdresse=${idIpAdresse}&imei=${imei}`);
     }
 
     getBoitierAnalysis(numBoitier: number, days: number = 30): Observable<BoitierAnalysis> {

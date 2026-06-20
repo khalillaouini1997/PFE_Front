@@ -258,9 +258,10 @@ export class ConfigurationWebComponentComponent implements OnInit {
 
 
   getAllIps() {
-    this.ipAddressService.getAllIps().subscribe({
+    this.ipAddressService.getAllIpAddresses('', 0, 100).subscribe({
       next: (res) => {
-        this.ipAddresses.set(res);
+        const content = res?.content || res;
+        this.ipAddresses.set(Array.isArray(content) ? content : []);
       },
       error: () => {
         this.ipAddresses.set([]);
@@ -406,7 +407,8 @@ export class ConfigurationWebComponentComponent implements OnInit {
     this.compteServerService.getAllBoitierofIdcompte(idServer).subscribe({
       next: (res: any) => {
         const responseData = res?.data || res;
-        this.boitiers.set(Array.isArray(responseData) ? responseData : []);
+        const boitiers = responseData?.content || responseData;
+        this.boitiers.set(Array.isArray(boitiers) ? boitiers : []);
         this.boitiersClicked.set(true);
       },
       error: () => {
@@ -660,9 +662,8 @@ export class ConfigurationWebComponentComponent implements OnInit {
 
   getSearchDeviceIemi(imei: string) {
     const idIpAdresse = this.deviceSettingForm.get('idIpAdresse')?.value;
-    const url = this.ipAddresses().find(ip => ip.idIpAdresse == idIpAdresse)?.urlGetId;
-    if (url) {
-      this.boitierService.getDeviceIdImei(url, Number.parseInt(imei)).subscribe((res: any) => {
+    if (idIpAdresse) {
+      this.boitierService.getDeviceIdImei(idIpAdresse, Number.parseInt(imei)).subscribe((res: any) => {
         const responseData = res?.data || res;
         this.deviceSettingForm.patchValue({ streamId: responseData?.id });
       });

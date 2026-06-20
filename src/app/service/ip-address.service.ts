@@ -15,10 +15,6 @@ export class IpAddressService {
         { type: "http" }
     ];
 
-    getAllIps(): Observable<IpAddress[]> {
-        return this.http.get<IpAddress[]>(`${environment.apiBaseUrl}ips`);
-    }
-
     getAllIpAddresses(keyword: string, page: number, size: number): Observable<PageResponse<IpAddress>> {
         return this.http.get<PageResponse<IpAddress>>(`${environment.apiBaseUrl}ips/all?keyWord=${keyword}&page=${page}&size=${size}`);
     }

@@ -3,7 +3,6 @@ import { HttpClient } from "@angular/common/http";
 import { CompteServer } from "../data/data";
 import { Observable } from "rxjs";
 import { environment } from '../../environments/environment';
-import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +10,6 @@ import { AuthService } from './auth.service';
 export class CompteServerService {
 
   private readonly http = inject(HttpClient);
-  private readonly authService = inject(AuthService);
 
   // Compte Server CRUD
   updateServerCompte(id: number, compteServer: CompteServer): Observable<any> {
@@ -23,7 +21,7 @@ export class CompteServerService {
   }
 
   getAllServerAccount(keyWord: string, page: number, size: number): Observable<any> {
-    return this.http.get<any>(`${environment.apiBaseUrl}compteServer?keyWord=${keyWord}&page=${page}&size=${size}&userName=${this.authService.getCurrentUserName()}`);
+    return this.http.get<any>(`${environment.apiBaseUrl}compteServer?keyWord=${keyWord}&page=${page}&size=${size}`);
   }
 
   getCompteServerById(id: number): Observable<any> {
@@ -35,8 +33,8 @@ export class CompteServerService {
     return this.http.post<any>(`${environment.apiBaseUrl}compteServer/${idCompteServer}?nombreBoitier=${nbrBoitiers}`, null);
   }
 
-  getAllBoitierofIdcompte(idCompteServer: number): Observable<any> {
-    return this.http.get<any>(`${environment.apiBaseUrl}compteServer/${idCompteServer}/listBoitiers`);
+  getAllBoitierofIdcompte(idCompteServer: number, page: number = 0, size: number = 100): Observable<any> {
+    return this.http.get<any>(`${environment.apiBaseUrl}compteServer/${idCompteServer}/Boitiers?page=${page}&size=${size}`);
   }
 
   extendIntervalOfBoitiers(idCompteServer: number): Observable<any> {
@@ -44,11 +42,11 @@ export class CompteServerService {
   }
 
   getAllServerAccountForForm(): Observable<any[]> {
-    return this.http.get<any[]>(`${environment.apiBaseUrl}compteServer/AllNames?userName=${this.authService.getCurrentUserName()}`);
+    return this.http.get<any[]>(`${environment.apiBaseUrl}compteServer/AllNames`);
   }
 
   createServerComptewithBoitier(compteServer: CompteServer, nbrBoitiers: number): Observable<any> {
-    return this.http.post<any>(`${environment.apiBaseUrl}compteServer/addNewComptewithBoitier?nombreBoitier=${nbrBoitiers}&username=${this.authService.getCurrentUserName()}`, compteServer);
+    return this.http.post<any>(`${environment.apiBaseUrl}compteServer/addNewComptewithBoitier?nombreBoitier=${nbrBoitiers}`, compteServer);
   }
 
   // Misc

@@ -3,14 +3,12 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { CompteClientWebInfoDTO, DeviceInstallationEvolution, OptionInfoDTO, PageResponse, RealTime } from '../data/data';
-import { AuthService } from './auth.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class WebAccountService {
     private readonly http = inject(HttpClient);
-    private readonly authService = inject(AuthService);
 
     readonly codesPays = [
         { key: "Maroc", value: "212" },
@@ -20,11 +18,11 @@ export class WebAccountService {
     ];
 
     addCompteWeb(compteWeb: any): Observable<CompteClientWebInfoDTO> {
-        return this.http.post<CompteClientWebInfoDTO>(`${environment.apiBaseUrl}compteWeb?userName=${this.authService.getCurrentUserName()}`, compteWeb);
+        return this.http.post<CompteClientWebInfoDTO>(`${environment.apiBaseUrl}compteWeb`, compteWeb);
     }
 
     getAllWebAccountByKeyWord(keyWord: string, page: number, size: number, region?: string, pool?: number): Observable<PageResponse<CompteClientWebInfoDTO>> {
-        let url = `${environment.apiBaseUrl}compteWeb?keyWord=${keyWord}&page=${page}&size=${size}&userName=${this.authService.getCurrentUserName()}`;
+        let url = `${environment.apiBaseUrl}compteWeb?keyWord=${keyWord}&page=${page}&size=${size}`;
         if (region) {
             url += `&region=${region}`;
         }
@@ -35,7 +33,7 @@ export class WebAccountService {
     }
 
     getWebAccountById(id: number): Observable<CompteClientWebInfoDTO> {
-        return this.http.get<CompteClientWebInfoDTO>(`${environment.apiBaseUrl}compteWeb/${id}?userName=${this.authService.getCurrentUserName()}`);
+        return this.http.get<CompteClientWebInfoDTO>(`${environment.apiBaseUrl}compteWeb/${id}`);
     }
 
     updateWebAccount(idCompteWeb: number, newCompteWeb: any): Observable<CompteClientWebInfoDTO> {
@@ -44,10 +42,6 @@ export class WebAccountService {
 
     deleteWebAccount(id: number): Observable<void> {
         return this.http.delete<void>(`${environment.apiBaseUrl}compteWeb/${id}`);
-    }
-
-    getAllCompteClientWeb(): Observable<CompteClientWebInfoDTO[]> {
-        return this.http.get<CompteClientWebInfoDTO[]>(`${environment.apiBaseUrl}compteWeb/All?userName=${this.authService.getCurrentUserName()}`);
     }
 
     getAllLastTram(idCompteWeb: number): Observable<RealTime[]> {
@@ -72,7 +66,7 @@ export class WebAccountService {
 
     // Lighter version for dropdowns — only returns {idCompteClientWeb, login}
     getAllWebAccountNames(): Observable<any[]> {
-        const url = `${environment.apiBaseUrl}compteWeb/AllNames?userName=${this.authService.getCurrentUserName()}`;
+        const url = `${environment.apiBaseUrl}compteWeb/AllNames`;
         return this.http.get<any[]>(url);
     }
 
