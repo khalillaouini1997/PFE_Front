@@ -2,7 +2,6 @@ import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, throwError, retry, timer } from 'rxjs';
-import { AuthService } from '../../service/auth.service';
 import { ProblemDetail, isProblemDetail } from '../../shared/models/problem-detail.model';
 
 // Error tracking for retry logic
@@ -11,7 +10,6 @@ const MAX_RETRIES = 2;
 const RETRY_DELAY_MS = 1000;
 
 export const httpErrorInterceptor: HttpInterceptorFn = (req, next) => {
-  const authService = inject(AuthService);
   const router = inject(Router);
 
   return next(req).pipe(
@@ -33,9 +31,6 @@ export const httpErrorInterceptor: HttpInterceptorFn = (req, next) => {
       const errorMessage = extractErrorMessage(error);
 
       if (error.status === 401) {
-        // Token expired or invalid
-        authService.logout();
-        router.navigate(['/authentification']);
         return throwError(() => error);
       }
 

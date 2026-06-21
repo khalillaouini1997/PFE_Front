@@ -60,7 +60,7 @@ bootstrapApplication(AppComponent, {
         registrationStrategy: 'registerWhenStable:30000'
       })
     ),
-    provideHttpClient(withInterceptors([authInterceptor, tokenRefreshInterceptor, apiResponseInterceptor, httpErrorInterceptor])),
+    provideHttpClient(withInterceptors([authInterceptor, apiResponseInterceptor, httpErrorInterceptor, tokenRefreshInterceptor])),
     provideAnimations(),
     providePrimeNG({
         theme: {
