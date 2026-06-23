@@ -179,10 +179,10 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
     })
       .bindPopup(`
         <div style="font-family:'Public Sans',sans-serif">
-          <b style="color:#2b3674;font-size:14px">${tram.matricule}</b><br>
-          <span style="color:#a3aed0">ID:</span> ${tram.deviceid}<br>
-          <span style="color:#a3aed0">Vitesse:</span> <b>${tram.speed} km/h</b><br>
-          <span style="color:#a3aed0">Status:</span> ${tram.status}
+          <b style="color:var(--text-primary);font-size:14px">${tram.matricule}</b><br>
+          <span style="color:var(--text-muted)">ID:</span> ${tram.deviceid}<br>
+          <span style="color:var(--text-muted)">Vitesse:</span> <b>${tram.speed} km/h</b><br>
+          <span style="color:var(--text-muted)">Status:</span> ${tram.status}
         </div>
       `)
       .on('click', () => this.locateDevice.emit(tram));

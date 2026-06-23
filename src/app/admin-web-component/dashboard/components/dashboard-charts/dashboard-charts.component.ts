@@ -275,7 +275,7 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
         label: 'Cumulative Devices',
         data: cumulativeData,
         borderColor: CHART_CONSTANTS.COLORS.PRIMARY,
-        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+        backgroundColor: 'rgba(20, 184, 166, 0.1)',
         fill: true,
         tension: 0.4
       }]

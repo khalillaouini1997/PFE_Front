@@ -12,17 +12,17 @@ export const MAP_CONSTANTS = {
 
 export const CHART_CONSTANTS = {
   COLORS: {
-    VALID: '#05cd99',
-    ISSUE: '#ee5d50',
-    NON_VALID: '#ffb800',
-    PRIMARY: '#4318ff',
+    VALID: '#10b981',
+    ISSUE: '#ef4444',
+    NON_VALID: '#f59e0b',
+    PRIMARY: '#14b8a6',
     ORANGE_TUNISIE: '#ff7900',
-    TUNISIE_TELECOM: '#0075c2',
-    OOREDOO: '#ed1c24',
-    UNKNOWN: '#a3aed0',
-    SPARK_TOTAL: '#4f46e5',
+    TUNISIE_TELECOM: '#38bdf8',
+    OOREDOO: '#f43f5e',
+    UNKNOWN: '#64748b',
+    SPARK_TOTAL: '#14b8a6',
     SPARK_VALID: '#10b981',
-    SPARK_ISSUE: '#f43f5e',
+    SPARK_ISSUE: '#ef4444',
     SPARK_MOVING: '#f59e0b'
   },
   SPARKLINE_STEPS: 6,

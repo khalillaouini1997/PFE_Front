@@ -44,7 +44,7 @@ export class DashboardEngineHealthComponent {
       case 'healthy': return '#10b981';
       case 'warning': return '#f59e0b';
       case 'critical': return '#f43f5e';
-      default: return '#a3aed0';
+      default: return '#64748b';
     }
   }
 
