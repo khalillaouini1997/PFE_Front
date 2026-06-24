@@ -90,10 +90,6 @@
                 <i class="fa fa-map-marker me-2" style="color:var(--accent-primary)"></i>
                 {{ 'DASHBOARD.GEO_TRACKING' | translate }}
               </h5>
-              <button class="btn-icon" (click)="toggleMapOverlay()"
-                title="{{ 'COMMON.EXTERNAL_WINDOW' | translate }}">
-                <i class="fa fa-expand"></i>
-              </button>
             </div>
             <app-dashboard-map [realtimes]="realtimes()"></app-dashboard-map>
           </div>
