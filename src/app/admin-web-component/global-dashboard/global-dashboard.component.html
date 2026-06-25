@@ -1,0 +1,72 @@
+<div class="main-panel p-4">
+  <div class="container-fluid dashboard-container">
+
+    <!-- Header -->
+    <div class="premium-card mb-4 header-gradient">
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <div class="title-section">
+          <h2 class="m-0">{{ 'GLOBAL_DASHBOARD.TITLE' | translate }}</h2>
+          <p class="m-0" style="font-size:.85rem; color: var(--text-secondary)">{{ 'GLOBAL_DASHBOARD.SUBTITLE' | translate }}</p>
+        </div>
+        <div class="controls-section d-flex align-items-center gap-2 flex-wrap">
+          <div class="notif-btn">
+            <i class="fa fa-bell"></i>
+            <span class="notif-badge">3</span>
+          </div>
+          <button class="btn-action-dash" (click)="onExport()" [disabled]="realtimes().length === 0"
+            title="{{ 'COMMON.EXPORT' | translate }}">
+            <i class="fa fa-download"></i>
+            <span class="d-none d-md-inline">{{ 'COMMON.EXPORT' | translate }}</span>
+          </button>
+          <button class="btn-refresh-dash" (click)="onRefresh()"
+            title="{{ 'COMMON.REFRESH' | translate }}">
+            <i class="fa fa-refresh"></i>
+            <span class="d-none d-md-inline">{{ 'COMMON.REFRESH' | translate }}</span>
+          </button>
+        </div>
+      </div>
+      <div class="radar-pulse">
+        <div class="radar-ring"></div>
+        <div class="radar-ring"></div>
+        <div class="radar-ring"></div>
+      </div>
+    </div>
+
+    <!-- Global loading -->
+    @if (loading()) {
+    <div class="global-spinner premium-card d-flex flex-column align-items-center justify-content-center text-center">
+      <div class="spinner-border" style="width:3rem;height:3rem;border-width:.3em;color:var(--accent-primary)" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <h4 class="mt-4 fw-bold" style="color:var(--text-primary)">{{ 'DASHBOARD.UPDATING_DATA' | translate }}</h4>
+      <p class="m-0" style="color:var(--text-muted)">Loading global fleet data...</p>
+    </div>
+    }
+
+    <!-- Main content -->
+    <div class="dashboard-content-wrapper" [class.content-loading]="loading()">
+
+      <!-- KPI Row -->
+      <div class="row g-3">
+        <div class="col-12">
+          <app-global-kpi [stats]="stats()"></app-global-kpi>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div class="row mt-3">
+        <div class="col-12">
+          <app-global-charts [realtimes]="realtimes()" [stats]="stats()"></app-global-charts>
+        </div>
+      </div>
+
+      <!-- No data -->
+      @if (realtimes().length === 0 && !loading()) {
+      <div class="premium-card text-center p-5 mt-4">
+        <i class="fa fa-folder-open-o fa-4x mb-4" style="color:var(--text-muted);opacity:0.3"></i>
+        <h4 class="fw-bold" style="color:var(--text-primary)">{{ 'DASHBOARD.NO_DATA_DESC' | translate }}</h4>
+      </div>
+      }
+    </div>
+  </div>
+</div>

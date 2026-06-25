@@ -15,6 +15,10 @@ export const ADMIN_WEB_ROUTES: Routes = [{
       loadComponent: () => import('./dashboard/dashboard.component').then(m => m.DashboardComponent)
     },
     {
+      path: 'global-dashboard',
+      loadComponent: () => import('./global-dashboard/global-dashboard.component').then(m => m.GlobalDashboardComponent)
+    },
+    {
       path: 'adminCompte',
       loadComponent: () => import('./compte-admin/compte-admin.component').then(m => m.CompteAdminComponent)
     },

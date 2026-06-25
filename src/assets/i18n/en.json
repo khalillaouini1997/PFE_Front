@@ -14,7 +14,8 @@
     "SYSTEM": "System",
     "BILLING": "Billing",
     "ACCESS_LOG": "Access Log",
-    "LOGOUT": "Logout"
+    "LOGOUT": "Logout",
+    "GLOBAL_DASHBOARD": "Global Dashboard"
   },
   "COMMON": {
     "ALL": "All",
@@ -148,6 +149,30 @@
     "SPEED_DISTRIBUTION": "Speed Distribution",
     "SIM_CARD_PROVIDERS": "Sim Card Providers",
     "SIGNAL_QUALITY": "Signal Quality"
+  },
+  "GLOBAL_DASHBOARD": {
+    "TITLE": "Global Fleet Dashboard",
+    "SUBTITLE": "Fleet-wide monitoring across all accounts",
+    "TOTAL_FLEET": "Total Fleet",
+    "ACTIVE_FLEET": "Active Fleet",
+    "STOPPED_FLEET": "Stopped Fleet",
+    "VALID_STATUS": "Valid Status",
+    "TECHNICAL_ISSUES": "Technical Issues",
+    "TOTAL_ACCOUNTS": "Total Accounts",
+    "ACCOUNT_BREAKDOWN": "Account Breakdown",
+    "ACCOUNT": "Account",
+    "AREA": "Area",
+    "TOTAL_VEHICLES": "Total Vehicles",
+    "MOVING": "Moving",
+    "STOPPED": "Stopped",
+    "VALID": "Valid",
+    "ISSUES": "Issues",
+    "AVG_SPEED": "Avg Speed",
+    "VEHICLE_STATUS": "Vehicle Status",
+    "SPEED_DISTRIBUTION": "Speed Distribution",
+    "SIM_PROVIDERS": "SIM Card Providers",
+    "SIGNAL_QUALITY": "Signal Quality",
+    "FLEET_ACTIVITY": "Fleet Activity"
   },
   "ARCHIVE": {
     "TITLE": "Archives & Raw",

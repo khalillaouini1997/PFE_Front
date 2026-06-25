@@ -23,6 +23,12 @@
                     <p>{{ 'SIDEBAR.DASHBOARD' | translate }} @if (notificationCount > 0) {<span class="badge rounded-pill bg-danger ms-2">{{notificationCount}}</span>}</p>
                 </a>
             </li>
+            <li [class.active]="isActiveGlobalDashBoard">
+                <a routerLink="/adminWeb/global-dashboard" (click)="setMenu('globalDashboard')" [title]="isCollapsed() ? ('SIDEBAR.GLOBAL_DASHBOARD' | translate) : ''">
+                    <i class="material-icons">public</i>
+                    <p>{{ 'SIDEBAR.GLOBAL_DASHBOARD' | translate }}</p>
+                </a>
+            </li>
             <li [class.active]="isActiveTraccar">
                 <a routerLink="/adminWeb/traccar" (click)="setMenu('traccar')" [title]="isCollapsed() ? ('SIDEBAR.TRACCAR' | translate) : ''">
                     <i class="material-icons">room</i>

@@ -14,7 +14,8 @@
     "SYSTEM": "Système",
     "BILLING": "Facturation",
     "ACCESS_LOG": "Journal d'accès",
-    "LOGOUT": "Déconnecter"
+    "LOGOUT": "Déconnecter",
+    "GLOBAL_DASHBOARD": "Tableau de bord global"
   },
   "COMMON": {
     "ALL": "Tous",
@@ -148,6 +149,30 @@
     "SPEED_DISTRIBUTION": "Distribution de la Vitesse",
     "SIM_CARD_PROVIDERS": "Fournisseurs de Cartes SIM",
     "SIGNAL_QUALITY": "Qualité du Signal"
+  },
+  "GLOBAL_DASHBOARD": {
+    "TITLE": "Tableau de bord global de la flotte",
+    "SUBTITLE": "Suivi global de la flotte à travers tous les comptes",
+    "TOTAL_FLEET": "Flotte Totale",
+    "ACTIVE_FLEET": "Flotte Active",
+    "STOPPED_FLEET": "Flotte Arrêtée",
+    "VALID_STATUS": "Statut Valide",
+    "TECHNICAL_ISSUES": "Problèmes Techniques",
+    "TOTAL_ACCOUNTS": "Total Comptes",
+    "ACCOUNT_BREAKDOWN": "Répartition par Compte",
+    "ACCOUNT": "Compte",
+    "AREA": "Région",
+    "TOTAL_VEHICLES": "Total Véhicules",
+    "MOVING": "En Mouvement",
+    "STOPPED": "Arrêté",
+    "VALID": "Valide",
+    "ISSUES": "Problèmes",
+    "AVG_SPEED": "Vit. Moy.",
+    "VEHICLE_STATUS": "Statut des Véhicules",
+    "SPEED_DISTRIBUTION": "Distribution de la Vitesse",
+    "SIM_PROVIDERS": "Fournisseurs SIM",
+    "SIGNAL_QUALITY": "Qualité du Signal",
+    "FLEET_ACTIVITY": "Activité de la Flotte"
   },
   "ARCHIVE": {
     "TITLE": "Archives & Brutes",
