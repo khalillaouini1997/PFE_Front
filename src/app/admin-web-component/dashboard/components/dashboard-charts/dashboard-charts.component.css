@@ -17,6 +17,10 @@
 }
 
 /* ── Full-width evolution chart ── */
+.evolution-chart-container {
+  margin-bottom: var(--spacing-lg);
+}
+
 .chart-card-full {
   background: var(--surface-card);
   border: 1px solid var(--surface-border);

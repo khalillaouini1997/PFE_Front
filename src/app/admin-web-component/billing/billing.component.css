@@ -438,6 +438,33 @@
   100% { transform: rotate(360deg); }
 }
 
+/* No invoice state */
+.no-invoice-state {
+  text-align: center;
+  padding: var(--spacing-3xl);
+  background: var(--surface-card);
+  border: 2px dashed var(--surface-border);
+  border-radius: var(--card-border-radius);
+  margin-top: var(--spacing-xl);
+}
+
+.no-invoice-icon {
+  font-size: 3rem;
+  margin-bottom: var(--spacing-md);
+}
+
+.no-invoice-state h3 {
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.no-invoice-state p {
+  color: var(--text-muted);
+  font-size: var(--text-base);
+}
+
 /* Respect reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
   .spinner {

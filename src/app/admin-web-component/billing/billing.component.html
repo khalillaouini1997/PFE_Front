@@ -18,6 +18,7 @@
               id="accountId" 
               formControlName="accountId" 
               class="form-control"
+              (change)="onAccountChange()"
             >
               <option value="">{{ loadingAccounts ? ('BILLING.LOADING_ACCOUNTS' | translate) : ('BILLING.SELECT_ACCOUNT' | translate) }}</option>
               <option *ngFor="let account of webAccounts" [value]="account.idCompteClientWeb">
@@ -87,6 +88,13 @@
   <div *ngIf="loading" class="loading-state">
     <div class="spinner"></div>
     <p>{{ 'BILLING.LOADING' | translate }}</p>
+  </div>
+
+  <!-- No existing invoice -->
+  <div *ngIf="noExistingInvoice && !loading" class="no-invoice-state">
+    <div class="no-invoice-icon">📋</div>
+    <h3>No Invoice Found</h3>
+    <p>No billing invoice exists for this account and period. Click <strong>Calculate</strong> to generate one.</p>
   </div>
 
   <!-- Results Section -->

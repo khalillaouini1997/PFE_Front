@@ -21,6 +21,7 @@ export class BillingComponent implements OnInit {
   selectedAccountId: number | null = null;
   webAccounts: any[] = [];
   loadingAccounts: boolean = false;
+  noExistingInvoice: boolean = false;
 
   private readonly billingService = inject(BillingService);
   private readonly webAccountService = inject(WebAccountService);
@@ -65,6 +66,46 @@ export class BillingComponent implements OnInit {
     });
   }
 
+  onAccountChange() {
+    const accountId = this.billingForm.get('accountId')?.value;
+    if (!accountId) {
+      this.billingResult = null;
+      this.noExistingInvoice = false;
+      return;
+    }
+
+    this.checkExistingInvoice();
+  }
+
+  checkExistingInvoice() {
+    const accountId = this.billingForm.get('accountId')?.value;
+    const year = this.billingForm.get('year')?.value;
+    const month = this.billingForm.get('month')?.value;
+
+    if (!accountId) return;
+
+    this.loading = true;
+    this.billingResult = null;
+    this.noExistingInvoice = false;
+
+    this.billingService.checkExistingInvoice(accountId, year, month).subscribe({
+      next: (res: any) => {
+        const data = res?.data || res;
+        if (data && data.totalAmount > 0) {
+          this.billingResult = data;
+          this.noExistingInvoice = false;
+        } else {
+          this.noExistingInvoice = true;
+        }
+        this.loading = false;
+      },
+      error: (err) => {
+        this.noExistingInvoice = true;
+        this.loading = false;
+      }
+    });
+  }
+
   calculateBilling() {
     if (this.billingForm.invalid) {
       this.toastr.error(this.translate.instant('BILLING.INVALID_FORM'), this.translate.instant('COMMON.ERROR'));
@@ -81,6 +122,7 @@ export class BillingComponent implements OnInit {
     }
 
     this.loading = true;
+    this.noExistingInvoice = false;
     withToast(this.billingService.calculateMonthlyBilling(accountId, year, month), this.toastr, this.translate, 'BILLING.CALCULATION_SUCCESS')
       .subscribe({
         next: (res: any) => {
@@ -108,6 +150,7 @@ export class BillingComponent implements OnInit {
       .subscribe({
         next: (res: any) => {
           this.billingResult = res?.data || res;
+          this.noExistingInvoice = false;
           this.loading = false;
         },
         error: (err) => {

@@ -25,4 +25,8 @@ export class BillingService {
       { responseType: 'blob' }
     );
   }
+
+  checkExistingInvoice(accountId: number, year: number, month: number): Observable<any> {
+    return this.http.get(`${this.apiBaseUrl}billing/account/${accountId}/${year}/${month}/check`);
+  }
 }

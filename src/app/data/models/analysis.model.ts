@@ -21,7 +21,6 @@ export interface BoitierAnalysis {
   numBoitier: number;
   analyzedDays: number;
   uptimePercentage: number;
-  totalExpectedFrames: number;
   totalReceivedFrames: number;
   healthScore: number;
   offlineGaps: OfflineGap[];
