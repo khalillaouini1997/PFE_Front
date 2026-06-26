@@ -81,4 +81,8 @@ export class WebAccountService {
     getDistinctPools(): Observable<number[]> {
         return this.http.get<number[]>(`${environment.apiBaseUrl}compteWeb/pools`);
     }
+
+    getAllLastTramGlobal(limit: number = 200): Observable<RealTime[]> {
+        return this.http.get<RealTime[]>(`${environment.apiBaseUrl}compteWeb/AllLastTram?limit=${limit}`);
+    }
 }

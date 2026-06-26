@@ -49,6 +49,7 @@ export class GlobalDashboardStore implements OnDestroy {
   init() {
     this.updateState({ loading: true, error: null });
     this.loadAccountCount();
+    this.loadAllRealtimesViaHttp();
     this.connectWebSocket();
   }
 
@@ -66,6 +67,20 @@ export class GlobalDashboardStore implements OnDestroy {
     });
   }
 
+  private loadAllRealtimesViaHttp() {
+    this.webAccountService.getAllLastTramGlobal().subscribe({
+      next: (res: any) => {
+        const data = res?.data || res;
+        const list = Array.isArray(data) ? data : [];
+        this.updateState({ realtimes: list as GlobalRealTime[], loading: false });
+        this.recalculateStats();
+      },
+      error: () => {
+        this.updateState({ loading: false, error: 'Failed to load fleet data' });
+      }
+    });
+  }
+
   private connectWebSocket() {
     if (!this.webSocketService.isConnected()) {
       this.webSocketService.connect();
@@ -77,9 +92,6 @@ export class GlobalDashboardStore implements OnDestroy {
           if (!positions?.length) return;
           this.updateState({ realtimes: positions as GlobalRealTime[], loading: false });
           this.recalculateStats();
-        },
-        error: () => {
-          this.updateState({ loading: false, error: 'WebSocket connection lost' });
         }
       });
 
@@ -105,6 +117,7 @@ export class GlobalDashboardStore implements OnDestroy {
   refresh() {
     this.updateState({ loading: true, error: null });
     this.loadAccountCount();
+    this.loadAllRealtimesViaHttp();
   }
 
   private updateState(partial: Partial<GlobalDashboardState>) {
