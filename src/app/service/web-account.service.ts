@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { CompteClientWebInfoDTO, DeviceInstallationEvolution, OptionInfoDTO, PageResponse, RealTime } from '../data/data';
+import { CompteClientWebInfoDTO, DeviceInstallationEvolution, OptionInfoDTO, PageResponse, RealTime, RealTimeSummary } from '../data/data';
 
 @Injectable({
     providedIn: 'root'
@@ -84,5 +84,9 @@ export class WebAccountService {
 
     getAllLastTramGlobal(limit: number = 200): Observable<RealTime[]> {
         return this.http.get<RealTime[]>(`${environment.apiBaseUrl}compteWeb/AllLastTram?limit=${limit}`);
+    }
+
+    getAllLastTramSummary(): Observable<RealTimeSummary[]> {
+        return this.http.get<RealTimeSummary[]>(`${environment.apiBaseUrl}compteWeb/AllLastTram/summary`);
     }
 }

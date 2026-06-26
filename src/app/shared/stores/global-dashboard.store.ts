@@ -1,5 +1,5 @@
 import { Injectable, inject, signal, computed, OnDestroy } from '@angular/core';
-import { CompteClientWebInfoDTO, RealTime } from '../../data/data';
+import { CompteClientWebInfoDTO, RealTimeSummary } from '../../data/data';
 import { WebAccountService } from '../../service/web-account.service';
 import { WebSocketService } from '../../service/web-socket.service';
 import { Subscription } from 'rxjs';
@@ -15,7 +15,7 @@ export interface GlobalDashboardStats {
   accountsCount: number;
 }
 
-export interface GlobalRealTime extends RealTime {}
+export interface GlobalRealTime extends RealTimeSummary {}
 
 export interface GlobalDashboardState {
   comptesWeb: CompteClientWebInfoDTO[];
@@ -68,7 +68,7 @@ export class GlobalDashboardStore implements OnDestroy {
   }
 
   private loadAllRealtimesViaHttp() {
-    this.webAccountService.getAllLastTramGlobal().subscribe({
+    this.webAccountService.getAllLastTramSummary().subscribe({
       next: (res: any) => {
         const data = res?.data || res;
         const list = Array.isArray(data) ? data : [];
@@ -90,7 +90,7 @@ export class GlobalDashboardStore implements OnDestroy {
       .subscribe({
         next: (positions) => {
           if (!positions?.length) return;
-          this.updateState({ realtimes: positions as GlobalRealTime[], loading: false });
+          this.updateState({ realtimes: positions as unknown as GlobalRealTime[], loading: false });
           this.recalculateStats();
         }
       });
