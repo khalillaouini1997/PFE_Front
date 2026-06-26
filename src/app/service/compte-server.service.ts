@@ -33,7 +33,7 @@ export class CompteServerService {
     return this.http.post<any>(`${environment.apiBaseUrl}compteServer/${idCompteServer}?nombreBoitier=${nbrBoitiers}`, null);
   }
 
-  getAllBoitierofIdcompte(idCompteServer: number, page: number = 0, size: number = 100): Observable<any> {
+  getAllBoitierofIdcompte(idCompteServer: number, page: number = 0, size: number = 10000): Observable<any> {
     return this.http.get<any>(`${environment.apiBaseUrl}compteServer/${idCompteServer}/Boitiers?page=${page}&size=${size}`);
   }
 
