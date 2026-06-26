@@ -178,19 +178,23 @@ export class BillingComponent implements OnInit {
     this.loading = true;
     this.billingService.downloadPdfReport(accountId, year, month)
       .pipe(
-        tap(() => this.toastr.success(this.translate.instant('BILLING.PDF_DOWNLOAD_SUCCESS'), this.translate.instant('COMMON.SUCCESS'))),
         finalize(() => { this.loading = false; })
       )
       .subscribe({
         next: (blob: Blob) => {
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = `billing_report_${accountId}_${year}-${month}.pdf`;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          window.URL.revokeObjectURL(url);
+          if (blob && blob.size > 0 && blob.type !== 'application/json') {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `billing_report_${accountId}_${year}-${month}.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            this.toastr.success(this.translate.instant('BILLING.PDF_DOWNLOAD_SUCCESS'), this.translate.instant('COMMON.SUCCESS'));
+          } else {
+            this.toastr.error('Failed to generate PDF', this.translate.instant('COMMON.ERROR'));
+          }
         },
         error: (err) => {
           this.toastr.error(this.translate.instant('COMMON.AN_ERROR_OCCURRED'), this.translate.instant('COMMON.ERROR'));
