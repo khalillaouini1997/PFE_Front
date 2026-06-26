@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { withToast } from '../../utils/toast.helpers';
+import { finalize, tap } from 'rxjs';
 import { BillingService } from 'src/app/service/billing.service';
 import { WebAccountService } from 'src/app/service/web-account.service';
 
@@ -123,14 +123,17 @@ export class BillingComponent implements OnInit {
 
     this.loading = true;
     this.noExistingInvoice = false;
-    withToast(this.billingService.calculateMonthlyBilling(accountId, year, month), this.toastr, this.translate, 'BILLING.CALCULATION_SUCCESS')
+    this.billingService.calculateMonthlyBilling(accountId, year, month)
+      .pipe(
+        tap(() => this.toastr.success(this.translate.instant('BILLING.CALCULATION_SUCCESS'), this.translate.instant('COMMON.SUCCESS'))),
+        finalize(() => { this.loading = false; })
+      )
       .subscribe({
         next: (res: any) => {
           this.billingResult = res?.data || res;
-          this.loading = false;
         },
         error: (err) => {
-          this.loading = false;
+          this.toastr.error(this.translate.instant('COMMON.AN_ERROR_OCCURRED'), this.translate.instant('COMMON.ERROR'));
         }
       });
   }
@@ -146,15 +149,18 @@ export class BillingComponent implements OnInit {
     }
 
     this.loading = true;
-    withToast(this.billingService.refreshMonthlyBilling(accountId, year, month), this.toastr, this.translate, 'BILLING.REFRESH_SUCCESS')
+    this.billingService.refreshMonthlyBilling(accountId, year, month)
+      .pipe(
+        tap(() => this.toastr.success(this.translate.instant('BILLING.REFRESH_SUCCESS'), this.translate.instant('COMMON.SUCCESS'))),
+        finalize(() => { this.loading = false; })
+      )
       .subscribe({
         next: (res: any) => {
           this.billingResult = res?.data || res;
           this.noExistingInvoice = false;
-          this.loading = false;
         },
         error: (err) => {
-          this.loading = false;
+          this.toastr.error(this.translate.instant('COMMON.AN_ERROR_OCCURRED'), this.translate.instant('COMMON.ERROR'));
         }
       });
   }
@@ -170,7 +176,11 @@ export class BillingComponent implements OnInit {
     }
 
     this.loading = true;
-    withToast(this.billingService.downloadPdfReport(accountId, year, month), this.toastr, this.translate, 'BILLING.PDF_DOWNLOAD_SUCCESS')
+    this.billingService.downloadPdfReport(accountId, year, month)
+      .pipe(
+        tap(() => this.toastr.success(this.translate.instant('BILLING.PDF_DOWNLOAD_SUCCESS'), this.translate.instant('COMMON.SUCCESS'))),
+        finalize(() => { this.loading = false; })
+      )
       .subscribe({
         next: (blob: Blob) => {
           const url = window.URL.createObjectURL(blob);
@@ -181,10 +191,9 @@ export class BillingComponent implements OnInit {
           a.click();
           document.body.removeChild(a);
           window.URL.revokeObjectURL(url);
-          this.loading = false;
         },
         error: (err) => {
-          this.loading = false;
+          this.toastr.error(this.translate.instant('COMMON.AN_ERROR_OCCURRED'), this.translate.instant('COMMON.ERROR'));
         }
       });
   }
