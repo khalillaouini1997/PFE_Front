@@ -172,7 +172,8 @@
     "SPEED_DISTRIBUTION": "Speed Distribution",
     "SIM_PROVIDERS": "SIM Card Providers",
     "SIGNAL_QUALITY": "Signal Quality",
-    "FLEET_ACTIVITY": "Fleet Activity"
+    "FLEET_ACTIVITY": "Fleet Activity",
+    "IGNITION_ON": "Ignition On"
   },
   "ARCHIVE": {
     "TITLE": "Archives & Raw",

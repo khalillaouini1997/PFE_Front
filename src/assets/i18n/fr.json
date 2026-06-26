@@ -172,7 +172,8 @@
     "SPEED_DISTRIBUTION": "Distribution de la Vitesse",
     "SIM_PROVIDERS": "Fournisseurs SIM",
     "SIGNAL_QUALITY": "Qualité du Signal",
-    "FLEET_ACTIVITY": "Activité de la Flotte"
+    "FLEET_ACTIVITY": "Activité de la Flotte",
+    "IGNITION_ON": "Allumé"
   },
   "ARCHIVE": {
     "TITLE": "Archives & Brutes",

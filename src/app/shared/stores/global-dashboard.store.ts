@@ -12,6 +12,7 @@ export interface GlobalDashboardStats {
   nonValid: number;
   moving: number;
   stopped: number;
+  ignitionOn: number;
   accountsCount: number;
 }
 
@@ -35,7 +36,7 @@ export class GlobalDashboardStore implements OnDestroy {
   private readonly state = signal<GlobalDashboardState>({
     comptesWeb: [],
     realtimes: [],
-    stats: { totalVehicles: 0, valid: 0, technicalIssue: 0, nonValid: 0, moving: 0, stopped: 0, accountsCount: 0 },
+    stats: { totalVehicles: 0, valid: 0, technicalIssue: 0, nonValid: 0, moving: 0, stopped: 0, ignitionOn: 0, accountsCount: 0 },
     loading: false,
     error: null
   });
@@ -109,6 +110,7 @@ export class GlobalDashboardStore implements OnDestroy {
         nonValid: data.filter(t => t.status === STATUS_TYPES.NON_VALID).length,
         moving: data.filter(t => t.speed > 0).length,
         stopped: data.filter(t => t.speed === 0).length,
+        ignitionOn: data.filter(t => t.ignition).length,
         accountsCount: this.state().comptesWeb.length
       }
     });

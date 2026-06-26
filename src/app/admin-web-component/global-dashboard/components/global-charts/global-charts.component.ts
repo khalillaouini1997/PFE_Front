@@ -24,6 +24,7 @@ export class GlobalChartsComponent implements AfterViewInit, OnDestroy {
     nonValid: 0,
     moving: 0,
     stopped: 0,
+    ignitionOn: 0,
     accountsCount: 0
   });
 

@@ -15,12 +15,10 @@ export interface RealTime {
 
 export interface RealTimeSummary {
   deviceid: number;
-  matricule: string;
   status: string;
   speed: number;
   ignition: boolean;
   record_time: Date;
-  login: string;
   signal: number;
   numPuce: string;
   imei: string;
