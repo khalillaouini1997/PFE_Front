@@ -17,8 +17,6 @@ export interface RealTimeSummary {
   deviceid: number;
   matricule: string;
   status: string;
-  latitude: number;
-  longitude: number;
   speed: number;
   ignition: boolean;
   record_time: Date;
