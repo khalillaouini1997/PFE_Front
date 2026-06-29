@@ -13,6 +13,7 @@
     "LIST_WEB": "Liste Web",
     "SYSTEM": "Système",
     "BILLING": "Facturation",
+    "BILLING_DASHBOARD": "Analyses Facturation",
     "ACCESS_LOG": "Journal d'accès",
     "LOGOUT": "Déconnecter",
     "GLOBAL_DASHBOARD": "Tableau de bord global"
@@ -419,5 +420,9 @@
     "REFRESH_ERROR": "Erreur lors de l'actualisation de la facturation",
     "PDF_DOWNLOAD_SUCCESS": "PDF téléchargé avec succès",
     "PDF_DOWNLOAD_ERROR": "Erreur lors du téléchargement du PDF"
+  },
+  "BILLING_DASHBOARD": {
+    "TITLE": "Analyses Facturation",
+    "SUBTITLE": "Rapports de facturation interactifs propulsés par Metabase"
   }
 }

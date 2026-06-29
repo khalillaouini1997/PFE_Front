@@ -13,6 +13,7 @@
     "LIST_WEB": "Web List",
     "SYSTEM": "System",
     "BILLING": "Billing",
+    "BILLING_DASHBOARD": "Billing Analytics",
     "ACCESS_LOG": "Access Log",
     "LOGOUT": "Logout",
     "GLOBAL_DASHBOARD": "Global Dashboard"
@@ -419,5 +420,9 @@
     "REFRESH_ERROR": "Error refreshing billing",
     "PDF_DOWNLOAD_SUCCESS": "PDF downloaded successfully",
     "PDF_DOWNLOAD_ERROR": "Error downloading PDF"
+  },
+  "BILLING_DASHBOARD": {
+    "TITLE": "Billing Analytics",
+    "SUBTITLE": "Interactive billing reports powered by Metabase"
   }
 }
