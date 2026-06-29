@@ -465,6 +465,34 @@
   font-size: var(--text-base);
 }
 
+/* Metabase Analytics */
+.metabase-section {
+  margin-top: var(--spacing-xl);
+}
+
+.metabase-section h3 {
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+.metabase-wrapper {
+  width: 100%;
+  height: 600px;
+  min-height: 500px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--surface-card);
+  border: 1px solid var(--surface-border);
+}
+
+.metabase-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
 /* Respect reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
   .spinner {

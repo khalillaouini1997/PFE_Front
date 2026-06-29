@@ -84,6 +84,20 @@
     </form>
   </div>
 
+  <!-- Metabase Analytics -->
+  <div class="metabase-section billing-card">
+    <h3>📊 {{ 'BILLING_DASHBOARD.TITLE' | translate }}</h3>
+    <div class="metabase-wrapper">
+      <iframe
+        [src]="metabaseUrl"
+        frameborder="0"
+        allowtransparency
+        class="metabase-iframe"
+        title="Billing Analytics Dashboard">
+      </iframe>
+    </div>
+  </div>
+
   <!-- Loading State -->
   <div *ngIf="loading" class="loading-state">
     <div class="spinner"></div>

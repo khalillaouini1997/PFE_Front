@@ -74,10 +74,6 @@ export const ADMIN_WEB_ROUTES: Routes = [{
     {
       path: 'billing',
       loadComponent: () => import('./billing/billing.component').then(m => m.BillingComponent)
-    },
-    {
-      path: 'billing-dashboard',
-      loadComponent: () => import('./billing-dashboard/billing-dashboard.component').then(m => m.BillingDashboardComponent)
     }
   ],
 }];
