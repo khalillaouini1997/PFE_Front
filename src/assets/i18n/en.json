@@ -13,7 +13,7 @@
     "LIST_WEB": "Web List",
     "SYSTEM": "System",
     "BILLING": "Billing",
-    "BILLING_DASHBOARD": "Billing Analytics",
+    "BILLING_ANALYTICS": "Billing Analytics",
     "ACCESS_LOG": "Access Log",
     "LOGOUT": "Logout",
     "GLOBAL_DASHBOARD": "Global Dashboard"

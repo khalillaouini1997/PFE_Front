@@ -1,7 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { finalize, tap } from 'rxjs';
@@ -29,10 +28,6 @@ export class BillingComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly toastr = inject(ToastrService);
   private readonly translate = inject(TranslateService);
-  private readonly sanitizer = inject(DomSanitizer);
-
-  private readonly METABASE_URL = 'http://localhost:3000/embed/dashboard/YOUR_TOKEN_HERE';
-  metabaseUrl: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.METABASE_URL);
 
   ngOnInit() {
     this.initForm();
