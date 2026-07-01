@@ -89,4 +89,8 @@ export class WebAccountService {
     getAllLastTramSummary(): Observable<RealTimeSummary[]> {
         return this.http.get<RealTimeSummary[]>(`${environment.apiBaseUrl}compteWeb/AllLastTram/summary`);
     }
+
+    getTotalDeviceCount(): Observable<number> {
+        return this.http.get<number>(`${environment.apiBaseUrl}compteWeb/device-count`);
+    }
 }

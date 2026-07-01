@@ -22,6 +22,7 @@ export interface GlobalDashboardState {
   comptesWeb: CompteClientWebInfoDTO[];
   realtimes: GlobalRealTime[];
   stats: GlobalDashboardStats;
+  deviceCount: number;
   loading: boolean;
   error: string | null;
 }
@@ -37,6 +38,7 @@ export class GlobalDashboardStore implements OnDestroy {
     comptesWeb: [],
     realtimes: [],
     stats: { totalVehicles: 0, valid: 0, technicalIssue: 0, nonValid: 0, moving: 0, stopped: 0, ignitionOn: 0, accountsCount: 0 },
+    deviceCount: 0,
     loading: false,
     error: null
   });
@@ -50,6 +52,7 @@ export class GlobalDashboardStore implements OnDestroy {
   init() {
     this.updateState({ loading: true, error: null });
     this.loadAccountCount();
+    this.loadDeviceCount();
     this.loadAllRealtimesViaHttp();
     this.connectWebSocket();
   }
@@ -64,6 +67,19 @@ export class GlobalDashboardStore implements OnDestroy {
       },
       error: () => {
         this.updateState({ error: 'Failed to load account list' });
+      }
+    });
+  }
+
+  private loadDeviceCount() {
+    this.webAccountService.getTotalDeviceCount().subscribe({
+      next: (res: any) => {
+        const count = typeof res === 'number' ? res : (res?.data ?? 0);
+        this.updateState({ deviceCount: count });
+        this.recalculateStats();
+      },
+      error: () => {
+        this.updateState({ deviceCount: 0 });
       }
     });
   }
@@ -104,7 +120,7 @@ export class GlobalDashboardStore implements OnDestroy {
     const data = this.state().realtimes;
     this.updateState({
       stats: {
-        totalVehicles: data.length,
+        totalVehicles: this.state().deviceCount || data.length,
         valid: data.filter(t => t.status === STATUS_TYPES.VALID).length,
         technicalIssue: data.filter(t => t.status === STATUS_TYPES.TECHNICAL_ISSUE).length,
         nonValid: data.filter(t => t.status === STATUS_TYPES.NON_VALID).length,
@@ -119,6 +135,7 @@ export class GlobalDashboardStore implements OnDestroy {
   refresh() {
     this.updateState({ loading: true, error: null });
     this.loadAccountCount();
+    this.loadDeviceCount();
     this.loadAllRealtimesViaHttp();
   }
 

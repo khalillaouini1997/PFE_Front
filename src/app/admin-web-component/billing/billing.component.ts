@@ -1,11 +1,15 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, viewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { finalize, tap } from 'rxjs';
+import { Chart, registerables } from 'chart.js';
 import { BillingService } from 'src/app/service/billing.service';
+import { BillingAnalyticsService } from 'src/app/service/billing-analytics.service';
 import { WebAccountService } from 'src/app/service/web-account.service';
+
+Chart.register(...registerables);
 
 @Component({
   selector: 'app-billing',
@@ -14,7 +18,9 @@ import { WebAccountService } from 'src/app/service/web-account.service';
   styleUrls: ['./billing.component.css'],
   imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule]
 })
-export class BillingComponent implements OnInit {
+export class BillingComponent implements OnInit, OnDestroy {
+  activeTab: 'invoice' | 'dashboard' = 'dashboard';
+
   billingForm!: FormGroup;
   loading: boolean = false;
   billingResult: any = null;
@@ -23,15 +29,42 @@ export class BillingComponent implements OnInit {
   loadingAccounts: boolean = false;
   noExistingInvoice: boolean = false;
 
+  selectedYear = new Date().getFullYear();
+  analyticsLoading = false;
+  topDevices: any[] = [];
+
+  revenueByMonthChart = viewChild<ElementRef>('revenueByMonthChart');
+  revenueByAccountChart = viewChild<ElementRef>('revenueByAccountChart');
+  statusChart = viewChild<ElementRef>('statusChart');
+
+  private revenueByMonthInstance?: Chart;
+  private revenueByAccountInstance?: Chart;
+  private statusInstance?: Chart;
+
   private readonly billingService = inject(BillingService);
+  private readonly analyticsService = inject(BillingAnalyticsService);
   private readonly webAccountService = inject(WebAccountService);
   private readonly fb = inject(FormBuilder);
   private readonly toastr = inject(ToastrService);
   private readonly translate = inject(TranslateService);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   ngOnInit() {
     this.initForm();
     this.loadWebAccounts();
+  }
+
+  ngOnDestroy() {
+    this.revenueByMonthInstance?.destroy();
+    this.revenueByAccountInstance?.destroy();
+    this.statusInstance?.destroy();
+  }
+
+  switchTab(tab: 'invoice' | 'dashboard') {
+    this.activeTab = tab;
+    if (tab === 'dashboard') {
+      setTimeout(() => this.loadAnalytics(), 0);
+    }
   }
 
   initForm() {
@@ -55,7 +88,7 @@ export class BillingComponent implements OnInit {
         this.loadingAccounts = false;
         this.billingForm.get('accountId')?.enable();
       },
-      error: (err) => {
+      error: () => {
         this.loadingAccounts = false;
         this.billingForm.get('accountId')?.enable();
         this.toastr.error(
@@ -73,7 +106,6 @@ export class BillingComponent implements OnInit {
       this.noExistingInvoice = false;
       return;
     }
-
     this.checkExistingInvoice();
   }
 
@@ -99,7 +131,7 @@ export class BillingComponent implements OnInit {
         }
         this.loading = false;
       },
-      error: (err) => {
+      error: () => {
         this.noExistingInvoice = true;
         this.loading = false;
       }
@@ -132,7 +164,7 @@ export class BillingComponent implements OnInit {
         next: (res: any) => {
           this.billingResult = res?.data || res;
         },
-        error: (err) => {
+        error: () => {
           this.toastr.error(this.translate.instant('COMMON.AN_ERROR_OCCURRED'), this.translate.instant('COMMON.ERROR'));
         }
       });
@@ -159,7 +191,7 @@ export class BillingComponent implements OnInit {
           this.billingResult = res?.data || res;
           this.noExistingInvoice = false;
         },
-        error: (err) => {
+        error: () => {
           this.toastr.error(this.translate.instant('COMMON.AN_ERROR_OCCURRED'), this.translate.instant('COMMON.ERROR'));
         }
       });
@@ -177,9 +209,7 @@ export class BillingComponent implements OnInit {
 
     this.loading = true;
     this.billingService.downloadPdfReport(accountId, year, month)
-      .pipe(
-        finalize(() => { this.loading = false; })
-      )
+      .pipe(finalize(() => { this.loading = false; }))
       .subscribe({
         next: (blob: Blob) => {
           if (blob && blob.size > 0 && blob.type !== 'application/json') {
@@ -196,10 +226,138 @@ export class BillingComponent implements OnInit {
             this.toastr.error('Failed to generate PDF', this.translate.instant('COMMON.ERROR'));
           }
         },
-        error: (err) => {
+        error: () => {
           this.toastr.error(this.translate.instant('COMMON.AN_ERROR_OCCURRED'), this.translate.instant('COMMON.ERROR'));
         }
       });
+  }
+
+  loadAnalytics() {
+    this.analyticsLoading = true;
+    this.analyticsService.getBillingAnalytics(this.selectedYear).subscribe({
+      next: (res: any) => {
+        const data = res?.data ?? res?.body?.data ?? res;
+        this.topDevices = Array.isArray(data?.topDevices) ? data.topDevices : [];
+        this.analyticsLoading = false;
+        this.cdr.detectChanges();
+        try {
+          this.renderCharts(data || {});
+        } catch (e) {
+          console.error('Chart rendering error:', e);
+        }
+      },
+      error: () => {
+        this.analyticsLoading = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  private renderCharts(data: any) {
+    this.renderRevenueByMonth(data.revenueByMonth || []);
+    this.renderRevenueByAccount(data.revenueByAccount || []);
+    this.renderStatusBreakdown(data.statusBreakdown || []);
+  }
+
+  private renderRevenueByMonth(data: any[]) {
+    const canvas = this.revenueByMonthChart();
+    if (!canvas) return;
+
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const map = new Map(data.map((d: any) => [d.month_num, d.total]));
+    const values = months.map((_, i) => map.get(String(i + 1).padStart(2, '0')) || 0);
+
+    if (this.revenueByMonthInstance) {
+      this.revenueByMonthInstance.data.labels = months;
+      this.revenueByMonthInstance.data.datasets[0].data = values;
+      this.revenueByMonthInstance.update('none');
+    } else {
+      this.revenueByMonthInstance = new Chart(canvas.nativeElement, {
+        type: 'line',
+        data: {
+          labels: months,
+          datasets: [{
+            label: 'Revenue (TND)',
+            data: values,
+            borderColor: '#14b8a6',
+            backgroundColor: 'rgba(20, 184, 166, 0.1)',
+            fill: true,
+            tension: 0.4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: false,
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true, grid: { display: false } }, x: { grid: { display: false } } }
+        }
+      });
+    }
+  }
+
+  private renderRevenueByAccount(data: any[]) {
+    const canvas = this.revenueByAccountChart();
+    if (!canvas) return;
+
+    const labels = data.map((d: any) => d.accountName || `#${d.accountId}`);
+    const values = data.map((d: any) => d.total);
+
+    if (this.revenueByAccountInstance) {
+      this.revenueByAccountInstance.data.labels = labels;
+      this.revenueByAccountInstance.data.datasets[0].data = values;
+      this.revenueByAccountInstance.update('none');
+    } else {
+      this.revenueByAccountInstance = new Chart(canvas.nativeElement, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Revenue (TND)',
+            data: values,
+            backgroundColor: '#14b8a6',
+            borderRadius: 8
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: false,
+          plugins: { legend: { display: false } },
+          scales: { x: { beginAtZero: true, grid: { display: false } }, y: { grid: { display: false } } }
+        }
+      });
+    }
+  }
+
+  private renderStatusBreakdown(data: any[]) {
+    const canvas = this.statusChart();
+    if (!canvas) return;
+
+    const labels = data.map((d: any) => d.status);
+    const values = data.map((d: any) => d.count);
+    const colors = ['#f59e0b', '#10b981', '#ef4444'];
+
+    if (this.statusInstance) {
+      this.statusInstance.data.labels = labels;
+      this.statusInstance.data.datasets[0].data = values;
+      this.statusInstance.update('none');
+    } else {
+      this.statusInstance = new Chart(canvas.nativeElement, {
+        type: 'doughnut',
+        data: {
+          labels,
+          datasets: [{ data: values, backgroundColor: colors, hoverOffset: 4 }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: false,
+          plugins: { legend: { position: 'bottom' } }
+        }
+      });
+    }
   }
 
   formatCurrency(amount: number): string {

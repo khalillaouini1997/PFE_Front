@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject, viewChild, ElementRef, effect } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, viewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
@@ -29,6 +29,7 @@ export class BillingAnalyticsComponent implements OnInit, OnDestroy {
   private statusInstance?: Chart;
 
   private readonly analyticsService = inject(BillingAnalyticsService);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   ngOnInit() {
     this.loadAnalytics();
@@ -44,13 +45,20 @@ export class BillingAnalyticsComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.analyticsService.getBillingAnalytics(this.selectedYear).subscribe({
       next: (res: any) => {
-        const data = res?.data || res;
-        this.topDevices = data.topDevices || [];
-        this.renderCharts(data);
+        const data = res?.data ?? res?.body?.data ?? res;
+        this.topDevices = Array.isArray(data?.topDevices) ? data.topDevices : [];
         this.loading = false;
+        this.cdr.detectChanges();
+        try {
+          this.renderCharts(data || {});
+        } catch (e) {
+          console.error('Chart rendering error:', e);
+        }
       },
-      error: () => {
+      error: (err) => {
+        console.error('Analytics load error:', err);
         this.loading = false;
+        this.cdr.detectChanges();
       }
     });
   }

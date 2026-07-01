@@ -81,12 +81,6 @@
                     <p>{{ 'SIDEBAR.BILLING' | translate }}</p>
                 </a>
             </li>
-            <li [class.active]="isActiveBillingAnalytics">
-                <a routerLink="/adminWeb/billing-analytics" (click)="setMenu('billingAnalytics')" [title]="isCollapsed() ? ('SIDEBAR.BILLING_ANALYTICS' | translate) : ''">
-                    <i class="material-icons">analytics</i>
-                    <p>{{ 'SIDEBAR.BILLING_ANALYTICS' | translate }}</p>
-                </a>
-            </li>
             <li [class.active]="isActiveAccessLog">
                 <a routerLink="/adminWeb/accessLog" (click)="setMenu('logs')" [title]="isCollapsed() ? ('SIDEBAR.ACCESS_LOG' | translate) : ''">
                     <i class="material-icons">history</i>
