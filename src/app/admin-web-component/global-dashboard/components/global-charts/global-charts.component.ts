@@ -1,4 +1,4 @@
-import { Component, input, viewChild, inject, AfterViewInit, OnDestroy, ElementRef, effect } from '@angular/core';
+import { Component, input, viewChild, inject, AfterViewInit, OnDestroy, ElementRef, effect, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { GlobalDashboardStats, GlobalRealTime } from '../../../../shared/stores/global-dashboard.store';
@@ -16,7 +16,7 @@ Chart.register(...registerables);
   styleUrls: ['./global-charts.component.css']
 })
 export class GlobalChartsComponent implements AfterViewInit, OnDestroy {
-  realtimes = input<GlobalRealTime[]>([]);
+  realtimes = input<any[]>([]);
   stats = input<GlobalDashboardStats>({
     totalVehicles: 0,
     valid: 0,
@@ -25,22 +25,29 @@ export class GlobalChartsComponent implements AfterViewInit, OnDestroy {
     moving: 0,
     stopped: 0,
     ignitionOn: 0,
-    accountsCount: 0
+    accountsCount: 0,
+    inactive: 0
   });
 
   statusChart = viewChild<ElementRef>('statusChart');
   speedChart = viewChild<ElementRef>('speedChart');
   puceChart = viewChild<ElementRef>('puceChart');
   signalChart = viewChild<ElementRef>('signalChart');
-  activityChart = viewChild<ElementRef>('activityChart');
+  healthChart = viewChild<ElementRef>('healthChart');
 
   private stateChart?: Chart;
   private speedChartInstance?: Chart;
   private puceChartInstance?: Chart;
   private signalChartInstance?: Chart;
-  private activityChartInstance?: Chart;
+  private healthChartInstance?: Chart;
 
   private translate = inject(TranslateService);
+
+  healthScore = computed(() => {
+    const s = this.stats();
+    const total = s.totalVehicles || (s.valid + s.technicalIssue + s.nonValid);
+    return total > 0 ? Math.round((s.valid / total) * 100) : 0;
+  });
 
   constructor() {
     effect(() => {
@@ -59,16 +66,16 @@ export class GlobalChartsComponent implements AfterViewInit, OnDestroy {
     this.speedChartInstance?.destroy();
     this.puceChartInstance?.destroy();
     this.signalChartInstance?.destroy();
-    this.activityChartInstance?.destroy();
+    this.healthChartInstance?.destroy();
   }
 
   updateCharts() {
-    if (!this.statusChart() || !this.speedChart() || !this.puceChart() || !this.signalChart() || !this.activityChart()) return;
+    if (!this.statusChart() || !this.speedChart() || !this.puceChart() || !this.signalChart() || !this.healthChart()) return;
     this.updateStateChart();
     this.updateSpeedChart();
     this.updatePuceChart();
     this.updateSignalChart();
-    this.updateActivityChart();
+    this.updateHealthChart();
   }
 
   private updateStateChart() {
@@ -215,31 +222,44 @@ export class GlobalChartsComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  private updateActivityChart() {
-    const canvas = this.activityChart();
+  private updateHealthChart() {
+    const canvas = this.healthChart();
     if (!canvas) return;
 
-    const stats = this.stats();
+    const score = this.healthScore();
+    let color = '#10b981'; // Good (Green)
+    if (score < 50) {
+      color = '#ef4444'; // Poor (Red)
+    } else if (score < 80) {
+      color = '#f59e0b'; // Fair (Amber)
+    }
+
     const data = {
-      labels: ['Moving', 'Stopped'],
+      labels: ['Health', 'Remaining'],
       datasets: [{
-        data: [stats.moving, stats.stopped],
-        backgroundColor: ['#14b8a6', '#64748b'],
-        hoverOffset: 4
+        data: [score, 100 - score],
+        backgroundColor: [color, 'var(--surface-border, #1e2d45)'],
+        borderWidth: 0,
+        hoverOffset: 0
       }]
     };
 
-    if (this.activityChartInstance) {
-      this.activityChartInstance.data = data;
-      this.activityChartInstance.update('none');
+    if (this.healthChartInstance) {
+      this.healthChartInstance.data = data;
+      this.healthChartInstance.update('none');
     } else {
-      this.activityChartInstance = new Chart(canvas.nativeElement, {
+      this.healthChartInstance = new Chart(canvas.nativeElement, {
         type: 'doughnut',
         data,
         options: {
-          responsive: true, maintainAspectRatio: false, animation: false,
-          plugins: { legend: { position: 'bottom' } },
-          cutout: '65%'
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: { enabled: false }
+          },
+          cutout: '75%'
         }
       });
     }

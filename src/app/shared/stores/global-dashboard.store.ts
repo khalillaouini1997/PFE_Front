@@ -1,5 +1,5 @@
 import { Injectable, inject, signal, computed, OnDestroy } from '@angular/core';
-import { CompteClientWebInfoDTO, RealTimeSummary } from '../../data/data';
+import { CompteClientWebInfoDTO, RealTime, RealTimeSummary } from '../../data/data';
 import { WebAccountService } from '../../service/web-account.service';
 import { WebSocketService } from '../../service/web-socket.service';
 import { Subscription } from 'rxjs';
@@ -14,17 +14,28 @@ export interface GlobalDashboardStats {
   stopped: number;
   ignitionOn: number;
   accountsCount: number;
+  inactive: number;
 }
 
-export interface GlobalRealTime extends RealTimeSummary {}
+export interface GlobalRealTime extends RealTime {}
+
+export interface ActivityEvent {
+  time: Date;
+  icon: string;
+  message: string;
+  type: 'move' | 'stop' | 'signal' | 'reconnect';
+}
 
 export interface GlobalDashboardState {
   comptesWeb: CompteClientWebInfoDTO[];
-  realtimes: GlobalRealTime[];
+  summaries: RealTimeSummary[];     // ALL devices - for accurate KPIs/charts
+  mapRealtimes: GlobalRealTime[];   // Limited devices - for map (has coordinates)
   stats: GlobalDashboardStats;
   deviceCount: number;
   loading: boolean;
   error: string | null;
+  activityFeed: ActivityEvent[];
+  accountPage: number;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -33,27 +44,85 @@ export class GlobalDashboardStore implements OnDestroy {
   private readonly webSocketService = inject(WebSocketService);
   private vehiclePositionSubscription?: Subscription;
   private connectionStatusSubscription?: Subscription;
+  private previousPositions = new Map<number, { speed: number; status: string }>();
 
   private readonly state = signal<GlobalDashboardState>({
     comptesWeb: [],
-    realtimes: [],
-    stats: { totalVehicles: 0, valid: 0, technicalIssue: 0, nonValid: 0, moving: 0, stopped: 0, ignitionOn: 0, accountsCount: 0 },
+    summaries: [],
+    mapRealtimes: [],
+    stats: { totalVehicles: 0, valid: 0, technicalIssue: 0, nonValid: 0, moving: 0, stopped: 0, ignitionOn: 0, accountsCount: 0, inactive: 0 },
     deviceCount: 0,
     loading: false,
-    error: null
+    error: null,
+    activityFeed: [],
+    accountPage: 0
   });
 
   readonly comptesWeb = computed(() => this.state().comptesWeb);
-  readonly realtimes = computed(() => this.state().realtimes);
+  /** Summaries for KPIs/charts (covers ALL devices) */
+  readonly summaries = computed(() => this.state().summaries);
+  /** Full RealTime data with coordinates for map */
+  readonly mapRealtimes = computed(() => this.state().mapRealtimes);
   readonly stats = computed(() => this.state().stats);
   readonly loading = computed(() => this.state().loading);
   readonly error = computed(() => this.state().error);
+  readonly activityFeed = computed(() => this.state().activityFeed);
+  readonly accountPage = computed(() => this.state().accountPage);
+
+  static readonly ACCOUNTS_PER_PAGE = 8;
+
+  readonly accountsBreakdown = computed(() => {
+    const data = this.state().mapRealtimes;
+    const accountsMap = new Map<string, {
+      login: string;
+      total: number;
+      moving: number;
+      stopped: number;
+      valid: number;
+      technicalIssue: number;
+      nonValid: number;
+    }>();
+
+    for (const rt of data) {
+      const login = rt.login || 'Unknown';
+      let entry = accountsMap.get(login);
+      if (!entry) {
+        entry = { login, total: 0, moving: 0, stopped: 0, valid: 0, technicalIssue: 0, nonValid: 0 };
+        accountsMap.set(login, entry);
+      }
+      entry.total++;
+      if (rt.speed > 0) { entry.moving++; } else { entry.stopped++; }
+      if (rt.status === STATUS_TYPES.VALID) { entry.valid++; }
+      else if (rt.status === STATUS_TYPES.TECHNICAL_ISSUE) { entry.technicalIssue++; }
+      else { entry.nonValid++; }
+    }
+
+    return Array.from(accountsMap.values())
+      .filter(a => a.total > 0)
+      .sort((a, b) => b.total - a.total);
+  });
+
+  readonly pagedAccounts = computed(() => {
+    const all = this.accountsBreakdown();
+    const page = this.state().accountPage;
+    const size = GlobalDashboardStore.ACCOUNTS_PER_PAGE;
+    return all.slice(page * size, (page + 1) * size);
+  });
+
+  readonly totalAccountPages = computed(() => {
+    return Math.ceil(this.accountsBreakdown().length / GlobalDashboardStore.ACCOUNTS_PER_PAGE);
+  });
+
+  setAccountPage(page: number) {
+    this.updateState({ accountPage: Math.max(0, Math.min(page, this.totalAccountPages() - 1)) });
+  }
 
   init() {
     this.updateState({ loading: true, error: null });
     this.loadAccountCount();
     this.loadDeviceCount();
-    this.loadAllRealtimesViaHttp();
+    this.loadSummaries();
+    this.loadMapRealtimes();
     this.connectWebSocket();
   }
 
@@ -84,17 +153,87 @@ export class GlobalDashboardStore implements OnDestroy {
     });
   }
 
-  private loadAllRealtimesViaHttp() {
+  /** Load lightweight summaries for ALL accounts (no limit, cached on backend) */
+  private loadSummaries() {
     this.webAccountService.getAllLastTramSummary().subscribe({
       next: (res: any) => {
         const data = res?.data || res;
         const list = Array.isArray(data) ? data : [];
-        this.updateState({ realtimes: list as GlobalRealTime[], loading: false });
+        this.updateState({ summaries: list as RealTimeSummary[], loading: false });
         this.recalculateStats();
+
+        // Seed initial positions to enable event generation on the very first WebSocket message
+        for (const item of list) {
+          if (item.deviceid) {
+            this.previousPositions.set(item.deviceid, {
+              speed: item.speed ?? 0,
+              status: item.status || ''
+            });
+          }
+        }
+
+        // Pre-populate activity feed with recent events from actual summaries to avoid blank display
+        const initialEvents: ActivityEvent[] = [];
+        const now = new Date();
+        let eventCount = 0;
+
+        for (const item of list) {
+          if (eventCount >= 5) break;
+          const time = item.record_time ? new Date(item.record_time) : new Date(now.getTime() - eventCount * 60000);
+          
+          if (item.speed > 0) {
+            initialEvents.push({
+              time: time,
+              icon: '🟢',
+              message: `Device #${item.deviceid} is moving`,
+              type: 'move'
+            });
+            eventCount++;
+          } else if (item.status === STATUS_TYPES.TECHNICAL_ISSUE) {
+            initialEvents.push({
+              time: time,
+              icon: '⚠️',
+              message: `Device #${item.deviceid} signal lost`,
+              type: 'signal'
+            });
+            eventCount++;
+          }
+        }
+
+        if (eventCount < 5) {
+          for (const item of list) {
+            if (eventCount >= 5) break;
+            if (item.speed === 0 && item.status !== STATUS_TYPES.TECHNICAL_ISSUE) {
+              const time = item.record_time ? new Date(item.record_time) : new Date(now.getTime() - eventCount * 60000);
+              initialEvents.push({
+                time: time,
+                icon: '🔴',
+                message: `Device #${item.deviceid} is stopped`,
+                type: 'stop'
+              });
+              eventCount++;
+            }
+          }
+        }
+
+        initialEvents.sort((a, b) => b.time.getTime() - a.time.getTime());
+        this.updateState({ activityFeed: initialEvents });
       },
       error: () => {
         this.updateState({ loading: false, error: 'Failed to load fleet data' });
       }
+    });
+  }
+
+  /** Load full RealTime objects (with coordinates) for map - from lightweight cached endpoint */
+  private loadMapRealtimes() {
+    this.webAccountService.getAllLastTramMapData().subscribe({
+      next: (res: any) => {
+        const data = res?.data || res;
+        const list = Array.isArray(data) ? data : [];
+        this.updateState({ mapRealtimes: list as GlobalRealTime[] });
+      },
+      error: () => { /* Map data is supplementary, don't block on failure */ }
     });
   }
 
@@ -107,8 +246,8 @@ export class GlobalDashboardStore implements OnDestroy {
       .subscribe({
         next: (positions) => {
           if (!positions?.length) return;
-          this.updateState({ realtimes: positions as unknown as GlobalRealTime[], loading: false });
-          this.recalculateStats();
+          this.generateActivityEvents(positions);
+          this.updateState({ mapRealtimes: positions as unknown as GlobalRealTime[], loading: false });
         }
       });
 
@@ -116,18 +255,53 @@ export class GlobalDashboardStore implements OnDestroy {
       .subscribe();
   }
 
+  /** Generate activity feed events by comparing current vs previous positions */
+  private generateActivityEvents(positions: RealTime[]) {
+    const newEvents: ActivityEvent[] = [];
+    const now = new Date();
+
+    for (const pos of positions) {
+      const prev = this.previousPositions.get(pos.deviceid);
+      if (prev) {
+        if (prev.speed === 0 && pos.speed > 0) {
+          newEvents.push({ time: now, icon: '🟢', message: `Device #${pos.deviceid} started moving${pos.login ? ` (${pos.login})` : ''}`, type: 'move' });
+        } else if (prev.speed > 0 && pos.speed === 0) {
+          newEvents.push({ time: now, icon: '🔴', message: `Device #${pos.deviceid} stopped${pos.login ? ` (${pos.login})` : ''}`, type: 'stop' });
+        }
+        if (prev.status === STATUS_TYPES.VALID && pos.status === STATUS_TYPES.TECHNICAL_ISSUE) {
+          newEvents.push({ time: now, icon: '⚠️', message: `Device #${pos.deviceid} signal lost${pos.login ? ` (${pos.login})` : ''}`, type: 'signal' });
+        } else if (prev.status === STATUS_TYPES.TECHNICAL_ISSUE && pos.status === STATUS_TYPES.VALID) {
+          newEvents.push({ time: now, icon: '✅', message: `Device #${pos.deviceid} reconnected${pos.login ? ` (${pos.login})` : ''}`, type: 'reconnect' });
+        }
+      }
+      this.previousPositions.set(pos.deviceid, { speed: pos.speed, status: pos.status });
+    }
+
+    if (newEvents.length > 0) {
+      const currentFeed = this.state().activityFeed;
+      this.updateState({ activityFeed: [...newEvents, ...currentFeed].slice(0, 50) });
+    }
+  }
+
+  /** Compute KPI stats from summaries (covers ALL devices) */
   private recalculateStats() {
-    const data = this.state().realtimes;
+    const data = this.state().summaries;
+    const totalVehicles = this.state().deviceCount || data.length;
+    const moving = data.filter(t => t.speed > 0).length;
+    const stopped = data.filter(t => t.speed === 0).length;
+    const inactive = Math.max(0, totalVehicles - moving - stopped);
+
     this.updateState({
       stats: {
-        totalVehicles: this.state().deviceCount || data.length,
+        totalVehicles,
         valid: data.filter(t => t.status === STATUS_TYPES.VALID).length,
         technicalIssue: data.filter(t => t.status === STATUS_TYPES.TECHNICAL_ISSUE).length,
         nonValid: data.filter(t => t.status === STATUS_TYPES.NON_VALID).length,
-        moving: data.filter(t => t.speed > 0).length,
-        stopped: data.filter(t => t.speed === 0).length,
+        moving,
+        stopped,
         ignitionOn: data.filter(t => t.ignition).length,
-        accountsCount: this.state().comptesWeb.length
+        accountsCount: this.state().comptesWeb.length,
+        inactive
       }
     });
   }
@@ -136,7 +310,8 @@ export class GlobalDashboardStore implements OnDestroy {
     this.updateState({ loading: true, error: null });
     this.loadAccountCount();
     this.loadDeviceCount();
-    this.loadAllRealtimesViaHttp();
+    this.loadSummaries();
+    this.loadMapRealtimes();
   }
 
   private updateState(partial: Partial<GlobalDashboardState>) {

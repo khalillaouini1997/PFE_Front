@@ -23,10 +23,14 @@
       <canvas #signalChart></canvas>
     </div>
   </div>
-  <div class="chart-card">
-    <h3>{{ 'GLOBAL_DASHBOARD.FLEET_ACTIVITY' | translate }}</h3>
-    <div class="chart-wrapper">
-      <canvas #activityChart></canvas>
+  <div class="chart-card health-score-card">
+    <h3>{{ 'GLOBAL_DASHBOARD.FLEET_HEALTH' | translate }}</h3>
+    <div class="chart-wrapper gauge-wrapper">
+      <canvas #healthChart></canvas>
+      <div class="gauge-center-text">
+        <span class="gauge-value">{{ healthScore() }}%</span>
+        <span class="gauge-label">{{ 'GLOBAL_DASHBOARD.HEALTH_STATUS' | translate }}</span>
+      </div>
     </div>
   </div>
 </div>

@@ -8,6 +8,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { GlobalDashboardStore } from 'src/app/shared/stores';
 import { GlobalChartsComponent } from './components/global-charts/global-charts.component';
 import { GlobalKpiComponent } from './components/global-kpi/global-kpi.component';
+import { DashboardMapComponent } from '../dashboard/components/dashboard-map/dashboard-map.component';
 
 @Component({
   selector: 'app-global-dashboard',
@@ -19,7 +20,8 @@ import { GlobalKpiComponent } from './components/global-kpi/global-kpi.component
     RouterModule,
     TranslateModule,
     GlobalChartsComponent,
-    GlobalKpiComponent
+    GlobalKpiComponent,
+    DashboardMapComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -32,7 +34,7 @@ export class GlobalDashboardComponent implements OnInit, OnDestroy {
   private readonly webAccountService = inject(WebAccountService);
   private readonly router = inject(Router);
 
-  readonly realtimes = this.store.realtimes;
+  readonly realtimes = this.store.summaries;
   readonly stats = this.store.stats;
   readonly loading = this.store.loading;
 

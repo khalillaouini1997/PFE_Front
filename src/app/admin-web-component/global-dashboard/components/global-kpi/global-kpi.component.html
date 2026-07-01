@@ -3,40 +3,36 @@
     [label]="'GLOBAL_DASHBOARD.TOTAL_FLEET' | translate"
     [value]="stats().totalVehicles"
     icon="🚗"
-    [trend]="'up'"
-    [trendValue]="0"
     [showSparkline]="false"
   ></app-kpi-card>
   <app-kpi-card
     [label]="'GLOBAL_DASHBOARD.ACTIVE_FLEET' | translate"
     [value]="stats().moving"
     icon="🟢"
-    [trend]="'up'"
-    [trendValue]="0"
     [showSparkline]="false"
   ></app-kpi-card>
   <app-kpi-card
     [label]="'GLOBAL_DASHBOARD.STOPPED_FLEET' | translate"
     [value]="stats().stopped"
     icon="🔴"
-    [trend]="'down'"
-    [trendValue]="0"
+    [showSparkline]="false"
+  ></app-kpi-card>
+  <app-kpi-card
+    [label]="'GLOBAL_DASHBOARD.INACTIVE_FLEET' | translate"
+    [value]="stats().inactive"
+    icon="⚪"
     [showSparkline]="false"
   ></app-kpi-card>
   <app-kpi-card
     [label]="'GLOBAL_DASHBOARD.VALID_STATUS' | translate"
     [value]="stats().valid"
     icon="✅"
-    [trend]="'up'"
-    [trendValue]="0"
     [showSparkline]="false"
   ></app-kpi-card>
   <app-kpi-card
     [label]="'GLOBAL_DASHBOARD.TECHNICAL_ISSUES' | translate"
     [value]="stats().technicalIssue"
     icon="⚠️"
-    [trend]="'down'"
-    [trendValue]="0"
     [showSparkline]="false"
   ></app-kpi-card>
   <app-kpi-card

@@ -1,4 +1,5 @@
 export interface RealTime {
+  login?: string;
   deviceid: number;
   matricule: string;
   status: string;

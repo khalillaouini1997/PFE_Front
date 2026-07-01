@@ -1,4 +1,4 @@
-import { Component, input, viewChild, AfterViewInit, OnDestroy, ElementRef, effect } from '@angular/core';
+import { Component, input, viewChild, AfterViewInit, OnDestroy, ElementRef, effect, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Chart, registerables } from 'chart.js';
 
@@ -24,9 +24,20 @@ export class KpiCardComponent implements AfterViewInit, OnDestroy {
   private sparklineData: number[] = [];
   private lastValue: number | string = '';
 
+  displayValue = signal<string | number>('');
+  private animationId?: number;
+
   constructor() {
     effect(() => {
       const value = this.value();
+
+      // Animate value if it's a number
+      if (typeof value === 'number') {
+        const start = typeof this.displayValue() === 'number' ? (this.displayValue() as number) : 0;
+        this.animateValue(start, value, 800);
+      } else {
+        this.displayValue.set(value);
+      }
 
       // Only update sparkline if chart exists and value actually changed
       if (this.showSparkline() && this.sparklineChart && value !== this.lastValue) {
@@ -45,7 +56,32 @@ export class KpiCardComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    if (this.animationId) {
+      cancelAnimationFrame(this.animationId);
+    }
     this.sparklineChart?.destroy();
+  }
+
+  private animateValue(start: number, end: number, duration: number) {
+    if (this.animationId) {
+      cancelAnimationFrame(this.animationId);
+    }
+    const startTime = performance.now();
+
+    const update = (now: number) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      // Ease out quad animation curve
+      const easeProgress = progress * (2 - progress);
+      const current = Math.round(start + (end - start) * easeProgress);
+      this.displayValue.set(current);
+
+      if (progress < 1) {
+        this.animationId = requestAnimationFrame(update);
+      }
+    };
+
+    this.animationId = requestAnimationFrame(update);
   }
 
   /**

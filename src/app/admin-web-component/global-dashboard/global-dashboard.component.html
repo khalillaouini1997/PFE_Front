@@ -6,7 +6,7 @@
       <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
         <div class="title-section">
           <h2 class="m-0">{{ 'GLOBAL_DASHBOARD.TITLE' | translate }}</h2>
-          <p class="m-0" style="font-size:.85rem; color: var(--text-secondary)">{{ 'GLOBAL_DASHBOARD.SUBTITLE' | translate }}</p>
+          <p class="m-0 subtitle-text">{{ 'GLOBAL_DASHBOARD.SUBTITLE' | translate }}</p>
         </div>
         <div class="controls-section d-flex align-items-center gap-2 flex-wrap">
           <div class="notif-btn">
@@ -35,11 +35,11 @@
     <!-- Global loading -->
     @if (loading()) {
     <div class="global-spinner premium-card d-flex flex-column align-items-center justify-content-center text-center">
-      <div class="spinner-border" style="width:3rem;height:3rem;border-width:.3em;color:var(--accent-primary)" role="status">
+      <div class="spinner-border loading-spinner" role="status">
         <span class="visually-hidden">Loading...</span>
       </div>
-      <h4 class="mt-4 fw-bold" style="color:var(--text-primary)">{{ 'DASHBOARD.UPDATING_DATA' | translate }}</h4>
-      <p class="m-0" style="color:var(--text-muted)">Loading global fleet data...</p>
+      <h4 class="mt-4 fw-bold text-primary-color">{{ 'DASHBOARD.UPDATING_DATA' | translate }}</h4>
+      <p class="m-0 text-muted-color">Loading global fleet data...</p>
     </div>
     }
 
@@ -53,6 +53,51 @@
         </div>
       </div>
 
+      <!-- Map & Activity Feed Row -->
+      <div class="row mt-3">
+        <div class="col-lg-8">
+          <div class="premium-card overflow-hidden h-100">
+            <div class="widget-header animate-fade-in">
+              <h5>
+                <i class="fa fa-map-marker me-2 map-icon"></i>
+                {{ 'DASHBOARD.GEO_TRACKING' | translate }}
+              </h5>
+            </div>
+            <app-dashboard-map [realtimes]="store.mapRealtimes()"></app-dashboard-map>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="premium-card h-100 d-flex flex-column">
+            <div class="widget-header">
+              <h5>
+                <i class="fa fa-bolt me-2 bolt-icon"></i>
+                Real-Time Activity Feed
+              </h5>
+            </div>
+            <div class="activity-feed-container flex-grow-1 p-3">
+              @if (store.activityFeed().length === 0) {
+                <div class="h-100 d-flex flex-column align-items-center justify-content-center text-center p-4">
+                  <i class="fa fa-rss fa-2x mb-3 text-secondary rss-icon"></i>
+                  <span class="text-secondary small">Waiting for real-time fleet events...</span>
+                </div>
+              } @else {
+                <div class="activity-events-list">
+                  @for (event of store.activityFeed(); track event.time.getTime() + event.message) {
+                    <div class="activity-event-item" [ngClass]="event.type">
+                      <span class="event-icon">{{ event.icon }}</span>
+                      <div class="event-details">
+                        <span class="event-message">{{ event.message }}</span>
+                        <span class="event-time">{{ event.time | date:'HH:mm:ss' }}</span>
+                      </div>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Charts Row -->
       <div class="row mt-3">
         <div class="col-12">
@@ -60,11 +105,114 @@
         </div>
       </div>
 
+      <!-- Top Accounts Table Row -->
+      <div class="row mt-4" *ngIf="realtimes().length > 0">
+        <div class="col-12">
+          <div class="premium-card overflow-hidden">
+            <div class="widget-header">
+              <h5>
+                <i class="fa fa-list-ol me-2 map-icon"></i>
+                {{ 'GLOBAL_DASHBOARD.ACCOUNT_BREAKDOWN' | translate }}
+              </h5>
+            </div>
+            <div class="table-responsive p-3">
+              <table class="table premium-table m-0">
+                <thead>
+                  <tr>
+                    <th>{{ 'GLOBAL_DASHBOARD.ACCOUNT' | translate }}</th>
+                    <th>{{ 'GLOBAL_DASHBOARD.TOTAL_VEHICLES' | translate }}</th>
+                    <th>{{ 'GLOBAL_DASHBOARD.MOVING' | translate }}</th>
+                    <th>{{ 'GLOBAL_DASHBOARD.STOPPED' | translate }}</th>
+                    <th>{{ 'GLOBAL_DASHBOARD.VALID' | translate }}</th>
+                    <th>{{ 'GLOBAL_DASHBOARD.ISSUES' | translate }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (account of store.pagedAccounts(); track account.login) {
+                    <tr>
+                      <td class="fw-bold text-primary-color">
+                        <i class="fa fa-building-o me-2 building-icon"></i>
+                        {{ account.login }}
+                      </td>
+                      <td>
+                        <span class="badge bg-primary-subtle text-primary fw-bold badge-text">
+                          {{ account.total }}
+                        </span>
+                      </td>
+                      <td>
+                        <span class="text-success fw-medium">
+                          <i class="fa fa-arrow-up me-1"></i>{{ account.moving }}
+                        </span>
+                      </td>
+                      <td>
+                        <span class="text-secondary fw-medium">
+                          <i class="fa fa-pause me-1"></i>{{ account.stopped }}
+                        </span>
+                      </td>
+                      <td>
+                        <div class="d-flex align-items-center gap-2">
+                          <div class="progress flex-grow-1 table-progress">
+                            <div class="progress-bar bg-success" role="progressbar" 
+                              [style.width.%]="(account.valid / account.total) * 100" 
+                              title="Operational health percentage"
+                              aria-label="Operational health percentage"
+                              [attr.aria-valuenow]="account.valid" 
+                              [attr.aria-valuemin]="0" 
+                              [attr.aria-valuemax]="account.total">
+                            </div>
+                          </div>
+                          <span class="text-success fw-bold text-success-small">
+                            {{ Math.round((account.valid / account.total) * 100) }}%
+                          </span>
+                        </div>
+                      </td>
+                      <td>
+                        @if (account.technicalIssue > 0) {
+                          <span class="badge bg-danger-subtle text-danger fw-bold">
+                            {{ account.technicalIssue }} {{ 'GLOBAL_DASHBOARD.ISSUES' | translate }}
+                          </span>
+                        } @else {
+                          <span class="text-success fw-medium">
+                            <i class="fa fa-check-circle me-1"></i>0
+                          </span>
+                        }
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+
+              <!-- Pagination Controls -->
+              <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top border-secondary-subtle flex-wrap gap-2">
+                <span class="text-secondary text-secondary-small">
+                  Showing {{ store.accountPage() * 8 + 1 }} to {{ Math.min((store.accountPage() + 1) * 8, store.accountsBreakdown().length) }} of {{ store.accountsBreakdown().length }} accounts
+                </span>
+                <div class="d-flex align-items-center gap-2">
+                  <button class="btn btn-sm btn-outline-secondary px-3 py-1" 
+                    [disabled]="store.accountPage() === 0" 
+                    (click)="store.setAccountPage(store.accountPage() - 1)">
+                    <i class="fa fa-chevron-left me-1"></i> Previous
+                  </button>
+                  <span class="text-primary fw-bold text-primary-small">
+                    Page {{ store.accountPage() + 1 }} of {{ store.totalAccountPages() }}
+                  </span>
+                  <button class="btn btn-sm btn-outline-secondary px-3 py-1" 
+                    [disabled]="store.accountPage() >= store.totalAccountPages() - 1" 
+                    (click)="store.setAccountPage(store.accountPage() + 1)">
+                    Next <i class="fa fa-chevron-right ms-1"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- No data -->
       @if (realtimes().length === 0 && !loading()) {
       <div class="premium-card text-center p-5 mt-4">
-        <i class="fa fa-folder-open-o fa-4x mb-4" style="color:var(--text-muted);opacity:0.3"></i>
-        <h4 class="fw-bold" style="color:var(--text-primary)">{{ 'DASHBOARD.NO_DATA_DESC' | translate }}</h4>
+        <i class="fa fa-folder-open-o fa-4x mb-4 folder-icon"></i>
+        <h4 class="fw-bold text-primary-color">{{ 'DASHBOARD.NO_DATA_DESC' | translate }}</h4>
       </div>
       }
     </div>

@@ -157,6 +157,7 @@
     "TOTAL_FLEET": "Total Fleet",
     "ACTIVE_FLEET": "Active Fleet",
     "STOPPED_FLEET": "Stopped Fleet",
+    "INACTIVE_FLEET": "Inactive / No Signal",
     "VALID_STATUS": "Valid Status",
     "TECHNICAL_ISSUES": "Technical Issues",
     "TOTAL_ACCOUNTS": "Total Accounts",
@@ -174,7 +175,9 @@
     "SIM_PROVIDERS": "SIM Card Providers",
     "SIGNAL_QUALITY": "Signal Quality",
     "FLEET_ACTIVITY": "Fleet Activity",
-    "IGNITION_ON": "Ignition On"
+    "IGNITION_ON": "Ignition On",
+    "FLEET_HEALTH": "Fleet Health Score",
+    "HEALTH_STATUS": "Operational Health"
   },
   "ARCHIVE": {
     "TITLE": "Archives & Raw",

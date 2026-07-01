@@ -90,6 +90,10 @@ export class WebAccountService {
         return this.http.get<RealTimeSummary[]>(`${environment.apiBaseUrl}compteWeb/AllLastTram/summary`);
     }
 
+    getAllLastTramMapData(): Observable<RealTime[]> {
+        return this.http.get<RealTime[]>(`${environment.apiBaseUrl}compteWeb/AllLastTram/map`);
+    }
+
     getTotalDeviceCount(): Observable<number> {
         return this.http.get<number>(`${environment.apiBaseUrl}compteWeb/device-count`);
     }

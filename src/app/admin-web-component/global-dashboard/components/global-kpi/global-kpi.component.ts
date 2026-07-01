@@ -8,7 +8,8 @@ import { GlobalDashboardStats } from '../../../../shared/stores/global-dashboard
   selector: 'app-global-kpi',
   standalone: true,
   imports: [CommonModule, TranslateModule, KpiCardComponent],
-  templateUrl: './global-kpi.component.html'
+  templateUrl: './global-kpi.component.html',
+  styleUrls: ['./global-kpi.component.css']
 })
 export class GlobalKpiComponent {
   stats = input<GlobalDashboardStats>({
@@ -19,6 +20,7 @@ export class GlobalKpiComponent {
     moving: 0,
     stopped: 0,
     ignitionOn: 0,
-    accountsCount: 0
+    accountsCount: 0,
+    inactive: 0
   });
 }

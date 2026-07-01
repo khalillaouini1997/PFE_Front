@@ -157,6 +157,7 @@
     "TOTAL_FLEET": "Flotte Totale",
     "ACTIVE_FLEET": "Flotte Active",
     "STOPPED_FLEET": "Flotte Arrêtée",
+    "INACTIVE_FLEET": "Inactif / Aucun Signal",
     "VALID_STATUS": "Statut Valide",
     "TECHNICAL_ISSUES": "Problèmes Techniques",
     "TOTAL_ACCOUNTS": "Total Comptes",
@@ -174,7 +175,9 @@
     "SIM_PROVIDERS": "Fournisseurs SIM",
     "SIGNAL_QUALITY": "Qualité du Signal",
     "FLEET_ACTIVITY": "Activité de la Flotte",
-    "IGNITION_ON": "Allumé"
+    "IGNITION_ON": "Allumé",
+    "FLEET_HEALTH": "Score de Santé de la Flotte",
+    "HEALTH_STATUS": "Santé Opérationnelle"
   },
   "ARCHIVE": {
     "TITLE": "Archives & Brutes",

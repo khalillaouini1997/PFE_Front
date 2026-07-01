@@ -1,0 +1,31 @@
+@import '../../../../shared/styles/design-tokens.css';
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--spacing-sm, 8px);
+}
+
+:host ::ng-deep .kpi-card {
+  padding: var(--spacing-sm, 12px) var(--spacing-md, 16px) !important;
+  border-radius: var(--radius-lg, 8px) !important;
+}
+
+:host ::ng-deep .kpi-header {
+  margin-bottom: 4px !important;
+}
+
+:host ::ng-deep .kpi-icon {
+  font-size: 1rem !important;
+}
+
+:host ::ng-deep .kpi-value {
+  font-size: 1.35rem !important;
+}
+
+:host ::ng-deep .kpi-label {
+  font-size: 0.75rem !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
