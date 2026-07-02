@@ -531,6 +531,10 @@
   margin-bottom: var(--spacing-lg);
 }
 
+.chart-card.full-width {
+  grid-column: 1 / -1;
+}
+
 .chart-card {
   background: var(--surface-card);
   border: 1px solid var(--surface-border);

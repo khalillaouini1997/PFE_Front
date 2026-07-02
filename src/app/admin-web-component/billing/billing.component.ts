@@ -36,10 +36,12 @@ export class BillingComponent implements OnInit, OnDestroy {
   revenueByMonthChart = viewChild<ElementRef>('revenueByMonthChart');
   revenueByAccountChart = viewChild<ElementRef>('revenueByAccountChart');
   statusChart = viewChild<ElementRef>('statusChart');
+  revenueForecastChart = viewChild<ElementRef>('revenueForecastChart');
 
   private revenueByMonthInstance?: Chart;
   private revenueByAccountInstance?: Chart;
   private statusInstance?: Chart;
+  private revenueForecastInstance?: Chart;
 
   private readonly billingService = inject(BillingService);
   private readonly analyticsService = inject(BillingAnalyticsService);
@@ -58,12 +60,16 @@ export class BillingComponent implements OnInit, OnDestroy {
     this.revenueByMonthInstance?.destroy();
     this.revenueByAccountInstance?.destroy();
     this.statusInstance?.destroy();
+    this.revenueForecastInstance?.destroy();
   }
 
   switchTab(tab: 'invoice' | 'dashboard') {
     this.activeTab = tab;
     if (tab === 'dashboard') {
-      setTimeout(() => this.loadAnalytics(), 0);
+      setTimeout(() => {
+        this.loadAnalytics();
+        this.loadForecast();
+      }, 0);
     }
   }
 
@@ -251,6 +257,98 @@ export class BillingComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
       }
     });
+  }
+
+  loadForecast() {
+    this.analyticsService.getRevenueHistory().subscribe({
+      next: (res: any) => {
+        const history = res?.data ?? res;
+        if (!Array.isArray(history) || history.length < 2) return;
+
+        const monthlyRevenue = history.map((h: any) => h.total || 0);
+        const labels = history.map((h: any) => h.billing_period);
+
+        this.analyticsService.getRevenueForecast(monthlyRevenue, 6).subscribe({
+          next: (forecast: any) => {
+            this.renderForecastChart(labels, monthlyRevenue, forecast);
+          },
+          error: (e: any) => console.error('Forecast API error:', e)
+        });
+      },
+      error: (e: any) => console.error('Revenue history error:', e)
+    });
+  }
+
+  private renderForecastChart(actualLabels: string[], actualData: number[], forecast: any) {
+    const canvas = this.revenueForecastChart();
+    if (!canvas) return;
+
+    const predictions: number[] = forecast?.predictions || [];
+    const lastMonth = actualLabels[actualLabels.length - 1] || '';
+
+    const predictedLabels = predictions.map((_: number, i: number) => {
+      const [year, month] = lastMonth.split('-').map(Number);
+      const d = new Date(year, month - 1 + i + 1, 1);
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+    });
+
+    const allLabels = [...actualLabels, ...predictedLabels];
+    const actualValues = [...actualData, ...new Array(predictedLabels.length).fill(null)];
+    const predictedValues = [
+      ...new Array(actualLabels.length - 1).fill(null),
+      actualData[actualData.length - 1],
+      ...predictions
+    ];
+
+    if (this.revenueForecastInstance) {
+      this.revenueForecastInstance.data.labels = allLabels;
+      this.revenueForecastInstance.data.datasets[0].data = actualValues;
+      this.revenueForecastInstance.data.datasets[1].data = predictedValues;
+      this.revenueForecastInstance.update('none');
+    } else {
+      this.revenueForecastInstance = new Chart(canvas.nativeElement, {
+        type: 'line',
+        data: {
+          labels: allLabels,
+          datasets: [
+            {
+              label: 'Actual Revenue (TND)',
+              data: actualValues,
+              borderColor: '#14b8a6',
+              backgroundColor: 'rgba(20, 184, 166, 0.1)',
+              fill: true,
+              tension: 0.4,
+              borderWidth: 2,
+              pointRadius: 3
+            },
+            {
+              label: 'Predicted Revenue (TND)',
+              data: predictedValues,
+              borderColor: '#f59e0b',
+              borderDash: [8, 4],
+              fill: false,
+              tension: 0.4,
+              borderWidth: 2,
+              pointRadius: 3,
+              pointStyle: 'triangle'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: false,
+          plugins: {
+            legend: { position: 'top' },
+            tooltip: { mode: 'index', intersect: false }
+          },
+          scales: {
+            y: { beginAtZero: true, grid: { display: false } },
+            x: { grid: { display: false }, ticks: { maxRotation: 45 } }
+          }
+        }
+      });
+    }
   }
 
   private renderCharts(data: any) {

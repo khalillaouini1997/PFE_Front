@@ -6,10 +6,22 @@ import { environment } from '../../environments/environment';
 @Injectable({ providedIn: 'root' })
 export class BillingAnalyticsService {
   private apiBaseUrl = environment.apiBaseUrl;
+  private mlServiceUrl = 'http://localhost:8000';
 
   constructor(private http: HttpClient) {}
 
   getBillingAnalytics(year: number): Observable<any> {
     return this.http.get(`${this.apiBaseUrl}billing/analytics/${year}`);
+  }
+
+  getRevenueHistory(): Observable<any> {
+    return this.http.get(`${this.apiBaseUrl}billing/revenue-history`);
+  }
+
+  getRevenueForecast(monthlyRevenue: number[], forecastMonths: number = 6): Observable<any> {
+    return this.http.post(`${this.mlServiceUrl}/api/revenue/forecast`, {
+      monthly_revenue: monthlyRevenue,
+      forecast_months: forecastMonths
+    });
   }
 }
