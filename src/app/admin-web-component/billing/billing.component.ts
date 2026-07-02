@@ -54,6 +54,10 @@ export class BillingComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.initForm();
     this.loadWebAccounts();
+    setTimeout(() => {
+      this.loadAnalytics();
+      this.loadForecast();
+    }, 0);
   }
 
   ngOnDestroy() {
