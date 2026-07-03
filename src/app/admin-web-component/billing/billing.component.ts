@@ -33,6 +33,18 @@ export class BillingComponent implements OnInit, OnDestroy {
   analyticsLoading = false;
   topDevices: any[] = [];
 
+  devicePage = 0;
+  pageSize = 10;
+
+  get totalDevicePages(): number {
+    return Math.ceil((this.billingResult?.deviceBreakdown?.length || 0) / this.pageSize);
+  }
+
+  get pagedDevices(): any[] {
+    const all = this.billingResult?.deviceBreakdown || [];
+    return all.slice(this.devicePage * this.pageSize, (this.devicePage + 1) * this.pageSize);
+  }
+
   revenueByMonthChart = viewChild<ElementRef>('revenueByMonthChart');
   revenueByAccountChart = viewChild<ElementRef>('revenueByAccountChart');
   statusChart = viewChild<ElementRef>('statusChart');
@@ -109,13 +121,15 @@ export class BillingComponent implements OnInit, OnDestroy {
     });
   }
 
-  onAccountChange() {
+  searchInvoice() {
     const accountId = this.billingForm.get('accountId')?.value;
     if (!accountId) {
-      this.billingResult = null;
-      this.noExistingInvoice = false;
+      this.toastr.error(this.translate.instant('BILLING.SELECT_ACCOUNT'), this.translate.instant('COMMON.ERROR'));
       return;
     }
+    this.billingResult = null;
+    this.noExistingInvoice = false;
+    this.devicePage = 0;
     this.checkExistingInvoice();
   }
 

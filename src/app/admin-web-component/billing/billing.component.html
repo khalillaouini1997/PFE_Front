@@ -28,7 +28,6 @@
                 id="accountId" 
                 formControlName="accountId" 
                 class="form-control"
-                (change)="onAccountChange()"
               >
                 <option value="">{{ loadingAccounts ? ('BILLING.LOADING_ACCOUNTS' | translate) : ('BILLING.SELECT_ACCOUNT' | translate) }}</option>
                 <option *ngFor="let account of webAccounts" [value]="account.idCompteClientWeb">
@@ -66,8 +65,17 @@
         <div class="button-group">
           <button 
             type="button" 
+            (click)="searchInvoice()" 
+            [disabled]="loading || !billingForm.get('accountId')?.value"
+            class="btn btn-primary"
+          >
+            <span class="btn-icon">🔍</span> Search
+          </button>
+
+          <button 
+            type="button" 
             (click)="calculateBilling()" 
-            [disabled]="loading"
+            [disabled]="loading || !billingForm.get('accountId')?.value"
             class="btn btn-primary"
           >
             <span class="btn-icon">⚡</span> {{ 'BILLING.CALCULATE' | translate }}
@@ -175,11 +183,23 @@
         <!-- Device Breakdown Table -->
         @if (billingResult.deviceBreakdown && billingResult.deviceBreakdown.length > 0) {
           <div class="billing-card table-card">
-            <h3>{{ 'BILLING.DEVICE_BREAKDOWN' | translate }} ({{ billingResult.deviceBreakdown.length }} devices)</h3>
+            <div class="table-header">
+              <h3>{{ 'BILLING.DEVICE_BREAKDOWN' | translate }} ({{ billingResult.deviceBreakdown.length }} devices)</h3>
+              <div class="pagination-controls">
+                <label>Rows:</label>
+                <select [(ngModel)]="pageSize" (change)="devicePage = 0" class="form-control-sm">
+                  <option [value]="10">10</option>
+                  <option [value]="25">25</option>
+                  <option [value]="50">50</option>
+                  <option [value]="100">100</option>
+                </select>
+              </div>
+            </div>
             <div class="table-responsive">
               <table class="billing-table">
                 <thead>
                   <tr>
+                    <th>#</th>
                     <th>{{ 'BILLING.DEVICE_ID' | translate }}</th>
                     <th>{{ 'BILLING.DEVICE_LABEL' | translate }}</th>
                     <th>{{ 'BILLING.WORKING_DAYS' | translate }}</th>
@@ -188,7 +208,8 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let device of billingResult.deviceBreakdown">
+                  <tr *ngFor="let device of pagedDevices; let i = index">
+                    <td class="text-muted">{{ devicePage * pageSize + i + 1 }}</td>
                     <td><span class="device-id-badge">#{{ device.deviceId }}</span></td>
                     <td><strong>{{ device.deviceLabel }}</strong><br><small class="text-muted">Box {{ device.numBoitier }}</small></td>
                     <td>
@@ -207,6 +228,15 @@
                 </tbody>
               </table>
             </div>
+            @if (totalDevicePages > 1) {
+              <div class="pagination">
+                <button class="btn btn-sm btn-secondary" (click)="devicePage = 0" [disabled]="devicePage === 0">&laquo;</button>
+                <button class="btn btn-sm btn-secondary" (click)="devicePage = devicePage - 1" [disabled]="devicePage === 0">&lsaquo;</button>
+                <span class="page-info">Page {{ devicePage + 1 }} / {{ totalDevicePages }}</span>
+                <button class="btn btn-sm btn-secondary" (click)="devicePage = devicePage + 1" [disabled]="devicePage >= totalDevicePages - 1">&rsaquo;</button>
+                <button class="btn btn-sm btn-secondary" (click)="devicePage = totalDevicePages - 1" [disabled]="devicePage >= totalDevicePages - 1">&raquo;</button>
+              </div>
+            }
           </div>
         }
 
