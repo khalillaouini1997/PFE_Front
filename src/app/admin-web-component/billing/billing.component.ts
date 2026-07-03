@@ -154,10 +154,12 @@ export class BillingComponent implements OnInit, OnDestroy {
           this.noExistingInvoice = true;
         }
         this.loading = false;
+        this.cdr.detectChanges();
       },
       error: () => {
         this.noExistingInvoice = true;
         this.loading = false;
+        this.cdr.detectChanges();
       }
     });
   }
