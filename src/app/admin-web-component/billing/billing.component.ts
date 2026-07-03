@@ -133,7 +133,7 @@ export class BillingComponent implements OnInit, OnDestroy {
     this.billingService.checkExistingInvoice(accountId, year, month).subscribe({
       next: (res: any) => {
         const data = res?.data || res;
-        if (data && data.totalAmount > 0) {
+        if (data && data.billingPeriod) {
           this.billingResult = data;
           this.noExistingInvoice = false;
         } else {
