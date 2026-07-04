@@ -1,4 +1,4 @@
-import { HttpClient, provideHttpClient, withInterceptors, withXsrfConfiguration } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { enableProdMode, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 
@@ -60,7 +60,7 @@ bootstrapApplication(AppComponent, {
         registrationStrategy: 'registerWhenStable:30000'
       })
     ),
-    provideHttpClient(withInterceptors([authInterceptor, apiResponseInterceptor, httpErrorInterceptor, tokenRefreshInterceptor]), withXsrfConfiguration({ cookieName: 'XSRF-TOKEN', headerName: 'X-XSRF-TOKEN' })),
+    provideHttpClient(withInterceptors([authInterceptor, apiResponseInterceptor, httpErrorInterceptor, tokenRefreshInterceptor])),
     provideAnimations(),
     providePrimeNG({
         theme: {
