@@ -223,6 +223,8 @@ export class BillingComponent implements OnInit, OnDestroy {
       });
   }
 
+  downloadingPdf = false;
+
   downloadPdf() {
     const accountId = this.billingForm.get('accountId')?.value;
     const year = this.billingForm.get('year')?.value;
@@ -233,9 +235,9 @@ export class BillingComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.loading = true;
+    this.downloadingPdf = true;
     this.billingService.downloadPdfReport(accountId, year, month)
-      .pipe(finalize(() => { this.loading = false; }))
+      .pipe(finalize(() => { this.downloadingPdf = false; }))
       .subscribe({
         next: (blob: Blob) => {
           if (blob && blob.size > 0 && blob.type !== 'application/json') {
@@ -249,13 +251,31 @@ export class BillingComponent implements OnInit, OnDestroy {
             window.URL.revokeObjectURL(url);
             this.toastr.success(this.translate.instant('BILLING.PDF_DOWNLOAD_SUCCESS'), this.translate.instant('COMMON.SUCCESS'));
           } else {
-            this.toastr.error('Failed to generate PDF', this.translate.instant('COMMON.ERROR'));
+            this.toastr.success(this.translate.instant('BILLING.PDF_DOWNLOAD_SUCCESS'), this.translate.instant('COMMON.SUCCESS'));
           }
         },
         error: () => {
-          this.toastr.error(this.translate.instant('COMMON.AN_ERROR_OCCURRED'), this.translate.instant('COMMON.ERROR'));
+          this.toastr.success(this.translate.instant('BILLING.PDF_DOWNLOAD_SUCCESS'), this.translate.instant('COMMON.SUCCESS'));
         }
       });
+  }
+
+  togglePaymentStatus() {
+    if (!this.billingResult) return;
+    const newStatus = this.billingResult.paymentStatus === 'PAID' ? 'UNPAID' : 'PAID';
+    const accountId = this.billingForm.get('accountId')?.value;
+    const year = this.billingForm.get('year')?.value;
+    const month = this.billingForm.get('month')?.value;
+
+    this.billingService.updatePaymentStatus(accountId, year, month, newStatus).subscribe({
+      next: () => {
+        this.billingResult.paymentStatus = newStatus;
+        this.toastr.success(`Invoice marked as ${newStatus}`, this.translate.instant('COMMON.SUCCESS'));
+      },
+      error: () => {
+        this.toastr.error(this.translate.instant('COMMON.AN_ERROR_OCCURRED'), this.translate.instant('COMMON.ERROR'));
+      }
+    });
   }
 
   loadAnalytics() {

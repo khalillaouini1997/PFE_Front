@@ -29,4 +29,12 @@ export class BillingService {
   checkExistingInvoice(accountId: number, year: number, month: number): Observable<any> {
     return this.http.get(`${this.apiBaseUrl}billing/account/${accountId}/${year}/${month}/check`);
   }
+
+  updatePaymentStatus(accountId: number, year: number, month: number, status: string): Observable<any> {
+    return this.http.put(
+      `${this.apiBaseUrl}billing/account/${accountId}/${year}/${month}/status`,
+      { status },
+      { headers: { 'Content-Type': 'application/json' } }
+    );
+  }
 }

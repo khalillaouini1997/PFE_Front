@@ -93,10 +93,10 @@
           <button 
             type="button" 
             (click)="downloadPdf()" 
-            [disabled]="loading || !billingResult"
+            [disabled]="downloadingPdf || !billingResult"
             class="btn btn-success"
           >
-            <span class="btn-icon">📄</span> {{ 'BILLING.DOWNLOAD_PDF' | translate }}
+            <span class="btn-icon">{{ downloadingPdf ? '⏳' : '📄' }}</span> {{ downloadingPdf ? ('BILLING.DOWNLOADING' | translate) : ('BILLING.DOWNLOAD_PDF' | translate) }}
           </button>
         </div>
       </form>
@@ -131,7 +131,19 @@
               <span class="kpi-label">{{ 'BILLING.TOTAL' | translate }} (TTC)</span>
               <span class="kpi-value">{{ formatCurrency(billingResult.totalAmount) }}</span>
             </div>
-            <span class="status-badge unpaid">UNPAID</span>
+            <div class="status-toggle-wrapper">
+              <label class="status-toggle">
+                <input 
+                  type="checkbox" 
+                  [checked]="billingResult.paymentStatus === 'PAID'"
+                  (change)="togglePaymentStatus()"
+                />
+                <span class="status-toggle-slider"></span>
+              </label>
+              <span class="status-badge" [class.paid]="billingResult.paymentStatus === 'PAID'" [class.unpaid]="billingResult.paymentStatus !== 'PAID'">
+                {{ billingResult.paymentStatus || 'UNPAID' }}
+              </span>
+            </div>
           </div>
 
           <div class="kpi-grid-sub">
@@ -171,7 +183,9 @@
             </div>
             <div class="detail-item">
               <span class="label">Invoice Status</span>
-              <span class="value text-warning">Pending Payment (Local MySQL Persisted)</span>
+              <span class="value" [class.text-warning]="billingResult.paymentStatus !== 'PAID'" [class.text-success]="billingResult.paymentStatus === 'PAID'">
+                {{ billingResult.paymentStatus === 'PAID' ? 'Paid' : 'Pending Payment' }}
+              </span>
             </div>
             <div class="detail-item">
               <span class="label">{{ 'BILLING.GENERATED_AT' | translate }}</span>

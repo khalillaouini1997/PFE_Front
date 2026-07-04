@@ -395,6 +395,7 @@
     "CALCULATE": "Calculate",
     "REFRESH": "Refresh",
     "DOWNLOAD_PDF": "Download PDF",
+    "DOWNLOADING": "Downloading...",
     "LOADING": "Loading...",
     "LOADING_ACCOUNTS": "Loading accounts...",
     "SUMMARY": "Summary",

@@ -303,6 +303,58 @@
   border: 1px solid var(--color-success-light);
 }
 
+/* Status Toggle Switch */
+.status-toggle-wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.status-toggle {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+
+.status-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.status-toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--color-error);
+  transition: 0.3s;
+  border-radius: 24px;
+}
+
+.status-toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.3s;
+  border-radius: 50%;
+}
+
+.status-toggle input:checked + .status-toggle-slider {
+  background-color: var(--color-success);
+}
+
+.status-toggle input:checked + .status-toggle-slider:before {
+  transform: translateX(20px);
+}
+
 /* Summary Card Details */
 .summary-card .summary-header {
   display: flex;
@@ -355,6 +407,10 @@
 
 .text-warning {
   color: var(--color-warning-dark) !important;
+}
+
+.text-success {
+  color: var(--color-success) !important;
 }
 
 /* Table Design */
