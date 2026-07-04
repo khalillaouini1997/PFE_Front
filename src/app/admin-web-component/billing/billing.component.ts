@@ -150,10 +150,12 @@ export class BillingComponent implements OnInit, OnDestroy {
         const data = res?.data || res;
         this.allInvoices = Array.isArray(data) ? data : [];
         this.loadingAllInvoices = false;
+        this.cdr.detectChanges();
       },
       error: () => {
         this.allInvoices = [];
         this.loadingAllInvoices = false;
+        this.cdr.detectChanges();
       }
     });
   }
