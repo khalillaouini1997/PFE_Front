@@ -42,6 +42,14 @@ export class BillingService {
     return this.http.get(`${this.apiBaseUrl}billing/account/${accountId}/invoices`);
   }
 
+  generateBatchBilling(accountId: number, startYear: number, startMonth: number): Observable<any> {
+    return this.http.post(
+      `${this.apiBaseUrl}billing/account/${accountId}/batch`,
+      { startYear, startMonth },
+      { headers: { 'Content-Type': 'application/json' } }
+    );
+  }
+
   updatePaymentStatus(accountId: number, year: number, month: number, status: string): Observable<any> {
     return this.http.put(
       `${this.apiBaseUrl}billing/account/${accountId}/${year}/${month}/status`,

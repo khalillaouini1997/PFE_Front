@@ -214,11 +214,6 @@ export class BillingComponent implements OnInit, OnDestroy {
   }
 
   calculateBilling() {
-    if (this.billingForm.invalid) {
-      this.toastr.error(this.translate.instant('BILLING.INVALID_FORM'), this.translate.instant('COMMON.ERROR'));
-      return;
-    }
-
     const accountId = this.billingForm.get('accountId')?.value;
     const year = this.billingForm.get('year')?.value;
     const month = this.billingForm.get('month')?.value;
@@ -230,14 +225,17 @@ export class BillingComponent implements OnInit, OnDestroy {
 
     this.loading = true;
     this.noExistingInvoice = false;
-    this.billingService.calculateMonthlyBilling(accountId, year, month)
+    this.billingService.generateBatchBilling(accountId, year, month)
       .pipe(
-        tap(() => this.toastr.success(this.translate.instant('BILLING.CALCULATION_SUCCESS'), this.translate.instant('COMMON.SUCCESS'))),
+        tap(() => this.toastr.success(this.translate.instant('BILLING.BATCH_SUCCESS'), this.translate.instant('COMMON.SUCCESS'))),
         finalize(() => { this.loading = false; this.cdr.detectChanges(); })
       )
       .subscribe({
         next: (res: any) => {
-          this.billingResult = res?.data || res;
+          const data = res?.data || res;
+          this.allInvoices = Array.isArray(data) ? data : [];
+          this.billingResult = this.allInvoices.length > 0 ? this.allInvoices[this.allInvoices.length - 1] : null;
+          this.showAllInvoicesView = this.allInvoices.length > 0;
         },
         error: () => {
           this.toastr.error(this.translate.instant('COMMON.AN_ERROR_OCCURRED'), this.translate.instant('COMMON.ERROR'));
