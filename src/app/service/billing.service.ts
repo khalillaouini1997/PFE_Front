@@ -15,6 +15,14 @@ export class BillingService {
     return this.http.get(`${this.apiBaseUrl}billing/account/${accountId}/${year}/${month}`);
   }
 
+  triggerAllAccountsBilling(): Observable<any> {
+    return this.http.post(`${this.apiBaseUrl}billing/schedule/trigger`, null);
+  }
+
+  triggerAccountBilling(accountId: number): Observable<any> {
+    return this.http.post(`${this.apiBaseUrl}billing/schedule/trigger/${accountId}`, null);
+  }
+
   refreshMonthlyBilling(accountId: number, year: number, month: number): Observable<any> {
     return this.http.post(`${this.apiBaseUrl}billing/account/${accountId}/${year}/${month}/refresh`, null);
   }

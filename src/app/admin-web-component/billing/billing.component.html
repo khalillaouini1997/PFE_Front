@@ -72,14 +72,41 @@
             <span class="btn-icon">🔍</span> Search
           </button>
 
-          <button 
-            type="button" 
-            (click)="calculateBilling()" 
-            [disabled]="loading || !billingForm.get('accountId')?.value"
-            class="btn btn-primary"
-          >
-            <span class="btn-icon">⚡</span> {{ 'BILLING.CALCULATE' | translate }}
-          </button>
+          <div class="dropdown" (click)="$event.stopPropagation()">
+            <button 
+              type="button" 
+              class="btn btn-primary dropdown-toggle" 
+              [disabled]="loading"
+              (click)="showCalcMenu = !showCalcMenu"
+            >
+              <span class="btn-icon">⚡</span> {{ 'BILLING.CALCULATE' | translate }}
+            </button>
+            @if (showCalcMenu) {
+              <ul class="dropdown-menu show">
+                <li>
+                  <a class="dropdown-item" (click)="calculateAllAccounts(); showCalcMenu = false" role="button">
+                    <span class="me-2">🌐</span> {{ 'BILLING.CALC_ALL_ACCOUNTS' | translate }}
+                    <br><small class="text-muted">{{ 'BILLING.CALC_PREVIOUS_MONTH' | translate }}</small>
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" (click)="calculateSpecificAccount(); showCalcMenu = false" role="button"
+                     [class.text-muted]="!billingForm.get('accountId')?.value">
+                    <span class="me-2">👤</span> {{ 'BILLING.CALC_SPECIFIC_ACCOUNT' | translate }}
+                    <br><small class="text-muted">{{ 'BILLING.CALC_PREVIOUS_MONTH' | translate }}</small>
+                  </a>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                  <a class="dropdown-item" (click)="calculateBilling(); showCalcMenu = false" role="button"
+                     [class.text-muted]="!billingForm.get('accountId')?.value">
+                    <span class="me-2">📅</span> {{ 'BILLING.CALC_CUSTOM_PERIOD' | translate }}
+                    <br><small class="text-muted">{{ 'BILLING.CALC_CHOSEN_PERIOD' | translate }}</small>
+                  </a>
+                </li>
+              </ul>
+            }
+          </div>
 
           <button 
             type="button" 

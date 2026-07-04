@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject, viewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, viewChild, ElementRef, ChangeDetectorRef, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
@@ -27,6 +27,7 @@ export class BillingComponent implements OnInit, OnDestroy {
   allInvoices: any[] = [];
   showAllInvoicesView: boolean = false;
   loadingAllInvoices: boolean = false;
+  showCalcMenu: boolean = false;
   selectedAccountId: number | null = null;
   webAccounts: any[] = [];
   loadingAccounts: boolean = false;
@@ -73,6 +74,11 @@ export class BillingComponent implements OnInit, OnDestroy {
       this.loadAnalytics();
       this.loadForecast();
     }, 0);
+  }
+
+  @HostListener('document:click')
+  onDocumentClick() {
+    this.showCalcMenu = false;
   }
 
   ngOnDestroy() {
@@ -227,11 +233,54 @@ export class BillingComponent implements OnInit, OnDestroy {
     this.billingService.calculateMonthlyBilling(accountId, year, month)
       .pipe(
         tap(() => this.toastr.success(this.translate.instant('BILLING.CALCULATION_SUCCESS'), this.translate.instant('COMMON.SUCCESS'))),
-        finalize(() => { this.loading = false; })
+        finalize(() => { this.loading = false; this.cdr.detectChanges(); })
       )
       .subscribe({
         next: (res: any) => {
           this.billingResult = res?.data || res;
+        },
+        error: () => {
+          this.toastr.error(this.translate.instant('COMMON.AN_ERROR_OCCURRED'), this.translate.instant('COMMON.ERROR'));
+        }
+      });
+  }
+
+  calculateAllAccounts() {
+    this.loading = true;
+    this.billingService.triggerAllAccountsBilling()
+      .pipe(
+        tap(() => this.toastr.success(this.translate.instant('BILLING.ALL_ACCOUNTS_SUCCESS'), this.translate.instant('COMMON.SUCCESS'))),
+        finalize(() => { this.loading = false; this.cdr.detectChanges(); })
+      )
+      .subscribe({
+        next: () => {
+          this.showAllInvoicesView = false;
+          this.allInvoices = [];
+        },
+        error: () => {
+          this.toastr.error(this.translate.instant('COMMON.AN_ERROR_OCCURRED'), this.translate.instant('COMMON.ERROR'));
+        }
+      });
+  }
+
+  calculateSpecificAccount() {
+    const accountId = this.billingForm.get('accountId')?.value;
+    if (!accountId) {
+      this.toastr.error(this.translate.instant('BILLING.SELECT_ACCOUNT'), this.translate.instant('COMMON.ERROR'));
+      return;
+    }
+
+    this.loading = true;
+    this.billingService.triggerAccountBilling(accountId)
+      .pipe(
+        tap(() => this.toastr.success(this.translate.instant('BILLING.ACCOUNT_SUCCESS'), this.translate.instant('COMMON.SUCCESS'))),
+        finalize(() => { this.loading = false; this.cdr.detectChanges(); })
+      )
+      .subscribe({
+        next: (res: any) => {
+          this.billingResult = res?.data || res;
+          this.showAllInvoicesView = false;
+          this.allInvoices = [];
         },
         error: () => {
           this.toastr.error(this.translate.instant('COMMON.AN_ERROR_OCCURRED'), this.translate.instant('COMMON.ERROR'));
