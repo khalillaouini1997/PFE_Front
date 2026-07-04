@@ -24,6 +24,9 @@ export class BillingComponent implements OnInit, OnDestroy {
   billingForm!: FormGroup;
   loading: boolean = false;
   billingResult: any = null;
+  allInvoices: any[] = [];
+  showAllInvoicesView: boolean = false;
+  loadingAllInvoices: boolean = false;
   selectedAccountId: number | null = null;
   webAccounts: any[] = [];
   loadingAccounts: boolean = false;
@@ -131,6 +134,44 @@ export class BillingComponent implements OnInit, OnDestroy {
     this.noExistingInvoice = false;
     this.devicePage = 0;
     this.checkExistingInvoice();
+  }
+
+  fetchAllInvoices() {
+    const accountId = this.billingForm.get('accountId')?.value;
+    if (!accountId) return;
+
+    this.loadingAllInvoices = true;
+    this.showAllInvoicesView = true;
+    this.billingResult = null;
+    this.noExistingInvoice = false;
+
+    this.billingService.getAllInvoicesByAccount(accountId).subscribe({
+      next: (res: any) => {
+        const data = res?.data || res;
+        this.allInvoices = Array.isArray(data) ? data : [];
+        this.loadingAllInvoices = false;
+      },
+      error: () => {
+        this.allInvoices = [];
+        this.loadingAllInvoices = false;
+      }
+    });
+  }
+
+  backToSingleInvoice() {
+    this.showAllInvoicesView = false;
+    this.allInvoices = [];
+  }
+
+  viewInvoice(invoice: any) {
+    this.showAllInvoicesView = false;
+    this.allInvoices = [];
+    this.billingResult = invoice;
+    this.noExistingInvoice = false;
+    this.billingForm.patchValue({
+      year: parseInt(invoice.billingPeriod.split('-')[0]),
+      month: parseInt(invoice.billingPeriod.split('-')[1])
+    });
   }
 
   checkExistingInvoice() {

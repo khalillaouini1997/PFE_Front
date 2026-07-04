@@ -30,6 +30,10 @@ export class BillingService {
     return this.http.get(`${this.apiBaseUrl}billing/account/${accountId}/${year}/${month}/check`);
   }
 
+  getAllInvoicesByAccount(accountId: number): Observable<any> {
+    return this.http.get(`${this.apiBaseUrl}billing/account/${accountId}/invoices`);
+  }
+
   updatePaymentStatus(accountId: number, year: number, month: number, status: string): Observable<any> {
     return this.http.put(
       `${this.apiBaseUrl}billing/account/${accountId}/${year}/${month}/status`,

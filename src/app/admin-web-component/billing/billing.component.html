@@ -92,6 +92,15 @@
 
           <button 
             type="button" 
+            (click)="fetchAllInvoices()" 
+            [disabled]="loadingAllInvoices || !billingForm.get('accountId')?.value"
+            class="btn btn-info"
+          >
+            <span class="btn-icon">{{ loadingAllInvoices ? '⏳' : '📋' }}</span> {{ loadingAllInvoices ? ('BILLING.LOADING' | translate) : ('BILLING.SHOW_ALL' | translate) }}
+          </button>
+
+          <button 
+            type="button" 
             (click)="downloadPdf()" 
             [disabled]="downloadingPdf || !billingResult"
             class="btn btn-success"
@@ -111,11 +120,78 @@
     }
 
     <!-- No existing invoice -->
-    @if (noExistingInvoice && !loading) {
+    @if (noExistingInvoice && !loading && !showAllInvoicesView) {
       <div class="no-invoice-state">
         <div class="no-invoice-icon">📋</div>
         <h3>No Invoice Found</h3>
         <p>No billing invoice exists for this account and period. Click <strong>Calculate</strong> to generate one.</p>
+      </div>
+    }
+
+    <!-- All Invoices View -->
+    @if (showAllInvoicesView) {
+      <div class="billing-card">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h3 class="m-0 fw-bold">
+            <span class="me-2">📋</span> {{ 'BILLING.ALL_INVOICES' | translate }} ({{ allInvoices.length }})
+          </h3>
+          <button type="button" class="btn btn-sm btn-outline-secondary" (click)="backToSingleInvoice()">
+            <span class="me-1">←</span> Back
+          </button>
+        </div>
+
+        @if (loadingAllInvoices) {
+          <div class="loading-state">
+            <div class="spinner"></div>
+            <p>{{ 'BILLING.LOADING' | translate }}</p>
+          </div>
+        } @else if (allInvoices.length === 0) {
+          <div class="no-invoice-state">
+            <div class="no-invoice-icon">📋</div>
+            <h3>No Invoices Found</h3>
+            <p>No invoices have been generated for this account yet.</p>
+          </div>
+        } @else {
+          <div class="table-responsive">
+            <table class="billing-table">
+              <thead>
+                <tr>
+                  <th>{{ 'BILLING.PERIOD' | translate }}</th>
+                  <th>{{ 'BILLING.ACCOUNT_NAME' | translate }}</th>
+                  <th>{{ 'BILLING.SUBTOTAL' | translate }} (HT)</th>
+                  <th>{{ 'BILLING.TVA' | translate }}</th>
+                  <th>{{ 'BILLING.TOTAL' | translate }} (TTC)</th>
+                  <th>Status</th>
+                  <th>{{ 'BILLING.GENERATED_AT' | translate }}</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (invoice of allInvoices; track invoice.billingPeriod) {
+                  <tr>
+                    <td><span class="device-id-badge">{{ invoice.billingPeriod }}</span></td>
+                    <td class="fw-bold">{{ invoice.accountName }}</td>
+                    <td>{{ formatCurrency(invoice.subtotal) }}</td>
+                    <td>{{ formatCurrency(invoice.tvaAmount) }}</td>
+                    <td><strong class="text-primary">{{ formatCurrency(invoice.totalAmount) }}</strong></td>
+                    <td>
+                      <span class="status-badge" [class.paid]="invoice.paymentStatus === 'PAID'" [class.unpaid]="invoice.paymentStatus !== 'PAID'">
+                        {{ invoice.paymentStatus || 'UNPAID' }}
+                      </span>
+                    </td>
+                    <td class="text-muted">{{ invoice.generatedAt }}</td>
+                    <td>
+                      <button type="button" class="btn btn-sm btn-outline-primary border-0" 
+                        (click)="viewInvoice(invoice)" title="View details">
+                        <i class="fa fa-eye me-1"></i> View
+                      </button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
       </div>
     }
 
