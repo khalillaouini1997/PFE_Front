@@ -398,6 +398,7 @@
     "CALC_CUSTOM_PERIOD": "Bill for Chosen Period",
     "CALC_PREVIOUS_MONTH": "Previous month",
     "CALC_CHOSEN_PERIOD": "Using year/month above",
+    "CALC_BATCH_DESC": "Generate all invoices from start date to last month",
     "ALL_ACCOUNTS_SUCCESS": "Billing triggered for all accounts",
     "ACCOUNT_SUCCESS": "Billing triggered for this account",
     "BATCH_SUCCESS": "Batch billing completed",

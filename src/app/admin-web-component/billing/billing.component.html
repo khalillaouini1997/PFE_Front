@@ -72,41 +72,14 @@
             <span class="btn-icon">🔍</span> Search
           </button>
 
-          <div class="dropdown" (click)="$event.stopPropagation()">
-            <button 
-              type="button" 
-              class="btn btn-primary dropdown-toggle" 
-              [disabled]="loading"
-              (click)="showCalcMenu = !showCalcMenu"
-            >
-              <span class="btn-icon">⚡</span> {{ 'BILLING.CALCULATE' | translate }}
-            </button>
-            @if (showCalcMenu) {
-              <ul class="dropdown-menu show">
-                <li>
-                  <a class="dropdown-item" (click)="calculateAllAccounts(); showCalcMenu = false" role="button">
-                    <span class="me-2">🌐</span> {{ 'BILLING.CALC_ALL_ACCOUNTS' | translate }}
-                    <br><small class="text-muted">{{ 'BILLING.CALC_PREVIOUS_MONTH' | translate }}</small>
-                  </a>
-                </li>
-                <li>
-                  <a class="dropdown-item" (click)="calculateSpecificAccount(); showCalcMenu = false" role="button"
-                     [class.text-muted]="!billingForm.get('accountId')?.value">
-                    <span class="me-2">👤</span> {{ 'BILLING.CALC_SPECIFIC_ACCOUNT' | translate }}
-                    <br><small class="text-muted">{{ 'BILLING.CALC_PREVIOUS_MONTH' | translate }}</small>
-                  </a>
-                </li>
-                <li><hr class="dropdown-divider"></li>
-                <li>
-                  <a class="dropdown-item" (click)="calculateBilling(); showCalcMenu = false" role="button"
-                     [class.text-muted]="!billingForm.get('accountId')?.value">
-                    <span class="me-2">📅</span> {{ 'BILLING.CALC_CUSTOM_PERIOD' | translate }}
-                    <br><small class="text-muted">{{ 'BILLING.CALC_CHOSEN_PERIOD' | translate }}</small>
-                  </a>
-                </li>
-              </ul>
-            }
-          </div>
+          <button 
+            type="button" 
+            (click)="showCalcModal = true"
+            [disabled]="loading"
+            class="btn btn-primary"
+          >
+            <span class="btn-icon">⚡</span> {{ 'BILLING.CALCULATE' | translate }}
+          </button>
 
           <button 
             type="button" 
@@ -444,3 +417,70 @@
     </div>
   }
 </div>
+
+<!-- Calculate Modal -->
+@if (showCalcModal) {
+<div class="modal-backdrop" (click)="showCalcModal = false"></div>
+<div class="calc-modal">
+  <div class="calc-modal-header">
+    <h4><i class="fa fa-calculator me-2 text-primary"></i> {{ 'BILLING.CALCULATE' | translate }}</h4>
+    <button type="button" class="btn-close" (click)="showCalcModal = false" aria-label="Close"></button>
+  </div>
+  <div class="calc-modal-body">
+    <!-- Option 1: All accounts, previous month -->
+    <div class="calc-option" (click)="calculateAllAccounts(); showCalcModal = false">
+      <div class="calc-option-icon">🌐</div>
+      <div class="calc-option-info">
+        <h5>{{ 'BILLING.CALC_ALL_ACCOUNTS' | translate }}</h5>
+        <p>{{ 'BILLING.CALC_PREVIOUS_MONTH' | translate }}</p>
+      </div>
+      <i class="fa fa-chevron-right calc-option-arrow"></i>
+    </div>
+
+    <!-- Option 2: Specific account, previous month -->
+    <div class="calc-option" 
+         (click)="calculateSpecificAccount(); showCalcModal = false"
+         [class.disabled]="!billingForm.get('accountId')?.value">
+      <div class="calc-option-icon">👤</div>
+      <div class="calc-option-info">
+        <h5>{{ 'BILLING.CALC_SPECIFIC_ACCOUNT' | translate }}</h5>
+        <p>{{ 'BILLING.CALC_PREVIOUS_MONTH' | translate }}</p>
+      </div>
+      <i class="fa fa-chevron-right calc-option-arrow"></i>
+    </div>
+
+    <!-- Option 3: Chosen period -->
+    <div class="calc-option" 
+         (click)="calculateBilling(); showCalcModal = false"
+         [class.disabled]="!billingForm.get('accountId')?.value">
+      <div class="calc-option-icon">📅</div>
+      <div class="calc-option-info">
+        <h5>{{ 'BILLING.CALC_CUSTOM_PERIOD' | translate }}</h5>
+        <p>{{ 'BILLING.CALC_BATCH_DESC' | translate }}</p>
+        <div class="calc-period-fields mt-2" (click)="$event.stopPropagation()">
+          <div class="d-flex gap-2 align-items-center">
+            <input type="number" [(ngModel)]="calcStartYear" class="form-control form-control-sm" 
+                   placeholder="Year" min="2000" max="2100" style="width: 100px;">
+            <span class="text-muted">-</span>
+            <select [(ngModel)]="calcStartMonth" class="form-select form-select-sm" style="width: 130px;">
+              <option [value]="1">January</option>
+              <option [value]="2">February</option>
+              <option [value]="3">March</option>
+              <option [value]="4">April</option>
+              <option [value]="5">May</option>
+              <option [value]="6">June</option>
+              <option [value]="7">July</option>
+              <option [value]="8">August</option>
+              <option [value]="9">September</option>
+              <option [value]="10">October</option>
+              <option [value]="11">November</option>
+              <option [value]="12">December</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <i class="fa fa-chevron-right calc-option-arrow"></i>
+    </div>
+  </div>
+</div>
+}

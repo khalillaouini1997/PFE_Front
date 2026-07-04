@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject, viewChild, ElementRef, ChangeDetectorRef, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, viewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
@@ -27,7 +27,9 @@ export class BillingComponent implements OnInit, OnDestroy {
   allInvoices: any[] = [];
   showAllInvoicesView: boolean = false;
   loadingAllInvoices: boolean = false;
-  showCalcMenu: boolean = false;
+  showCalcModal: boolean = false;
+  calcStartYear: number = new Date().getFullYear();
+  calcStartMonth: number = new Date().getMonth() + 1;
   selectedAccountId: number | null = null;
   webAccounts: any[] = [];
   loadingAccounts: boolean = false;
@@ -74,11 +76,6 @@ export class BillingComponent implements OnInit, OnDestroy {
       this.loadAnalytics();
       this.loadForecast();
     }, 0);
-  }
-
-  @HostListener('document:click')
-  onDocumentClick() {
-    this.showCalcMenu = false;
   }
 
   ngOnDestroy() {
@@ -215,8 +212,8 @@ export class BillingComponent implements OnInit, OnDestroy {
 
   calculateBilling() {
     const accountId = this.billingForm.get('accountId')?.value;
-    const year = this.billingForm.get('year')?.value;
-    const month = this.billingForm.get('month')?.value;
+    const year = this.calcStartYear;
+    const month = this.calcStartMonth;
 
     if (!accountId) {
       this.toastr.error(this.translate.instant('BILLING.SELECT_ACCOUNT'), this.translate.instant('COMMON.ERROR'));

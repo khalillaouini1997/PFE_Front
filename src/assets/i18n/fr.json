@@ -398,6 +398,7 @@
     "CALC_CUSTOM_PERIOD": "Facturer pour une période choisie",
     "CALC_PREVIOUS_MONTH": "Mois précédent",
     "CALC_CHOSEN_PERIOD": "Utiliser année/mois ci-dessus",
+    "CALC_BATCH_DESC": "Générer toutes les factures de la date de début au dernier mois",
     "ALL_ACCOUNTS_SUCCESS": "Facturation déclenchée pour tous les comptes",
     "ACCOUNT_SUCCESS": "Facturation déclenchée pour ce compte",
     "BATCH_SUCCESS": "Facturation en lot terminée",
