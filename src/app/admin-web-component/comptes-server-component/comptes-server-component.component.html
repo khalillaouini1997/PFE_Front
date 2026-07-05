@@ -40,7 +40,7 @@
                     <td><code>{{compteServer.ipAdresse || ('COMMON.NOT_CONFIGURED' | translate)}}</code></td>
                     <td class="text-end">
                         <div class="btn-group gap-2">
-                            <button class="btn btn-sm btn-outline-warning border-0 p-2" (click)="onSelect(compteServer)" 
+                            <button *ngIf="canDelete()" class="btn btn-sm btn-outline-warning border-0 p-2" (click)="onSelect(compteServer)" 
                                 title="{{ 'COMMON.EDIT' | translate }}">
                                 <i class="fa fa-edit fs-5"></i>
                             </button>

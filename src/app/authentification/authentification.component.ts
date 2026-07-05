@@ -51,7 +51,7 @@ export class AuthentificationComponent implements AfterViewInit {
         this.webSocketService.connect();
         localStorage.setItem("isReloading", "true");
         if (_admin.user.role === 'AGENT') {
-          this.router.navigate(['/adminWeb/compteweb']);
+          this.router.navigate(['/adminWeb/listWebs']);
         } else {
           this.router.navigate(['/adminWeb/dashboard']);
         }

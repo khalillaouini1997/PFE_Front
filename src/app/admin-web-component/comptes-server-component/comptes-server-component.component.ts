@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { CompteServer, IpAddress } from 'src/app/data/data';
 import { CompteServerService } from "../../service/compte-server.service";
 import { IpAddressService } from "../../service/ip-address.service";
+import { AuthService } from '../../service/auth.service';
 import { createPaginationState, pageChanged } from '../../shared/components/pagination-base';
 import { withToast } from '../../utils/toast.helpers';
 
@@ -47,8 +48,13 @@ export class ComptesServerComponentComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly compteServerService = inject(CompteServerService);
   private readonly ipAddressService = inject(IpAddressService);
+  private readonly authService = inject(AuthService);
   private readonly fb = inject(FormBuilder);
   private readonly translate = inject(TranslateService);
+
+  canDelete(): boolean {
+    return this.authService.hasRole('GLOBALADMINDESC');
+  }
 
   ngOnInit() {
     this.initForms();

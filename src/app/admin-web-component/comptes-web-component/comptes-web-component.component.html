@@ -1,7 +1,7 @@
 <div class="main-panel p-4">
     <app-page-header titleKey="WEB_ACCOUNTS.TITLE" subtitleKey="WEB_ACCOUNTS.SUBTITLE">
         <app-search-input placeholder="WEB_ACCOUNTS.SEARCH_PLACEHOLDER" (search)="searchWebAccount($event)" />
-        <button class="btn btn-glass btn-sm rounded-circle" routerLink="/adminWeb/addCompteWeb" title="{{ 'WEB_ACCOUNTS.ADD' | translate }}">
+        <button *ngIf="canDelete()" class="btn btn-glass btn-sm rounded-circle" routerLink="/adminWeb/addCompteWeb" title="{{ 'WEB_ACCOUNTS.ADD' | translate }}">
             <i class="fa fa-plus text-white"></i>
         </button>
     </app-page-header>
@@ -77,11 +77,11 @@
                     <td class="text-center text-primary fw-bold">{{compteWeb.pool || 0}}</td>
                     <td class="text-end">
                         <div class="btn-group gap-1">
-                            <button class="btn btn-sm btn-outline-primary border-0 p-1" 
+                            <button *ngIf="canDelete()" class="btn btn-sm btn-outline-primary border-0 p-1" 
                                 [routerLink]="['/adminWeb/configurations',compteWeb.idCompteClientWeb]" title="{{ 'COMMON.CONFIGURE' | translate }}">
                                 <i class="fa fa-cog"></i>
                             </button>
-                            <button class="btn btn-sm btn-outline-danger border-0 p-1" 
+                            <button *ngIf="canDelete()" class="btn btn-sm btn-outline-danger border-0 p-1" 
                                 (click)="onSelect(compteWeb);deleteWebAccount(); $event.stopPropagation();" title="{{ 'COMMON.DELETE' | translate }}">
                                 <i class="fa fa-trash"></i>
                             </button>

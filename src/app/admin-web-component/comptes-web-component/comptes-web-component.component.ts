@@ -6,6 +6,7 @@ import { CompteWeb, createCompteWeb } from 'src/app/data/data';
 import { environment } from '../../../environments/environment';
 
 import { WebAccountService } from 'src/app/service/web-account.service';
+import { AuthService } from 'src/app/service/auth.service';
 import { createPaginationState, pageChanged } from '../../shared/components/pagination-base';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -49,11 +50,16 @@ export class ComptesWebComponentComponent implements OnInit {
   owner: string = environment.owner;
 
   private readonly webAccountService = inject(WebAccountService);
+  private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly toastr = inject(ToastrService);
   private readonly fb = inject(FormBuilder);
   private readonly translate = inject(TranslateService);
   private readonly cdr = inject(ChangeDetectorRef);
+
+  canDelete(): boolean {
+    return this.authService.hasRole('GLOBALADMINDESC');
+  }
 
   ngOnInit() {
     if (localStorage.getItem(STORAGE_KEYS.IS_RELOADING) === 'true') {

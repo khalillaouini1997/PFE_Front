@@ -60,31 +60,19 @@ export class SidebarComponent implements OnInit {
     this.router.navigate(['/authentification']);
   }
 
-  isAdminGolbal(): boolean {
+  isWebAdminOrGlobal(): boolean {
+    return this.authService.hasRole('WEBADMIN') || this.authService.hasRole('GLOBALADMINDESC');
+  }
+
+  isGlobalAdminDesc(): boolean {
     return this.authService.hasRole('GLOBALADMINDESC');
-  }
-
-  isWebAdmin(): boolean {
-    return this.authService.hasRole('WEBADMIN');
-  }
-
-  isReporter(): boolean {
-    return this.authService.hasRole('REPORTER');
   }
 
   isAgent(): boolean {
     return this.authService.hasRole('AGENT');
   }
 
-  isGlobalAdmin(): boolean {
-    return this.authService.hasRole('GLOBALADMINDESC') || this.authService.hasRole('WEBADMIN');
-  }
-
-  isAgentAdmin(): boolean {
-    return this.authService.hasRole('AGENT') || this.authService.hasRole('GLOBALADMINDESC');
-  }
-
-  isGlobalAdminDesc(): boolean {
+  canDelete(): boolean {
     return this.authService.hasRole('GLOBALADMINDESC');
   }
 
