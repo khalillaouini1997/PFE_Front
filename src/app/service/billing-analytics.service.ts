@@ -6,7 +6,7 @@ import { environment } from '../../environments/environment';
 @Injectable({ providedIn: 'root' })
 export class BillingAnalyticsService {
   private apiBaseUrl = environment.apiBaseUrl;
-  private mlServiceUrl = 'http://localhost:8000';
+  private anomalyServiceUrl = 'http://localhost:8000';
 
   constructor(private http: HttpClient) {}
 
@@ -19,7 +19,7 @@ export class BillingAnalyticsService {
   }
 
   getRevenueForecast(monthlyRevenue: number[], forecastMonths: number = 6): Observable<any> {
-    return this.http.post(`${this.mlServiceUrl}/api/revenue/forecast`, {
+    return this.http.post(`${this.anomalyServiceUrl}/api/revenue/forecast`, {
       monthly_revenue: monthlyRevenue,
       forecast_months: forecastMonths
     });

@@ -411,6 +411,9 @@ export class BillingComponent implements OnInit, OnDestroy {
     if (!canvas) return;
 
     const predictions: number[] = forecast?.predictions || [];
+    const confidenceLower: number[] = forecast?.confidence_lower || [];
+    const confidenceUpper: number[] = forecast?.confidence_upper || [];
+    const trend: number[] = forecast?.trend || [];
     const lastMonth = actualLabels[actualLabels.length - 1] || '';
 
     const predictedLabels = predictions.map((_: number, i: number) => {
@@ -426,11 +429,23 @@ export class BillingComponent implements OnInit, OnDestroy {
       actualData[actualData.length - 1],
       ...predictions
     ];
+    const lowerBand = [
+      ...new Array(actualLabels.length - 1).fill(null),
+      actualData[actualData.length - 1],
+      ...confidenceLower
+    ];
+    const upperBand = [
+      ...new Array(actualLabels.length - 1).fill(null),
+      actualData[actualData.length - 1],
+      ...confidenceUpper
+    ];
 
     if (this.revenueForecastInstance) {
       this.revenueForecastInstance.data.labels = allLabels;
       this.revenueForecastInstance.data.datasets[0].data = actualValues;
       this.revenueForecastInstance.data.datasets[1].data = predictedValues;
+      this.revenueForecastInstance.data.datasets[2].data = upperBand;
+      this.revenueForecastInstance.data.datasets[3].data = lowerBand;
       this.revenueForecastInstance.update('none');
     } else {
       this.revenueForecastInstance = new Chart(canvas.nativeElement, {
@@ -458,6 +473,28 @@ export class BillingComponent implements OnInit, OnDestroy {
               borderWidth: 2,
               pointRadius: 3,
               pointStyle: 'triangle'
+            },
+            {
+              label: 'Upper Confidence (95%)',
+              data: upperBand,
+              borderColor: 'rgba(245, 158, 11, 0.3)',
+              backgroundColor: 'rgba(245, 158, 11, 0.1)',
+              fill: '+1',
+              tension: 0.4,
+              borderWidth: 1,
+              pointRadius: 0,
+              borderDash: [4, 2]
+            },
+            {
+              label: 'Lower Confidence (95%)',
+              data: lowerBand,
+              borderColor: 'rgba(245, 158, 11, 0.3)',
+              backgroundColor: 'transparent',
+              fill: false,
+              tension: 0.4,
+              borderWidth: 1,
+              pointRadius: 0,
+              borderDash: [4, 2]
             }
           ]
         },

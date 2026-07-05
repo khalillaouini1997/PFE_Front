@@ -26,5 +26,10 @@ export interface BoitierAnalysis {
   offlineGaps: OfflineGap[];
   signalTrend: SignalTrend;
   prediction: string;
-  failureProbability30Days: number;
+  anomalyCount: number;
+  anomalyRate: number;
+  topAnomalyTypes: Record<string, number>;
+  structuralAnomalies: number;
+  logicalAnomalies: number;
+  mlAnomalies: number;
 }

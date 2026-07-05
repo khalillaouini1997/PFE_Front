@@ -25,7 +25,8 @@ export class ArchiveComponent implements OnInit {
 
   analysisData = signal<BoitierAnalysis | null>(null);
   isAnalyzing = signal<boolean>(false);
-  analysisDays = signal<number>(30);
+  analysisDays = signal<number>(500);
+  selectedLimit = 500;
 
 
   constructor(
@@ -111,7 +112,7 @@ export class ArchiveComponent implements OnInit {
 
   getAiAnalysis() {
     this.isAnalyzing.set(true);
-    this.boitierService.getBoitierAnalysis(this.numBoitier(), this.analysisDays()).subscribe({
+    this.boitierService.getBoitierAnalysis(this.numBoitier(), 30, this.selectedLimit).subscribe({
       next: (data) => {
         this.analysisData.set(data);
         this.isAnalyzing.set(false);
@@ -122,9 +123,22 @@ export class ArchiveComponent implements OnInit {
     });
   }
 
-  changeDays(days: number) {
-    this.analysisDays.set(days);
-    this.getAiAnalysis();
+  changeDays(limit: number) {
+    this.selectedLimit = limit;
+  }
+
+  getAnomalyTypes(): { name: string; count: number }[] {
+    const data = this.analysisData();
+    if (!data?.topAnomalyTypes) return [];
+    return Object.entries(data.topAnomalyTypes)
+      .map(([name, count]) => ({ name, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 5);
+  }
+
+  getTopAnomaly(): { name: string; count: number } | null {
+    const types = this.getAnomalyTypes();
+    return types.length > 0 ? types[0] : null;
   }
 }
 

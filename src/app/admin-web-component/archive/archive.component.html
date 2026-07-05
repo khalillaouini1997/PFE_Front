@@ -26,7 +26,7 @@
             <p-tablist>
                 <p-tab value="0">{{ 'ARCHIVE.TERMINAL_ARCHIVE' | translate }}</p-tab>
                 <p-tab value="1" (click)="getAllRaws()" (keydown.enter)="getAllRaws()">{{ 'ARCHIVE.RAW_DATA' | translate }}</p-tab>
-                <p-tab value="2" (click)="getAiAnalysis()" (keydown.enter)="getAiAnalysis()"><i class="fa fa-brain me-1 text-primary"></i> AI Prediction Panel</p-tab>
+                <p-tab value="2" (click)="getAiAnalysis()" (keydown.enter)="getAiAnalysis()"><i class="fa fa-shield-alt me-1 text-danger"></i> Anomaly Detection</p-tab>
             </p-tablist>
 
             <p-tabpanels>
@@ -117,141 +117,153 @@
                 
                 <p-tabpanel value="2">
                     <div class="ai-panel p-4 bg-light bg-opacity-10">
-                        <!-- Header / Days selector -->
+                        <!-- Header / Trame limit selector -->
                         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
                             <div>
-                                <h4 class="m-0 fw-bold text-dark"><i class="fa fa-brain me-2 text-primary"></i>AI Telemetry Intelligence</h4>
-                                <small class="text-muted">Predictive failure forecasting and historical telemetry analysis</small>
+                                <h4 class="m-0 fw-bold text-dark"><i class="fa fa-shield-alt me-2 text-danger"></i>Anomaly Detection</h4>
+                                <small class="text-muted">Structural, logical & ML-based anomaly analysis using Isolation Forest</small>
                             </div>
-                            <div class="btn-group shadow-sm">
-                                <button type="button" class="btn btn-sm btn-outline-primary" [class.active]="analysisDays() === 7" (click)="changeDays(7)">7 Days</button>
-                                <button type="button" class="btn btn-sm btn-outline-primary" [class.active]="analysisDays() === 30" (click)="changeDays(30)">30 Days</button>
-                                <button type="button" class="btn btn-sm btn-outline-primary" [class.active]="analysisDays() === 90" (click)="changeDays(90)">90 Days</button>
+                            <div class="d-flex align-items-center gap-2">
+                                <label class="text-muted small me-1">Trames to analyze:</label>
+                                <select class="form-select form-select-sm shadow-sm" style="width: auto;" [(ngModel)]="selectedLimit" (ngModelChange)="changeDays($event)">
+                                    <option [value]="100">100</option>
+                                    <option [value]="500">500</option>
+                                    <option [value]="1000">1,000</option>
+                                    <option [value]="5000">5,000</option>
+                                    <option [value]="10000">10,000</option>
+                                </select>
+                                <button type="button" class="btn btn-sm btn-danger shadow-sm fw-bold" (click)="getAiAnalysis()">
+                                    <i class="fa fa-play me-1"></i> Run Detection
+                                </button>
                             </div>
                         </div>
 
                         <!-- Loading State -->
                         <div *ngIf="isAnalyzing()" class="text-center py-5">
-                            <div class="spinner-border text-primary mb-3" role="status">
+                            <div class="spinner-border text-danger mb-3" role="status">
                                 <span class="visually-hidden">Loading...</span>
                             </div>
-                            <h5 class="text-muted">Analyzing telemetry frames, power levels, and GSM trends...</h5>
+                            <h5 class="text-muted">Running anomaly detection across trame data...</h5>
                         </div>
 
                         <!-- Analysis Content -->
                         <div *ngIf="!isAnalyzing() && analysisData() as data" class="row g-4">
-                            <!-- Left: Health Score Card & KPI summaries -->
-                            <div class="col-lg-4">
-                                <div class="premium-card p-4 text-center h-100 shadow-sm border bg-white">
-                                    <h5 class="fw-bold mb-4 text-secondary">Device Health Score</h5>
-                                    
-                                    <!-- Health Circular Indicator -->
-                                    <div class="health-score-container position-relative d-inline-block mb-3">
-                                        <svg class="health-ring" width="160" height="160">
-                                            <circle class="ring-bg" cx="80" cy="80" r="70" fill="transparent" stroke="#f1f3f5" stroke-width="12"></circle>
-                                            <circle class="ring-bar" cx="80" cy="80" r="70" fill="transparent" 
-                                                [attr.stroke]="data.healthScore >= 85 ? '#2ec4b6' : (data.healthScore >= 60 ? '#ff9f1c' : '#e71d36')" 
-                                                stroke-width="12" 
-                                                [attr.stroke-dasharray]="440" 
-                                                [attr.stroke-dashoffset]="440 - (440 * data.healthScore / 100)"
-                                                stroke-linecap="round"></circle>
-                                        </svg>
-                                        <div class="health-score-label position-absolute top-50 start-50 translate-middle">
-                                            <span class="score-value display-5 fw-bold" [style.color]="data.healthScore >= 85 ? '#2ec4b6' : (data.healthScore >= 60 ? '#ff9f1c' : '#e71d36')">{{data.healthScore}}</span>
-                                            <span class="score-percent text-muted fs-4">%</span>
+                            <!-- KPI Cards -->
+                            <div class="col-12">
+                                <div class="row g-3">
+                                    <!-- Health Score -->
+                                    <div class="col-md-3 col-6">
+                                        <div class="premium-card p-3 text-center shadow-sm border bg-white h-100">
+                                            <small class="text-muted d-block mb-1">Health Score</small>
+                                            <div class="d-flex align-items-center justify-content-center gap-2">
+                                                <span class="display-6 fw-bold" [style.color]="data.healthScore >= 85 ? '#2ec4b6' : (data.healthScore >= 60 ? '#ff9f1c' : '#e71d36')">{{data.healthScore}}</span>
+                                                <span class="text-muted fs-5">%</span>
+                                            </div>
+                                            <span class="badge mt-1" [ngClass]="data.healthScore >= 85 ? 'bg-success bg-opacity-10 text-success' : (data.healthScore >= 60 ? 'bg-warning bg-opacity-10 text-warning' : 'bg-danger bg-opacity-10 text-danger')">
+                                                {{data.healthScore >= 85 ? 'Excellent' : (data.healthScore >= 60 ? 'Moderate' : 'Critical')}}
+                                            </span>
                                         </div>
                                     </div>
 
-                                    <div class="mt-2">
-                                        <span class="badge px-3 py-2 fs-6" 
-                                            [ngClass]="data.healthScore >= 85 ? 'bg-success bg-opacity-10 text-success' : (data.healthScore >= 60 ? 'bg-warning bg-opacity-10 text-warning' : 'bg-danger bg-opacity-10 text-danger')">
-                                            {{ data.healthScore >= 85 ? 'Excellent Health' : (data.healthScore >= 60 ? 'Moderate Health' : 'Critical Warning') }}
-                                        </span>
+                                    <!-- Anomaly Rate -->
+                                    <div class="col-md-3 col-6">
+                                        <div class="premium-card p-3 text-center shadow-sm border bg-white h-100">
+                                            <small class="text-muted d-block mb-1">Anomaly Rate</small>
+                                            <div class="d-flex align-items-center justify-content-center gap-2">
+                                                <span class="display-6 fw-bold" [style.color]="data.anomalyRate >= 20 ? '#e71d36' : (data.anomalyRate >= 5 ? '#ff9f1c' : '#2ec4b6')">{{data.anomalyRate}}</span>
+                                                <span class="text-muted fs-5">%</span>
+                                            </div>
+                                            <span class="badge mt-1" [ngClass]="data.anomalyRate >= 20 ? 'bg-danger bg-opacity-10 text-danger' : (data.anomalyRate >= 5 ? 'bg-warning bg-opacity-10 text-warning' : 'bg-success bg-opacity-10 text-success')">
+                                                {{data.anomalyRate >= 20 ? 'High Risk' : (data.anomalyRate >= 5 ? 'Moderate' : 'Low Risk')}}
+                                            </span>
+                                        </div>
                                     </div>
 
-                                    <hr class="my-4">
+                                    <!-- Uptime -->
+                                    <div class="col-md-3 col-6">
+                                        <div class="premium-card p-3 text-center shadow-sm border bg-white h-100">
+                                            <small class="text-muted d-block mb-1">Uptime</small>
+                                            <div class="d-flex align-items-center justify-content-center gap-2">
+                                                <span class="display-6 fw-bold text-dark">{{data.uptimePercentage}}</span>
+                                                <span class="text-muted fs-5">%</span>
+                                            </div>
+                                            <span class="badge mt-1" [ngClass]="data.uptimePercentage >= 95 ? 'bg-success bg-opacity-10 text-success' : (data.uptimePercentage >= 80 ? 'bg-warning bg-opacity-10 text-warning' : 'bg-danger bg-opacity-10 text-danger')">
+                                                {{data.uptimePercentage >= 95 ? 'Stable' : (data.uptimePercentage >= 80 ? 'Fair' : 'Poor')}}
+                                            </span>
+                                        </div>
+                                    </div>
 
-                                    <!-- Key Metrics Grid -->
-                                    <div class="row g-3 text-start">
-                                        <div class="col-6">
-                                            <small class="text-muted d-block">Uptime Ratio</small>
-                                            <span class="fw-bold text-dark fs-5">{{data.uptimePercentage}}%</span>
-                                        </div>
-                                        <div class="col-6">
-                                            <small class="text-muted d-block">Failure Risk</small>
-                                            <span class="fw-bold fs-5" [style.color]="data.failureProbability30Days >= 0.5 ? '#e71d36' : (data.failureProbability30Days >= 0.2 ? '#ff9f1c' : '#2ec4b6')">
-                                                {{(data.failureProbability30Days * 100).toFixed(0)}}%
-                                            </span>
-                                        </div>
-                                        <div class="col-6">
-                                            <small class="text-muted d-block">Signal Strength</small>
-                                            <span class="fw-bold text-dark fs-5">
-                                                <i class="fa fa-signal me-1 text-primary"></i> {{data.signalTrend.avgSignal}}
-                                            </span>
-                                        </div>
-                                        <div class="col-6">
-                                            <small class="text-muted d-block">Signal Trend</small>
-                                            <span class="badge text-white" 
-                                                [ngClass]="data.signalTrend.trend === 'IMPROVING' ? 'bg-success' : (data.signalTrend.trend === 'DEGRADING' ? 'bg-danger' : 'bg-secondary')">
-                                                {{data.signalTrend.trend}}
-                                            </span>
+                                    <!-- Top Anomaly -->
+                                    <div class="col-md-3 col-6">
+                                        <div class="premium-card p-3 text-center shadow-sm border bg-white h-100">
+                                            <small class="text-muted d-block mb-1">Top Anomaly</small>
+                                            <div class="d-flex align-items-center justify-content-center">
+                                                <span class="fw-bold text-danger fs-5" *ngIf="getTopAnomaly() as top">{{top.name}}</span>
+                                                <span class="text-muted fs-5" *ngIf="!getTopAnomaly()">N/A</span>
+                                            </div>
+                                            <span class="badge mt-1 bg-light text-dark border" *ngIf="getTopAnomaly()">{{getTopAnomaly()!.count}} occurrences</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Right: Prediction & Gaps List -->
-                            <div class="col-lg-8 d-flex flex-column gap-4">
-                                <!-- Prediction Card -->
+                            <!-- Detection Analysis Card -->
+                            <div class="col-12">
                                 <div class="premium-card p-4 shadow-sm border bg-white prediction-glow-card" 
-                                    [style.border-left-color]="data.healthScore >= 85 ? '#2ec4b6' : (data.healthScore >= 60 ? '#ff9f1c' : '#e71d36')"
+                                    [style.border-left-color]="data.anomalyRate >= 20 ? '#e71d36' : (data.anomalyRate >= 5 ? '#ff9f1c' : '#2ec4b6')"
                                     style="border-left-width: 6px;">
-                                    <h5 class="fw-bold text-dark mb-3"><i class="fa fa-magic me-2 text-primary"></i>AI Uptime Prediction & Forecast</h5>
+                                    <h5 class="fw-bold text-dark mb-3"><i class="fa fa-search me-2 text-primary"></i>Detection Analysis</h5>
                                     <p class="fs-5 lh-base text-dark bg-light p-3 rounded border border-light opacity-90">{{data.prediction}}</p>
-                                    <div class="d-flex align-items-center gap-3 mt-3 flex-wrap">
-                                        <span class="text-muted">Analyzed frames: <strong class="text-dark">{{data.totalReceivedFrames}}</strong></span>
-                                        <span class="text-muted">|</span>
-                                        <span class="text-muted">Analysis Window: <strong class="text-dark">{{data.analyzedDays}} Days</strong></span>
-                                    </div>
-                                </div>
-
-                                <!-- Gaps List -->
-                                <div class="premium-card p-4 shadow-sm border bg-white flex-grow-1">
-                                    <h5 class="fw-bold text-dark mb-3"><i class="fa fa-history me-2 text-primary"></i>Detected Transmission Outages (Gaps > 10m)</h5>
                                     
-                                    <div *ngIf="data.offlineGaps.length === 0" class="alert alert-success d-flex align-items-center gap-3 mb-0" role="alert">
-                                        <i class="fa fa-check-circle fs-4"></i>
-                                        <div>
-                                            <strong>No outages detected!</strong> The tracker remained consistently connected during the entire analysis window.
+                                    <!-- Stats Row -->
+                                    <div class="row g-3 mt-3">
+                                        <div class="col-md-2 col-4">
+                                            <div class="text-center p-2 rounded bg-light">
+                                                <small class="text-muted d-block">Analyzed</small>
+                                                <span class="fw-bold text-dark fs-5">{{selectedLimit}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 col-4">
+                                            <div class="text-center p-2 rounded bg-light">
+                                                <small class="text-muted d-block">Anomalous</small>
+                                                <span class="fw-bold fs-5" [style.color]="data.anomalyCount > 0 ? '#e71d36' : '#2ec4b6'">{{data.anomalyCount}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 col-4">
+                                            <div class="text-center p-2 rounded bg-light">
+                                                <small class="text-muted d-block">Anomaly Rate</small>
+                                                <span class="fw-bold fs-5" [style.color]="data.anomalyRate >= 20 ? '#e71d36' : (data.anomalyRate >= 5 ? '#ff9f1c' : '#2ec4b6')">{{data.anomalyRate}}%</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 col-4">
+                                            <div class="text-center p-2 rounded bg-light">
+                                                <small class="text-muted d-block">Structural</small>
+                                                <span class="fw-bold text-danger fs-5">{{data.structuralAnomalies || 0}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 col-4">
+                                            <div class="text-center p-2 rounded bg-light">
+                                                <small class="text-muted d-block">Logical</small>
+                                                <span class="fw-bold text-warning fs-5">{{data.logicalAnomalies || 0}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 col-4">
+                                            <div class="text-center p-2 rounded bg-light">
+                                                <small class="text-muted d-block">ML</small>
+                                                <span class="fw-bold text-info fs-5">{{data.mlAnomalies || 0}}</span>
+                                            </div>
                                         </div>
                                     </div>
 
-                                    <div *ngIf="data.offlineGaps.length > 0" class="table-responsive" style="max-height: 250px; overflow-y: auto;">
-                                        <table class="table table-hover align-middle table-sm">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col">Outage Start</th>
-                                                    <th scope="col">Connection Restore</th>
-                                                    <th scope="col">Outage Duration</th>
-                                                    <th scope="col">Probable Primary Cause</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr *ngFor="let gap of data.offlineGaps">
-                                                    <td class="text-nowrap small text-secondary">{{gap.startTime}}</td>
-                                                    <td class="text-nowrap small text-secondary">{{gap.endTime}}</td>
-                                                    <td>
-                                                        <span class="badge bg-dark bg-opacity-75">{{gap.durationMinutes}} mins</span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="badge rounded-pill" 
-                                                            [ngClass]="gap.probableCause.includes('Power') ? 'bg-danger bg-opacity-10 text-danger' : (gap.probableCause.includes('Signal') ? 'bg-warning bg-opacity-10 text-warning' : 'bg-secondary bg-opacity-10 text-secondary')">
-                                                            <i class="fa" [ngClass]="gap.probableCause.includes('Power') ? 'fa-plug' : (gap.probableCause.includes('Signal') ? 'fa-signal' : 'fa-info-circle')"></i> {{gap.probableCause}}
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                    <!-- Top Anomaly Types -->
+                                    <div *ngIf="data.topAnomalyTypes" class="mt-4">
+                                        <small class="text-muted d-block mb-2">Top Anomaly Types Detected:</small>
+                                        <div class="d-flex flex-wrap gap-2">
+                                            <span *ngFor="let type of getAnomalyTypes()" class="badge bg-light text-dark border px-2 py-1">
+                                                <i class="fa" [ngClass]="type.name.includes('FOREST') ? 'fa-magic text-info' : (type.name.includes('TIME') || type.name.includes('GPS') ? 'fa-clock text-warning' : 'fa-exclamation-triangle text-danger')"></i>
+                                                {{type.name}}: <strong>{{type.count}}</strong>
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -259,8 +271,8 @@
 
                         <!-- No Data State -->
                         <div *ngIf="!isAnalyzing() && !analysisData()" class="text-center py-5">
-                            <i class="fa fa-info-circle text-muted display-4 mb-3"></i>
-                            <h5 class="text-muted">No analysis telemetry available. Click a tab or refresh.</h5>
+                            <i class="fa fa-shield-alt text-muted display-4 mb-3"></i>
+                            <h5 class="text-muted">No anomaly data available. Select trame count and click Run Detection.</h5>
                         </div>
                     </div>
                 </p-tabpanel>

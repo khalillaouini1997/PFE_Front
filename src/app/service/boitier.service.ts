@@ -108,8 +108,8 @@ export class BoitierService {
         return this.http.get<any>(`${environment.apiBaseUrl}boities/device-by-imei?idIpAdresse=${idIpAdresse}&imei=${imei}`);
     }
 
-    getBoitierAnalysis(numBoitier: number, days: number = 30): Observable<BoitierAnalysis> {
-        return this.http.get<BoitierAnalysis>(`${environment.apiBaseUrl}boities/${numBoitier}/analysis?days=${days}`);
+    getBoitierAnalysis(numBoitier: number, days: number = 30, limit: number = 500): Observable<BoitierAnalysis> {
+        return this.http.get<BoitierAnalysis>(`${environment.apiBaseUrl}boities/${numBoitier}/analysis?days=${days}&limit=${limit}`);
     }
 }
 
