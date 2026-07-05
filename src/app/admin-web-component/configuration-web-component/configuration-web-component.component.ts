@@ -153,7 +153,10 @@ export class ConfigurationWebComponentComponent implements OnInit {
       area: [''],
       notificationSubquery: [''],
       mobileNotif: [false],
-      idCompteServer: [null]
+      idCompteServer: [null],
+      deviceFeeByDay: [0],
+      accountFeeByMonth: [0],
+      simCardFeePerMonth: [0]
     });
 
     this.recalculateForm = this.fb.group({
@@ -227,7 +230,10 @@ export class ConfigurationWebComponentComponent implements OnInit {
           area: _compteWeb.area,
           notificationSubquery: _compteWeb.notificationSubquery,
           mobileNotif: _compteWeb.mobileNotif,
-          idCompteServer: _compteWeb.compteClientServer?.idCompteClientServer || null
+          idCompteServer: _compteWeb.compteClientServer?.idCompteClientServer || null,
+          deviceFeeByDay: _compteWeb.deviceFeeByDay || 0,
+          accountFeeByMonth: _compteWeb.accountFeeByMonth || 0,
+          simCardFeePerMonth: _compteWeb.simCardFeePerMonth || 0
         });
 
         const currentServer = this.serverAccount();
