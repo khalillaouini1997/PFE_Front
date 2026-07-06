@@ -9,7 +9,8 @@ FROM nginx:alpine
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 COPY --from=build /app/dist/web_admin/browser /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/nginx.conf
-RUN chown -R appuser:appgroup /usr/share/nginx/html /var/cache/nginx /var/run /etc/nginx/conf.d && \
+RUN rm -f /etc/nginx/conf.d/default.conf && \
+    chown -R appuser:appgroup /usr/share/nginx/html /var/cache/nginx /var/run /etc/nginx/conf.d && \
     chmod -R 755 /var/cache/nginx /var/run
 USER appuser
 EXPOSE 4200
