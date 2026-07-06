@@ -12,6 +12,6 @@ COPY nginx.conf /etc/nginx/nginx.conf
 RUN chown -R appuser:appgroup /usr/share/nginx/html /var/cache/nginx /var/run /etc/nginx/conf.d && \
     chmod -R 755 /var/cache/nginx /var/run
 USER appuser
-EXPOSE 80
+EXPOSE 4200
 HEALTHCHECK --interval=15s --timeout=5s --retries=3 --start-period=10s \
-  CMD wget --spider -q http://localhost:80/ || exit 1
+  CMD wget --spider -q http://localhost:4200/ || exit 1
