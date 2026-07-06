@@ -1,5 +1,22 @@
-.cl {
+@import '../../shared/styles/design-tokens.css';
+
+:host {
+  display: block;
+  background-color: var(--slate-50);
+  min-height: 100vh;
+}
+
+[data-theme='dark'] :host {
+  background-color: var(--slate-900);
+}
+
+.clickable-row {
   cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.clickable-row:hover {
+  background-color: rgba(var(--bs-primary-rgb), 0.05) !important;
 }
 
 .form-group {

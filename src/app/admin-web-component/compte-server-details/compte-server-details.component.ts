@@ -1,34 +1,40 @@
-import { Component, OnInit, OnDestroy, inject, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Boitier, BoitierRealTime, CompteServer } from 'src/app/data/data';
+import { Component, OnInit, OnDestroy, inject, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
+import { ActivatedRoute, Params, RouterModule } from '@angular/router';
+import { Boitier, BoitierRealTime, CompteServer, createCompteServer, createBoitier } from 'src/app/data/data';
 import { CompteServerService } from "../../service/compte-server.service";
 import { BoitierService } from "../../service/boitier.service";
-import { AuthService } from "../../service/auth.service";
+
 import { ToastrService } from "ngx-toastr";
+import { withToast } from '../../utils/toast.helpers';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TableModule } from 'primeng/table';
+import { PaginatorModule } from 'primeng/paginator';
 import { CommonModule, DatePipe, DecimalPipe, NgClass } from '@angular/common';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
+import { EmptyTableComponent } from '../../shared/components/empty-table/empty-table.component';
 
 @Component({
     selector: 'app-compte-server-details',
     standalone: true,
     templateUrl: './compte-server-details.component.html',
     styleUrls: ['./compte-server-details.component.css'],
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, TableModule, DatePipe, DecimalPipe, NgClass]
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, TableModule, PaginatorModule, DatePipe, DecimalPipe, NgClass, RouterModule, TranslateModule, PageHeaderComponent, EmptyTableComponent]
 })
 export class CompteServerDetailsComponent implements OnInit, OnDestroy {
   addForm!: FormGroup;
   searchForm!: FormGroup;
   paginationForm!: FormGroup;
   updateForm!: FormGroup;
+  @ViewChild('updateBoitierModal') updateBoitierModal!: ElementRef<HTMLDialogElement>;
 
   private refreshInterval: any;
-  compteServer: CompteServer = new CompteServer();
+  compteServer: CompteServer = createCompteServer();
   boitiers: Boitier[] = [];
   boitiersInvalid: Boitier[] = [];
   BOITIER_INSTALLED: number = 0;
   BOITIER_NOT_INSTALLED: number = 0;
-  selectedBoitier: Boitier = new Boitier();
+  selectedBoitier: Boitier = createBoitier();
   ID_COMPTE: number = 0;
   nbrBoitiers: number = 0;
   searchBoitier: string = "";
@@ -36,31 +42,30 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
   intervalTo: number = 0;
   mode: boolean = false;
   messageError: string = "";
+  today: Date = new Date();
 
   public maxSize: number = 5;
   public bigTotalItems: number = 0;
   public bigCurrentPage: number = 1;
   itemsPerPage = 15;
+  private loadingInProgress: boolean = false;
 
   private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
   private readonly compteServerService = inject(CompteServerService);
   private readonly boitierService = inject(BoitierService);
-  private readonly authService = inject(AuthService);
   private readonly toastr = inject(ToastrService);
   private readonly fb = inject(FormBuilder);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly translate = inject(TranslateService);
 
   ngOnInit() {
     this.initForms();
-    if (!this.authService.isAuthenticated()) {
-      this.router.navigate(['/error']);
-      return;
-    }
+
 
     this.route.params.subscribe((params: Params) => {
       this.ID_COMPTE = +params['idCompteClientServer'];
       this.loadCompteDetails();
+      this.loadingInProgress = false; // Reset guard for route change
       this.loadBoitierList();
     });
 
@@ -96,32 +101,114 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
 
   private loadCompteDetails() {
     this.compteServerService.getCompteServerById(this.ID_COMPTE).subscribe(res => {
-      this.compteServer = res;
-      this.intervalFrom = res.intervaleStart;
-      this.intervalTo = res.intervaleEnd;
-      this.BOITIER_NOT_INSTALLED = res.intervaleEnd - res.intervaleStart + 1;
-      this.cdr.markForCheck();
+      // Handle nested response structure
+      const data = res.data || res;
+      this.compteServer = data;
+      this.intervalFrom = data.intervaleStart;
+      this.intervalTo = data.intervaleEnd;
+      this.BOITIER_NOT_INSTALLED = data.availableSlotsCount;
+      if (data.installedBoitiersCount !== undefined) {
+        this.BOITIER_INSTALLED = data.installedBoitiersCount;
+      }
+      this.cdr.detectChanges();
     });
   }
 
-  private loadBoitierList() {
-    const keyword = this.searchForm.get('searchBoitier')?.value;
-    this.boitierService.getBoitierOfAccount(this.ID_COMPTE, keyword, this.bigCurrentPage - 1, this.itemsPerPage).subscribe(res => {
-      this.boitiers = res.content.map((b: Boitier) => ({
-        ...b,
-        stat: b.etatBoitier === 'INSTALLED'
-      }));
-      this.bigTotalItems = res.totalElements;
-      this.BOITIER_INSTALLED = res.totalElements;
-      this.refreshBoitierArchives();
-      this.cdr.markForCheck();
+  loadBoitierList(event?: any) {
+    if (this.loadingInProgress) return;
+    this.loadingInProgress = true;
+    this.cdr.detectChanges();
+
+    // Extract pagination parameters from the PrimeNG table event
+    let page = 0;
+    let size = this.itemsPerPage;
+
+    if (event) {
+      page = event.first ? Math.floor(event.first / event.rows) : 0;
+      size = event.rows || this.itemsPerPage;
+    } else {
+      // When called without event (e.g., from ngOnInit), use current page from form
+      page = this.bigCurrentPage - 1; // Convert to 0-based
+    }
+
+    const keyword = (this.searchForm.get('searchBoitier')?.value || "").trim();
+    this.boitierService.getBoitierOfAccount(this.ID_COMPTE, keyword, page, size).subscribe({
+      next: (res: any) => {
+        // Handle different response structures
+        let content = res.content;
+        let pageData = res.page;
+        
+        // Handle nested data structure: { success: true, data: { content: [...], page: {...} } }
+        if (!content && res.data) {
+          content = res.data.content || res.data;
+          pageData = res.data.page || res.data;
+        }
+        // Handle direct array response
+        if (!content && Array.isArray(res)) {
+          content = res;
+        }
+        // Default to empty array
+        if (!content) {
+          content = [];
+        }
+        
+        if (!Array.isArray(content)) {
+          this.boitiers = [];
+        } else {
+          this.boitiers = content.map((b: Boitier) => ({
+            ...b,
+            stat: b.etatBoitier === 'INSTALLED'
+          }));
+        }
+        this.bigTotalItems = pageData?.totalElements || res.totalElements || res.total || (res.data?.totalElements || res.data?.total || content.length || 0);
+        // Do not overwrite BOITIER_INSTALLED here, as res.totalElements is the search result count!
+        this.refreshBoitierArchives();
+        this.loadingInProgress = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.loadingInProgress = false;
+        this.cdr.detectChanges();
+      }
     });
   }
 
   private refreshBoitierArchives() {
     this.boitiers.forEach(boitier => {
-      this.boitierService.lastArchiveOfBoitier(boitier.numBoitier).subscribe((arch: BoitierRealTime) => {
-        boitier.dateLastTrame = arch.dateLastTrame;
+      this.boitierService.lastArchiveOfBoitier(boitier.numBoitier).subscribe((res: any) => {
+        // Handle nested response structure
+        const arch = res.data || res;
+        
+        // Handle dateLastTrame - could be timestamp (number) or string
+        if (arch.dateLastTrame) {
+          if (typeof arch.dateLastTrame === 'number') {
+            // It's a timestamp
+            boitier.dateLastTrame = new Date(arch.dateLastTrame);
+          } else if (typeof arch.dateLastTrame === 'string') {
+            // Parse date from DD-MM-YYYY HH:mm:ss format or ISO format to Date object
+            if (arch.dateLastTrame.includes('T')) {
+              // ISO format
+              boitier.dateLastTrame = new Date(arch.dateLastTrame);
+            } else {
+              // DD-MM-YYYY HH:mm:ss format
+              const parts = arch.dateLastTrame.split(' ');
+              if (parts.length === 2) {
+                const dateParts = parts[0].split('-');
+                const timeParts = parts[1].split(':');
+                if (dateParts.length === 3 && timeParts.length === 3) {
+                  boitier.dateLastTrame = new Date(
+                    parseInt(dateParts[2]), // year
+                    parseInt(dateParts[1]) - 1, // month (0-indexed)
+                    parseInt(dateParts[0]), // day
+                    parseInt(timeParts[0]), // hours
+                    parseInt(timeParts[1]), // minutes
+                    parseInt(timeParts[2]) // seconds
+                  );
+                }
+              }
+            }
+          }
+        }
         if (arch.emplacement) {
           boitier.emplacement = arch.emplacement;
         } else if (arch.vitesse !== undefined) {
@@ -132,22 +219,13 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
         boitier.vitesse = arch.vitesse;
         boitier.gpsLastTrame = arch.gpsLastTrame;
         boitier.gsmLastTrame = arch.gsmLastTrame;
-        this.cdr.markForCheck();
+        this.cdr.detectChanges();
       });
     });
   }
 
-  public pageChanged(event: any): void {
-    if (event.first !== undefined && event.rows !== undefined) {
-      this.bigCurrentPage = (event.first / event.rows) + 1;
-      this.itemsPerPage = event.rows;
-      this.loadBoitierList();
-    }
-  }
-
   searchBoitiers() {
-    this.bigCurrentPage = 1;
-    this.paginationForm.get('bigCurrentPage')?.setValue(1, { emitEvent: false });
+    this.loadingInProgress = false; // Reset guard for search
     this.loadBoitierList();
   }
 
@@ -156,86 +234,99 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
     this.updateForm.patchValue({
       label: boitier.label
     });
+    if (this.updateBoitierModal) {
+      this.updateBoitierModal.nativeElement.showModal();
+    }
+  }
+
+  closeUpdateModal() {
+    if (this.updateBoitierModal) {
+      this.updateBoitierModal.nativeElement.close();
+    }
   }
 
   updateBoitier() {
     this.selectedBoitier.label = this.updateForm.get('label')?.value;
-    this.boitierService.updateBoitier(this.selectedBoitier, this.ID_COMPTE, "label").subscribe({
-      next: (res) => {
-        const index = this.boitiers.findIndex(x => x.idBoitier === this.selectedBoitier.idBoitier);
-        if (index !== -1) {
-          this.boitiers[index] = { ...this.boitiers[index], label: res.label };
+    withToast(this.boitierService.updateBoitier(this.selectedBoitier, this.ID_COMPTE, "label"), this.toastr, this.translate, 'SERVER_DETAILS.UPDATE_SUCCESS')
+      .subscribe({
+        next: (res) => {
+          const index = this.boitiers.findIndex(x => x.idBoitier === this.selectedBoitier.idBoitier);
+          if (index !== -1) {
+            this.boitiers[index] = { ...this.boitiers[index], label: res.label };
+          }
+          this.closeUpdateModal();
+          this.cdr.detectChanges();
+        },
+        error: () => {
+          this.cdr.detectChanges();
         }
-        this.toastr.success(' Device updated ', 'Success!');
-        this.cdr.markForCheck();
-      },
-      error: () => {
-        this.toastr.error('There is a mistake', 'Error!');
-        this.cdr.markForCheck();
-      }
-    });
+      });
   }
 
   addBoitiers() {
     const nbrBoitiersToAdd = this.addForm.get('nbrBoitiers')?.value;
     if (this.BOITIER_NOT_INSTALLED < nbrBoitiersToAdd) {
-      if (!confirm("Vous êtes sur de vouloir ajouter une nouvelle intervalle libre ?")) return;
+      if (!confirm(this.translate.instant('SERVER_DETAILS.CONFIRM_NEW_INTERVAL'))) return;
     }
     this.addBoitierAfterConfirmation(nbrBoitiersToAdd);
   }
 
   private addBoitierAfterConfirmation(nbrBoitiersToAdd: number) {
-    this.boitierService.addBoitiers(this.ID_COMPTE, nbrBoitiersToAdd).subscribe({
-      next: (res: any) => {
-        this.mode = false;
-        this.BOITIER_NOT_INSTALLED = res.compteserver.intervaleEnd - res.compteserver.intervaleStart + 1;
-        this.intervalFrom = res.compteserver.intervaleStart;
-        this.intervalTo = res.compteserver.intervaleEnd;
-        this.loadBoitierList();
-        this.toastr.success(nbrBoitiersToAdd + ' devices added', 'Success!');
-        this.addForm.reset({ nbrBoitiers: 0 });
-        this.cdr.markForCheck();
-      },
-      error: (err) => {
-        this.mode = true;
-        this.messageError = err.error?.message || "An error occurred";
-        this.toastr.error('There is a mistake', 'Error!');
-        this.cdr.markForCheck();
-      }
-    });
+    withToast(this.compteServerService.addBoitiers(this.ID_COMPTE, nbrBoitiersToAdd), this.toastr, this.translate, 'SERVER_DETAILS.DEVICES_ADDED')
+      .subscribe({
+        next: (res: any) => {
+          this.mode = false;
+          const data = res?.data || res;
+          this.BOITIER_NOT_INSTALLED = data.compteServer.intervaleEnd - data.compteServer.intervaleStart + 1;
+          this.intervalFrom = data.compteServer.intervaleStart;
+          this.intervalTo = data.compteServer.intervaleEnd;
+          this.loadCompteDetails();
+          this.loadBoitierList();
+          this.addForm.reset({ nbrBoitiers: 0 });
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          this.mode = true;
+          this.messageError = err.error?.message || this.translate.instant('COMMON.ERROR_OCCURRED');
+          this.cdr.detectChanges();
+        }
+      });
   }
 
   extendIntervalOfBoitiers() {
     if (this.BOITIER_NOT_INSTALLED !== 0) {
-      this.toastr.error('you cannot extend this interval because there are more devices available', 'Error!');
+      this.toastr.error(
+        this.translate.instant('SERVER_DETAILS.CANNOT_EXTEND_AVAILABLE'), 
+        this.translate.instant('COMMON.ERROR')
+      );
       return;
     }
 
-    if (confirm("are you sure that you want extend this Account ?")) {
-      this.compteServerService.extendIntervalOfBoitiers(this.ID_COMPTE).subscribe(res => {
-        this.BOITIER_NOT_INSTALLED = res.intervaleEnd - res.intervaleStart + 1;
-        this.toastr.success('interval extended', 'Success!');
-        this.cdr.markForCheck();
-      });
+    if (confirm(this.translate.instant('SERVER_DETAILS.CONFIRM_EXTEND_ACCOUNT'))) {
+      withToast(this.compteServerService.extendIntervalOfBoitiers(this.ID_COMPTE), this.toastr, this.translate, 'SERVER_DETAILS.INTERVAL_EXTENDED')
+        .subscribe(res => {
+          this.BOITIER_NOT_INSTALLED = res.intervaleEnd - res.intervaleStart + 1;
+          this.cdr.detectChanges();
+        });
     }
   }
 
   changeBoitierStatus(boitier: Boitier) {
     const updatedBoitier = { ...boitier, etatBoitier: 'INSTALLED' };
-    this.boitierService.updateBoitier(updatedBoitier, this.ID_COMPTE, "etat").subscribe({
-      next: () => {
-        const index = this.boitiers.findIndex(x => x.idBoitier === boitier.idBoitier);
-        if (index !== -1) {
-          this.boitiers[index].etatBoitier = 'INSTALLED';
-          this.boitiers[index].stat = true;
+    withToast(this.boitierService.updateBoitier(updatedBoitier, this.ID_COMPTE, "etat"), this.toastr, this.translate, 'SERVER_DETAILS.DEVICE_INSTALLED')
+      .subscribe({
+        next: () => {
+          const index = this.boitiers.findIndex(x => x.idBoitier === boitier.idBoitier);
+          if (index !== -1) {
+            this.boitiers[index].etatBoitier = 'INSTALLED';
+            this.boitiers[index].stat = true;
+          }
+          this.BOITIER_INSTALLED++;
+          this.cdr.detectChanges();
+        },
+        error: () => {
+          this.cdr.detectChanges();
         }
-        this.toastr.success(' Device is Installed now ', 'Success!');
-        this.cdr.markForCheck();
-      },
-      error: () => {
-        this.toastr.error('Table of this server does not exist', 'Error!');
-        this.cdr.markForCheck();
-      }
-    });
+      });
   }
 }

@@ -1,5 +1,6 @@
-import { ExtraOptions, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 import { AuthentificationComponent } from './authentification/authentification.component';
+import { ErrorComponent } from './error/error.component';
 import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
@@ -14,12 +15,12 @@ export const routes: Routes = [
     component: AuthentificationComponent
   },
   {
+    path: 'error',
+    component: ErrorComponent
+  },
+  {
     path: '',
     redirectTo: 'authentification',
     pathMatch: 'full'
   }
 ];
-
-export const routingConfig: ExtraOptions = {
-  useHash: false,
-};

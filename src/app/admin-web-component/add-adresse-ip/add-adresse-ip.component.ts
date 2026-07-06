@@ -1,16 +1,18 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { IpAddress } from "../../data/data";
 import { IpAddressService } from "../../service/ip-address.service";
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { ToastrService } from 'ngx-toastr';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { withToast } from '../../utils/toast.helpers';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 
 @Component({
     selector: 'app-add-adresse-ip',
     standalone: true,
     templateUrl: './add-adresse-ip.component.html',
     styleUrls: ['./add-adresse-ip.component.css'],
-    imports: [ReactiveFormsModule]
+    imports: [ReactiveFormsModule, TranslateModule, PageHeaderComponent]
 })
 export class AddAdresseIpComponent implements OnInit {
 
@@ -20,6 +22,7 @@ export class AddAdresseIpComponent implements OnInit {
   private readonly ipAddressService = inject(IpAddressService);
   private readonly toastr = inject(ToastrService);
   private readonly fb = inject(FormBuilder);
+  private readonly translate = inject(TranslateService);
 
   constructor() {
     this.initForm();
@@ -43,18 +46,19 @@ export class AddAdresseIpComponent implements OnInit {
 
   saveIpAddres() {
     if (this.ipForm.invalid) {
-      this.toastr.warning('Please fill all required fields correctly', 'Warning');
+      this.toastr.warning(
+        this.translate.instant('WEB_ACCOUNTS.FILL_REQUIRED'), 
+        this.translate.instant('COMMON.WARNING')
+      );
       return;
     }
 
-    this.ipAddressService.saveIpAddress(this.ipForm.value).subscribe({
-      next: () => {
-        this.toastr.success('IP Address saved', 'Success');
-        this.ipForm.reset({ typeConnection: 'SSH' });
-      },
-      error: () => {
-        this.toastr.error('Error saving IP address', 'Error');
-      }
-    });
+    withToast(this.ipAddressService.saveIpAddress(this.ipForm.value), this.toastr, this.translate, 'IP_ADDRESS.SAVED')
+      .subscribe({
+        next: () => {
+          this.ipForm.reset({ typeConnection: 'SSH' });
+        },
+        error: () => {}
+      });
   }
 }

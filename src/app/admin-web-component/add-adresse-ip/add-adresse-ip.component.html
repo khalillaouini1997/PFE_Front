@@ -1,15 +1,9 @@
 <div class="main-panel p-4">
-     <div class="premium-card mb-4 header-gradient shadow-sm">
-        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-            <div class="title-section text-white">
-                <h2 class="m-0 fw-bold">Ajouter une Adresse IP</h2>
-                <p class="m-0 text-white-50 opacity-75">Connecter une nouvelle source de données ou endpoint serveur</p>
-            </div>
-            <button class="btn btn-glass btn-sm rounded-circle" routerLink="/adminWeb/listIps" title="Retour">
-                <i class="fa fa-arrow-left text-white"></i>
-            </button>
-        </div>
-    </div>
+    <app-page-header titleKey="IP_ADDRESS.ADD_TITLE" subtitleKey="IP_ADDRESS.ADD_SUBTITLE">
+        <button class="btn btn-glass btn-sm rounded-circle" routerLink="/adminWeb/listIps" title="{{ 'COMMON.BACK' | translate }}">
+            <i class="fa fa-arrow-left text-white"></i>
+        </button>
+    </app-page-header>
 
     <div class="row justify-content-center">
         <div class="col-lg-8">
@@ -18,56 +12,56 @@
                     <div class="row g-3">
                         <div class="col-md-6">
                             <div class="form-floating mb-3">
-                                <input type="text" formControlName="label" class="form-control" id="ipLabel" placeholder="Label">
-                                <label for="ipLabel">Libellé / Nom de l'IP</label>
+                                <input type="text" formControlName="label" class="form-control" id="ipLabel" placeholder="{{ 'IP_ADDRESS.LABEL_NAME' | translate }}">
+                                <label for="ipLabel">{{ 'IP_ADDRESS.LABEL_NAME' | translate }}</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating mb-3">
-                                <input type="text" formControlName="value" class="form-control" id="ipValue" placeholder="Value">
-                                <label for="ipValue">Adresse IP / Valeur</label>
+                                <input type="text" formControlName="value" class="form-control" id="ipValue" placeholder="{{ 'IP_ADDRESS.IP_VALUE' | translate }}">
+                                <label for="ipValue">{{ 'IP_ADDRESS.IP_VALUE' | translate }}</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating mb-3">
-                                <input type="text" formControlName="jdbcUser" class="form-control" id="jdbcUser" placeholder="User">
-                                <label for="jdbcUser">Pseudo JDBC</label>
+                                <input type="text" formControlName="jdbcUser" class="form-control" id="jdbcUser" placeholder="{{ 'IP_ADDRESS.JDBC_USER' | translate }}">
+                                <label for="jdbcUser">{{ 'IP_ADDRESS.JDBC_USER' | translate }}</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating mb-3">
-                                <input type="password" formControlName="jdbcPass" class="form-control" id="jdbcPass" placeholder="Pass">
-                                <label for="jdbcPass">Mot de passe JDBC</label>
+                                <input type="password" formControlName="jdbcPass" class="form-control" id="jdbcPass" placeholder="{{ 'IP_ADDRESS.JDBC_PASS' | translate }}">
+                                <label for="jdbcPass">{{ 'IP_ADDRESS.JDBC_PASS' | translate }}</label>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-floating mb-3">
-                                <input type="text" formControlName="url" class="form-control" id="ipUrl" placeholder="URL">
-                                <label for="ipUrl">URL de connexion complète</label>
+                                <input type="text" formControlName="url" class="form-control" id="ipUrl" placeholder="{{ 'IP_ADDRESS.CONN_URL' | translate }}">
+                                <label for="ipUrl">{{ 'IP_ADDRESS.CONN_URL' | translate }}</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating mb-3">
-                                <select formControlName="typeConnection" class="form-select border-0 bg-light" id="typeConnection" title="Type de Connexion">
+                                <select formControlName="typeConnection" class="form-select border-0 bg-light" id="typeConnection" title="{{ 'IP_ADDRESS.CONN_TYPE' | translate }}">
                                     @for (type of typeConnection; track type.type) {
                                         <option [value]="type.type">{{type.type}}</option>
                                     }
                                 </select>
-                                <label for="typeConnection">Type de Connexion</label>
+                                <label for="typeConnection">{{ 'IP_ADDRESS.CONN_TYPE' | translate }}</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating mb-3">
-                                <input type="text" formControlName="dbName" class="form-control" id="dbName" placeholder="DB">
-                                <label for="dbName">Nom de la Base de Données</label>
+                                <input type="text" formControlName="dbName" class="form-control" id="dbName" placeholder="{{ 'IP_ADDRESS.DB_NAME_INPUT' | translate }}">
+                                <label for="dbName">{{ 'IP_ADDRESS.DB_NAME_INPUT' | translate }}</label>
                             </div>
                         </div>
                     </div>
 
                     <div class="mt-4 pt-3 d-flex justify-content-end gap-3">
-                        <button type="button" class="btn btn-light px-4 btn-cancel-premium" routerLink="/adminWeb/listIps">Annuler</button>
+                        <button type="button" class="btn btn-light px-4 btn-cancel-premium" routerLink="/adminWeb/listIps">{{ 'COMMON.CANCEL' | translate }}</button>
                         <button type="button" class="btn btn-primary px-5 fw-bold shadow-sm btn-save-premium" [disabled]="ipForm.invalid" (click)="saveIpAddres()">
-                           <i class="fa fa-save me-2"></i> Enregistrer l'Adresse IP
+                           <i class="fa fa-save me-2"></i> {{ 'IP_ADDRESS.SAVE_IP' | translate }}
                         </button>
                     </div>
                 </form>

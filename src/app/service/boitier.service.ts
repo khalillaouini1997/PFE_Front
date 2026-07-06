@@ -2,7 +2,8 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { Archive, Boitier, BoitierRealTime, DeviceOpt, DeviceSetting, PageResponse, PathConfigPayload, raws, RecalculatePayload, VehiculeSetting } from '../data/data';
+import { Archive, Boitier, BoitierRealTime, DeviceOpt, DeviceSetting, PageResponse, PathConfigPayload, Raws, RecalculatePayload, VehiculeSetting, BoitierAnalysis } from '../data/data';
+
 
 @Injectable({
     providedIn: 'root'
@@ -12,34 +13,18 @@ export class BoitierService {
 
     // Preparation & Listing
     prepareDBForAllDevises(idServer: number): Observable<void> {
-        return this.http.get<void>(`${environment.apiBaseUrl}boities/${idServer}`);
+        return this.http.post<void>(`${environment.apiBaseUrl}boities/${idServer}/prepareDB`, null);
     }
 
     prepareDBForSingleDevise(idServer: number, idBoitier: number): Observable<void> {
-        return this.http.get<void>(`${environment.apiBaseUrl}boities/${idServer}/device/${idBoitier}`);
-    }
-
-    getAllCompteDevises(idServer: number): Observable<Boitier[]> {
-        return this.http.get<Boitier[]>(`${environment.apiBaseUrl}boities/all/${idServer}`);
+        return this.http.post<void>(`${environment.apiBaseUrl}boities/${idServer}/device/${idBoitier}/prepareDB`, null);
     }
 
     getBoitierOfAccount(id: number, keyword: string, page: number, size: number): Observable<PageResponse<Boitier>> {
         return this.http.get<PageResponse<Boitier>>(`${environment.apiBaseUrl}compteServer/${id}/Boitiers?keyWord=${keyword}&page=${page}&size=${size}`);
     }
 
-    getAllBoitierofIdcompte(idCompteServer: number): Observable<Boitier[]> {
-        return this.http.get<Boitier[]>(`${environment.apiBaseUrl}compteServer/${idCompteServer}/listBoitiers`);
-    }
-
     // CRUD & Updates
-    addBoitiers(idCompteServer: number, nbrBoitiers: number): Observable<void> {
-        return this.http.post<void>(`${environment.apiBaseUrl}compteServer/${idCompteServer}?nombreBoitier=${nbrBoitiers}`, null);
-    }
-
-    deleteCompteServer(id: number): Observable<void> {
-        return this.http.delete<void>(`${environment.apiBaseUrl}compteServer/${id}`);
-    }
-
     updateBoitier(boitier: Boitier, idServer: number, updateType: string): Observable<Boitier> {
         return this.http.put<Boitier>(`${environment.apiBaseUrl}boities?idServer=${idServer}&updateType=${updateType}`, boitier);
     }
@@ -49,8 +34,8 @@ export class BoitierService {
         return this.http.get<BoitierRealTime>(`${environment.apiBaseUrl}boities/${numBoitier}/lastArchive`);
     }
 
-    getRaws(numBoitier: number, limit: number): Observable<raws> {
-        return this.http.get<raws>(`${environment.apiBaseUrl}boities/${numBoitier}/Raw/${limit}`);
+    getRaws(numBoitier: number, limit: number): Observable<Raws> {
+        return this.http.get<Raws>(`${environment.apiBaseUrl}boities/${numBoitier}/Raw/${limit}`);
     }
 
     getArchiveOfBoitier(numboitier: number, limit: number): Observable<Archive[]> {
@@ -59,27 +44,27 @@ export class BoitierService {
 
     // Recalculation
     recalculeHistorique(idCompteWeb: number, payload: RecalculatePayload): Observable<void> {
-        return this.http.put<void>(`${environment.apiBaseUrl}boities/${idCompteWeb}/recalculate/historique`, payload);
+        return this.http.post<void>(`${environment.apiBaseUrl}boities/${idCompteWeb}/recalculate/historique`, payload);
     }
 
     recalculeAlert(idCompteWeb: number, payload: RecalculatePayload): Observable<void> {
-        return this.http.put<void>(`${environment.apiBaseUrl}boities/${idCompteWeb}/recalculate/alert`, payload);
+        return this.http.post<void>(`${environment.apiBaseUrl}boities/${idCompteWeb}/recalculate/alert`, payload);
     }
 
     recalculeFuel(idCompteWeb: number, payload: RecalculatePayload): Observable<void> {
-        return this.http.put<void>(`${environment.apiBaseUrl}boities/${idCompteWeb}/recalculate/fuel`, payload);
+        return this.http.post<void>(`${environment.apiBaseUrl}boities/${idCompteWeb}/recalculate/fuel`, payload);
     }
 
     recalculePaths(idCompteWeb: number, payload: RecalculatePayload): Observable<void> {
-        return this.http.put<void>(`${environment.apiBaseUrl}boities/${idCompteWeb}/recalculate/paths`, payload);
+        return this.http.post<void>(`${environment.apiBaseUrl}boities/${idCompteWeb}/recalculate/paths`, payload);
     }
 
     recalculeBoitier(idCompteWeb: number, payload: RecalculatePayload): Observable<void> {
-        return this.http.put<void>(`${environment.apiBaseUrl}boities/${idCompteWeb}/recalculate/resetboitier`, payload);
+        return this.http.post<void>(`${environment.apiBaseUrl}boities/${idCompteWeb}/recalculate/resetboitier`, payload);
     }
 
     resetRT(idCompteWeb: number, payload: RecalculatePayload): Observable<void> {
-        return this.http.put<void>(`${environment.apiBaseUrl}boities/${idCompteWeb}/recalculate/resetRT`, payload);
+        return this.http.post<void>(`${environment.apiBaseUrl}boities/${idCompteWeb}/recalculate/resetRT`, payload);
     }
 
     // Configuration & Settings
@@ -111,7 +96,20 @@ export class BoitierService {
         return this.http.put<void>(`${environment.apiBaseUrl}boities/${idCompteWeb}/resetOdo`, vehiculeSetting);
     }
 
-    getDeviceIdImei(url: string, imei: number): Observable<any> {
-        return this.http.get<any>(url + imei);
+    getLastId(idCompteWeb: number, idBoitier: number): Observable<{ lastId: number }> {
+        return this.http.get<{ lastId: number }>(`${environment.apiBaseUrl}boities/${idCompteWeb}/lastId/${idBoitier}`);
+    }
+
+    resetLastId(idCompteWeb: number, vehiculeSetting: VehiculeSetting): Observable<void> {
+        return this.http.put<void>(`${environment.apiBaseUrl}boities/${idCompteWeb}/resetLastId`, vehiculeSetting);
+    }
+
+    getDeviceIdImei(idIpAdresse: number, imei: number): Observable<any> {
+        return this.http.get<any>(`${environment.apiBaseUrl}boities/device-by-imei?idIpAdresse=${idIpAdresse}&imei=${imei}`);
+    }
+
+    getBoitierAnalysis(numBoitier: number, days: number = 30, limit: number = 500): Observable<BoitierAnalysis> {
+        return this.http.get<BoitierAnalysis>(`${environment.apiBaseUrl}boities/${numBoitier}/analysis?days=${days}&limit=${limit}`);
     }
 }
+

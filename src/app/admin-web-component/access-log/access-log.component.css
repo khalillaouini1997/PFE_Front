@@ -1,3 +1,11 @@
+@import '../../shared/styles/design-tokens.css';
+
+:host {
+  display: block;
+  background-color: var(--bg-main);
+  min-height: 100vh;
+}
+
 .search-group {
     border-radius: 12px;
     overflow: hidden;
@@ -9,7 +17,12 @@
 
 .btn-search {
     background: white;
-    color: var(--primary);
+    color: var(--primary-600);
+}
+
+[data-theme='dark'] .btn-search {
+    background: var(--slate-700);
+    color: var(--primary-300);
 }
 
 .log-table-container {

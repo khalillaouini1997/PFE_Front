@@ -1,0 +1,93 @@
+/* ===== DASHBOARD CHARTS ===== */
+@import '../../../../shared/styles/design-tokens.css';
+
+.charts-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--spacing-lg);
+  min-height: 0;
+}
+
+@media (max-width: 1400px) {
+  .charts-container { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .charts-container { grid-template-columns: 1fr; }
+}
+
+/* ── Full-width evolution chart ── */
+.evolution-chart-container {
+  margin-bottom: var(--spacing-lg);
+}
+
+.chart-card-full {
+  background: var(--surface-card);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--card-border-radius);
+  padding: var(--spacing-xl);
+  min-height: 380px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Chart Card ── */
+.chart-card {
+  background: var(--surface-card);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--card-border-radius);
+  padding: var(--spacing-lg);
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow var(--transition-fast);
+}
+
+.chart-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.chart-card h3 {
+  margin: 0 0 var(--spacing-md) 0;
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.chart-wrapper {
+  position: relative;
+  width: 100%;
+  flex-grow: 1;
+  min-height: 0;
+}
+
+/* ── Granularity Selector ── */
+.granularity-select {
+  padding: var(--spacing-xs) var(--spacing-md);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--surface-border);
+  background: var(--surface-elevated);
+  color: var(--text-primary);
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+}
+
+.granularity-select:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+}
+
+/* ── No Data ── */
+.no-data {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 120px;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}

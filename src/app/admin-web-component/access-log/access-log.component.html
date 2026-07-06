@@ -1,30 +1,12 @@
 <div class="main-panel p-4">
-    <!-- Header Section -->
-    <div class="premium-card mb-4 header-gradient shadow-sm p-4">
-        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-            <div class="title-section text-white">
-                <h2 class="m-0 fw-bold">Journal d'Accès</h2>
-                <p class="m-0 text-white-50 opacity-75">Suivi en temps réel des connexions et de la sécurité</p>
-            </div>
-            
-            <div class="controls-section d-flex align-items-center gap-3">
-                <form class="d-flex align-items-center" [formGroup]="searchForm" (ngSubmit)="searchAccess()">
-                    <div class="input-group shadow-sm search-group-premium">
-                        <input type="text" class="form-control border-0 px-3 search-input-premium bg-white bg-opacity-10 text-white" 
-                            formControlName="keyWord" placeholder="Rechercher par login..." title="Rechercher par login">
-                        <button class="btn btn-glass border-0" type="submit" title="Lancer la recherche">
-                            <i class="fa fa-search"></i>
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+    <app-page-header titleKey="ACCESS_LOG.TITLE" subtitleKey="ACCESS_LOG.SUBTITLE">
+        <app-search-input placeholder="ACCESS_LOG.SEARCH_PLACEHOLDER" (search)="searchAccess($event)" />
+    </app-page-header>
 
     <!-- Table Section -->
     <div class="premium-card p-0 overflow-hidden shadow-sm">
-        <p-table [value]="accessLogs" [lazy]="true" (onLazyLoad)="pageChanged($event)" 
-            [paginator]="true" [rows]="itemsPerPage" [totalRecords]="bigTotalItems" 
+        <p-table [value]="accessLogs" [lazy]="true" (onLazyLoad)="onPageChanged($event)" 
+            [paginator]="true" [rows]="pagination.itemsPerPage" [totalRecords]="pagination.bigTotalItems" 
             [rowsPerPageOptions]="[10,15,30,50]"
             [loading]="loading"
             stateStorage="session" stateKey="access-logs-state"
@@ -34,10 +16,10 @@
             
             <ng-template pTemplate="header">
                 <tr>
-                    <th class="col-user" pReorderableColumn pResizableColumn>Utilisateur Access</th>
-                    <th class="col-date" pReorderableColumn pResizableColumn>Date & Heure</th>
-                    <th class="col-ip" pReorderableColumn pResizableColumn>Adresse IP</th>
-                    <th class="col-agent" pReorderableColumn pResizableColumn>Navigateur / Agent</th>
+                    <th scope="col" class="col-user" pReorderableColumn pResizableColumn>{{ 'ACCESS_LOG.USER' | translate }}</th>
+                    <th scope="col" class="col-date" pReorderableColumn pResizableColumn>{{ 'ACCESS_LOG.DATE_TIME' | translate }}</th>
+                    <th scope="col" class="col-ip" pReorderableColumn pResizableColumn>{{ 'ACCESS_LOG.IP_ADDRESS' | translate }}</th>
+                    <th scope="col" class="col-agent" pReorderableColumn pResizableColumn>{{ 'ACCESS_LOG.BROWSER_AGENT' | translate }}</th>
                 </tr>
             </ng-template>
 
@@ -53,14 +35,7 @@
                 </tr>
             </ng-template>
 
-            <ng-template pTemplate="emptymessage">
-                <tr>
-                    <td colspan="4" class="text-center py-5 text-secondary">
-                        <i class="fa fa-history fa-3x opacity-25 mb-2"></i>
-                        <p>Aucun journal d'accès trouvé</p>
-                    </td>
-                </tr>
-            </ng-template>
+            <app-empty-table [colspan]="4" icon="fa-history" messageKey="ACCESS_LOG.NO_DATA" />
         </p-table>
     </div>
 </div>

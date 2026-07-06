@@ -1,26 +1,41 @@
 import { CommonModule, DatePipe, DecimalPipe, Location, NgClass } from '@angular/common';
 import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Archive, raws } from "../../data/data";
+import { Archive, Raws, BoitierAnalysis, createRaws } from "../../data/data";
+
 import { BoitierService } from "../../service/boitier.service";
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { TabsModule } from 'primeng/tabs';
+import { TranslateModule } from '@ngx-translate/core';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 
 @Component({
   selector: 'app-archive',
   standalone: true,
   templateUrl: './archive.component.html',
   styleUrls: ['./archive.component.css'],
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, TableModule, TabsModule, DatePipe, DecimalPipe, NgClass]
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TableModule, TabsModule, DatePipe, DecimalPipe, NgClass, TranslateModule, PageHeaderComponent]
 })
 export class ArchiveComponent implements OnInit {
   archives = signal<Archive[]>([]);
-  rawData = signal<raws>(new raws());
+  rawData = signal<Raws>(createRaws());
   numBoitier = signal<number>(0);
   archiveForm!: FormGroup;
 
-  constructor(private _location: Location, private route: ActivatedRoute, private boitierService: BoitierService, private router: Router, private fb: FormBuilder) { }
+  analysisData = signal<BoitierAnalysis | null>(null);
+  isAnalyzing = signal<boolean>(false);
+  analysisDays = signal<number>(500);
+  selectedLimit = 500;
+
+
+  constructor(
+    private readonly _location: Location,
+    private readonly route: ActivatedRoute,
+    private readonly boitierService: BoitierService,
+    private readonly router: Router,
+    private readonly fb: FormBuilder
+  ) { }
 
   ngOnInit(): void {
     this.initForms();
@@ -43,9 +58,11 @@ export class ArchiveComponent implements OnInit {
   getAllRaws() {
     const limit = this.archiveForm.get('limit')?.value || 200;
     this.boitierService.getRaws(this.numBoitier(), limit).subscribe((_raws: any) => {
-      const updatedRaws = new raws();
-      updatedRaws.raws = _raws.raws;
-      updatedRaws.count = _raws.count;
+      // Handle nested response structure
+      const rawData = _raws.data || _raws;
+      const updatedRaws = createRaws();
+      updatedRaws.raws = rawData.raws || [];
+      updatedRaws.count = rawData.count || 0;
       this.rawData.set(updatedRaws);
     });
   }
@@ -53,12 +70,75 @@ export class ArchiveComponent implements OnInit {
   getArchives() {
     const limit = this.archiveForm.get('limit')?.value || 200;
     this.boitierService.getArchiveOfBoitier(this.numBoitier(), limit).subscribe(_archives => {
-      const archs = (_archives as any[]).map(a => ({
-        ...a,
-        latitude: +a.latitude.toFixed(5),
-        longitude: +a.longitude.toFixed(5)
-      }));
+      // Handle different response structures
+      let archivesData: any = _archives;
+      if (_archives && typeof _archives === 'object' && !Array.isArray(_archives)) {
+        archivesData = (_archives as any).data || (_archives as any).content || [];
+      }
+      if (!Array.isArray(archivesData)) {
+        archivesData = [];
+      }
+      
+      const archs = archivesData.map(a => {
+        // Parse date from DD-MM-YYYY HH:mm:ss format to Date object
+        let parsedDate = a.date;
+        if (a.date && typeof a.date === 'string') {
+          const parts = a.date.split(' ');
+          if (parts.length === 2) {
+            const dateParts = parts[0].split('-');
+            const timeParts = parts[1].split(':');
+            if (dateParts.length === 3 && timeParts.length === 3) {
+              parsedDate = new Date(
+                parseInt(dateParts[2]), // year
+                parseInt(dateParts[1]) - 1, // month (0-indexed)
+                parseInt(dateParts[0]), // day
+                parseInt(timeParts[0]), // hours
+                parseInt(timeParts[1]), // minutes
+                parseInt(timeParts[2]) // seconds
+              );
+            }
+          }
+        }
+        return {
+          ...a,
+          date: parsedDate,
+          latitude: +a.latitude.toFixed(5),
+          longitude: +a.longitude.toFixed(5)
+        };
+      });
       this.archives.set(archs);
     });
   }
+
+  getAiAnalysis() {
+    this.isAnalyzing.set(true);
+    this.boitierService.getBoitierAnalysis(this.numBoitier(), 30, this.selectedLimit).subscribe({
+      next: (data) => {
+        this.analysisData.set(data);
+        this.isAnalyzing.set(false);
+      },
+      error: (err) => {
+        this.isAnalyzing.set(false);
+      }
+    });
+  }
+
+  changeDays(limit: number) {
+    this.selectedLimit = limit;
+  }
+
+  getAnomalyTypes(): { name: string; count: number }[] {
+    const data = this.analysisData();
+    if (!data?.topAnomalyTypes) return [];
+    return Object.entries(data.topAnomalyTypes)
+      .map(([name, count]) => ({ name, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 5);
+  }
+
+  getTopAnomaly(): { name: string; count: number } | null {
+    const types = this.getAnomalyTypes();
+    return types.length > 0 ? types[0] : null;
+  }
 }
+

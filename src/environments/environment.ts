@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiBaseUrl: "/ws_webadmin/",
+  apiBaseUrl: "/ws_webadmin/api/v1/",
   owner: "TDS"
 };
 

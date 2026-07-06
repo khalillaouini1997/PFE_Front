@@ -1,33 +1,15 @@
 <div class="main-panel p-4">
-    <!-- Header Section -->
-    <div class="premium-card mb-4 header-gradient shadow-sm p-4">
-        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-            <div class="title-section text-white">
-                <h2 class="m-0 fw-bold">Comptes Administrateurs</h2>
-                <p class="m-0 text-white-50 opacity-75">Gérer les accès de haut niveau et les permissions</p>
-            </div>
-            
-            <div class="controls-section d-flex align-items-center gap-3">
-                <form class="d-flex align-items-center" [formGroup]="searchForm" (ngSubmit)="searchWebAccount()">
-                    <div class="input-group shadow-sm search-container-premium">
-                        <input type="text" class="form-control border-0 px-3 search-input-premium bg-white bg-opacity-10 text-white" 
-                            formControlName="keyWord" placeholder="Rechercher un admin..." title="Rechercher un admin">
-                        <button class="btn btn-glass border-0" type="submit" title="Lancer la recherche">
-                            <i class="fa fa-search"></i>
-                        </button>
-                    </div>
-                </form>
-                <button class="btn btn-glass btn-sm rounded-circle" routerLink="/adminWeb/addAdminCompte" title="Ajouter un administrateur">
-                    <i class="fa fa-plus"></i>
-                </button>
-            </div>
-        </div>
-    </div>
+    <app-page-header titleKey="ADMIN_ACCOUNTS.TITLE" subtitleKey="ADMIN_ACCOUNTS.SUBTITLE">
+        <app-search-input placeholder="ADMIN_ACCOUNTS.SEARCH_PLACEHOLDER" (search)="searchWebAccount($event)" />
+        <button class="btn btn-glass btn-sm rounded-circle" routerLink="/adminWeb/addAdminCompte" title="{{ 'ADMIN_ACCOUNTS.ADD' | translate }}">
+            <i class="fa fa-plus"></i>
+        </button>
+    </app-page-header>
 
     <!-- Table Section -->
     <div class="premium-card p-0 overflow-hidden shadow-sm">
-        <p-table [value]="adminComptes" [lazy]="true" (onLazyLoad)="pageChanged($event)" 
-            [paginator]="true" [rows]="itemsPerPage" [totalRecords]="bigTotalItems" 
+        <p-table [value]="adminComptes" [lazy]="true" (onLazyLoad)="onPageChanged($event)" 
+            [paginator]="true" [rows]="pagination.itemsPerPage" [totalRecords]="pagination.bigTotalItems" 
             [rowsPerPageOptions]="[10,15,30,50]"
             [loading]="loading"
             stateStorage="session" stateKey="admin-comptes-state"
@@ -37,16 +19,16 @@
             
             <ng-template pTemplate="header">
                 <tr>
-                    <th style="width: 80px" pReorderableColumn pResizableColumn>ID</th>
-                    <th pReorderableColumn pResizableColumn>Utilisateur</th>
-                    <th pReorderableColumn pResizableColumn>Mot de passe</th>
-                    <th pReorderableColumn pResizableColumn>Dernier Boitier</th>
-                    <th pReorderableColumn pResizableColumn>Rôle</th>
-                    <th pReorderableColumn pResizableColumn>ID Traccar</th>
-                    <th pReorderableColumn pResizableColumn>Notifications (FCM)</th>
-                    <th pReorderableColumn pResizableColumn>Support Mail</th>
-                    <th class="text-end" style="width: 150px" pReorderableColumn pResizableColumn>Coûts & Frais</th>
-                    <th class="text-end" style="width: 100px">Actions</th>
+                    <th scope="col" style="width: 80px" pReorderableColumn pResizableColumn>{{ 'COMMON.ID' | translate }}</th>
+                    <th scope="col" pReorderableColumn pResizableColumn>{{ 'COMMON.USER' | translate }}</th>
+                    <th scope="col" pReorderableColumn pResizableColumn>{{ 'AUTH.PASSWORD' | translate }}</th>
+                    <th scope="col" pReorderableColumn pResizableColumn>{{ 'ADMIN_ACCOUNTS.LAST_TERMINAL' | translate }}</th>
+                    <th scope="col" pReorderableColumn pResizableColumn>{{ 'ADMIN_ACCOUNTS.ROLE' | translate }}</th>
+                    <th scope="col" pReorderableColumn pResizableColumn>{{ 'ADMIN_ACCOUNTS.TRACCAR_ID' | translate }}</th>
+                    <th scope="col" pReorderableColumn pResizableColumn>{{ 'ADMIN_ACCOUNTS.FCM_NOTIFICATIONS' | translate }}</th>
+                    <th scope="col" pReorderableColumn pResizableColumn>{{ 'ADMIN_ACCOUNTS.SUPPORT_MAIL' | translate }}</th>
+                    <th scope="col" class="text-end" style="width: 150px" pReorderableColumn pResizableColumn>{{ 'ADMIN_ACCOUNTS.COSTS_FEES' | translate }}</th>
+                    <th scope="col" class="text-end" style="width: 100px">{{ 'COMMON.ACTIONS' | translate }}</th>
                 </tr>
             </ng-template>
 
@@ -58,34 +40,38 @@
                     <td><span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-10">{{adminCompte.numLastBoitierAvailable}}</span></td>
                     <td>
                         <span class="badge rounded-pill px-3" [ngClass]="{
-                            'bg-danger bg-opacity-10 text-danger border border-danger border-opacity-10': adminCompte.role === 'GLOBALADMIN',
-                            'bg-info bg-opacity-10 text-info border border-info border-opacity-10': adminCompte.role === 'AGENT',
+                            'bg-primary bg-opacity-10 text-dark border border-primary border-opacity-10': adminCompte.role === 'GLOBALADMINDESC',
+                            'bg-info bg-opacity-10 text-dark border border-info border-opacity-10': adminCompte.role === 'AGENT',
                             'bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-10': !adminCompte.role.includes('ADMIN')
                         }">
-                            {{adminCompte.role}}
+                            @if (adminCompte.role === 'GLOBALADMINDESC') {
+                                Admin Accounts
+                            } @else {
+                                {{adminCompte.role}}
+                            }
                         </span>
                     </td>
                     <td>{{adminCompte.idTraccar || '—'}}</td>
                     <td class="small">
                         @if (adminCompte.useFcm) {
-                            <div class="text-success fw-bold"><i class="fa fa-check-circle me-1"></i> Fcm Active</div>
+                            <div class="text-success fw-bold"><i class="fa fa-check-circle me-1"></i> {{ 'ADMIN_ACCOUNTS.FCM_ACTIVE' | translate }}</div>
                             <div class="opacity-50">Prf: {{adminCompte.fcmPrefix}}</div>
                         } @else {
-                            <div class="text-secondary opacity-50"><i class="fa fa-minus-circle me-1"></i> Off</div>
+                            <div class="text-secondary opacity-50"><i class="fa fa-minus-circle me-1"></i> {{ 'COMMON.OFF' | translate }}</div>
                         }
                     </td>
                     <td class="small">{{adminCompte.mailSupport || '—'}}</td>
                     <td class="text-end small">
-                        <div>Cost: <strong class="text-dark">{{adminCompte.deviceCostByDay}}</strong>/j</div>
-                        <div>Free: <strong class="text-dark">{{adminCompte.accountFreePerMonth}}</strong>/m</div>
-                        <div>Fee: <strong class="text-dark">{{adminCompte.transctionFee}}</strong>%</div>
+                        <div>{{ 'ADMIN_ACCOUNTS.COST' | translate }}: <strong class="text-dark">{{adminCompte.deviceCostByDay}}</strong>/j</div>
+                        <div>{{ 'ADMIN_ACCOUNTS.FREE' | translate }}: <strong class="text-dark">{{adminCompte.accountFreePerMonth}}</strong>/m</div>
+                        <div>{{ 'ADMIN_ACCOUNTS.FEE' | translate }}: <strong class="text-dark">{{adminCompte.transctionFee}}</strong>%</div>
                     </td>
                     <td class="text-end">
                         <div class="btn-group gap-2">
-                            <button class="btn btn-sm btn-outline-warning border-0 p-2" title="Modifier">
+                            <button class="btn btn-sm btn-outline-warning border-0 p-2" title="{{ 'COMMON.EDIT' | translate }}">
                                 <i class="fa fa-edit fs-5"></i>
                             </button>
-                            <button class="btn btn-sm btn-outline-danger border-0 p-2" title="Supprimer">
+                            <button class="btn btn-sm btn-outline-danger border-0 p-2" title="{{ 'COMMON.DELETE' | translate }}">
                                 <i class="fa fa-trash fs-5"></i>
                             </button>
                         </div>
@@ -93,14 +79,7 @@
                 </tr>
             </ng-template>
 
-            <ng-template pTemplate="emptymessage">
-                <tr>
-                    <td colspan="10" class="text-center py-5 text-secondary">
-                        <i class="fa fa-users fa-3x opacity-25 mb-2"></i>
-                        <p>Aucun compte administrateur trouvé</p>
-                    </td>
-                </tr>
-            </ng-template>
+            <app-empty-table [colspan]="10" icon="fa-users" messageKey="ADMIN_ACCOUNTS.NO_DATA" />
         </p-table>
     </div>
 </div>

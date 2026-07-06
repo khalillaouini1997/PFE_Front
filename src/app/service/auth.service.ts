@@ -1,8 +1,10 @@
 import { Injectable, inject } from '@angular/core';
-import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { Observable, map, catchError, of } from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { AdministratorCompte } from '../data/data';
+import { WebSocketService } from './web-socket.service';
+import { STORAGE_KEYS } from '../shared/constants';
 
 @Injectable({
     providedIn: 'root'
@@ -10,43 +12,59 @@ import { AdministratorCompte } from '../data/data';
 export class AuthService {
 
     private readonly http = inject(HttpClient);
-    private readonly TOKEN_KEY = 'token';
-    private readonly USER_KEY = 'currentUser';
-    private readonly AUTH_STATUS_KEY = 'isAuthenticate';
-    private readonly TOKEN_PREFIX = 'Bearer ';
+    private readonly webSocketService = inject(WebSocketService);
+    private readonly TOKEN_PREFIX = 'rimtel ';
 
     currentUser: AdministratorCompte | null = null;
 
     authentificate(login: string, password: string): Observable<any> {
-        return this.http.post<any>(`${environment.apiBaseUrl}authenticate?username=${encodeURIComponent(login)}&password=${encodeURIComponent(password)}`, {});
+        const body = { username: login, password: password };
+        return this.http.post<any>(`${environment.apiBaseUrl}authenticate`, body);
+    }
+
+    refreshToken(): Observable<any> {
+        return this.http.post<any>(`${environment.apiBaseUrl}refresh`, {});
     }
 
     saveSession(authResponse: any) {
-        const token = authResponse.token;
-        localStorage.setItem(this.TOKEN_KEY, this.TOKEN_PREFIX + token);
-        localStorage.setItem(this.USER_KEY, JSON.stringify(authResponse));
-        localStorage.setItem(this.AUTH_STATUS_KEY, 'true');
+        localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(authResponse));
+        localStorage.setItem(STORAGE_KEYS.AUTH_STATUS, 'true');
         this.currentUser = authResponse;
     }
 
     logout() {
-        localStorage.removeItem(this.TOKEN_KEY);
-        localStorage.removeItem(this.USER_KEY);
-        localStorage.removeItem(this.AUTH_STATUS_KEY);
+        document.cookie = 'jwt_token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=Strict';
+        localStorage.removeItem(STORAGE_KEYS.USER);
+        localStorage.removeItem(STORAGE_KEYS.AUTH_STATUS);
         this.currentUser = null;
+        this.webSocketService.disconnect();
     }
 
-    getToken(): string | null {
-        return localStorage.getItem(this.TOKEN_KEY);
+    checkAuth(): Observable<boolean> {
+        return this.http.get<any>(`${environment.apiBaseUrl}auth/me`).pipe(
+            map(res => {
+                if (res?.user) {
+                    this.currentUser = res;
+                    localStorage.setItem(STORAGE_KEYS.AUTH_STATUS, 'true');
+                    localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(res));
+                    return true;
+                }
+                return false;
+            }),
+            catchError(() => {
+                this.logout();
+                return of(false);
+            })
+        );
     }
 
     isAuthenticated(): boolean {
-        return localStorage.getItem(this.AUTH_STATUS_KEY) === 'true';
+        return localStorage.getItem(STORAGE_KEYS.AUTH_STATUS) === 'true';
     }
 
     getCurrentUser(): any {
         if (this.currentUser) return this.currentUser;
-        const userStr = localStorage.getItem(this.USER_KEY);
+        const userStr = localStorage.getItem(STORAGE_KEYS.USER);
         if (userStr) {
             this.currentUser = JSON.parse(userStr);
             return this.currentUser;
@@ -55,20 +73,15 @@ export class AuthService {
     }
 
     getCurrentUserName(): string | null {
-        const session = this.getCurrentUser();
-        return session && session.user ? session.user.username : null;
+        return this.getCurrentUser()?.user?.username ?? null;
     }
 
     isAgentAdmin(): boolean {
-        const session = this.getCurrentUser();
-        if (session && session.user && (session.user.role === 'GLOBALADMIN' || session.user.role === 'WEBADMIN')) {
-            return true;
-        }
-        return false;
+        const user = this.getCurrentUser()?.user;
+        return user?.role === 'GLOBALADMINDESC' || user?.role === 'WEBADMIN';
     }
 
     hasRole(role: string): boolean {
-        const session = this.getCurrentUser();
-        return session && session.user && session.user.role === role;
+        return this.getCurrentUser()?.user?.role === role;
     }
 }

@@ -1,16 +1,9 @@
 <div class="main-panel p-4">
-    <!-- Header Section -->
-    <div class="premium-card mb-4 header-gradient shadow-sm p-4">
-        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-            <div class="title-section text-white">
-                <h2 class="m-0 fw-bold">Nouveau Compte Serveur</h2>
-                <p class="m-0 text-white-50 opacity-75">Configurer une instance serveur pour un client</p>
-            </div>
-            <button class="btn btn-glass btn-sm rounded-circle" routerLink="/adminWeb/listServers" title="Retour à la liste">
-                <i class="fa fa-arrow-left text-white"></i>
-            </button>
-        </div>
-    </div>
+    <app-page-header titleKey="SERVER_ACCOUNTS.ADD_TITLE" subtitleKey="SERVER_ACCOUNTS.ADD_SUBTITLE">
+        <button class="btn btn-glass btn-sm rounded-circle" routerLink="/adminWeb/listServers" title="{{ 'COMMON.BACK_TO_LIST' | translate }}">
+            <i class="fa fa-arrow-left text-white"></i>
+        </button>
+    </app-page-header>
 
     @if (mode) {
         <div class="alert alert-danger border-0 shadow-sm mb-4 fade-in" role="alert">
@@ -24,79 +17,81 @@
                 <form [formGroup]="serverForm">
                     <h5 class="fw-bold mb-4 border-bottom pb-2 d-flex align-items-center">
                         <i class="material-icons me-2 text-primary">terminal</i>
-                        Identifiants du Serveur
+                        {{ 'SERVER_ACCOUNTS.CREDENTIALS' | translate }}
                     </h5>
                     
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <div class="form-floating mb-1">
-                                <input type="text" class="form-control" formControlName="pseudo" id="pseudo" placeholder="Pseudo" (keyup)="onKeyPseudo()"
+                            <div class="form-group mb-3 custom-form-group">
+                                <label for="pseudo" class="premium-label">{{ 'SERVER_ACCOUNTS.PSEUDO' | translate }}</label>
+                                <input type="text" class="form-control premium-input" formControlName="pseudo" id="pseudo" placeholder="{{ 'SERVER_ACCOUNTS.PSEUDO' | translate }}" (keyup)="onKeyPseudo()"
                                     [class.is-invalid]="(serverForm.get('pseudo')?.invalid && serverForm.get('pseudo')?.touched) || isExistPseudo">
-                                <label for="pseudo">Pseudo du Serveur</label>
                             </div>
                             @if (isExistPseudo) {
-                                <div class="text-danger small ms-2 mt-1"><i class="fa fa-times-circle"></i> Ce pseudo est déjà utilisé</div>
+                                <div class="text-danger small ms-2 mt-1"><i class="fa fa-times-circle"></i> {{ 'SERVER_ACCOUNTS.PSEUDO_EXISTS' | translate }}</div>
                             }
                         </div>
                         <div class="col-md-6">
-                            <div class="form-floating mb-1">
-                                <input type="text" class="form-control" formControlName="login" id="login" placeholder="Login" (keyup)="onKeyLogin()"
+                            <div class="form-group mb-3 custom-form-group">
+                                <label for="login" class="premium-label">{{ 'SERVER_ACCOUNTS.ADMIN_LOGIN' | translate }}</label>
+                                <input type="text" class="form-control premium-input" formControlName="login" id="login" placeholder="{{ 'SERVER_ACCOUNTS.ADMIN_LOGIN' | translate }}" (keyup)="onKeyLogin()"
                                     [class.is-invalid]="(serverForm.get('login')?.invalid && serverForm.get('login')?.touched) || isExistLogin">
-                                <label for="login">Login Administrateur</label>
                             </div>
                             @if (isExistLogin) {
-                                <div class="text-danger small ms-2 mt-1"><i class="fa fa-times-circle"></i> Ce login est déjà utilisé</div>
+                                <div class="text-danger small ms-2 mt-1"><i class="fa fa-times-circle"></i> {{ 'SERVER_ACCOUNTS.LOGIN_EXISTS' | translate }}</div>
                             }
                         </div>
 
                         <div class="col-md-6">
-                            <div class="form-floating mb-1">
-                                <input type="password" class="form-control" formControlName="password" id="Password" placeholder="Password"
+                            <div class="form-group mb-3 custom-form-group">
+                                <label for="Password" class="premium-label">{{ 'AUTH.PASSWORD' | translate }}</label>
+                                <input type="password" class="form-control premium-input" formControlName="password" id="Password" placeholder="******"
                                     [class.is-invalid]="serverForm.get('password')?.touched && serverForm.get('password')?.invalid">
-                                <label for="Password">Mot de passe</label>
                             </div>
                             @if (serverForm.get('password')?.errors?.['minlength']) {
-                                <div class="text-danger small ms-2 mt-1">Minimum 6 caractères requis</div>
+                                <div class="text-danger small ms-2 mt-1">{{ 'AUTH.MIN_LENGTH_6' | translate }}</div>
                             }
                         </div>
                         <div class="col-md-6">
-                            <div class="form-floating mb-1">
-                                <input type="password" class="form-control" formControlName="confirmationPassword" id="confirmPassword" placeholder="Confirm"
+                            <div class="form-group mb-3 custom-form-group">
+                                <label for="confirmPassword" class="premium-label">{{ 'AUTH.CONFIRM_PASSWORD' | translate }}</label>
+                                <input type="password" class="form-control premium-input" formControlName="confirmationPassword" id="confirmPassword" placeholder="******"
                                     [class.is-invalid]="serverForm.get('confirmationPassword')?.touched && (serverForm.get('confirmationPassword')?.invalid || serverForm.errors?.['mismatch'])">
-                                <label for="confirmPassword">Confirmer le mot de passe</label>
                             </div>
                             @if (serverForm.get('confirmationPassword')?.touched && serverForm.errors?.['mismatch']) {
-                                <div class="text-danger small ms-2 mt-1">Les mots de passe ne correspondent pas</div>
+                                <div class="text-danger small ms-2 mt-1">{{ 'AUTH.PASSWORDS_MISMATCH' | translate }}</div>
                             }
                         </div>
                     </div>
 
                     <h5 class="fw-bold mt-4 mb-4 border-bottom pb-2 d-flex align-items-center">
                         <i class="material-icons me-2 text-primary">event_available</i>
-                        Validité & Capacité
+                        {{ 'SERVER_ACCOUNTS.VALIDITY_CAPACITY' | translate }}
                     </h5>
                     
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control" bsDatepicker formControlName="date_Expiration"
-                                    id="dateExpiration" [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }" placeholder="Expiration">
-                                <label for="dateExpiration">Date d'expiration</label>
+                            <div class="form-group mb-3 custom-datepicker-container">
+                                <label for="dateExpiration" class="p-datepicker-label">{{ 'SERVER_ACCOUNTS.EXPIRES_AT' | translate }}</label>
+                                <p-datepicker formControlName="date_Expiration" id="dateExpiration" 
+                                    dateFormat="dd-mm-yy" [showIcon]="true" appendTo="body"
+                                    styleClass="w-100" inputStyleClass="form-control premium-datepicker-input">
+                                </p-datepicker>
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="form-floating mb-3">
-                                <input type="number" min="0" class="form-control" formControlName="numberBoitier" id="numberBoitier" placeholder="Devices">
-                                <label for="numberBoitier">Nombre de Boitiers Autorisés</label>
+                            <div class="form-group mb-3 custom-form-group">
+                                <label for="numberBoitier" class="premium-label">{{ 'SERVER_ACCOUNTS.NUMBER_BOXES' | translate }}</label>
+                                <input type="number" min="0" class="form-control premium-input" formControlName="numberBoitier" id="numberBoitier" placeholder="0">
                             </div>
                         </div>
                     </div>
 
                     <div class="mt-4 pt-3 d-flex justify-content-end gap-3">
-                        <button type="button" class="btn btn-light px-4 btn-cancel-server" routerLink="/adminWeb/listServers">Annuler</button>
+                        <button type="button" class="btn btn-light px-4 btn-cancel-server" routerLink="/adminWeb/listServers">{{ 'COMMON.CANCEL' | translate }}</button>
                         <button type="button" class="btn btn-primary px-5 fw-bold shadow-sm btn-create-server" [disabled]="serverForm.invalid || isExistPseudo || isExistLogin" 
-                            (click)="addCompteServer()" data-toggle="modal" data-target="#Modalupdate">
-                            <i class="fa fa-check me-2"></i> Créer le Compte Serveur
+                            (click)="addCompteServer()">
+                            <i class="fa fa-check me-2"></i> {{ 'SERVER_ACCOUNTS.CREATE_ACCOUNT' | translate }}
                         </button>
                     </div>
                 </form>
@@ -105,33 +100,34 @@
     </div>
 </div>
 
-<!-- Progress Modal (Modernized) -->
-<div id="Modalupdate" class="modal fade" role="dialog" tabindex="-1" aria-hidden="true" data-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content modal-content-server-progress">
+<!-- Progress Modal (Native Dialog) -->
+<dialog #progressModal id="Modalupdate" class="border-0 rounded-4 shadow-lg p-0 overflow-hidden" (cancel)="$event.preventDefault()">
+    <div class="modal-dialog-centered progress-dialog-content">
+        <div class="modal-content modal-content-server-progress border-0 w-100">
             <div class="modal-header bg-warning py-4 border-0">
                 <div class="w-100 text-center">
                     <i class="fa fa-cogs fa-3x text-white mb-2 animate-spin-slow"></i>
-                    <h4 class="modal-title fw-bold text-white m-0">Création en cours</h4>
+                    <h4 class="modal-title fw-bold text-white m-0">{{ 'SERVER_ACCOUNTS.CREATION_IN_PROGRESS' | translate }}</h4>
                 </div>
             </div>
             <div class="modal-body p-5 text-center bg-white">
                 <div class="display-4 fw-bold text-primary mb-2">
                     {{ notifications }} <small class="text-secondary fs-4">/ {{serverForm.get('numberBoitier')?.value}}</small>
                 </div>
-                <p class="text-secondary fw-medium">Boitiers préparés avec succès</p>
+                <p class="text-secondary fw-medium">{{ 'SERVER_ACCOUNTS.DEVICES_PREPARED' | translate }}</p>
                 
                 <div class="progress mt-4 shadow-sm progress-rounded-premium">
-                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" 
-                        [style.width.%]="(notifications / serverForm.get('numberBoitier')?.value) * 100"></div>
+                    <progress class="progress-bar progress-bar-striped progress-bar-animated bg-success" 
+                        [style.width.%]="(notifications / serverForm.get('numberBoitier')?.value) * 100"
+                        [value]="notifications" [max]="serverForm.get('numberBoitier')?.value"></progress>
                 </div>
             </div>
             <div class="modal-footer border-0 p-4 bg-light">
-                <button type="button" class="btn btn-dark w-100 py-2 fw-bold btn-finish-server" data-dismiss="modal" (click)="reinitialisation()" 
+                <button type="button" class="btn btn-dark w-100 py-2 fw-bold btn-finish-server" (click)="reinitialisation()" 
                     [disabled]="notifications < serverForm.get('numberBoitier')?.value">
-                    Terminer & Retour
+                    {{ 'COMMON.FINISH_BACK' | translate }}
                 </button>
             </div>
         </div>
     </div>
-</div>
+</dialog>

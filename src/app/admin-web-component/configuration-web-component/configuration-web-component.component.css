@@ -1,66 +1,25 @@
+@import '../../shared/styles/design-tokens.css';
+
+:host {
+  display: block;
+  background-color: white;
+  min-height: 100vh;
+}
+
+[data-theme='dark'] :host {
+  background-color: var(--slate-900);
+}
+
 .center {
   float: none;
   margin-left: auto;
   margin-right: auto;
 }
 
-.left-drag {
-  border: solid;
-  border-color: mediumvioletred;
-}
 
-.right-drag {
-  border: solid;
-  border-color: dodgerblue;
-}
-
-.bor {
-  margin-top: 15px;
-  margin-bottom: 20px;
-
-}
-
-
-.selected {
-  cursor: pointer;
-  font-weight: bold;
-  color: black;
-}
-
-ul li {
-  list-style-type: none;
-}
-
-.btn-warning {
-  float: left;
-  margin: 2px;
-  padding: 6px;
-}
-
-.selectedItem {
-  color: black;
-}
-
-.row {
-  margin-top: 25px;
-}
-
-.config {
-  margin: 2px;
-  margin-left: 10px;
-}
-
-.change {
-  cursor: pointer;
-}
-
-.itemsSelect {
-  cursor: pointer;
-}
-
-.itemsSelect:hover {
-  background-color: lightgray;
-  color: mediumvioletred
+.row.g-4 {
+    --bs-gutter-y: 2rem;
+    --bs-gutter-x: 2rem;
 }
 
 .container-fluid {
@@ -79,17 +38,6 @@ ul li {
   padding: 0px 8px;
 }
 
-.labell {
-  border-radius: 2px;
-  background: purple;
-  padding: 4px;
-}
-
-.labelle {
-  border-radius: 2px;
-  background: green;
-  padding: 4px;
-}
 
 .btn.btn-success,
 .btn.btn-success:hover,
@@ -160,8 +108,8 @@ table>thead>tr>th,
 }
 
 .notification-scroll {
-    max-height: 150px;
-    overflow-y: auto;
+  max-height: 150px;
+  overflow-y: auto;
 }
 
 
@@ -181,10 +129,6 @@ table>thead>tr>th,
   margin: 32px 0 0 0;
 }
 
-.modal {
-  background: rgba(0, 0, 0, 0.5);
-}
-
 .fade-in {
   animation: fadeIn 0.3s ease-in-out;
 }
@@ -195,7 +139,7 @@ table>thead>tr>th,
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   z-index: 10040;
 }
 
@@ -217,100 +161,23 @@ table>thead>tr>th,
 
 .modal-dialog-small-margin {
   margin-top: 5px;
-  margin-right: 5px; 
-  color: white; 
+  margin-right: 5px;
+  color: white;
   font-size: 20px;
 }
 
-.notification-box {
-  color: rgb(0, 0, 0);
-  width: 850px;
-  height: 150px;
-  text-align: justify;
-  border: 1px solid black;
-  overflow: auto;
-}
 
-.card-content-padding {
-  padding: 0px 20px;
-}
-
-.options-label {
-  color: #AAAAAA; 
-  font-size: 12px; 
-  position: static; 
-  display: block; 
-  margin-bottom: 5px;
-}
-
-.navbar-form-nomargin {
-  margin: 0;
-}
-
-.imei-search-button {
-  margin: 0px; 
-  padding: 1px 5px; 
-  margin: 0px 0px 0px 0px;
-}
-
-.table-header-gradient {
-  background: linear-gradient(60deg, #ef5350, #e53935); 
-  color:white;
-}
-
-.config-btn {
-  padding: 0px 8px;
-  font-size: 8px;
-  margin: 1px 0px 0px 0px;
-}
-
-.margin-top-0 {
-  margin-top: 0;
-}
-
-.text-center-bold {
-  text-align: center;
-  font-weight: bold;
-}
-
-.header-accent-red {
-  background-color: #e73f3b; 
-  color: white;
-}
-
-.modal-backdrop-fs {
-  position: fixed; 
-  top: 0; 
-  left: 0; 
-  width: 100%; 
-  height: 100%;
-}
-
-.modal-dialog-responsive {
-  width: 900px; 
-  margin-top: 20px;
-}
-
-.text-center-nomargin {
-  text-align: center; 
-  margin-top: 0px;
-}
-
-.font-size-14 {
-  font-size: 14px;
-}
-
-.options-title {
-  color: #AAAAAA; 
-  font-size: 12px; 
-  position: static; 
-  display: block; 
-  margin-bottom: 5px;
-}
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .modal-backdrop.fade-in {
@@ -318,8 +185,13 @@ table>thead>tr>th,
 }
 
 @keyframes fadeInBackdrop {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 
@@ -337,4 +209,399 @@ table>thead>tr>th,
 .table>tfoot>tr>td {
   padding: 0px 8px;
   vertical-align: middle;
+}
+
+/* Premium Modal Styles */
+.modal-backdrop-glass {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.6) !important;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  z-index: 10080 !important;
+  transition: opacity 0.3s ease;
+}
+
+.modal-backdrop-glass.fade {
+  opacity: 0;
+}
+
+.modal-backdrop-glass.show {
+  opacity: 1;
+}
+
+.modal-config-zindex {
+  z-index: 10090 !important;
+}
+
+.modal-content-premium {
+  border-radius: 20px !important;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+}
+
+.header-gradient {
+  background: var(--primary-600);
+}
+
+.btn-purple {
+  background: var(--primary-600);
+  color: white;
+  transition: all var(--transition-fast) var(--ease-default);
+}
+
+.btn-purple:hover {
+  background: var(--primary-700);
+}
+
+.scale-110 {
+  transform: scale(1.1);
+}
+
+/* Layout Stability Overrides */
+.premium-card {
+  position: relative !important;
+  background-color: #ffffff !important;
+  z-index: 1;
+}
+
+[data-theme='dark'] .premium-card {
+  background-color: var(--slate-800) !important;
+}
+
+.premium-card-overflow {
+    overflow: visible !important;
+    z-index: 10 !important;
+}
+
+.premium-multiselect .multiselect-dropdown {
+    position: relative !important;
+}
+
+.premium-multiselect .dropdown-list {
+    z-index: 9999 !important;
+    position: absolute !important;
+    background: #fff !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
+}
+
+.premium-multiselect .multiselect-dropdown .dropdown-btn {
+    border: 1px solid rgba(0,0,0,0.05) !important;
+    border-radius: 12px !important;
+    padding: 0.75rem 1rem !important;
+    background-color: #f8fafc !important;
+}
+
+.premium-multiselect .multiselect-dropdown .dropdown-btn .selected-item {
+    background: #4f46e5 !important;
+    border: 1px solid #4f46e5 !important;
+}
+
+.modal-content-premium .premium-card {
+  border: 1px solid rgba(0,0,0,0.05) !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+}
+
+.modal-body label:not(.form-check-label):not(.toggle-option-label) {
+  position: relative !important;
+  display: block !important;
+  transform: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  margin-bottom: 6px !important;
+  color: #64748b !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.025em !important;
+  pointer-events: auto !important;
+}
+
+.toggle-option-label {
+  display: inline !important;
+  margin-bottom: 0 !important;
+  color: #1e293b !important;
+  font-size: 0.8rem !important;
+  font-weight: 700 !important;
+  text-transform: capitalize !important;
+  letter-spacing: normal !important;
+  text-transform: capitalize !important;
+}
+
+.modal-body .form-check-label {
+  position: relative !important;
+  display: inline-block !important;
+  transform: none !important;
+  margin-left: 10px !important;
+  margin-bottom: 0 !important;
+}
+
+/* Fix for input groups and alignment */
+.reset-actions .input-group-text {
+  font-size: 0.7rem !important;
+  padding: 0 8px !important;
+}
+
+.reset-actions .form-control {
+  height: 38px !important;
+  font-size: 0.85rem !important;
+}
+
+.modal-body select.form-select,
+.modal-body input.form-control {
+  background-color: #f8fafc !important;
+  border: 1px solid transparent !important;
+  border-radius: 8px !important;
+  padding: 0.6rem 0.75rem !important;
+  transition: all 0.2s ease !important;
+}
+
+.modal-body select.form-select:focus,
+.modal-body input.form-control:focus {
+  background-color: #ffffff !important;
+  border-color: #6366f1 !important;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1) !important;
+}
+
+[data-theme='dark'] .modal-body select.form-select:focus,
+[data-theme='dark'] .modal-body input.form-control:focus {
+  background-color: var(--slate-700) !important;
+}
+
+.btn-reset-fixed-height,
+.input-group-fixed-height {
+  height: 38px !important;
+}
+
+dialog {
+    padding: 0;
+    border: none;
+    border-radius: 12px;
+}
+
+dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+}
+
+.progress-dialog-content {
+    width: 800px;
+    max-width: 95vw;
+}
+
+/* Reorganized Configuration Styles */
+.prominent-label-custom {
+    display: block !important;
+    position: relative !important;
+    font-size: 0.85rem !important;
+    font-weight: 800 !important;
+    color: #4f46e5 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    margin-bottom: 8px !important;
+}
+
+
+/* SQL Query Box Styles */
+.sql-query-box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 16px;
+    margin-top: 20px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.sql-query-title {
+    color: #4f46e5;
+    font-weight: 600;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+}
+
+.sql-query-content {
+    background: #1e293b;
+    color: #e2e8f0;
+    padding: 16px;
+    border-radius: 8px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    margin: 0;
+}
+
+/* Tab Navigation Styles */
+.tab-nav-container {
+    background-color: #ffffff;
+    gap: 8px;
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+}
+
+[data-theme='dark'] .tab-nav-container {
+    background-color: var(--slate-800);
+}
+
+.tab-nav-btn {
+    background: none;
+    border: none;
+    outline: none;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #64748b;
+    border-radius: 8px;
+    transition: all 0.2s ease-in-out;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.tab-nav-btn:hover {
+    color: #1e293b;
+    background-color: #f1f5f9;
+}
+
+.tab-nav-btn.active {
+    color: #4f46e5;
+    background-color: #eef2ff;
+}
+
+.badge-dot {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: 1.5px solid #ffffff;
+}
+
+/* Premium Options Switch Card */
+.option-card-premium {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+    padding: 0.85rem 1rem;
+    transition: all 0.2s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.option-card-premium:hover {
+    border-color: rgba(99, 102, 241, 0.25);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    transform: translateY(-1px);
+}
+
+.option-card-premium.active {
+    background-color: #fafbfe;
+    border-color: rgba(99, 102, 241, 0.35);
+}
+
+.option-icon-container {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f1f5f9;
+    color: #475569;
+    font-size: 0.95rem;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+
+.option-card-premium.active .option-icon-container {
+    background-color: #eef2ff;
+    color: #4f46e5;
+}
+
+.option-label {
+    font-size: 0.85rem;
+    letter-spacing: 0.2px;
+}
+
+/* Terminal Console Styles */
+.console-terminal {
+    background-color: #0f172a;
+    border: 1px solid #1e293b;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+}
+
+.console-terminal-header {
+    background-color: #1e293b;
+}
+
+.console-terminal-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 4px;
+}
+
+.console-terminal-dot.bg-danger {
+    background-color: #ef4444 !important;
+}
+
+.console-terminal-dot.bg-warning {
+    background-color: #f59e0b !important;
+}
+
+.console-terminal-dot.bg-success {
+    background-color: #10b981 !important;
+}
+
+.console-terminal-body {
+    background-color: #0f172a;
+    color: #f8fafc;
+}
+
+.hover-bg-terminal-line:hover {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+/* Button & Animation Custom Styles */
+.btn-purple {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%) !important;
+    color: white !important;
+}
+
+.btn-purple:hover {
+    background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%) !important;
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25) !important;
+}
+
+.fade-in {
+    animation: fadeIn 0.25s ease-out;
+}
+
+.animate-slide-up {
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
 }

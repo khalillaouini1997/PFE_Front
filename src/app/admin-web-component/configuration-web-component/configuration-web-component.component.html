@@ -3,11 +3,12 @@
     <div class="premium-card mb-4 header-gradient shadow-sm p-4">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
             <div class="title-section text-white">
-                <h2 class="m-0 fw-bold">Configuration du Compte</h2>
-                <p class="m-0 text-white-50 opacity-75">ID: {{compteWeb().idCompteClientWeb}} | Gérer les accès et préférences</p>
+                <h2 class="m-0 fw-bold">{{ 'WEB_CONFIG.TITLE' | translate }}</h2>
+                <p class="m-0 text-white-50 opacity-75">ID: {{compteWeb().idCompteClientWeb}} | {{
+                    'WEB_CONFIG.SUBTITLE_DESC' | translate }}</p>
             </div>
             <button type="button" class="btn btn-white shadow-sm fw-bold px-4" (click)="saveChange()">
-                <i class="fa fa-save me-2 text-primary"></i> Sauvegarder
+                <i class="fa fa-save me-2 text-primary"></i> {{ 'COMMON.SAVE' | translate }}
             </button>
         </div>
     </div>
@@ -15,64 +16,105 @@
     <div class="row g-4">
         <!-- Basic info and Options -->
         <div class="col-lg-8">
-            <div class="premium-card h-100 shadow-sm">
-                <h5 class="fw-bold mb-4 border-bottom pb-2"><i class="fa fa-user-circle me-2 text-primary"></i> Informations Générales</h5>
-                
+            <div class="premium-card h-100 shadow-sm premium-card-overflow">
+                <h5 class="fw-bold mb-4 border-bottom pb-2"><i class="fa fa-user-circle me-2 text-primary"></i> {{
+                    'WEB_CONFIG.GENERAL_INFO' | translate }}</h5>
+
                 <div class="row g-3">
                     <div class="col-md-6">
                         <div class="form-floating mb-3 shadow-sm rounded">
-                            <input type="text" class="form-control border-0 bg-light" formControlName="login" id="configLogin" placeholder="Login">
-                            <label for="configLogin">Login</label>
+                            <input type="text" class="form-control border-0 bg-light" formControlName="login"
+                                id="configLogin" placeholder="Login">
+                            <label for="configLogin">{{ 'AUTH.USERNAME' | translate }}</label>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating mb-3 shadow-sm rounded">
-                            <input type="text" class="form-control border-0 bg-light" formControlName="password" id="configPassword" placeholder="Mot de passe">
-                            <label for="configPassword">Mot de passe</label>
+                            <input type="text" class="form-control border-0 bg-light" formControlName="password"
+                                id="configPassword" placeholder="{{ 'AUTH.PASSWORD' | translate }}">
+                            <label for="configPassword">{{ 'AUTH.PASSWORD' | translate }}</label>
                         </div>
                     </div>
-                    
+
                     <div class="col-md-6">
-                        <div class="form-floating mb-3 shadow-sm rounded">
-                            <select formControlName="code_pays" class="form-select border-0 bg-light" id="configCodePays">
+                        <div class="mb-3 px-1">
+                            <label for="configCodePays" class="prominent-label-custom">{{ 'WEB_CONFIG.COUNTRY_CODE' |
+                                translate }}</label>
+                            <select formControlName="code_pays" class="form-select config-select-premium border-0"
+                                id="configCodePays" title="{{ 'WEB_CONFIG.COUNTRY_CODE' | translate }}">
                                 @for (codePays of codesPays(); track codePays.value) {
-                                    <option [value]="codePays.value">{{codePays.key}} (+{{codePays.value}})</option>
+                                <option [value]="codePays.value">(+{{codePays.value}}) {{codePays.key}}</option>
                                 }
                             </select>
-                            <label for="configCodePays">Code Pays</label>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="form-floating mb-3 shadow-sm rounded">
-                            <input type="text" class="form-control border-0 bg-light" bsDatepicker formControlName="date_expiration"
-                                [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }" placement="bottom" placeholder="Date expiration" id="configExp">
-                            <label for="configExp">Date d'expiration</label>
+                        <div class="form-group mb-3 custom-datepicker-container">
+                            <label for="configExp" class="p-datepicker-label" style="font-size: 0.85rem; color: #6c757d;">{{ 'SERVER_ACCOUNTS.EXPIRATION_DATE' | translate }}</label>
+                            <p-datepicker formControlName="date_expiration" id="configExp"
+                                dateFormat="dd-mm-yy" [showIcon]="true" [appendTo]="'body'"
+                                styleClass="w-100" inputStyleClass="form-control bg-light border-0 shadow-sm px-3 py-2 text-dark w-100">
+                            </p-datepicker>
                         </div>
                     </div>
 
                     <div class="col-12">
                         <div class="mb-3 px-1">
-                            <label class="small fw-bold text-secondary text-uppercase mb-2">Options du Compte</label>
-                            <ng-multiselect-dropdown [placeholder]="'Sélectionner des options'" [settings]="dropdownSettings()"
-                                [data]="options()" formControlName="options" class="premium-multiselect">
+                            <label for="configOptions" class="small fw-bold text-secondary text-uppercase mb-2">{{
+                                'WEB_CONFIG.ACCOUNT_OPTIONS' | translate }}</label>
+                            <ng-multiselect-dropdown id="configOptions" [placeholder]="'WEB_CONFIG.SELECT_OPTIONS' | translate"
+                                [settings]="dropdownSettings" [data]="options()" formControlName="options"
+                                class="premium-multiselect" aria-label="{{ 'WEB_CONFIG.ACCOUNT_OPTIONS' | translate }}">
                             </ng-multiselect-dropdown>
                         </div>
                     </div>
 
                     <div class="col-md-6">
                         <div class="form-floating mb-3 shadow-sm rounded">
-                            <input type="number" min="0" max="4" formControlName="pool" class="form-control border-0 bg-light" id="configPool" placeholder="Pool">
-                            <label for="configPool">Pool (Zonage)</label>
+                            <input type="number" min="0" max="4" formControlName="pool"
+                                class="form-control border-0 bg-light" id="configPool" placeholder="Pool">
+                            <label for="configPool">{{ 'WEB_CONFIG.POOL_ZONAGE' | translate }}</label>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating mb-3 shadow-sm rounded">
                             <select formControlName="area" class="form-select border-0 bg-light" id="configArea">
                                 @for (t of regions; track t) {
-                                    <option [value]="t">{{ t }}</option>
+                                <option [value]="t">{{ t }}</option>
                                 }
                             </select>
-                            <label for="configArea">Région / Secteur</label>
+                            <label for="configArea">{{ 'WEB_CONFIG.REGION_SECTOR' | translate }}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="border-top pt-3 mt-1">
+                            <h6 class="fw-bold text-secondary text-uppercase mb-3" style="font-size: 0.75rem; letter-spacing: 0.5px;">
+                                <i class="fa fa-coins me-2 text-warning"></i>Billing Configuration
+                            </h6>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <div class="form-floating mb-3 shadow-sm rounded">
+                                        <input type="number" min="0" step="0.001" formControlName="deviceFeeByDay"
+                                            class="form-control border-0 bg-light" id="configDeviceFeeByDay" placeholder="0">
+                                        <label for="configDeviceFeeByDay">Device Fee / Day (TND)</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-floating mb-3 shadow-sm rounded">
+                                        <input type="number" min="0" step="0.001" formControlName="accountFeeByMonth"
+                                            class="form-control border-0 bg-light" id="configAccountFeeByMonth" placeholder="0">
+                                        <label for="configAccountFeeByMonth">Account Fee / Month (TND)</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-floating mb-3 shadow-sm rounded">
+                                        <input type="number" min="0" step="0.001" formControlName="simCardFeePerMonth"
+                                            class="form-control border-0 bg-light" id="configSimCardFeePerMonth" placeholder="0">
+                                        <label for="configSimCardFeePerMonth">SIM Card Fee / Month (TND)</label>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -82,37 +124,57 @@
         <!-- Contact and Notif -->
         <div class="col-lg-4">
             <div class="premium-card h-100 shadow-sm">
-                <h5 class="fw-bold mb-4 border-bottom pb-2"><i class="fa fa-envelope-open me-2 text-primary"></i> Contact & Notifications</h5>
-                
+                <h5 class="fw-bold mb-4 border-bottom pb-2"><i class="fa fa-envelope-open me-2 text-primary"></i> {{
+                    'WEB_CONFIG.CONTACT_NOTIF' | translate }}</h5>
+
                 <div class="form-floating mb-3 shadow-sm rounded">
-                    <input type="text" class="form-control border-0 bg-light" formControlName="firstname" id="configFirstname" placeholder="Nom">
-                    <label for="configFirstname">Nom</label>
+                    <input type="text" class="form-control border-0 bg-light" formControlName="firstname"
+                        id="configFirstname" placeholder="{{ 'COMMON.LASTNAME' | translate }}">
+                    <label for="configFirstname">{{ 'COMMON.LASTNAME' | translate }}</label>
                 </div>
                 <div class="form-floating mb-3 shadow-sm rounded">
-                    <input type="text" class="form-control border-0 bg-light" formControlName="lastname" id="configLastname" placeholder="Prénom">
-                    <label for="configLastname">Prénom</label>
+                    <input type="text" class="form-control border-0 bg-light" formControlName="lastname"
+                        id="configLastname" placeholder="{{ 'COMMON.FIRSTNAME' | translate }}">
+                    <label for="configLastname">{{ 'COMMON.FIRSTNAME' | translate }}</label>
                 </div>
                 <div class="form-floating mb-3 shadow-sm rounded">
-                    <input type="email" class="form-control border-0 bg-light" formControlName="email" id="configEmail" placeholder="Email">
+                    <input type="email" class="form-control border-0 bg-light" formControlName="email" id="configEmail"
+                        placeholder="Email">
                     <label for="configEmail">Email</label>
                 </div>
                 <div class="form-floating mb-3 shadow-sm rounded">
-                    <input type="tel" class="form-control border-0 bg-light" formControlName="telephone" id="configTelephone" placeholder="Téléphone">
-                    <label for="configTelephone">Téléphone</label>
+                    <input type="tel" class="form-control border-0 bg-light" formControlName="telephone"
+                        id="configTelephone" placeholder="{{ 'COMMON.PHONE' | translate }}">
+                    <label for="configTelephone">{{ 'COMMON.PHONE' | translate }}</label>
                 </div>
 
-                <div class="premium-card bg-light border-0 shadow-none mt-3 p-3">
-                    <div class="form-floating mb-3 bg-white rounded shadow-sm">
-                        <select formControlName="notificationSubquery" class="form-select border-0" id="configNotifType">
+                <div class="mt-4 pt-3 border-top border-light">
+                    <!-- Notification Section Header -->
+                    <div
+                        class="d-flex align-items-center justify-content-between mb-4 p-3 bg-light bg-opacity-50 rounded-3 transition-hover border border-light shadow-none">
+                        <div class="d-flex flex-column">
+                            <span class="fw-bold text-indigo small text-uppercase letter-spacing-1">{{
+                                'WEB_CONFIG.MOBILE_NOTIF' | translate }}</span>
+                        </div>
+                        <div class="form-check form-switch m-0 d-flex align-items-center">
+                            <input class="form-check-input scale-150 cursor-pointer ms-0" type="checkbox"
+                                formControlName="mobileNotif" id="configMobileNotif"
+                                title="{{ 'WEB_CONFIG.MOBILE_NOTIF' | translate }}"
+                                aria-label="{{ 'WEB_CONFIG.MOBILE_NOTIF' | translate }}">
+                        </div>
+                    </div>
+
+                    <!-- Notification Type -->
+                    <div class="mb-3 px-1">
+                        <label for="configNotifType" class="prominent-label-custom">{{ 'WEB_CONFIG.NOTIF_TYPE' |
+                            translate }}</label>
+                        <select formControlName="notificationSubquery"
+                            class="form-select config-select-premium border-0 shadow-sm" id="configNotifType"
+                            title="{{ 'WEB_CONFIG.NOTIF_TYPE' | translate }}">
                             @for (notifSub of notifSubs; track notifSub) {
-                                <option [value]="notifSub">{{ notifSub }}</option>
+                            <option [value]="notifSub">{{ notifSub }}</option>
                             }
                         </select>
-                        <label for="configNotifType">Type de notification</label>
-                    </div>
-                    <div class="form-check form-switch p-0 d-flex align-items-center justify-content-between">
-                        <label class="form-check-label fw-bold text-secondary small text-uppercase ms-0" for="configMobileNotif">Notifications Mobile</label>
-                        <input class="form-check-input ms-0 scale-125" type="checkbox" formControlName="mobileNotif" id="configMobileNotif">
                     </div>
                 </div>
             </div>
@@ -122,20 +184,24 @@
         <div class="col-12 mt-4">
             <div class="premium-card p-0 overflow-hidden shadow-sm">
                 <div class="p-4 bg-light bg-opacity-50 border-bottom d-flex justify-content-between align-items-center">
-                    <h5 class="m-0 fw-bold"><i class="fa fa-server me-2 text-primary"></i> Serveur Associé</h5>
-                    <div class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill border border-primary border-opacity-10">
-                        ID: {{serverAccount().idCompteClientServer}}
+                    <h5 class="m-0 fw-bold"><i class="fa fa-server me-2 text-primary"></i> {{
+                        'WEB_CONFIG.ASSOCIATED_SERVER' | translate }}</h5>
+                    <div
+                        class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill border border-primary border-opacity-10">
+                        ID: {{serverAccount().idCompteClientServer || 'N/A'}}
                     </div>
                 </div>
-                
-                <p-table [value]="[serverAccount()]" styleClass="p-datatable-sm p-datatable-gridlines premium-table-custom" responsiveLayout="scroll">
+
+                <p-table [value]="[serverAccount()]"
+                    styleClass="p-datatable-sm p-datatable-gridlines premium-table-custom" responsiveLayout="scroll">
                     <ng-template pTemplate="header">
                         <tr>
-                            <th>Pseudo</th>
-                            <th>Adresse IP</th>
-                            <th>Création</th>
-                            <th>Statut / Expiration</th>
-                            <th class="text-end" style="width: 250px">Actions</th>
+                            <th scope="col">{{ 'SERVER_ACCOUNTS.PSEUDO' | translate }}</th>
+                            <th scope="col">{{ 'SERVER_ACCOUNTS.IP_ENDPOINT' | translate }}</th>
+                            <th scope="col">{{ 'WEB_ACCOUNTS.CREATED_AT' | translate }}</th>
+                            <th scope="col">{{ 'WEB_CONFIG.STATE_ACTUAL' | translate }}</th>
+                            <th scope="col" class="text-end" style="width: 250px">{{ 'COMMON.ACTIONS' | translate }}
+                            </th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-server>
@@ -147,20 +213,28 @@
                                 <div class="d-flex align-items-center gap-2">
                                     <span class="text-secondary">{{server.date_Expiration | date:'dd MMM yyyy'}}</span>
                                     @if (server.during) {
-                                        <span class="badge bg-success bg-opacity-10 text-success rounded-pill border border-success border-opacity-10">Active</span>
+                                    <span
+                                        class="badge bg-success bg-opacity-10 text-success rounded-pill border border-success border-opacity-10">{{
+                                        'COMMON.ACTIVE' | translate }}</span>
                                     }
                                     @if (server.expired) {
-                                        <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill border border-danger border-opacity-10">Expiré</span>
+                                    <span
+                                        class="badge bg-danger bg-opacity-10 text-danger rounded-pill border border-danger border-opacity-10">{{
+                                        'SERVER_ACCOUNTS.EXPIRED' | translate }}</span>
                                     }
                                 </div>
                             </td>
                             <td class="text-end">
                                 <div class="btn-group gap-2">
-                                    <button type="button" class="btn btn-sm btn-outline-purple border-0" (click)="prepareDB(server.idCompteClientServer)" title="Préparer BDD">
-                                        <i class="fa fa-database me-1"></i> BDD
+                                    <button type="button" class="btn btn-sm btn-outline-purple border-0"
+                                        (click)="prepareDB(server.idCompteClientServer)"
+                                        [title]="'WEB_CONFIG.PREPARE_DB' | translate">
+                                        <i class="fa fa-database me-1"></i> {{ 'WEB_CONFIG.PREPARE_DB' | translate }}
                                     </button>
-                                    <button type="button" class="btn btn-sm btn-primary px-3" (click)="showDevises(server.idCompteClientServer)" title="Voir Boitiers">
-                                        <i class="fa fa-mobile me-1"></i> Boitiers
+                                    <button type="button" class="btn btn-sm btn-primary px-3"
+                                        (click)="showDevises(server.idCompteClientServer)"
+                                        [title]="'WEB_CONFIG.VIEW_DEVICES' | translate">
+                                        <i class="fa fa-mobile me-1"></i> {{ 'WEB_CONFIG.VIEW_DEVICES' | translate }}
                                     </button>
                                 </div>
                             </td>
@@ -172,68 +246,84 @@
 
         <!-- Boitier Sub-Section -->
         @if (boitiersClicked()) {
-            <div class="col-12 mt-4 fade-in">
-                <div class="premium-card p-0 overflow-hidden border-warning border-opacity-25 shadow-sm">
-                    <div class="p-4 bg-warning bg-opacity-10 border-bottom d-flex justify-content-between align-items-center">
-                        <h5 class="m-0 fw-bold text-dark"><i class="fa fa-microchip me-2 text-warning"></i> Terminaux ({{boitiers().length}})</h5>
-                        <div class="d-flex gap-2">
-                            @if (getNumberOfBoitiersNotInstall() > 0) {
-                                <span class="badge bg-warning text-dark border border-warning border-opacity-25 rounded-pill px-3">
-                                    <i class="fa fa-warning me-1"></i> {{getNumberOfBoitiersNotInstall()}} non installés
-                                </span>
-                            }
-                            @if (selectedBoitiersIds().length > 0) {
-                                <span class="badge bg-dark text-white rounded-pill px-3">
-                                    {{selectedBoitiersIds().length}} sélectionnés
-                                </span>
-                            }
-                        </div>
+        <div class="col-12 mt-4 fade-in">
+            <div class="premium-card p-0 overflow-hidden border-warning border-opacity-25 shadow-sm">
+                <div
+                    class="p-4 bg-warning bg-opacity-10 border-bottom d-flex justify-content-between align-items-center">
+                    <h5 class="m-0 fw-bold text-dark"><i class="fa fa-microchip me-2 text-warning"></i> {{
+                        'WEB_CONFIG.TERMINALS' | translate }} ({{boitiers().length}})</h5>
+                    <div class="d-flex gap-2">
+                        @if (getNumberOfBoitiersNotInstall() > 0) {
+                        <span
+                            class="badge bg-warning text-dark border border-warning border-opacity-25 rounded-pill px-3">
+                            <i class="fa fa-warning me-1"></i> {{getNumberOfBoitiersNotInstall()}} {{
+                            'WEB_CONFIG.NOT_INSTALLED' | translate }}
+                        </span>
+                        }
+                        @if (selectedBoitiersIds().length > 0) {
+                        <span class="badge bg-dark text-white rounded-pill px-3">
+                            {{selectedBoitiersIds().length}} {{ 'WEB_CONFIG.SELECTED' | translate }}
+                        </span>
+                        }
                     </div>
-                    
-                    <p-table [value]="boitiers()" [paginator]="true" [rows]="10" 
-                        [rowsPerPageOptions]="[10,20,50,100]"
+                </div>
+
+                <div class="table-responsive table-container-max-height">
+                    <p-table [value]="boitiers()" [paginator]="false"
                         styleClass="p-datatable-sm p-datatable-gridlines premium-table-custom"
                         responsiveLayout="scroll">
                         <ng-template pTemplate="header">
                             <tr>
-                                <th style="width: 50px">
+                                <th scope="col" style="width: 50px">
                                     <div class="form-check m-0">
-                                        <input class="form-check-input" type="checkbox" (change)="onCheckedAllBoitiers()"
+                                        <input class="form-check-input" type="checkbox" id="selectAllBoitiers"
+                                            (change)="onCheckedAllBoitiers()"
                                             [checked]="boitiers().length === selectedBoitiersIds().length && boitiers().length > 0"
-                                            title="Tout sélectionner">
+                                            title="{{ 'WEB_CONFIG.SELECT_ALL' | translate }}"
+                                            aria-label="{{ 'WEB_CONFIG.SELECT_ALL' | translate }}">
                                     </div>
                                 </th>
-                                <th>Identifiant #</th>
-                                <th>État Actuel</th>
-                                <th class="text-end" style="width: 200px">Configurations</th>
+                                <th scope="col">{{ 'COMMON.ID' | translate }} #</th>
+                                <th scope="col">{{ 'WEB_CONFIG.STATE_ACTUAL' | translate }}</th>
+                                <th scope="col" class="text-end" style="width: 200px">{{ 'SERVER_DETAILS.CONFIGURATION'
+                                    | translate }}</th>
                             </tr>
                         </ng-template>
                         <ng-template pTemplate="body" let-boitier>
                             <tr class="align-middle">
                                 <td>
                                     <div class="form-check m-0">
-                                        <input class="form-check-input" type="checkbox" (change)="onCheckedBoitier(boitier.numBoitier)"
+                                        <input class="form-check-input" type="checkbox"
+                                            [id]="'checkBoitier' + boitier.numBoitier"
+                                            (change)="onCheckedBoitier(boitier.numBoitier)"
                                             [checked]="isCheckedBoitier(boitier.numBoitier)"
-                                            title="Sélectionner le boitier">
+                                            title="{{ 'WEB_CONFIG.SELECT_DEVICE' | translate }}"
+                                            aria-label="{{ 'WEB_CONFIG.SELECT_DEVICE' | translate }}">
                                     </div>
                                 </td>
                                 <td class="fw-bold text-primary">{{boitier.numBoitier}}</td>
                                 <td>
                                     @if (boitier.etatBoitier==='INSTALLED') {
-                                        <span class="badge bg-success bg-opacity-10 text-success rounded-pill border border-success border-opacity-10 px-3">Installé</span>
+                                    <span
+                                        class="badge bg-success bg-opacity-10 text-success rounded-pill border border-success border-opacity-10 px-3">{{
+                                        'WEB_CONFIG.INSTALLED' | translate }}</span>
                                     } @else {
-                                        <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill border border-danger border-opacity-10 px-3">Non installé</span>
+                                    <span
+                                        class="badge bg-danger bg-opacity-10 text-danger rounded-pill border border-danger border-opacity-10 px-3">{{
+                                        'WEB_CONFIG.NOT_INSTALLED_STATE' | translate }}</span>
                                     }
                                 </td>
                                 <td class="text-end">
                                     @if (boitier.etatBoitier==='INSTALLED') {
-                                        <button type="button" class="btn btn-sm btn-outline-success border-0" (click)="editBoitier(boitier)">
-                                            <i class="fa fa-cogs me-1"></i> Configurer
-                                        </button>
+                                    <button type="button" class="btn btn-sm btn-outline-success border-0"
+                                        (click)="editBoitier(boitier)">
+                                        <i class="fa fa-cogs me-1"></i> {{ 'COMMON.CONFIGURE' | translate }}
+                                    </button>
                                     } @else {
-                                        <button type="button" class="btn btn-sm btn-outline-warning border-0" (click)="prepareDBForSingleDevice(boitier.idBoitier)">
-                                            <i class="fa fa-wrench me-1"></i> Préparer
-                                        </button>
+                                    <button type="button" class="btn btn-sm btn-outline-warning border-0"
+                                        (click)="prepareDBForSingleDevice(boitier.numBoitier)">
+                                        <i class="fa fa-wrench me-1"></i> {{ 'WEB_CONFIG.PREPARE' | translate }}
+                                    </button>
                                     }
                                 </td>
                             </tr>
@@ -241,200 +331,418 @@
                     </p-table>
                 </div>
             </div>
+        </div>
         }
     </div>
 </div>
 
-<!-- Modal Recalculate / Config (Modernized) -->
-@if (showConfigModal()) {
-    <div class="modal-backdrop fade show modal-backdrop-glass" (click)="closeConfigModal()"></div>
-    <div class="modal fade show d-block modal-config-zindex" id="ModalConfig" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content modal-content-premium border-0 shadow-lg">
-                <div class="modal-header header-gradient border-0 p-4">
-                    <div class="text-white">
-                        <h4 class="m-0 fw-bold">Recalcule & Options BDD</h4>
-                        <p class="m-0 small text-white-50 opacity-75">Boitier: {{selectedBoitierId()}}</p>
-                    </div>
-                    <button type="button" class="btn-close btn-close-white" (click)="closeConfigModal()" aria-label="Close"></button>
+<!-- Modal Recalculate / Config (Native Dialog) -->
+<dialog #configModal id="ModalConfig" class="border-0 rounded-4 shadow-lg p-0 overflow-hidden"
+    style="max-width: 900px; width: 95%; max-height: 90vh; height: 90vh;">
+    <div class="d-flex flex-column h-100 w-100">
+        <div class="d-flex flex-column flex-grow-1 overflow-hidden bg-light rounded-4">
+            <!-- Header -->
+            <div class="header-gradient border-0 px-4 py-3 d-flex justify-content-between align-items-center flex-shrink-0"
+                style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);">
+                <div class="text-white d-flex flex-column gap-1">
+                    <h4 class="m-0 fw-bold fs-5"><i class="fa fa-cogs me-2"></i>{{ 'WEB_CONFIG.RECALC_TITLE' | translate }}</h4>
+                    <p class="m-0 small text-white-50">{{ 'SERVER_DETAILS.TERMINAL' | translate }}: <span class="fw-bold text-white">{{selectedBoitierId()}}</span></p>
                 </div>
-                
-                <div class="modal-body p-4 bg-light bg-opacity-50">
-                    @if (selectedBoitiersIds().length > 0) {
-                        <div class="premium-card bg-white mb-4 p-3 border-0 shadow-sm">
-                            <label class="small fw-bold text-secondary text-uppercase mb-2">Application Multi-Boitiers ({{selectedBoitiersIds().length}})</label>
-                            <div class="d-flex flex-wrap gap-1">
-                                @for (id of selectedBoitiersIds(); track id) {
-                                    <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-10">{{id}}</span>
+                <button type="button" class="btn-close btn-close-white opacity-75" (click)="closeConfigModal()"
+                    aria-label="Close"></button>
+            </div>
+
+            <!-- Tab Navigation Bar -->
+            <div class="bg-white border-bottom px-4 py-2 d-flex gap-2 flex-shrink-0 tab-nav-container overflow-x-auto">
+                <button type="button" class="tab-nav-btn" [class.active]="activeTab() === 'recalculate'" (click)="activeTab.set('recalculate')">
+                    <i class="fa fa-history me-2"></i>{{ 'WEB_CONFIG.HISTORIC_RECALC' | translate }}
+                </button>
+                <button type="button" class="tab-nav-btn" [class.active]="activeTab() === 'options'" (click)="activeTab.set('options')">
+                    <i class="fa fa-toggle-on me-2"></i>{{ 'WEB_CONFIG.DEVICE_OPTIONS' | translate }}
+                </button>
+                <button type="button" class="tab-nav-btn" [class.active]="activeTab() === 'bdd'" (click)="activeTab.set('bdd')">
+                    <i class="fa fa-filter me-2"></i>{{ 'WEB_CONFIG.BDD_CONFIG_FILTER' | translate }}
+                </button>
+                <button type="button" class="tab-nav-btn" [class.active]="activeTab() === 'stream'" (click)="activeTab.set('stream')">
+                    <i class="fa fa-rss me-2"></i>{{ 'WEB_CONFIG.STREAM_SETTINGS' | translate }}
+                </button>
+                <button type="button" class="tab-nav-btn position-relative" [class.active]="activeTab() === 'logs'" (click)="activeTab.set('logs')">
+                    <i class="fa fa-terminal me-2"></i>{{ 'WEB_CONFIG.CONSOLE_STREAM' | translate }}
+                    @if (notifications().length > 0) {
+                        <span class="badge-dot" [class.bg-danger]="getNumberOfNotificationErrors() > 0" [class.bg-success]="getNumberOfNotificationErrors() === 0"></span>
+                    }
+                </button>
+            </div>
+
+            <!-- Scrollable Content Area -->
+            <div class="p-4 bg-light overflow-y-auto flex-grow-1">
+                @if (selectedBoitiersIds().length > 0) {
+                <div class="bg-white rounded-4 p-3 mb-4 shadow-sm border border-secondary border-opacity-10 d-flex align-items-center gap-3">
+                    <span class="small fw-bold text-secondary text-uppercase m-0">{{ 'WEB_CONFIG.MULTI_DEVICE_APP' | translate }} ({{selectedBoitiersIds().length}})</span>
+                    <div class="d-flex flex-wrap gap-2">
+                        @for (id of selectedBoitiersIds(); track id) {
+                        <span class="badge bg-indigo-50 text-indigo border border-indigo-200 rounded-pill px-3 py-2 text-primary"
+                            style="background: #eef2ff; color: #4f46e5;">{{id}}</span>
+                        }
+                    </div>
+                </div>
+                }
+
+                <!-- TAB 1: RECALCULATE -->
+                <div class="row justify-content-center fade-in" [hidden]="activeTab() !== 'recalculate'">
+                    <div class="col-md-10 col-lg-8" [formGroup]="recalculateForm">
+                        <div class="bg-white rounded-4 shadow-sm border border-secondary border-opacity-10 p-4">
+                            <h6 class="fw-bold mb-4 text-dark fs-6 d-flex align-items-center">
+                                <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-2 me-3 d-inline-flex">
+                                    <i class="fa fa-history"></i>
+                                </div>
+                                {{ 'WEB_CONFIG.HISTORIC_RECALC' | translate }}
+                            </h6>
+
+                            <div class="row g-3">
+                                <div class="col-sm-6" *ngIf="dateBoolean">
+                                    <div class="bg-light rounded-3 overflow-hidden shadow-sm border-0 p-3">
+                                        <label for="recalculateStartDate" class="form-label text-secondary fw-bold text-uppercase mb-2"
+                                               style="font-size: 0.75rem; letter-spacing: 0.5px;">{{ 'WEB_CONFIG.START_DATE' | translate }}</label>
+                                        <p-datepicker id="recalculateStartDate" formControlName="datestart"
+                                                      dateFormat="dd-mm-yy" [showIcon]="true" [appendTo]="'body'" [showTime]="true"
+                                                      [maxDate]="maxDate"
+                                                      [showOnFocus]="true"
+                                                      styleClass="w-100"
+                                                      inputStyleClass="form-control bg-white border-0 shadow-sm fs-6 px-3 py-2 text-dark w-100"
+                                                      [readonlyInput]="false">
+                                        </p-datepicker>
+                                    </div>
+                                </div>
+
+                                <div [class.col-sm-6]="dateBoolean" [class.col-sm-12]="!dateBoolean">
+                                    <div class="bg-light rounded-3 overflow-hidden shadow-sm border-0 p-3">
+                                        <label for="recalculateType" class="form-label text-secondary fw-bold text-uppercase mb-2"
+                                               style="font-size: 0.75rem; letter-spacing: 0.5px;">{{ 'WEB_CONFIG.RECALC_NATURE' | translate }}</label>
+                                        <div class="input-group input-group-lg">
+                                            <span class="input-group-text bg-transparent border-0 text-muted px-3"><i class="fa fa-list-ul"></i></span>
+                                            <select id="recalculateType" formControlName="typeRecalcule"
+                                                    class="form-select bg-white border-0 shadow-sm fs-6 px-3 py-2 fw-medium text-dark cursor-pointer"
+                                                    [title]="'WEB_CONFIG.RECALC_NATURE' | translate">
+                                                <option *ngFor="let type of recalculateTypes" [value]="type.value">{{ type.label | translate }}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="button"
+                                class="btn btn-lg w-100 fw-bold rounded-3 text-white transition-all border-0 shadow-sm mt-4 btn-purple"
+                                [disabled]="recalculateForm.invalid"
+                                (click)="recalculate()">
+                                <i class="fa me-2" [class.fa-retweet]="!loadingRecalculate()"
+                                    [class.fa-spinner]="loadingRecalculate()"
+                                    [class.fa-spin]="loadingRecalculate()"></i>
+                                {{loadingRecalculate() ? ('WEB_CONFIG.PROCESSING' | translate) : ('WEB_CONFIG.START_RECALC' | translate)}}
+                            </button>
+
+                            @if(showSqlBox) {
+                            <div class="sql-query-box mt-4 animate-slide-up">
+                                <h6 class="sql-query-title">
+                                    <i class="fa fa-code text-primary"></i>
+                                    Requêtes SQL
+                                </h6>
+                                <pre class="sql-query-content">{{sqlQuery}}</pre>
+                            </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 2: DEVICE OPTIONS -->
+                @if (activeTab() === 'options') {
+                <div class="row justify-content-center fade-in" [formGroup]="deviceOptForm">
+                    <div class="col-md-11" style="max-width: 800px;">
+                        <div class="bg-white rounded-4 shadow-sm border border-secondary border-opacity-10 p-4">
+                            <h6 class="fw-bold mb-4 text-dark fs-6 d-flex align-items-center">
+                                <div class="bg-info bg-opacity-10 text-info rounded-circle p-2 me-3 d-inline-flex"><i class="fa fa-toggle-on"></i></div> {{ 'WEB_CONFIG.DEVICE_OPTIONS' | translate }}
+                            </h6>
+
+                            <div class="row g-3 mb-4">
+                                @for (opt of optionsList; track opt.key) {
+                                <div class="col-md-4 col-sm-6">
+                                    <div class="option-card-premium" [class.active]="deviceOptForm.get(opt.key)?.value">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="option-icon-container">
+                                                <i class="fa {{opt.icon}}"></i>
+                                            </div>
+                                            <span class="option-label text-dark fw-bold">{{opt.label}}</span>
+                                        </div>
+                                        <div class="form-check form-switch p-0 m-0 d-flex align-items-center">
+                                            <input class="form-check-input cursor-pointer m-0 ms-0"
+                                                style="width: 2.2em; height: 1.1em;" type="checkbox" role="switch"
+                                                [formControlName]="opt.key" [id]="'opt'+opt.key" [title]="opt.label">
+                                        </div>
+                                    </div>
+                                </div>
                                 }
                             </div>
-                        </div>
-                    }
 
-                    <div class="row g-4">
-                        <!-- Recalcule Form side -->
-                        <div class="col-md-6" [formGroup]="recalculateForm">
-                            <div class="premium-card bg-white h-100 border-0 shadow-sm p-3">
-                                <h6 class="fw-bold mb-3 border-bottom pb-2"><i class="fa fa-history me-2 text-primary"></i> Recalcule Historique</h6>
-                                <div class="mb-3" *ngIf="dateBoolean">
-                                    <label class="form-label small text-secondary fw-bold">Date de début</label>
-                                    <input type="text" class="form-control bg-light border-0 shadow-none" bsDatepicker formControlName="datestart" [maxDate]="maxDate"
-                                        [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY, HH:mm' }" placement="bottom" placeholder="Choisir une date..." autocomplete="off">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label small text-secondary fw-bold">Nature du Recalcule</label>
-                                    <select formControlName="typeRecalcule" class="form-select bg-light border-0 shadow-none" title="Nature du recalcule">
-                                        <option value="recalcule trajet">recalcule trajet</option>
-                                        <option value="recalcule boitier">recalcule boitier</option>
-                                        <option value="recalcule carburant">recalcule carburant</option>
-                                        <option value="recalcule alert">recalcule alert</option>
-                                        <option value="recalcule Temps reel">recalcule Temps reel</option>
-                                    </select>
-                                </div>
-                                <button type="button" class="btn btn-primary w-100 mt-2 fw-bold" [disabled]="recalculateForm.invalid" (click)="recalculate()">
-                                    <i class="fa me-2" [class.fa-retweet]="!loadingRecalculate()" [class.fa-spinner]="loadingRecalculate()" [class.fa-spin]="loadingRecalculate()"></i>
-                                    {{loadingRecalculate() ? 'Traitement...' : 'Démarrer le Recalcule'}}
-                                </button>
-                            </div>
+                            <button type="button"
+                                class="btn btn-dark text-white rounded-3 py-3 fw-bold w-100 shadow-sm border-0 transition-all"
+                                (click)="editDeviceOptionConfig()" [disabled]="loadingEditDeviceOption()">
+                                <i class="fa fa-save me-2"></i> {{ 'WEB_CONFIG.SAVE_OPTIONS' | translate }}
+                            </button>
                         </div>
+                    </div>
+                </div>
+                }
 
-                        <!-- Device Options Form side -->
-                        <div class="col-md-6" [formGroup]="deviceOptForm">
-                            <div class="premium-card bg-white h-100 border-0 shadow-sm p-3">
-                                <h6 class="fw-bold mb-3 border-bottom pb-2"><i class="fa fa-toggle-on me-2 text-primary"></i> Options Terminal</h6>
-                                <div class="row g-2">
-                                    @for (opt of ['useIgnition', 'useFuel', 'useTemp', 'useFms', 'useJ1708', 'useIdDriver', 'useStop']; track opt) {
-                                        <div class="col-6">
-                                            <div class="form-check form-switch bg-light p-2 ps-5 rounded-3 border-0 h-100 d-flex align-items-center">
-                                                <input class="form-check-input ms-0 mt-0 scale-110" type="checkbox" [formControlName]="opt" [id]="'opt'+opt" title="{{opt}}">
-                                                <label class="form-check-label small fw-bold text-secondary text-capitalize" [for]="'opt'+opt">{{opt.replace('use', '')}}</label>
-                                            </div>
+                <!-- TAB 3: BDD CONFIG -->
+                @if (activeTab() === 'bdd') {
+                <div class="row justify-content-center fade-in" [formGroup]="pathConfigForm">
+                    <div class="col-md-11" style="max-width: 800px;">
+                        <div class="bg-white rounded-4 shadow-sm border border-secondary border-opacity-10 p-4">
+                            <h6 class="fw-bold mb-4 text-dark fs-6 d-flex align-items-center">
+                                <div class="bg-success bg-opacity-10 text-success rounded-circle p-2 me-3 d-inline-flex">
+                                    <i class="fa fa-filter"></i>
+                                </div>
+                                {{ 'WEB_CONFIG.BDD_CONFIG_FILTER' | translate }}
+                            </h6>
+
+                            <div class="row g-3">
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="bg-light p-3 rounded-3 border border-secondary border-opacity-10 shadow-sm h-100">
+                                        <div class="d-flex align-items-center gap-2 mb-2">
+                                            <i class="fa fa-route text-primary"></i>
+                                            <label for="pathMinSec" class="form-label text-secondary fw-bold text-uppercase m-0" style="font-size: 0.75rem;">Path Min</label>
                                         </div>
-                                    }
-                                </div>
-                                <div class="mt-3 pt-3 border-top d-flex gap-2">
-                                    <button type="button" class="btn btn-outline-success btn-sm flex-fill fw-bold" (click)="editDeviceOptionConfig()" [disabled]="loadingEditDeviceOption()">
-                                        <i class="fa fa-save me-1"></i> Options
-                                    </button>
-                                    <button type="button" class="btn btn-outline-danger btn-sm flex-fill fw-bold" (click)="resetOdometre()" [disabled]="loadingResetOdometre()">
-                                        <i class="fa fa-history me-1"></i> Odo
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- BDD Configuration -->
-                        <div class="col-12" [formGroup]="pathConfigForm">
-                            <div class="premium-card bg-white border-0 shadow-sm p-3">
-                                <h6 class="fw-bold mb-3 border-bottom pb-2"><i class="fa fa-database me-2 text-primary"></i> Configurations BDD (Filtrage)</h6>
-                                <div class="row g-3">
-                                    <div class="col-md-4">
-                                        <label class="form-label small text-secondary fw-bold">Path Min (sec)</label>
-                                        <select class="form-select bg-light border-0 shadow-none" formControlName="pathMinSec" title="Path Min (sec)">
-                                            @for (t of [30,60,90,120,150,180,210,240,270,300]; track t) { <option [value]="t">{{t}}s</option> }
-                                        </select>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label small text-secondary fw-bold">Stop Min (sec)</label>
-                                        <select class="form-select bg-light border-0 shadow-none" formControlName="stopMinSec" title="Stop Min (sec)">
-                                            @for (t of [30,60,90,120,150,180,210,240,270,300]; track t) { <option [value]="t">{{t}}s</option> }
-                                        </select>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label small text-secondary fw-bold">Pause Min (sec)</label>
-                                        <select class="form-select bg-light border-0 shadow-none" formControlName="pauseMinSec" title="Pause Min (sec)">
-                                            @for (t of [30,60,90,120,150,180,210,240,270,300]; track t) { <option [value]="t">{{t}}s</option> }
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label small text-secondary fw-bold">Distance Min (m)</label>
-                                        <select class="form-select bg-light border-0 shadow-none" formControlName="distanceMinMeter" title="Distance Min (m)">
-                                            @for (d of [5,10,20,50,100,300,500,1000]; track d) { <option [value]="d">{{d}}m</option> }
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label small text-secondary fw-bold">Vitesse Min (km/h)</label>
-                                        <select class="form-select bg-light border-0 shadow-none" formControlName="pathMinSpeed" title="Vitesse Min (km/h)">
-                                            @for (s of [1,5,10,15,20]; track s) { <option [value]="s">{{s}} km/h</option> }
-                                        </select>
-                                    </div>
-                                </div>
-                                <button type="button" class="btn btn-purple w-100 mt-4 text-white fw-bold shadow-sm" (click)="editPathConfig()" [disabled]="pathConfigForm.invalid || loadingEditPathConfig()">
-                                    <i class="fa me-2" [class.fa-check]="!loadingEditPathConfig()" [class.fa-spinner]="loadingEditPathConfig()" [class.fa-spin]="loadingEditPathConfig()"></i>
-                                    Initialiser la Configuration
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Technical Settings (Stream) -->
-                        <div class="col-12" [formGroup]="deviceSettingForm">
-                            <div class="premium-card bg-info bg-opacity-10 border-0 shadow-none p-3">
-                                <h6 class="fw-bold mb-3 border-bottom pb-2 text-dark"><i class="fa fa-rss me-2 text-info"></i> Paramètres de Flux (Streams)</h6>
-                                <div class="row g-3 align-items-end">
-                                    <div class="col-md-5">
-                                        <label class="form-label small text-secondary fw-bold">Rawstream IP</label>
-                                        <select class="form-select bg-white border-0 shadow-sm" formControlName="idIpAdresse" title="Rawstream IP">
-                                            @for (ip of ipAddresses(); track ip.idIpAdresse) {
-                                                <option [ngValue]="ip.idIpAdresse">{{ip.label}}</option>
+                                        <select id="pathMinSec" class="form-select bg-white border border-secondary border-opacity-25 shadow-none w-100" formControlName="pathMinSec" title="Path Min (sec)">
+                                            @for (t of [30,60,90,120,150,180,210,240,270,300]; track t) {
+                                                <option [value]="t">{{t}}s</option>
                                             }
                                         </select>
                                     </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label small text-secondary fw-bold">Stream ID</label>
-                                        <input type="number" class="form-control bg-white border-0 shadow-sm" formControlName="streamId" placeholder="ID" title="Stream ID">
-                                    </div>
-                                    <div class="col-md-3">
-                                        <button type="button" class="btn btn-dark w-100 fw-bold shadow-sm" (click)="editDeviceSetting()" [disabled]="loadingDeviceSetting()">
-                                            <i class="fa fa-sync-alt me-2"></i> Appliquer
-                                        </button>
+                                </div>
+
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="bg-light p-3 rounded-3 border border-secondary border-opacity-10 shadow-sm h-100">
+                                        <div class="d-flex align-items-center gap-2 mb-2">
+                                            <i class="fa fa-stop-circle text-danger"></i>
+                                            <label for="stopMinSec" class="form-label text-secondary fw-bold text-uppercase m-0" style="font-size: 0.75rem;">Stop Min</label>
+                                        </div>
+                                        <select id="stopMinSec" class="form-select bg-white border border-secondary border-opacity-25 shadow-none w-100" formControlName="stopMinSec" title="Stop Min (sec)">
+                                            @for (t of [30,60,90,120,150,180,210,240,270,300]; track t) {
+                                                <option [value]="t">{{t}}s</option>
+                                            }
+                                        </select>
                                     </div>
                                 </div>
-                                
-                                <div class="mt-4 pt-3 border-top border-dark border-opacity-10" [formGroup]="imeiSearchForm">
-                                    <label class="form-label small text-secondary fw-bold italic mb-2">Migrer / Rechercher IMEI Traccar</label>
-                                    <div class="input-group shadow-sm rounded overflow-hidden">
-                                        <input type="text" class="form-control border-0 bg-white" formControlName="imei" placeholder="Saisir IMEI..." title="Rechercher IMEI Traccar">
-                                        <button type="button" class="btn btn-secondary px-4 border-0" (click)="getSearchDeviceIemi(imeiSearchForm.get('imei')?.value)">
-                                            <i class="fa fa-search me-1"></i> Rechercher
+
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="bg-light p-3 rounded-3 border border-secondary border-opacity-10 shadow-sm h-100">
+                                        <div class="d-flex align-items-center gap-2 mb-2">
+                                            <i class="fa fa-pause-circle text-warning"></i>
+                                            <label for="pauseMinSec" class="form-label text-secondary fw-bold text-uppercase m-0" style="font-size: 0.75rem;">Pause Min</label>
+                                        </div>
+                                        <select id="pauseMinSec" class="form-select bg-white border border-secondary border-opacity-25 shadow-none w-100" formControlName="pauseMinSec" title="Pause Min (sec)">
+                                            @for (t of [30,60,90,120,150,180,210,240,270,300]; track t) {
+                                                <option [value]="t">{{t}}s</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-lg-6">
+                                    <div class="bg-light p-3 rounded-3 border border-secondary border-opacity-10 shadow-sm h-100">
+                                        <div class="d-flex align-items-center gap-2 mb-2">
+                                            <i class="fa fa-arrows-alt-h text-info"></i>
+                                            <label for="distanceMinMeter" class="form-label text-secondary fw-bold text-uppercase m-0" style="font-size: 0.75rem;">Distance Min (m)</label>
+                                        </div>
+                                        <select id="distanceMinMeter" class="form-select bg-white border border-secondary border-opacity-25 shadow-none w-100" formControlName="distanceMinMeter" title="Distance Min (m)">
+                                            @for (d of [5,10,20,50,100,300,500,1000]; track d) {
+                                                <option [value]="d">{{d}}m</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 col-lg-6">
+                                    <div class="bg-light p-3 rounded-3 border border-secondary border-opacity-10 shadow-sm h-100">
+                                        <div class="d-flex align-items-center gap-2 mb-2">
+                                            <i class="fa fa-tachometer-alt text-success"></i>
+                                            <label for="pathMinSpeed" class="form-label text-secondary fw-bold text-uppercase m-0" style="font-size: 0.75rem;">Vitesse Min (km/h)</label>
+                                        </div>
+                                        <select id="pathMinSpeed" class="form-select bg-white border border-secondary border-opacity-25 shadow-none w-100" formControlName="pathMinSpeed" title="Vitesse Min (km/h)">
+                                            @for (s of [1,5,10,15,20]; track s) {
+                                                <option [value]="s">{{s}} km/h</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="button"
+                                class="btn btn-lg w-100 mt-4 text-white fw-bold rounded-3 shadow-sm border-0 transition-all btn-purple"
+                                (click)="editPathConfig()"
+                                [disabled]="pathConfigForm.invalid || loadingEditPathConfig()">
+                                <i class="fa me-2" [class.fa-check]="!loadingEditPathConfig()"
+                                    [class.fa-spinner]="loadingEditPathConfig()"
+                                    [class.fa-spin]="loadingEditPathConfig()"></i>
+                                {{ 'WEB_CONFIG.INIT_CONFIG' | translate }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                }
+
+                <!-- TAB 4: STREAM & RESET SETTINGS -->
+                @if (activeTab() === 'stream') {
+                <div class="row justify-content-center fade-in">
+                    <div class="col-md-11" style="max-width: 800px;">
+                        
+                        <!-- Stream settings form -->
+                        <div class="bg-white rounded-4 shadow-sm border border-secondary border-opacity-10 p-4 mb-4" [formGroup]="deviceSettingForm">
+                            <h6 class="fw-bold mb-4 text-dark fs-6 d-flex align-items-center">
+                                <div class="bg-info bg-opacity-10 text-info rounded-circle p-2 me-3 d-inline-flex"><i class="fa fa-rss"></i></div> {{ 'WEB_CONFIG.STREAM_SETTINGS' | translate }}
+                            </h6>
+
+                            <div class="row g-3">
+                                <div class="col-md-8">
+                                    <div class="bg-light p-3 rounded-3 border border-secondary border-opacity-10 shadow-sm h-100">
+                                        <label for="rawstreamIpAddress" class="form-label text-secondary fw-bold text-uppercase mb-2" style="font-size: 0.7rem;">Rawstream IP Address</label>
+                                        <select id="rawstreamIpAddress" class="form-select bg-white border border-secondary border-opacity-25 shadow-none w-100"
+                                                formControlName="idIpAdresse" title="Rawstream IP">
+                                            @for (ip of ipAddresses(); track ip.idIpAdresse) {
+                                                <option [ngValue]="ip.idIpAdresse">{{ip.label}} ({{ip.value}})</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="bg-light p-3 rounded-3 border border-secondary border-opacity-10 shadow-sm h-100">
+                                        <label for="streamIdInput" class="form-label text-secondary fw-bold text-uppercase mb-2" style="font-size: 0.7rem;">Stream ID</label>
+                                        <input id="streamIdInput" type="number" class="form-control bg-white border border-secondary border-opacity-25 shadow-none w-100"
+                                                formControlName="streamId" placeholder="0" title="Stream ID">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="button" class="btn btn-success fw-bold border-0 py-3 rounded-3 w-100 mt-4 shadow-sm transition-all"
+                                    (click)="editDeviceSetting()" [disabled]="loadingDeviceSetting()">
+                                <i class="fa me-2"
+                                    [class.fa-check]="!loadingDeviceSetting()"
+                                    [class.fa-spinner]="loadingDeviceSetting()"
+                                    [class.fa-spin]="loadingDeviceSetting()"></i>
+                                {{ 'WEB_CONFIG.SAVE_OPTIONS' | translate }}
+                            </button>
+                        </div>
+
+                        <!-- Reset operations card -->
+                        <div class="bg-white rounded-4 shadow-sm border border-secondary border-opacity-10 p-4">
+                            <h6 class="fw-bold mb-4 text-dark fs-6 d-flex align-items-center">
+                                <div class="bg-danger bg-opacity-10 text-danger rounded-circle p-2 me-3 d-inline-flex"><i class="fa fa-history"></i></div> Reset Controls
+                            </h6>
+
+                            <div class="row g-4">
+                                <div class="col-sm-6" [formGroup]="lastIdForm">
+                                    <div class="bg-light p-3 rounded-3 border border-secondary border-opacity-10 shadow-sm">
+                                        <label for="lastIdValue" class="form-label text-secondary fw-bold text-uppercase mb-2" style="font-size: 0.7rem;">{{ 'WEB_CONFIG.LAST_ID' | translate }}</label>
+                                        <div class="input-group">
+                                            <input id="lastIdValue" type="number" class="form-control bg-white border border-secondary border-opacity-25 px-3 py-2 text-dark shadow-none"
+                                                formControlName="lastIdValue" placeholder="0" [title]="'WEB_CONFIG.LAST_ID' | translate">
+                                            <button type="button" class="btn btn-primary px-3 transition-all"
+                                                (click)="resetLastId()" [disabled]="loadingResetLastId()">
+                                                <i class="fa me-2" [class.fa-save]="!loadingResetLastId()"
+                                                    [class.fa-spinner]="loadingResetLastId()" [class.fa-spin]="loadingResetLastId()"></i>
+                                                {{ 'COMMON.SAVE' | translate }}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="bg-light p-3 rounded-3 border border-secondary border-opacity-10 shadow-sm h-100 d-flex flex-column justify-content-between">
+                                        <div>
+                                            <span class="form-label text-secondary fw-bold text-uppercase mb-2" style="font-size: 0.7rem;">Odometer Reset</span>
+                                        </div>
+                                        <button type="button" class="btn btn-outline-danger w-100 py-2 rounded-3 transition-all fw-bold"
+                                            (click)="resetOdometre()" [disabled]="loadingResetOdometre()">
+                                            <i class="fa me-2" [class.fa-tachometer-alt]="!loadingResetOdometre()"
+                                                [class.fa-spinner]="loadingResetOdometre()" [class.fa-spin]="loadingResetOdometre()"></i>
+                                            {{ 'WEB_CONFIG.RESET_ODO' | translate }}
                                         </button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                
-                <div class="modal-footer p-3 bg-light border-0">
-                    <div class="w-100 d-flex justify-content-between align-items-center">
-                        <div class="notification-count px-3 py-1 bg-white rounded-pill small border shadow-sm fw-bold">
-                            <i class="fa fa-bell me-1 text-warning"></i>
-                            {{notifications().length}} Logs
-                        </div>
-                        <button type="button" class="btn btn-light px-4 fw-bold shadow-sm" (click)="closeConfigModal()">Fermer</button>
-                    </div>
-                </div>
 
-                @if (notifications().length > 0) {
-                    <div class="notifications-panel p-3 bg-dark text-white border-top border-secondary fade-in">
-                        <div class="d-flex justify-content-between mb-2">
-                            <span class="small fw-bold text-uppercase opacity-50">Flux console</span>
-                            @if (getNumberOfNotificationErrors() > 0) {
-                                <span class="text-danger small fw-bold"><i class="fa fa-times-circle me-1"></i> {{getNumberOfNotificationErrors()}} Erreurs</span>
-                            } @else {
-                                <span class="text-success small fw-bold"><i class="fa fa-check-circle me-1"></i> Ok</span>
-                            }
-                        </div>
-                        <div class="notification-scroll">
-                            @for (n of notifications(); track $index) {
-                                <div class="small mb-1 d-flex gap-2">
-                                    <i class="fa mt-1" [class.fa-check-circle]="n.status" [class.text-success]="n.status" [class.fa-exclamation-circle]="!n.status" [class.text-danger]="!n.status"></i>
-                                    <span class="opacity-50 font-monospace">[{{$index+1}}]</span> {{n.value}}
+                    </div>
+                </div>
+                }
+
+                <!-- TAB 5: CONSOLE LOGS -->
+                @if (activeTab() === 'logs') {
+                <div class="row justify-content-center fade-in">
+                    <div class="col-md-11" style="max-width: 800px;">
+                        <div class="console-terminal rounded-4 shadow-lg overflow-hidden border border-dark">
+                            <!-- Terminal Header -->
+                            <div class="console-terminal-header bg-dark px-4 py-2 border-bottom border-secondary border-opacity-25 d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="console-terminal-dot bg-danger"></span>
+                                    <span class="console-terminal-dot bg-warning"></span>
+                                    <span class="console-terminal-dot bg-success"></span>
+                                    <span class="text-secondary small ms-2 font-monospace">system_logs.sh</span>
                                 </div>
-                            }
+                                <div class="d-flex gap-2">
+                                    @if (getNumberOfNotificationErrors() > 0) {
+                                    <span class="text-danger small fw-bold bg-danger bg-opacity-15 px-3 py-1 rounded-pill"><i
+                                            class="fa fa-times-circle me-1"></i> {{getNumberOfNotificationErrors()}} {{ 'COMMON.ERRORS' | translate }}</span>
+                                    } @else {
+                                    <span class="text-success small fw-bold bg-success bg-opacity-15 px-3 py-1 rounded-pill"><i
+                                            class="fa fa-check-circle me-1"></i> {{ 'COMMON.OK' | translate }}</span>
+                                    }
+                                </div>
+                            </div>
+
+                            <!-- Terminal Content -->
+                            <div class="console-terminal-body p-4 bg-dark text-white font-monospace overflow-y-auto" style="height: 380px;">
+                                @if (notifications().length === 0) {
+                                <div class="text-secondary opacity-50 py-5 text-center">
+                                    <i class="fa fa-terminal fa-2x mb-3"></i>
+                                    <p class="m-0">Console is idle. Active log events will appear here.</p>
+                                </div>
+                                }
+                                @for (n of notifications(); track $index) {
+                                <div class="small mb-2 d-flex gap-2 align-items-start p-2 rounded-2 transition-all hover-bg-terminal-line">
+                                    <i class="fa mt-1 flex-shrink-0" [class.fa-check-circle]="n.status"
+                                        [class.text-success]="n.status" [class.fa-exclamation-circle]="!n.status"
+                                        [class.text-danger]="!n.status"></i>
+                                    <span class="text-secondary flex-shrink-0">[{{$index+1}}]</span>
+                                    <span class="text-light fw-medium text-break">{{n.value}}</span>
+                                </div>
+                                }
+                            </div>
                         </div>
                     </div>
+                </div>
                 }
             </div>
+
+            <!-- Footer status bar + actions -->
+            <div class="modal-footer p-3 bg-white border-top border-secondary border-opacity-10 rounded-bottom-4 flex-shrink-0">
+                <div class="w-100 d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center gap-3">
+                        <button type="button" class="notification-count px-3 py-2 bg-light rounded-pill small fw-bold text-secondary border-0 shadow-sm d-flex align-items-center gap-2 cursor-pointer"
+                            (click)="activeTab.set('logs')" (keydown.enter)="activeTab.set('logs')" (keydown.space)="activeTab.set('logs'); $event.preventDefault()" aria-label="Open logs tab">
+                            <i class="fa fa-bell" [class.text-warning]="notifications().length > 0" [class.text-secondary]="notifications().length === 0"></i>
+                            <span>{{notifications().length}} Logs</span>
+                        </button>
+                        <div class="badge bg-indigo bg-opacity-10 text-indigo px-3 py-2 rounded-pill border border-indigo border-opacity-10">
+                            {{ 'SERVER_DETAILS.TERMINAL' | translate }}: {{selectedBoitierId()}}
+                        </div>
+                    </div>
+                    <button type="button"
+                        class="btn btn-light px-4 py-2 fw-bold shadow-sm rounded-pill text-dark border border-secondary border-opacity-10 hover-bg-secondary transition-all"
+                        (click)="closeConfigModal()">{{ 'COMMON.CLOSE' | translate }}</button>
+                </div>
+            </div>
+
         </div>
     </div>
-}
+</dialog>

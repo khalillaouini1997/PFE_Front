@@ -1,0 +1,34 @@
+<div class="kpi-grid">
+  <app-kpi-card
+    [label]="'Total Vehicles'"
+    [value]="stats().total"
+    icon="🚗"
+    [trend]="'up'"
+    [trendValue]="5"
+    [showSparkline]="true"
+  ></app-kpi-card>
+  <app-kpi-card
+    [label]="'Valid Status'"
+    [value]="stats().valid"
+    icon="✅"
+    [trend]="'up'"
+    [trendValue]="12"
+    [showSparkline]="true"
+  ></app-kpi-card>
+  <app-kpi-card
+    [label]="'Technical Issues'"
+    [value]="stats().technicalIssue"
+    icon="⚠️"
+    [trend]="'down'"
+    [trendValue]="8"
+    [showSparkline]="true"
+  ></app-kpi-card>
+  <app-kpi-card
+    [label]="'Moving'"
+    [value]="stats().moving"
+    icon="📍"
+    [trend]="'up'"
+    [trendValue]="15"
+    [showSparkline]="true"
+  ></app-kpi-card>
+</div>

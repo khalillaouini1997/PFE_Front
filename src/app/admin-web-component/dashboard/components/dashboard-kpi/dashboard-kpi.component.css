@@ -1,0 +1,8 @@
+/* ===== DASHBOARD KPI ===== */
+@import '../../../../shared/styles/design-tokens.css';
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--spacing-lg);
+}

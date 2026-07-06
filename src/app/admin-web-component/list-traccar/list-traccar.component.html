@@ -1,36 +1,36 @@
 <div class="main-panel p-4">
-    <div class="premium-card mb-4 header-gradient shadow-sm p-4">
-        <div class="row align-items-center">
-            <div class="col-sm-6">
-                <h4 class="title text-white m-0 fw-bold"><i class="fa fa-server me-2"></i> Liste des Trracars</h4>
-                <p class="m-0 text-white-50 small opacity-75">Gestion des instances Traccar</p>
-            </div>
-            <div class="col-sm-6">
-                <form [formGroup]="searchForm" (ngSubmit)="searchWebAccount()" class="d-flex justify-content-end gap-2">
-                    <div class="input-group input-group-sm w-auto">
-                        <input type="text" class="form-control border-0 shadow-sm px-3 bg-white bg-opacity-10 text-white search-input-fancy" 
-                            formControlName="keyWord" placeholder="Rechercher...">
-                        <button class="btn btn-glass px-3 border-0" type="submit" title="Rechercher">
-                            <i class="fa fa-search"></i>
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+    <app-page-header titleKey="TRACCAR.TITLE" subtitleKey="TRACCAR.SUBTITLE">
+        <app-search-input placeholder="TRACCAR.SEARCH_PLACEHOLDER" (search)="searchWebAccount($event)" />
+    </app-page-header>
 
     <div class="premium-card p-0 overflow-hidden shadow-sm">
-        <p-table [value]="traccarDtos" [paginator]="true" [rows]="15" 
+        @if(loading) {
+        <div class="text-center py-5">
+            <i class="fa fa-spinner fa-spin fa-3x text-primary"></i>
+            <p class="mt-3 text-secondary">Chargement...</p>
+        </div>
+        } @else {
+        <p-table [value]="traccarDtos" [paginator]="true" [rows]="15"
+            [totalRecords]="totalRecords"
             [globalFilterFields]="['name', 'imei']"
             [rowsPerPageOptions]="[10,15,30,50]"
             styleClass="p-datatable-sm p-datatable-gridlines premium-table-custom"
             responsiveLayout="scroll">
-            
+
             <ng-template pTemplate="header">
                 <tr>
-                    <th pSortableColumn="id" style="width: 100px">ID <p-sortIcon field="id"></p-sortIcon></th>
-                    <th pSortableColumn="name">Nom <p-sortIcon field="name"></p-sortIcon></th>
-                    <th pSortableColumn="imei">IMEI <p-sortIcon field="imei"></p-sortIcon></th>
+                    <th scope="col" pSortableColumn="id" style="width: 80px">ID <p-sortIcon field="id"></p-sortIcon></th>
+                    <th scope="col" pSortableColumn="name">Nom <p-sortIcon field="name"></p-sortIcon></th>
+                    <th scope="col" pSortableColumn="imei">IMEI <p-sortIcon field="imei"></p-sortIcon></th>
+                    <th scope="col" pSortableColumn="iccid">ICCID <p-sortIcon field="iccid"></p-sortIcon></th>
+                    <th scope="col" pSortableColumn="category">Catégorie <p-sortIcon field="category"></p-sortIcon></th>
+                    <th scope="col" pSortableColumn="model">Modèle <p-sortIcon field="model"></p-sortIcon></th>
+                    <th scope="col" pSortableColumn="phone">Téléphone <p-sortIcon field="phone"></p-sortIcon></th>
+                    <th scope="col" pSortableColumn="contact">Contact <p-sortIcon field="contact"></p-sortIcon></th>
+                    <th scope="col" pSortableColumn="latitude">Latitude <p-sortIcon field="latitude"></p-sortIcon></th>
+                    <th scope="col" pSortableColumn="longitude">Longitude <p-sortIcon field="longitude"></p-sortIcon></th>
+                    <th scope="col" pSortableColumn="lastupdate">Dernière Mise à Jour <p-sortIcon field="lastupdate"></p-sortIcon></th>
+                    <th scope="col" pSortableColumn="disabled">Statut <p-sortIcon field="disabled"></p-sortIcon></th>
                 </tr>
             </ng-template>
 
@@ -39,17 +39,26 @@
                     <td><span class="badge bg-light text-dark">{{trac.id}}</span></td>
                     <td class="fw-bold">{{trac.name}}</td>
                     <td><code>{{trac.imei}}</code></td>
-                </tr>
-            </ng-template>
-
-            <ng-template pTemplate="emptymessage">
-                <tr>
-                    <td colspan="3" class="text-center py-5 text-secondary">
-                        <i class="fa fa-search fa-3x opacity-25 mb-2"></i>
-                        <p>Aucun Traccar trouvé</p>
+                    <td><small>{{trac.iccid || 'N/A'}}</small></td>
+                    <td><small>{{trac.category || 'N/A'}}</small></td>
+                    <td><small>{{trac.model || 'N/A'}}</small></td>
+                    <td><small>{{trac.phone || 'N/A'}}</small></td>
+                    <td><small>{{trac.contact || 'N/A'}}</small></td>
+                    <td><small>{{trac.latitude || 'N/A'}}</small></td>
+                    <td><small>{{trac.longitude || 'N/A'}}</small></td>
+                    <td><small>{{trac.lastupdate || 'N/A'}}</small></td>
+                    <td>
+                        @if(trac.disabled === true) {
+                        <span class="badge bg-danger">Désactivé</span>
+                        } @else {
+                        <span class="badge bg-success">Actif</span>
+                        }
                     </td>
                 </tr>
             </ng-template>
+
+            <app-empty-table [colspan]="12" icon="fa-search" messageKey="TRACCAR.NO_DATA" />
         </p-table>
+        }
     </div>
 </div>

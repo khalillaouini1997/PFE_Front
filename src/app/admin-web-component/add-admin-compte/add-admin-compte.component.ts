@@ -1,12 +1,16 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, inject } from '@angular/core';
+
 import { AdministratorCompte } from 'src/app/data/data';
 import { AdminAccountService } from 'src/app/service/admin-account.service';
-import { AuthService } from 'src/app/service/auth.service';
+
 import { catchError } from "rxjs/operators";
-import { of, tap } from "rxjs";
+import { of } from "rxjs";
 import { ToastrService } from "ngx-toastr";
+import { withToast } from '../../utils/toast.helpers';
+import { NOTIFICATION_SUBQUERIES } from '../../shared/constants';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 
 
 @Component({
@@ -14,21 +18,22 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
     standalone: true,
     templateUrl: './add-admin-compte.component.html',
     styleUrls: ['./add-admin-compte.component.css'],
-    imports: [ReactiveFormsModule]
+    imports: [ReactiveFormsModule, TranslateModule, PageHeaderComponent]
 })
-export class AddAdminCompteComponent implements OnInit {
+export class AddAdminCompteComponent {
 
   adminForm!: FormGroup;
-  roles = ['GLOBALADMIN', 'WEBADMIN', 'GLOBALADMINDESC', 'AGENT'];
-  notifSubs = ['date_sub(NOW(), INTERVAL 6 hour)', 'date_sub(NOW(), INTERVAL 1 DAY)', 'date_sub(NOW(), INTERVAL 2 DAY)'];
+  roles = ['GLOBALADMINDESC', 'WEBADMIN', 'AGENT'];
+  notifSubs = NOTIFICATION_SUBQUERIES;
   messageError: string = "";
   mode: boolean = false;
 
-  private readonly router = inject(Router);
+
   private readonly adminAccountService = inject(AdminAccountService);
-  private readonly authService = inject(AuthService);
+
   private readonly toastr = inject(ToastrService);
   private readonly fb = inject(FormBuilder);
+  private readonly translate = inject(TranslateService);
 
   constructor() {
     this.initForm();
@@ -49,31 +54,28 @@ export class AddAdminCompteComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-    if (!this.authService.isAuthenticated()) {
-      this.router.navigate(['/error']);
-    }
-  }
+
 
   addAdminCompte() {
     if (this.adminForm.invalid) {
-      this.toastr.warning('Please fill all required fields', 'Warning');
+      this.toastr.warning(
+        this.translate.instant('WEB_ACCOUNTS.FILL_REQUIRED'), 
+        this.translate.instant('COMMON.WARNING')
+      );
       return;
     }
 
     const payload: AdministratorCompte = this.adminForm.value;
-    this.adminAccountService.addAdminCompte(payload)
+    withToast(this.adminAccountService.addAdminCompte(payload), this.toastr, this.translate, 'ADMIN_ACCOUNTS.ADD_SUCCESS')
       .pipe(
-        tap(() => {
-          this.toastr.success('Admin Account is added successfully', 'Success!');
-          this.adminForm.reset({ role: 'WEBADMIN', idTraccar: 0, useFcm: false });
-        }),
-        catchError(error => {
-          console.error('Error adding admin compte:', error);
-          this.toastr.error('There is a mistake', 'Error!');
+        catchError(() => {
           return of(null);
         })
       )
-      .subscribe();
+      .subscribe({
+        next: () => {
+          this.adminForm.reset({ role: 'WEBADMIN', idTraccar: 0, useFcm: false });
+        }
+      });
   }
 }

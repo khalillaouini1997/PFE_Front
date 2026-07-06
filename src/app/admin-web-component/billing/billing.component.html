@@ -1,0 +1,486 @@
+<div class="billing-container">
+  <!-- Header with tabs -->
+  <div class="billing-header">
+    <div class="title-section">
+      <h2>{{ 'BILLING.TITLE' | translate }}</h2>
+      <p class="subtitle">{{ 'BILLING.SUBTITLE' | translate }}</p>
+    </div>
+    <div class="tab-switcher">
+      <button class="tab-btn" [class.active]="activeTab === 'dashboard'" (click)="switchTab('dashboard')">
+        <span class="tab-icon">📊</span> Dashboard
+      </button>
+      <button class="tab-btn" [class.active]="activeTab === 'invoice'" (click)="switchTab('invoice')">
+        <span class="tab-icon">📄</span> Invoice
+      </button>
+    </div>
+  </div>
+
+  <!-- ==================== INVOICE TAB ==================== -->
+  @if (activeTab === 'invoice') {
+    <!-- Form Section -->
+    <div class="billing-card filter-card">
+      <form [formGroup]="billingForm">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="accountId">{{ 'BILLING.SELECT_ACCOUNT' | translate }}</label>
+            <div class="select-wrapper">
+              <select 
+                id="accountId" 
+                formControlName="accountId" 
+                class="form-control"
+              >
+                <option value="">{{ loadingAccounts ? ('BILLING.LOADING_ACCOUNTS' | translate) : ('BILLING.SELECT_ACCOUNT' | translate) }}</option>
+                <option *ngFor="let account of webAccounts" [value]="account.idCompteClientWeb">
+                  {{ account.login }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="year">{{ 'BILLING.YEAR' | translate }}</label>
+            <input 
+              type="number" 
+              id="year" 
+              formControlName="year" 
+              class="form-control"
+              min="2000"
+              max="2100"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="month">{{ 'BILLING.MONTH' | translate }}</label>
+            <input 
+              type="number" 
+              id="month" 
+              formControlName="month" 
+              class="form-control"
+              min="1"
+              max="12"
+            />
+          </div>
+        </div>
+
+        <div class="button-group">
+          <button 
+            type="button" 
+            (click)="searchInvoice()" 
+            [disabled]="loading || !billingForm.get('accountId')?.value"
+            class="btn btn-primary"
+          >
+            <span class="btn-icon">🔍</span> Search
+          </button>
+
+          <button 
+            type="button" 
+            (click)="showCalcModal = true"
+            [disabled]="loading"
+            class="btn btn-primary"
+          >
+            <span class="btn-icon">⚡</span> {{ 'BILLING.CALCULATE' | translate }}
+          </button>
+
+          <button 
+            type="button" 
+            (click)="refreshBilling()" 
+            [disabled]="loading || !billingResult"
+            class="btn btn-secondary"
+          >
+            <span class="btn-icon">🔄</span> {{ 'BILLING.REFRESH' | translate }}
+          </button>
+
+          <button 
+            type="button" 
+            (click)="fetchAllInvoices()" 
+            [disabled]="loadingAllInvoices || !billingForm.get('accountId')?.value"
+            class="btn btn-info"
+          >
+            <span class="btn-icon">{{ loadingAllInvoices ? '⏳' : '📋' }}</span> {{ loadingAllInvoices ? ('BILLING.LOADING' | translate) : ('BILLING.SHOW_ALL' | translate) }}
+          </button>
+
+          <button 
+            type="button" 
+            (click)="downloadPdf()" 
+            [disabled]="downloadingPdf || !billingResult"
+            class="btn btn-success"
+          >
+            <span class="btn-icon">{{ downloadingPdf ? '⏳' : '📄' }}</span> {{ downloadingPdf ? ('BILLING.DOWNLOADING' | translate) : ('BILLING.DOWNLOAD_PDF' | translate) }}
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Loading State -->
+    @if (loading) {
+      <div class="loading-state">
+        <div class="spinner"></div>
+        <p>{{ 'BILLING.LOADING' | translate }}</p>
+      </div>
+    }
+
+    <!-- No existing invoice -->
+    @if (noExistingInvoice && !loading && !showAllInvoicesView) {
+      <div class="no-invoice-state">
+        <div class="no-invoice-icon">📋</div>
+        <h3>No Invoice Found</h3>
+        <p>No billing invoice exists for this account and period. Click <strong>Calculate</strong> to generate one.</p>
+      </div>
+    }
+
+    <!-- All Invoices View -->
+    @if (showAllInvoicesView) {
+      <div class="billing-card">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h3 class="m-0 fw-bold">
+            <span class="me-2">📋</span> {{ 'BILLING.ALL_INVOICES' | translate }} ({{ allInvoices.length }})
+          </h3>
+          <button type="button" class="btn btn-sm btn-outline-secondary" (click)="backToSingleInvoice()">
+            <span class="me-1">←</span> Back
+          </button>
+        </div>
+
+        @if (loadingAllInvoices) {
+          <div class="loading-state">
+            <div class="spinner"></div>
+            <p>{{ 'BILLING.LOADING' | translate }}</p>
+          </div>
+        } @else if (allInvoices.length === 0) {
+          <div class="no-invoice-state">
+            <div class="no-invoice-icon">📋</div>
+            <h3>No Invoices Found</h3>
+            <p>No invoices have been generated for this account yet.</p>
+          </div>
+        } @else {
+          <div class="table-responsive">
+            <table class="billing-table">
+              <thead>
+                <tr>
+                  <th>{{ 'BILLING.PERIOD' | translate }}</th>
+                  <th>{{ 'BILLING.ACCOUNT_NAME' | translate }}</th>
+                  <th>{{ 'BILLING.SUBTOTAL' | translate }} (HT)</th>
+                  <th>{{ 'BILLING.TVA' | translate }}</th>
+                  <th>{{ 'BILLING.TOTAL' | translate }} (TTC)</th>
+                  <th>Status</th>
+                  <th>{{ 'BILLING.GENERATED_AT' | translate }}</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (invoice of allInvoices; track invoice.billingPeriod) {
+                  <tr>
+                    <td><span class="device-id-badge">{{ invoice.billingPeriod }}</span></td>
+                    <td class="fw-bold">{{ invoice.accountName }}</td>
+                    <td>{{ formatCurrency(invoice.subtotal) }}</td>
+                    <td>{{ formatCurrency(invoice.tvaAmount) }}</td>
+                    <td><strong class="text-primary">{{ formatCurrency(invoice.totalAmount) }}</strong></td>
+                    <td>
+                      <span class="status-badge" [class.paid]="invoice.paymentStatus === 'PAID'" [class.unpaid]="invoice.paymentStatus !== 'PAID'">
+                        {{ invoice.paymentStatus || 'UNPAID' }}
+                      </span>
+                    </td>
+                    <td class="text-muted">{{ invoice.generatedAt }}</td>
+                    <td>
+                      <button type="button" class="btn btn-sm btn-outline-primary border-0" 
+                        (click)="viewInvoice(invoice)" title="View details">
+                        <i class="fa fa-eye me-1"></i> View
+                      </button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Results Section -->
+    @if (billingResult && !loading) {
+      <div class="billing-results-wrapper">
+        
+        <!-- Invoice KPI Grid -->
+        <div class="kpi-grid">
+          <div class="kpi-card total-card">
+            <div class="kpi-icon">💰</div>
+            <div class="kpi-info">
+              <span class="kpi-label">{{ 'BILLING.TOTAL' | translate }} (TTC)</span>
+              <span class="kpi-value">{{ formatCurrency(billingResult.totalAmount) }}</span>
+            </div>
+            <div class="status-toggle-wrapper">
+              <label class="status-toggle">
+                <input 
+                  type="checkbox" 
+                  [checked]="billingResult.paymentStatus === 'PAID'"
+                  (change)="togglePaymentStatus()"
+                />
+                <span class="status-toggle-slider"></span>
+              </label>
+              <span class="status-badge" [class.paid]="billingResult.paymentStatus === 'PAID'" [class.unpaid]="billingResult.paymentStatus !== 'PAID'">
+                {{ billingResult.paymentStatus || 'UNPAID' }}
+              </span>
+            </div>
+          </div>
+
+          <div class="kpi-grid-sub">
+            <div class="kpi-card">
+              <div class="kpi-info">
+                <span class="kpi-label">{{ 'BILLING.SUBTOTAL' | translate }} (HT)</span>
+                <span class="kpi-value-small">{{ formatCurrency(billingResult.subtotal) }}</span>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-info">
+                <span class="kpi-label">{{ 'BILLING.TVA' | translate }} (19%)</span>
+                <span class="kpi-value-small">{{ formatCurrency(billingResult.tvaAmount) }}</span>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-info">
+                <span class="kpi-label">{{ 'BILLING.ACCOUNT_FEE' | translate }}</span>
+                <span class="kpi-value-small">{{ formatCurrency(billingResult.accountFeeByMonth) }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Client Info Summary -->
+        <div class="billing-card summary-card">
+          <div class="summary-header">
+            <h3>{{ 'BILLING.SUMMARY' | translate }}</h3>
+            <span class="period-tag">{{ billingResult.billingPeriod }}</span>
+          </div>
+          <div class="summary-details">
+            <div class="detail-item">
+              <span class="label">{{ 'BILLING.ACCOUNT_NAME' | translate }}</span>
+              <span class="value">{{ billingResult.accountName }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Invoice Status</span>
+              <span class="value" [class.text-warning]="billingResult.paymentStatus !== 'PAID'" [class.text-success]="billingResult.paymentStatus === 'PAID'">
+                {{ billingResult.paymentStatus === 'PAID' ? 'Paid' : 'Pending Payment' }}
+              </span>
+            </div>
+            <div class="detail-item">
+              <span class="label">{{ 'BILLING.GENERATED_AT' | translate }}</span>
+              <span class="value">{{ billingResult.generatedAt }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Device Breakdown Table -->
+        @if (billingResult.deviceBreakdown && billingResult.deviceBreakdown.length > 0) {
+          <div class="billing-card table-card">
+            <div class="table-header">
+              <h3>{{ 'BILLING.DEVICE_BREAKDOWN' | translate }} ({{ billingResult.deviceBreakdown.length }} devices)</h3>
+              <div class="pagination-controls">
+                <label>Rows:</label>
+                <select [(ngModel)]="pageSize" (change)="devicePage = 0" class="form-control-sm">
+                  <option [value]="10">10</option>
+                  <option [value]="25">25</option>
+                  <option [value]="50">50</option>
+                  <option [value]="100">100</option>
+                </select>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="billing-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>{{ 'BILLING.DEVICE_ID' | translate }}</th>
+                    <th>{{ 'BILLING.DEVICE_LABEL' | translate }}</th>
+                    <th>{{ 'BILLING.WORKING_DAYS' | translate }}</th>
+                    <th>Fee Configuration</th>
+                    <th>{{ 'BILLING.SUBTOTAL' | translate }} (HT)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let device of pagedDevices; let i = index">
+                    <td class="text-muted">{{ devicePage * pageSize + i + 1 }}</td>
+                    <td><span class="device-id-badge">#{{ device.deviceId }}</span></td>
+                    <td><strong>{{ device.deviceLabel }}</strong><br><small class="text-muted">Box {{ device.numBoitier }}</small></td>
+                    <td>
+                      <span class="days-badge" [class.active-days]="device.workingDays > 0">
+                        {{ device.workingDays }} Days
+                      </span>
+                    </td>
+                    <td>
+                      <div class="fee-breakdown-details">
+                        <div>Daily: {{ formatCurrency(device.deviceFeeByDay) }}/day</div>
+                        <div>SIM: {{ formatCurrency(device.simCardFeePerMonth) }}/month</div>
+                      </div>
+                    </td>
+                    <td><strong class="text-primary">{{ formatCurrency(device.subtotal) }}</strong></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            @if (totalDevicePages > 1) {
+              <div class="pagination">
+                <button class="btn btn-sm btn-secondary" (click)="devicePage = 0" [disabled]="devicePage === 0">&laquo;</button>
+                <button class="btn btn-sm btn-secondary" (click)="devicePage = devicePage - 1" [disabled]="devicePage === 0">&lsaquo;</button>
+                <span class="page-info">Page {{ devicePage + 1 }} / {{ totalDevicePages }}</span>
+                <button class="btn btn-sm btn-secondary" (click)="devicePage = devicePage + 1" [disabled]="devicePage >= totalDevicePages - 1">&rsaquo;</button>
+                <button class="btn btn-sm btn-secondary" (click)="devicePage = totalDevicePages - 1" [disabled]="devicePage >= totalDevicePages - 1">&raquo;</button>
+              </div>
+            }
+          </div>
+        }
+
+        <!-- Formula Details -->
+        <div class="billing-card formula-card">
+          <h3>📜 {{ 'BILLING.CALCULATION_DETAILS' | translate }}</h3>
+          <div class="formula-box">
+            <p><strong>Device Subtotal formula:</strong> (Device Fee per Day × Working Days) + SIM Card Fee per Month</p>
+            <p><strong>Invoice Subtotal formula:</strong> Sum of Device Subtotals + Monthly Platform Account Fee</p>
+            <p><strong>TVA:</strong> Subtotal × 19%</p>
+            <p><strong>Total Amount (TTC):</strong> Subtotal + TVA</p>
+          </div>
+        </div>
+      </div>
+    }
+  }
+
+  <!-- ==================== DASHBOARD TAB ==================== -->
+  @if (activeTab === 'dashboard') {
+    <div class="dashboard-section">
+      <div class="analytics-header">
+        <div class="year-selector">
+          <label>Year:</label>
+          <select [(ngModel)]="selectedYear" (change)="loadAnalytics()" class="form-control">
+            <option *ngFor="let y of [selectedYear-2, selectedYear-1, selectedYear, selectedYear+1]" [value]="y">{{ y }}</option>
+          </select>
+        </div>
+      </div>
+
+      @if (analyticsLoading) {
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <p>Loading analytics...</p>
+        </div>
+      }
+
+      <!-- Charts Row 1 -->
+      <div class="charts-row">
+        <div class="chart-card">
+          <h3>Revenue by Month</h3>
+          <div class="chart-wrapper"><canvas #revenueByMonthChart></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h3>Revenue by Account</h3>
+          <div class="chart-wrapper"><canvas #revenueByAccountChart></canvas></div>
+        </div>
+      </div>
+
+      <!-- Charts Row 2 -->
+      <div class="charts-row">
+        <div class="chart-card chart-small">
+          <h3>Invoice Status</h3>
+          <div class="chart-wrapper"><canvas #statusChart></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h3>Top Devices by Billing</h3>
+          <div class="table-wrapper">
+            <table class="analytics-table" *ngIf="topDevices.length > 0">
+              <thead>
+                <tr>
+                  <th>Device</th>
+                  <th>Label</th>
+                  <th>Working Days</th>
+                  <th>Total (HT)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let device of topDevices">
+                  <td><span class="device-badge">#{{ device.numBoitier }}</span></td>
+                  <td>{{ device.deviceLabel }}</td>
+                  <td>{{ device.totalWorkingDays }} days</td>
+                  <td class="fw-bold">{{ formatCurrency(device.totalSubtotal) }}</td>
+                </tr>
+              </tbody>
+            </table>
+            <p *ngIf="topDevices.length === 0 && !analyticsLoading" class="no-data">No billing data available for this year.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Revenue Forecast Chart -->
+      <div class="charts-row">
+        <div class="chart-card full-width">
+          <h3>Revenue Forecast (6-Month Rolling Prediction)</h3>
+          <div class="chart-wrapper"><canvas #revenueForecastChart></canvas></div>
+        </div>
+      </div>
+    </div>
+  }
+</div>
+
+<!-- Calculate Modal -->
+@if (showCalcModal) {
+<div class="modal-backdrop" (click)="showCalcModal = false"></div>
+<div class="calc-modal">
+  <div class="calc-modal-header">
+    <h4><i class="fa fa-calculator me-2 text-primary"></i> {{ 'BILLING.CALCULATE' | translate }}</h4>
+    <button type="button" class="btn-close" (click)="showCalcModal = false" aria-label="Close"></button>
+  </div>
+  <div class="calc-modal-body">
+    <!-- Option 1: All accounts, previous month -->
+    <div class="calc-option" (click)="calculateAllAccounts(); showCalcModal = false">
+      <div class="calc-option-icon">🌐</div>
+      <div class="calc-option-info">
+        <h5>{{ 'BILLING.CALC_ALL_ACCOUNTS' | translate }}</h5>
+        <p>{{ 'BILLING.CALC_PREVIOUS_MONTH' | translate }}</p>
+      </div>
+      <i class="fa fa-chevron-right calc-option-arrow"></i>
+    </div>
+
+    <!-- Option 2: Specific account, previous month -->
+    <div class="calc-option" 
+         (click)="calculateSpecificAccount(); showCalcModal = false"
+         [class.disabled]="!billingForm.get('accountId')?.value">
+      <div class="calc-option-icon">👤</div>
+      <div class="calc-option-info">
+        <h5>{{ 'BILLING.CALC_SPECIFIC_ACCOUNT' | translate }}</h5>
+        <p>{{ 'BILLING.CALC_PREVIOUS_MONTH' | translate }}</p>
+      </div>
+      <i class="fa fa-chevron-right calc-option-arrow"></i>
+    </div>
+
+    <!-- Option 3: Chosen period -->
+    <div class="calc-option" 
+         (click)="calculateBilling(); showCalcModal = false"
+         [class.disabled]="!billingForm.get('accountId')?.value">
+      <div class="calc-option-icon">📅</div>
+      <div class="calc-option-info">
+        <h5>{{ 'BILLING.CALC_CUSTOM_PERIOD' | translate }}</h5>
+        <p>{{ 'BILLING.CALC_BATCH_DESC' | translate }}</p>
+        <div class="calc-period-fields mt-2" (click)="$event.stopPropagation()">
+          <div class="d-flex gap-2 align-items-center">
+            <input type="number" [(ngModel)]="calcStartYear" class="form-control form-control-sm" 
+                   placeholder="Year" min="2000" max="2100" style="width: 100px;">
+            <span class="text-muted">-</span>
+            <select [(ngModel)]="calcStartMonth" class="form-select form-select-sm" style="width: 130px;">
+              <option [value]="1">January</option>
+              <option [value]="2">February</option>
+              <option [value]="3">March</option>
+              <option [value]="4">April</option>
+              <option [value]="5">May</option>
+              <option [value]="6">June</option>
+              <option [value]="7">July</option>
+              <option [value]="8">August</option>
+              <option [value]="9">September</option>
+              <option [value]="10">October</option>
+              <option [value]="11">November</option>
+              <option [value]="12">December</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <i class="fa fa-chevron-right calc-option-arrow"></i>
+    </div>
+  </div>
+</div>
+}

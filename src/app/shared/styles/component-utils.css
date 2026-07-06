@@ -1,0 +1,54 @@
+/* ===== Shared Component Utilities ===== */
+
+/* -- Dialog/Modal Base -- */
+dialog,
+[role='dialog'] {
+  border: none;
+  border-radius: var(--radius-xl, 12px);
+  padding: 0;
+  max-width: 90vw;
+  max-height: 90vh;
+  box-shadow: var(--shadow-lg);
+}
+
+dialog::backdrop,
+[role='dialog']::backdrop {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+/* -- Form Group -- */
+.form-group {
+  padding-bottom: 0px;
+  margin: 0px 0 0 0;
+}
+
+/* -- Premium Card -- */
+.premium-card {
+  background: var(--card-bg, #ffffff);
+  border: var(--card-border, 1px solid #e2e8f0);
+  border-radius: var(--radius-xl, 12px);
+  padding: var(--spacing-xl, 24px);
+  box-shadow: var(--shadow-sm);
+}
+
+[data-theme='dark'] .premium-card {
+  background: var(--card-bg, #1e293b);
+  border: 1px solid var(--slate-700, #334155);
+}
+
+/* -- Fade In Animation -- */
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* -- Sidebar Width Variables -- */
+:root {
+  --sidebar-width-expanded: 280px;
+  --sidebar-width-collapsed: 80px;
+}

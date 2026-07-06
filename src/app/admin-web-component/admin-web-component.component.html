@@ -5,94 +5,9 @@
         <span></span>
     </label>
 
-    <aside class="sidebar" [class.collapsed]="isCollapsed()">
-        <div class="sidebar-wrapper">
-            <div class="logo-section d-flex align-items-center justify-content-between px-2">
-                <div class="logo" [class.d-none]="isCollapsed()">
-                    @if (owner==='TRACI') {
-                        <img alt="Traci" Src="http://traci.tn/images/logo_traci.png" class="mx-auto d-block w-50 h-auto opacity-75">
-                    } @else if (owner==='TDS' || owner==='SLAMA') {
-                        <img alt="tds" Src="http://fleet.tn/images/logotds.png" class="mx-auto d-block w-75 h-auto">
-                    } @else if (owner==='FINEK') {
-                        <img alt="finek" Src="https://finek.com.tn/images/loginfinek.png" class="mx-auto d-block w-75 h-auto">
-                    }
-                </div>
-                <button class="toggle-sidebar-btn desktop-only" (click)="toggleSidebar()" type="button">
-                    <i class="material-icons">{{ isCollapsed() ? 'menu' : 'menu_open' }}</i>
-                </button>
-            </div>
+    <app-sidebar (sidebarToggle)="onSidebarToggle($event)"></app-sidebar>
 
-            <ul class="nav">
-                <li class="nav-section-title">Général</li>
-                <li [class.active]="isActiveDashBoard">
-                    <a routerLink="/adminWeb/dashboard" (click)="setMenu('dashboard')" [title]="isCollapsed() ? 'Tableau de bord' : ''">
-                        <i class="material-icons">dashboard</i>
-                        <p>Tableau de bord @if (notificationCount > 0) {<span class="badge rounded-pill bg-danger ms-2">{{notificationCount}}</span>}</p>
-                    </a>
-                </li>
-                <li [class.active]="isActiveTraccar">
-                    <a routerLink="/adminWeb/traccar" (click)="setMenu('traccar')" [title]="isCollapsed() ? 'Suivi Traccar' : ''">
-                        <i class="material-icons">room</i>
-                        <p>Suivi Traccar</p>
-                    </a>
-                </li>
-                
-                <li class="nav-section-title">Gestion</li>
-                <li *ngIf="isAgentAdmin()" [class.active]="isActiveAddAdminCompte">
-                    <a routerLink="/adminWeb/addAdminCompte" (click)="setMenu('addAdmin')" [title]="isCollapsed() ? 'Ajouter Admin' : ''">
-                        <i class="material-icons">person_add_alt</i>
-                        <p>Ajouter Admin</p>
-                    </a>
-                </li>
-                <li *ngIf="isAgentAdmin()" [class.active]="isActiveAdminCompte">
-                    <a routerLink="/adminWeb/adminCompte" (click)="setMenu('listAdmin')" [title]="isCollapsed() ? 'Liste Admins' : ''">
-                        <i class="material-icons">group</i>
-                        <p>Liste Admins</p>
-                    </a>
-                </li>
-                <li [class.active]="isActiveServerForm">
-                    <a routerLink="/adminWeb/addCompteServer" (click)="setMenu('addServer')" [title]="isCollapsed() ? 'Ajouter Serveur' : ''">
-                        <i class="material-icons">dns</i>
-                        <p>Ajouter Serveur</p>
-                    </a>
-                </li>
-                <li [class.active]="isActiveListServer">
-                    <a routerLink="/adminWeb/listServers" (click)="setMenu('listServer')" [title]="isCollapsed() ? 'Liste Serveurs' : ''">
-                        <i class="material-icons">storage</i>
-                        <p>Liste Serveurs</p>
-                    </a>
-                </li>
-                <li [class.active]="isActiveForm">
-                    <a routerLink="/adminWeb/addCompteWeb" (click)="setMenu('addWeb')" [title]="isCollapsed() ? 'Ajouter Web' : ''">
-                        <i class="material-icons">web</i>
-                        <p>Ajouter Web</p>
-                    </a>
-                </li>
-                <li [class.active]="isActiveListWeb">
-                    <a routerLink="/adminWeb/listWebs" (click)="setMenu('listWeb')" [title]="isCollapsed() ? 'Liste Web' : ''">
-                        <i class="material-icons">language</i>
-                        <p>Liste Web</p>
-                    </a>
-                </li>
-
-                <li class="nav-section-title">Système</li>
-                <li [class.active]="isActiveAccessLog">
-                    <a routerLink="/adminWeb/accessLog" (click)="setMenu('logs')" [title]="isCollapsed() ? 'Journal d\'accès' : ''">
-                        <i class="material-icons">history</i>
-                        <p>Journal d'accès</p>
-                    </a>
-                </li>
-                <li class="logout-item">
-                    <a (click)="logout()" class="text-danger opacity-75" [title]="isCollapsed() ? 'Déconnecter' : ''">
-                        <i class="material-icons">power_settings_new</i>
-                        <p>Déconnecter</p>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </aside>
-
-    <main class="content" [class.collapsed]="isCollapsed()">
+    <main class="content" [class.collapsed]="isSidebarCollapsed">
         <router-outlet></router-outlet>
     </main>
 </div>

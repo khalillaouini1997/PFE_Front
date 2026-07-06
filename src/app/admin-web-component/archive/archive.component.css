@@ -1,4 +1,15 @@
 /*created by AHMED HAYEL*/
+@import '../../shared/styles/design-tokens.css';
+
+:host {
+  display: block;
+  background-color: white;
+  min-height: 100vh;
+}
+
+[data-theme='dark'] :host {
+  background-color: var(--slate-900);
+}
 
 .limit-input-group {
     width: 150px;
@@ -7,7 +18,12 @@
 .btn-refresh-archive {
     border-radius: 10px;
     background: white;
-    color: var(--primary);
+    color: var(--primary-600);
+}
+
+[data-theme='dark'] .btn-refresh-archive {
+    background: var(--slate-700);
+    color: var(--primary-300);
 }
 
 .table-container-70vh {
@@ -20,6 +36,10 @@
 
 table tbody {
   background-color: white;
+}
+
+[data-theme='dark'] table tbody {
+  background-color: var(--slate-800);
 }
 table thead {
   background-color: #e9423e;
@@ -59,3 +79,75 @@ th {
 .td-small {
   font-size: 12px;
 }
+
+/* Premium Badge for Terminal ID */
+.premium-terminal-badge {
+    background: rgba(15, 23, 42, 0.4) !important;
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 0.5rem 1.25rem !important;
+    font-size: 0.85rem !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.025em;
+    border-radius: 50rem !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+    display: inline-flex;
+    align-items: center;
+}
+
+.terminal-number {
+    font-size: 1.1rem !important;
+    font-weight: 800 !important;
+    margin-left: 2px;
+    color: #ffffff;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+/* AI Telemetry Panel Styles */
+.ai-panel {
+    border-radius: 12px;
+}
+
+.health-score-container {
+    width: 160px;
+    height: 160px;
+}
+
+.health-ring {
+    transform: rotate(-90deg);
+}
+
+.ring-bar {
+    transition: stroke-dashoffset 0.8s ease-in-out;
+}
+
+.prediction-glow-card {
+    transition: all 0.3s ease;
+    border-radius: 12px;
+}
+
+.prediction-glow-card:hover {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08) !important;
+    transform: translateY(-2px);
+}
+
+.table-responsive::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+    background: #dee2e6;
+    border-radius: 4px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+    background: #ced4da;
+}
+

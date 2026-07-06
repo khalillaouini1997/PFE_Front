@@ -1,0 +1,304 @@
+/* ===== COMMAND CONSOLE DASHBOARD ===== */
+@import '../../shared/styles/design-tokens.css';
+
+:host {
+  display: block;
+  background-color: var(--surface-base);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* ── Layout ── */
+.main-panel {
+  width: 100% !important;
+  padding: var(--spacing-xl) !important;
+  box-sizing: border-box;
+}
+
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+  max-width: 1600px;
+  margin: 0 auto;
+  padding-bottom: var(--spacing-xl);
+  flex-shrink: 0;
+}
+
+/* ── Header ── */
+.header-gradient {
+  padding: var(--spacing-lg) var(--spacing-xl);
+  border-radius: var(--card-border-radius);
+  border: 1px solid var(--surface-border);
+}
+
+.header-gradient h2 {
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: -0.3px;
+  margin-bottom: 2px;
+  color: var(--text-primary);
+}
+
+/* ── Notification Bell ── */
+.notif-btn {
+  position: relative;
+  background: var(--surface-elevated);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-lg);
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background var(--transition-fast) var(--ease-default), color var(--transition-fast);
+}
+.notif-btn:hover { background: var(--surface-hover); color: var(--accent-primary); }
+.notif-badge {
+  position: absolute;
+  top: -4px; right: -4px;
+  background: var(--color-error);
+  color: #fff;
+  border-radius: var(--radius-full);
+  font-size: 0.6rem;
+  font-weight: var(--font-weight-bold);
+  padding: 1px 5px;
+  border: 2px solid var(--surface-card);
+}
+
+/* ── Controls ── */
+.dashboard-select {
+  min-width: 200px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--surface-border);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--text-sm);
+  background: var(--surface-card);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: border-color var(--transition-fast);
+}
+.dashboard-select:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.15);
+}
+
+.btn-action-dash {
+  border-radius: var(--radius-lg);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--text-sm);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  background: var(--surface-card);
+  color: var(--accent-primary);
+  border: 1px solid var(--surface-border);
+  cursor: pointer;
+  display: flex; align-items: center; gap: var(--spacing-sm);
+  transition: all var(--transition-fast);
+}
+.btn-action-dash:hover { background: var(--surface-elevated); border-color: var(--accent-primary); }
+.btn-action-dash:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.btn-refresh-dash {
+  border-radius: var(--radius-lg);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--text-sm);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  background: var(--accent-primary);
+  color: var(--surface-base);
+  border: none;
+  cursor: pointer;
+  display: flex; align-items: center; gap: var(--spacing-sm);
+  transition: all var(--transition-fast);
+}
+.btn-refresh-dash:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
+/* ── Icon Button ── */
+.btn-icon {
+  width: 36px; height: 36px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--surface-border);
+  background: var(--surface-card);
+  color: var(--text-secondary);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.btn-icon:hover { background: var(--surface-elevated); color: var(--accent-primary); border-color: var(--accent-primary); }
+
+/* ── Widget Header ── */
+.widget-header {
+  padding: var(--spacing-md) var(--spacing-xl);
+  background: var(--surface-elevated);
+  border-bottom: 1px solid var(--surface-border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.widget-header h5 {
+  margin: 0;
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  display: flex; align-items: center;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ── Table Body ── */
+.table-body {
+  padding: var(--spacing-md);
+}
+
+/* ── Console Table ── */
+.console-table .p-datatable-thead > tr > th {
+  background: var(--surface-elevated) !important;
+  color: var(--text-secondary) !important;
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--text-xs) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--surface-border) !important;
+  padding: var(--spacing-sm) var(--spacing-md) !important;
+}
+
+.console-table .p-datatable-tbody > tr {
+  background: var(--surface-card) !important;
+  color: var(--text-primary) !important;
+  transition: background var(--transition-fast);
+
+  &:hover {
+    background: var(--surface-elevated) !important;
+  }
+
+  > td {
+    border-bottom: 1px solid var(--surface-border) !important;
+    padding: var(--spacing-sm) var(--spacing-md) !important;
+  }
+}
+
+/* ── Badge Styles ── */
+.badge-id {
+  background: var(--surface-elevated);
+  color: var(--text-secondary);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-sm);
+  padding: 2px 8px;
+  font-family: var(--font-family-mono);
+  font-size: var(--text-xs);
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 10px;
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-semibold);
+}
+
+.status-valid {
+  background: rgba(16, 185, 129, 0.12);
+  color: var(--color-success);
+}
+.status-error {
+  background: rgba(239, 68, 68, 0.12);
+  color: var(--color-error);
+}
+.status-warning {
+  background: rgba(245, 158, 11, 0.12);
+  color: var(--color-warning);
+}
+
+.speed-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-semibold);
+  font-family: var(--font-family-mono);
+}
+
+.speed-active {
+  background: rgba(20, 184, 166, 0.12);
+  color: var(--accent-primary);
+}
+.speed-stopped {
+  background: var(--surface-elevated);
+  color: var(--text-muted);
+}
+
+.mono-text {
+  font-family: var(--font-family-mono);
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+}
+
+/* ── Fullscreen Map ── */
+.fullscreen-card {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  z-index: 9999;
+  padding: 0;
+  border-radius: 0;
+  background: var(--surface-base);
+}
+.fullscreen-map {
+  height: 100vh !important;
+  border-radius: 0 !important;
+}
+
+/* ── Utilities ── */
+.v-hidden { display: none; }
+
+.dashboard-content-wrapper {
+  flex: 1;
+  min-height: 0;
+  overflow: visible;
+}
+
+.content-loading {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.global-spinner {
+  padding: var(--spacing-3xl);
+  background: rgba(12, 18, 34, 0.85);
+  backdrop-filter: blur(10px);
+}
+
+/* ── Responsive ── */
+@media (max-width: 1199px) {
+  .main-panel { padding: var(--spacing-lg) !important; }
+}
+
+@media (max-width: 991px) {
+  .dashboard-container { gap: var(--spacing-lg); }
+  .header-gradient { padding: var(--spacing-lg); }
+  .controls-section { width: 100%; justify-content: flex-start; }
+  .dashboard-select { min-width: 0; flex: 1 1 220px; }
+  .btn-action-dash,
+  .btn-refresh-dash { flex: 1 1 auto; justify-content: center; }
+}
+
+@media (max-width: 640px) {
+  .main-panel { padding: var(--spacing-md) !important; }
+  .header-gradient { padding: var(--spacing-md); }
+  .header-gradient h2 { font-size: var(--text-lg); }
+  .header-gradient p { font-size: var(--text-sm); }
+  .controls-section { gap: var(--spacing-sm); }
+  .dashboard-select,
+  .btn-action-dash,
+  .btn-refresh-dash { width: 100%; }
+  .btn-action-dash span,
+  .btn-refresh-dash span { display: none; }
+  .widget-header { padding: var(--spacing-sm) var(--spacing-lg); }
+  .widget-header h5 { font-size: var(--text-xs); }
+  .radar-pulse { display: none; }
+}

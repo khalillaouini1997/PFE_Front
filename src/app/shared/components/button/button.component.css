@@ -1,0 +1,148 @@
+@import '../../styles/design-tokens.css';
+
+button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  padding: var(--button-padding-md);
+  border-radius: var(--button-border-radius);
+  font-family: var(--font-family-base);
+  font-size: var(--text-sm);
+  font-weight: var(--button-font-weight);
+  cursor: pointer;
+  border: none;
+  transition: all var(--transition-fast) var(--ease-default);
+  box-shadow: var(--shadow-sm);
+  position: relative;
+}
+
+button:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Sizes */
+button.size-sm {
+  padding: var(--button-padding-sm);
+  font-size: var(--text-xs);
+}
+
+button.size-lg {
+  padding: var(--button-padding-lg);
+  font-size: var(--text-base);
+}
+
+/* Full width */
+button.full-width {
+  width: 100%;
+}
+
+/* Variants */
+button.primary {
+  background: var(--primary-600);
+  color: white;
+}
+
+button.primary:hover:not(:disabled) {
+  background: var(--primary-700);
+}
+
+button.primary:active:not(:disabled) {
+  background: var(--primary-800);
+}
+
+button.secondary {
+  background: var(--slate-100);
+  color: var(--slate-700);
+  border: 1px solid var(--slate-300);
+}
+
+button.secondary:hover:not(:disabled) {
+  background: var(--slate-200);
+  color: var(--slate-800);
+}
+
+button.secondary:active:not(:disabled) {
+  background: var(--slate-300);
+}
+
+button.tertiary {
+  background: transparent;
+  color: var(--primary-600);
+  border: 1px solid var(--primary-300);
+}
+
+button.tertiary:hover:not(:disabled) {
+  background: var(--primary-50);
+  border-color: var(--primary-400);
+}
+
+button.tertiary:active:not(:disabled) {
+  background: var(--primary-100);
+}
+
+button.danger {
+  background: var(--color-error);
+  color: white;
+}
+
+button.danger:hover:not(:disabled) {
+  background: var(--color-error-dark);
+}
+
+button.danger:active:not(:disabled) {
+  background: #b91c1c;
+}
+
+/* Loading state */
+button.loading {
+  pointer-events: none;
+}
+
+button.loading .spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+button.loading .icon,
+button.loading ::ng-content {
+  opacity: 0.5;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Icon */
+button .icon {
+  font-size: 18px;
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  button {
+    transition: none;
+  }
+  
+  button:hover:not(:disabled),
+  button:active:not(:disabled) {
+    transform: none;
+  }
+  
+  button.loading .spinner {
+    animation: none;
+    border-top-color: currentColor;
+  }
+}

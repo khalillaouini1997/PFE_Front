@@ -1,24 +1,24 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { AdministratorCompte } from '../data/data';
 import { HttpClient } from '@angular/common/http';
+import { AuthService } from './auth.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class TraccarService {
-  public currentUser: AdministratorCompte;
+  private readonly authService = inject(AuthService);
+  private readonly _http = inject(HttpClient);
 
-  constructor(private _http: HttpClient) {
-
-  }
-
-  getLisTraccar(): Observable<any> {
-    this.currentUser = JSON.parse(localStorage.getItem('user') || '{}');
-    const url = `${environment.apiBaseUrl}traccar/${this.currentUser.idTraccar}`;
+  getLisTraccar(keyword: string = ''): Observable<any> {
+    const userObj = this.authService.getCurrentUser();
+    const idTraccar = userObj?.user?.idTraccar ?? 0;
+    let url = `${environment.apiBaseUrl}traccar/${idTraccar}`;
+    if (keyword) {
+      url += `?keyword=${encodeURIComponent(keyword)}`;
+    }
     return this._http.get(url);
   }
-
 }
 

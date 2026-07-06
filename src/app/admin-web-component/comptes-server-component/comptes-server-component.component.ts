@@ -1,69 +1,66 @@
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject, ViewChild, ElementRef } from '@angular/core';
 import { saveAs as importedSaveAs } from 'file-saver';
 import { ToastrService } from 'ngx-toastr';
 import { CompteServer, IpAddress } from 'src/app/data/data';
 import { CompteServerService } from "../../service/compte-server.service";
 import { IpAddressService } from "../../service/ip-address.service";
-import { AuthService } from "../../service/auth.service";
+import { AuthService } from '../../service/auth.service';
+import { createPaginationState, pageChanged } from '../../shared/components/pagination-base';
+import { withToast } from '../../utils/toast.helpers';
+
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { DatePickerModule } from 'primeng/datepicker';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { TableModule } from 'primeng/table';
+import { PaginatorModule } from 'primeng/paginator';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
+import { SearchInputComponent } from '../../shared/components/search-input/search-input.component';
+import { EmptyTableComponent } from '../../shared/components/empty-table/empty-table.component';
 
 @Component({
   selector: 'app-comptes-server-component',
   standalone: true,
   templateUrl: './comptes-server-component.component.html',
   styleUrls: ['./comptes-server-component.component.css'],
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, TableModule, BsDatepickerModule]
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, TableModule, PaginatorModule, DatePickerModule, TranslateModule, PageHeaderComponent, SearchInputComponent, EmptyTableComponent]
 })
 export class ComptesServerComponentComponent implements OnInit {
   private readonly cdr = inject(ChangeDetectorRef);
+  @ViewChild('updateModal') updateModal!: ElementRef<HTMLDialogElement>;
 
   keyWord: string = "";
-  public maxSize: number = 5;
-  public bigTotalItems: number = 0;
-  public bigCurrentPage: number = 1;
-  itemsPerPage = 30;
+  pagination = createPaginationState();
   comptesServer: CompteServer[] = [];
   loading: boolean = false;
+  private loadingInProgress: boolean = false;
   dt: Date = new Date();
   mode: boolean = false;
   messageError: string = "";
   ips: IpAddress[] = [];
 
-  searchForm!: FormGroup;
+  private currentKeyWord: string = '';
   updateServerForm!: FormGroup;
 
-  private readonly router = inject(Router);
   private readonly toastr = inject(ToastrService);
   private readonly route = inject(ActivatedRoute);
   private readonly compteServerService = inject(CompteServerService);
   private readonly ipAddressService = inject(IpAddressService);
   private readonly authService = inject(AuthService);
   private readonly fb = inject(FormBuilder);
+  private readonly translate = inject(TranslateService);
+
+  canDelete(): boolean {
+    return this.authService.hasRole('GLOBALADMINDESC');
+  }
 
   ngOnInit() {
     this.initForms();
-    if (!this.authService.isAuthenticated()) {
-      this.router.navigate(['/error']);
-      return;
-    }
-
-    this.getAllcompteServer(this.searchForm.get('keyWord')?.value || "", this.bigCurrentPage - 1, this.itemsPerPage);
-    this.ipAddressService.getAllIps().subscribe(res => {
-      this.ips = res;
-      this.cdr.markForCheck();
-    });
   }
 
   initForms() {
-    this.searchForm = this.fb.group({
-      keyWord: ['']
-    });
-
     this.updateServerForm = this.fb.group({
       idCompteClientServer: [null],
       pseudo: ['', Validators.required],
@@ -71,42 +68,66 @@ export class ComptesServerComponentComponent implements OnInit {
       password: ['', Validators.required],
       idIpAdresse: [null, Validators.required]
     });
+
+    this.ipAddressService.getAllIpAddresses('', 0, 100).subscribe((res: any) => {
+      const responseData = res?.data || res;
+      this.ips = responseData?.content || (Array.isArray(responseData) ? responseData : []);
+      this.cdr.detectChanges();
+    });
+    this.loadComptesServer();
   }
 
-  public pageChanged(event: any): void {
-    if (event.first !== undefined && event.rows !== undefined) {
-      this.bigCurrentPage = (event.first / event.rows) + 1;
-      this.itemsPerPage = event.rows;
-      this.getAllcompteServer(this.searchForm.get('keyWord')?.value || "", this.bigCurrentPage - 1, this.itemsPerPage);
-    }
-  }
-
-  getAllcompteServer(keyWord: string, page: number, size: number) {
+  loadComptesServer(event?: any) {
+    if (this.loadingInProgress) return;
+    this.loadingInProgress = true;
     this.loading = true;
     this.comptesServer = [];
-    this.cdr.markForCheck();
+    this.cdr.detectChanges();
+
+    let page = this.pagination.bigCurrentPage - 1;
+    let size = this.pagination.itemsPerPage;
+
+    if (event) {
+      page = event.first ? Math.floor(event.first / event.rows) : 0;
+      size = event.rows || this.pagination.itemsPerPage;
+    }
+
+    const keyWord = this.currentKeyWord;
+
     this.compteServerService.getAllServerAccount(keyWord, page, size).subscribe({
-      next: (_comptesServer) => {
-        this.comptesServer = _comptesServer.content as any;
-        const now = new Date().getTime();
+      next: (_comptesServer: any) => {
+        const responseData = _comptesServer?.data || _comptesServer;
+        const content = responseData?.content || responseData || [];
+        this.comptesServer = Array.isArray(content) ? content : [];
+        const now = Date.now();
         this.comptesServer.forEach(s => {
           s.expired = now >= s.date_Expiration;
           s.during = !s.expired;
         });
-        this.bigTotalItems = _comptesServer.totalElements;
+        this.pagination.bigTotalItems = responseData?.page?.totalElements || responseData?.totalElements || 0;
         this.loading = false;
-        this.cdr.markForCheck();
+        this.loadingInProgress = false;
+        this.cdr.detectChanges();
       },
       error: () => {
         this.loading = false;
-        this.cdr.markForCheck();
+        this.loadingInProgress = false;
+        this.cdr.detectChanges();
       }
     });
   }
 
-  searchAccount() {
-    this.bigCurrentPage = 1;
-    this.getAllcompteServer(this.searchForm.get('keyWord')?.value || "", this.bigCurrentPage - 1, this.itemsPerPage);
+  onPageChanged(event: any): void {
+    pageChanged(event, this.pagination);
+    this.loadingInProgress = false;
+    this.loadComptesServer();
+  }
+
+  searchAccount(keyWord: string = '') {
+    this.currentKeyWord = keyWord;
+    this.pagination.bigCurrentPage = 1;
+    this.loadingInProgress = false;
+    this.loadComptesServer();
   }
 
   onExport() {
@@ -114,49 +135,59 @@ export class ComptesServerComponentComponent implements OnInit {
 
     this.compteServerService.ExportListComptesServer(this.comptesServer)
       .subscribe(blob => {
-        importedSaveAs(blob, 'Rapport des comptes serveur.xlsx');
+        importedSaveAs(blob, this.translate.instant('SERVER_ACCOUNTS.REPORT_FILENAME'));
       });
   }
 
   deleteCompteServer() {
     const selectedId = this.updateServerForm.get('idCompteClientServer')?.value;
-    if (selectedId && confirm("are you sure that you want to delete this Account ?")) {
-      this.compteServerService.deleteCompteServer(selectedId).subscribe({
-        next: () => {
-          this.comptesServer = this.comptesServer.filter(x => x.idCompteClientServer !== selectedId);
-          this.toastr.success(' Account was deleted ', 'Success!');
-        },
-        error: () => {
-          this.toastr.error(' Account was not deleted ', 'Error!');
-        }
-      });
+    if (selectedId && confirm(this.translate.instant('WEB_ACCOUNTS.DELETE_CONFIRM'))) {
+      withToast(this.compteServerService.deleteCompteServer(selectedId), this.toastr, this.translate, 'SERVER_ACCOUNTS.DELETE_SUCCESS')
+        .subscribe({
+          next: () => {
+            this.comptesServer = this.comptesServer.filter(x => x.idCompteClientServer !== selectedId);
+          },
+          error: () => {}
+        });
     }
   }
 
   updateCompteServer() {
     const updatedCompte = { ...this.updateServerForm.value, date_Expiration: this.dt.getTime() };
-    this.compteServerService.updateServerCompte(updatedCompte.idCompteClientServer, updatedCompte).subscribe({
-      next: (_compteUp: any) => {
-        this.mode = false;
-        const now = new Date().getTime();
-        _compteUp.expired = now >= _compteUp.date_Expiration;
-        _compteUp.during = !_compteUp.expired;
+    withToast(this.compteServerService.updateServerCompte(updatedCompte.idCompteClientServer, updatedCompte), this.toastr, this.translate, 'SERVER_ACCOUNTS.UPDATE_SUCCESS')
+      .subscribe({
+        next: (_compteUp: any) => {
+          this.mode = false;
+          const now = Date.now();
+          _compteUp.expired = now >= _compteUp.date_Expiration;
+          _compteUp.during = !_compteUp.expired;
 
-        const index = this.comptesServer.findIndex(x => x.idCompteClientServer === _compteUp.idCompteClientServer);
-        if (index !== -1) {
-          this.comptesServer[index] = _compteUp;
+          const index = this.comptesServer.findIndex(x => x.idCompteClientServer === _compteUp.idCompteClientServer);
+          if (index !== -1) {
+            this.comptesServer[index] = _compteUp;
+          }
+          this.closeUpdateModal();
+          this.cdr.detectChanges();
+        },
+        error: (error) => {
+          this.mode = true;
+          this.messageError = error.error?.message || this.translate.instant('COMMON.AN_ERROR_OCCURRED');
+          this.cdr.detectChanges();
         }
-        this.toastr.success(' Server account updated ', 'Success!');
-      },
-      error: (error) => {
-        this.mode = true;
-        this.messageError = error.error?.message || "An error occurred";
-      }
-    });
+      });
   }
 
   onSelect(compteServer: CompteServer) {
     this.updateServerForm.patchValue(compteServer);
     this.dt = new Date(compteServer.date_Expiration);
+    if (this.updateModal) {
+      this.updateModal.nativeElement.showModal();
+    }
+  }
+
+  closeUpdateModal() {
+    if (this.updateModal) {
+      this.updateModal.nativeElement.close();
+    }
   }
 }

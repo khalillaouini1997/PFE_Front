@@ -1,60 +1,66 @@
 <div class="main-panel p-4">
-    <!-- Header Section -->
-    <div class="premium-card mb-4 header-gradient shadow-sm">
-        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-            <div class="title-section text-white">
-                <h2 class="m-0 fw-bold">Portails Clients (Web)</h2>
-                <p class="m-0 text-white-50 opacity-75">Gérer les comptes utilisateurs et les accès front-end</p>
-            </div>
-            
-            <div class="controls-section d-flex align-items-center gap-3">
-                <form class="d-flex align-items-center" [formGroup]="searchForm" (ngSubmit)="searchWebAccount()">
-                    <div class="input-group shadow-sm search-container-premium">
-                        <input type="text" class="form-control border-0 px-3 search-input-medium" formControlName="keyWord" placeholder="Rechercher client..." title="Rechercher client">
-                        <button class="btn btn-white border-0 search-btn-premium" type="submit" title="Lancer la recherche">
-                            <i class="fa fa-search"></i>
-                        </button>
-                    </div>
-                </form>
-                <button class="btn btn-glass btn-sm rounded-circle" routerLink="/adminWeb/addCompteWeb" title="Nouveau Compte Web">
-                    <i class="fa fa-plus text-white"></i>
-                </button>
-            </div>
-        </div>
-    </div>
+    <app-page-header titleKey="WEB_ACCOUNTS.TITLE" subtitleKey="WEB_ACCOUNTS.SUBTITLE">
+        <app-search-input placeholder="WEB_ACCOUNTS.SEARCH_PLACEHOLDER" (search)="searchWebAccount($event)" />
+        <button *ngIf="canDelete()" class="btn btn-glass btn-sm rounded-circle" routerLink="/adminWeb/addCompteWeb" title="{{ 'WEB_ACCOUNTS.ADD' | translate }}">
+            <i class="fa fa-plus text-white"></i>
+        </button>
+    </app-page-header>
 
     <!-- Table Section -->
     <div class="premium-card p-0 overflow-hidden shadow-sm">
-        <p-table [value]="comptesWeb" [lazy]="true" (onLazyLoad)="pageChanged($event)" 
-            [paginator]="true" [rows]="itemsPerPage" [totalRecords]="bigTotalItems" 
+        <p-table [value]="comptesWeb" [lazy]="true" (onLazyLoad)="loadWebAccounts($event)"
+            [paginator]="true" [rows]="pagination.itemsPerPage" [totalRecords]="pagination.bigTotalItems"
             [rowsPerPageOptions]="[10,15,30,50,60]"
             [loading]="loading"
-            stateStorage="session" stateKey="comptes-web-state"
             [reorderableColumns]="true" [resizableColumns]="true" columnResizeMode="expand"
             styleClass="p-datatable-sm p-datatable-gridlines premium-table-custom"
-            responsiveLayout="scroll">
+            responsiveLayout="scroll"
+            paginatorPosition="bottom"
+            (onPage)="onPageChanged($event)">
             
             <ng-template pTemplate="header">
                 <tr>
-                    <th style="width: 70px" pReorderableColumn pResizableColumn>Id</th>
-                    <th pReorderableColumn pResizableColumn>Login</th>
-                    <th pReorderableColumn pResizableColumn>Mot de passe</th>
-                    <th pReorderableColumn pResizableColumn>Créé à</th>
-                    <th pReorderableColumn pResizableColumn>Expiré le</th>
-                    <th pReorderableColumn pResizableColumn>Nom Prenom</th>
-                    <th pReorderableColumn pResizableColumn>Téléphone</th>
-                    <th pReorderableColumn pResizableColumn>Région</th>
-                    <th pReorderableColumn pResizableColumn>Type Client</th>
-                    <th pReorderableColumn pResizableColumn>Red E / j</th>
-                    <th pReorderableColumn pResizableColumn>Red C / m</th>
-                    <th pReorderableColumn pResizableColumn>Red E / m</th>
-                    <th pReorderableColumn pResizableColumn>Red sim / m</th>
-                    <th class="text-end" style="width: 100px">Actions</th>
+                    <th scope="col" style="width: 70px" pReorderableColumn pResizableColumn>{{ 'COMMON.ID' | translate }}</th>
+                    <th scope="col" pReorderableColumn pResizableColumn>{{ 'AUTH.USERNAME' | translate }}</th>
+                    <th scope="col" pReorderableColumn pResizableColumn>{{ 'AUTH.PASSWORD' | translate }}</th>
+                    <th scope="col" pReorderableColumn pResizableColumn>{{ 'WEB_ACCOUNTS.CREATED_AT' | translate }}</th>
+                    <th scope="col" pReorderableColumn pResizableColumn>{{ 'WEB_ACCOUNTS.EXPIRES_AT' | translate }}</th>
+                    <th scope="col" pReorderableColumn pResizableColumn>{{ 'WEB_ACCOUNTS.FULL_NAME' | translate }}</th>
+                    <th scope="col" pReorderableColumn pResizableColumn>{{ 'WEB_ACCOUNTS.PHONE' | translate }}</th>
+                    <th scope="col" pReorderableColumn pResizableColumn>
+                        <div class="d-flex flex-column">
+                            <span>{{ 'WEB_ACCOUNTS.REGION' | translate }}</span>
+                            <select class="form-select form-select-sm mt-1" 
+                                [formControl]="regionControl" (change)="searchWebAccount()" 
+                                title="Filter by region">
+                                <option value="">All</option>
+                                <option value="TUNIS">TUNIS</option>
+                                <option value="sousse">sousse</option>
+                                <option value="sfax">sfax</option>
+                                <option value="UNDEFINED">Not Defined</option>
+                            </select>
+                        </div>
+                    </th>
+                    <th scope="col" pReorderableColumn pResizableColumn>{{ 'WEB_ACCOUNTS.CLIENT_TYPE' | translate }}</th>
+                    <th scope="col" pReorderableColumn pResizableColumn>
+                        <div class="d-flex flex-column">
+                            <span>{{ 'WEB_ACCOUNTS.POOL' | translate }}</span>
+                            <select class="form-select form-select-sm mt-1" 
+                                [formControl]="poolControl" (change)="searchWebAccount()" 
+                                title="Filter by pool">
+                                <option value="">All</option>
+                                @for (pool of availablePools; track pool) {
+                                    <option [ngValue]="pool">{{pool}}</option>
+                                }
+                            </select>
+                        </div>
+                    </th>
+                    <th scope="col" class="text-end" style="width: 100px">{{ 'COMMON.ACTIONS' | translate }}</th>
                 </tr>
             </ng-template>
 
             <ng-template pTemplate="body" let-compteWeb>
-                <tr class="align-middle">
+                <tr class="align-middle clickable-row" (click)="onSelect(compteWeb)">
                     <td><span class="badge bg-light text-dark">{{compteWeb.idCompteClientWeb}}</span></td>
                     <td class="fw-bold text-primary">{{compteWeb.login}}</td>
                     <td><code>{{compteWeb.rawPassword}}</code></td>
@@ -68,18 +74,15 @@
                     <td class="small">{{compteWeb.telephone}}</td>
                     <td><span class="badge bg-info bg-opacity-10 text-info">{{compteWeb.area}}</span></td>
                     <td class="small">{{compteWeb.administratorCompte?.username}}</td>
-                    <td class="text-center">{{compteWeb.deviceFeeByDay}}</td>
-                    <td class="text-center">{{compteWeb.accountFeeByMonth}}</td>
-                    <td class="text-center">{{compteWeb.deviceFeePerMonth}}</td>
-                    <td class="text-center">{{compteWeb.simCardFeePerMonth}}</td>
+                    <td class="text-center text-primary fw-bold">{{compteWeb.pool || 0}}</td>
                     <td class="text-end">
                         <div class="btn-group gap-1">
-                            <button class="btn btn-sm btn-outline-primary border-0 p-1" 
-                                [routerLink]="['/adminWeb/configurations',compteWeb.idCompteClientWeb]" title="Configurer">
+                            <button *ngIf="canDelete()" class="btn btn-sm btn-outline-primary border-0 p-1" 
+                                [routerLink]="['/adminWeb/configurations',compteWeb.idCompteClientWeb]" title="{{ 'COMMON.CONFIGURE' | translate }}">
                                 <i class="fa fa-cog"></i>
                             </button>
-                            <button class="btn btn-sm btn-outline-danger border-0 p-1" 
-                                (click)="onSelect(compteWeb);deleteWebAccount();" title="Supprimer">
+                            <button *ngIf="canDelete()" class="btn btn-sm btn-outline-danger border-0 p-1" 
+                                (click)="onSelect(compteWeb);deleteWebAccount(); $event.stopPropagation();" title="{{ 'COMMON.DELETE' | translate }}">
                                 <i class="fa fa-trash"></i>
                             </button>
                         </div>
@@ -87,14 +90,7 @@
                 </tr>
             </ng-template>
 
-            <ng-template pTemplate="emptymessage">
-                <tr>
-                    <td colspan="14" class="text-center py-5 text-secondary">
-                        <i class="fa fa-globe fa-3x opacity-25 mb-2"></i>
-                        <p>Aucun compte web trouvé</p>
-                    </td>
-                </tr>
-            </ng-template>
+            <app-empty-table [colspan]="11" icon="fa-globe" messageKey="WEB_ACCOUNTS.NO_DATA" />
         </p-table>
     </div>
 </div>

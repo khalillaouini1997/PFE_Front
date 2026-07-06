@@ -1,8 +1,12 @@
 {
   "/ws_webadmin": {
-    "target": "https://fleet.tn",
+    "target": "http://localhost:8080",
     "secure": false,
     "changeOrigin": true,
-    "logLevel": "debug"
+    "ws": true,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/ws_webadmin": ""
+    }
   }
 }

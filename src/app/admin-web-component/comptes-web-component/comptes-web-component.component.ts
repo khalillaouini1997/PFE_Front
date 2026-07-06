@@ -1,109 +1,151 @@
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
+import { CommonModule, DatePipe } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { CompteWeb } from 'src/app/data/data';
+import { CompteWeb, createCompteWeb } from 'src/app/data/data';
 import { environment } from '../../../environments/environment';
-import { AuthService } from 'src/app/service/auth.service';
+
 import { WebAccountService } from 'src/app/service/web-account.service';
+import { AuthService } from 'src/app/service/auth.service';
+import { createPaginationState, pageChanged } from '../../shared/components/pagination-base';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
-import { DatePipe } from '@angular/common';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { STORAGE_KEYS } from 'src/app/shared/constants';
+import { withToast } from '../../utils/toast.helpers';
 
 
 import { TableModule } from 'primeng/table';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
+import { SearchInputComponent } from '../../shared/components/search-input/search-input.component';
+import { EmptyTableComponent } from '../../shared/components/empty-table/empty-table.component';
 
 @Component({
   selector: 'app-comptes-web-component',
   standalone: true,
   templateUrl: './comptes-web-component.component.html',
   styleUrls: ['./comptes-web-component.component.css'],
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, TableModule, DatePipe]
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, TableModule, DatePipe, TranslateModule, PageHeaderComponent, SearchInputComponent, EmptyTableComponent]
 })
 export class ComptesWebComponentComponent implements OnInit {
-  private readonly cdr = inject(ChangeDetectorRef);
-  itemsPerPage = 30;
-  public bigTotalItems: number = 0;
-  public bigCurrentPage: number = 1;
-  public maxSize: number = 5;
+  pagination = createPaginationState();
   comptesWeb: CompteWeb[] = [];
   loading: boolean = false;
-  selectedWebAccount: CompteWeb = new CompteWeb();
+  private loadingInProgress: boolean = false;
+  selectedWebAccount: CompteWeb = createCompteWeb();
   dt: any;
   code_pays = [];
 
   searchForm!: FormGroup;
+  private currentKeyWord: string = '';
+  availablePools: number[] = [];
+
+  get regionControl() {
+    return this.searchForm.get('region') as any;
+  }
+
+  get poolControl() {
+    return this.searchForm.get('pool') as any;
+  }
 
   owner: string = environment.owner;
 
-  private readonly authService = inject(AuthService);
   private readonly webAccountService = inject(WebAccountService);
+  private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly toastr = inject(ToastrService);
   private readonly fb = inject(FormBuilder);
+  private readonly translate = inject(TranslateService);
+  private readonly cdr = inject(ChangeDetectorRef);
+
+  canDelete(): boolean {
+    return this.authService.hasRole('GLOBALADMINDESC');
+  }
 
   ngOnInit() {
-    this.initForms();
-    if (!this.authService.isAuthenticated()) {
-      this.router.navigate(['/error']);
-    } else {
-      this.getAllWebAccount(this.searchForm.get('keyWord')?.value || "", this.bigCurrentPage - 1, this.itemsPerPage);
+    if (localStorage.getItem(STORAGE_KEYS.IS_RELOADING) === 'true') {
+      localStorage.removeItem(STORAGE_KEYS.IS_RELOADING);
+      globalThis.location.reload();
+      return;
     }
+    this.initForms();
   }
 
   initForms() {
     this.searchForm = this.fb.group({
-      keyWord: ['']
+      region: [''],
+      pool: ['']
     });
+    this.loadAvailablePools();
+    this.loadWebAccounts();
   }
 
-  public pageChanged(event: any): void {
-    if (event.first !== undefined && event.rows !== undefined) {
-      this.bigCurrentPage = (event.first / event.rows) + 1;
-      this.itemsPerPage = event.rows;
-      this.getAllWebAccount(this.searchForm.get('keyWord')?.value, this.bigCurrentPage - 1, this.itemsPerPage);
-    }
-  }
-
-  getAllWebAccount(keyWord: string, page: number, size: number) {
+  loadWebAccounts(event?: any) {
+    if (this.loadingInProgress) return;
+    this.loadingInProgress = true;
     this.loading = true;
-    this.comptesWeb = [];
-    this.cdr.markForCheck();
-    this.webAccountService.getAllWebAccountByKeyWord(keyWord, page, size).subscribe({
-      next: (_comptesWeb) => {
-        this.loading = false;
-        this.comptesWeb = _comptesWeb.content as any;
+    this.cdr.detectChanges();
 
-        for (let i = 0; i < this.comptesWeb.length; i++) {
-          if (new Date().getTime() < new Date(this.comptesWeb[i].date_expiration).getTime()) {
-            this.comptesWeb[i].expired = false;
-            this.comptesWeb[i].during = true;
+    let page = this.pagination.bigCurrentPage - 1;
+    let size = this.pagination.itemsPerPage;
+
+    if (event) {
+      page = event.first ? Math.floor(event.first / event.rows) : 0;
+      size = event.rows || this.pagination.itemsPerPage;
+    }
+
+    const keyWord = this.currentKeyWord;
+    const region = this.searchForm?.get('region')?.value || '';
+    const pool = this.searchForm?.get('pool')?.value ? parseInt(this.searchForm?.get('pool')?.value) : undefined;
+
+    this.webAccountService.getAllWebAccountByKeyWord(keyWord, page, size, region, pool).subscribe({
+      next: (res: any) => {
+        const responseData = res?.data || res;
+        const totalElements = responseData?.page?.totalElements || responseData?.totalElements || 0;
+        const loaded = responseData?.content || [];
+
+        for (const compte of loaded) {
+          if (Date.now() < new Date(compte.date_expiration).getTime()) {
+            compte.expired = false;
+            compte.during = true;
           } else {
-            this.comptesWeb[i].expired = true;
-            this.comptesWeb[i].during = false;
+            compte.expired = true;
+            compte.during = false;
           }
         }
-        this.bigTotalItems = _comptesWeb.totalElements;
-        this.cdr.markForCheck();
+
+        this.comptesWeb = loaded;
+        this.pagination.bigTotalItems = totalElements;
+        this.loading = false;
+        this.loadingInProgress = false;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         this.loading = false;
-        this.toastr.error('Error loading web accounts', 'Error');
-        this.cdr.markForCheck();
+        this.loadingInProgress = false;
+        this.cdr.detectChanges();
+        this.toastr.error(
+          this.translate.instant('WEB_ACCOUNTS.LOAD_ERROR'),
+          this.translate.instant('COMMON.ERROR')
+        );
       }
     });
+  }
+
+  onPageChanged(event: any): void {
+    pageChanged(event, this.pagination);
+    this.loadingInProgress = false;
+    this.loadWebAccounts();
   }
 
   getDateLogF(username: string) {
     this.webAccountService.getDateLog(username).subscribe();
   }
 
-  searchWebAccount() {
-    this.loading = true;
-    this.bigCurrentPage = 1;
-    this.cdr.markForCheck();
-    this.getAllWebAccount(this.searchForm.get('keyWord')?.value, this.bigCurrentPage - 1, this.itemsPerPage);
-    this.loading = false;
-    this.cdr.markForCheck();
+  searchWebAccount(keyWord: string = '') {
+    this.currentKeyWord = keyWord;
+    this.pagination.bigCurrentPage = 1;
+    this.loadingInProgress = false;
+    this.loadWebAccounts();
   }
 
   onSelect(compteWeb: CompteWeb) {
@@ -116,26 +158,32 @@ export class ComptesWebComponentComponent implements OnInit {
       date: { year: dateDecop.getFullYear(), month: dateDecop.getUTCMonth() + 1, day: dateDecop.getUTCDate() },
       jsdate: dateDecop
     };
-    this.cdr.markForCheck();
+    this.router.navigate(['/adminWeb/configurations', compteWeb.idCompteClientWeb]);
+  }
+
+  loadAvailablePools() {
+    this.webAccountService.getDistinctPools().subscribe({
+      next: (pools: any) => {
+        const responseData = pools?.data || pools;
+        const poolsArray = Array.isArray(responseData) ? responseData : (responseData?.content || []);
+        this.availablePools = poolsArray.sort((a, b) => a - b);
+      },
+      error: (err) => {
+      }
+    });
   }
 
   deleteWebAccount() {
-    const res = confirm("are you sure that you want to delete this Account ?");
+    const res = confirm(this.translate.instant('WEB_ACCOUNTS.DELETE_CONFIRM'));
     if (res) {
-      const indexCompte = this.comptesWeb.findIndex(x => x.idCompteClientWeb == this.selectedWebAccount.idCompteClientWeb);
-      this.webAccountService.deleteWebAccount(this.selectedWebAccount.idCompteClientWeb).subscribe({
-        next: () => {
-          this.toastr.success(' Account was deleted ', 'Success!');
-          if (indexCompte > -1) {
-            this.comptesWeb.splice(indexCompte, 1);
-            this.cdr.markForCheck();
-          }
-        },
-        error: () => {
-          this.toastr.error(' Account was not deleted ', 'Error!');
-          this.cdr.markForCheck();
-        }
-      });
+      withToast(this.webAccountService.deleteWebAccount(this.selectedWebAccount.idCompteClientWeb), this.toastr, this.translate, 'WEB_ACCOUNTS.DELETE_SUCCESS')
+        .subscribe({
+          next: () => {
+            this.loadingInProgress = false;
+            this.loadWebAccounts();
+          },
+          error: () => {}
+        });
     }
   }
 }

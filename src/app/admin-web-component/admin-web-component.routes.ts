@@ -1,22 +1,6 @@
 import { Routes } from '@angular/router';
-import { ComptesWebComponentComponent } from './comptes-web-component/comptes-web-component.component';
-import { ComptesServerComponentComponent } from './comptes-server-component/comptes-server-component.component';
-import { AddCompteWebComponentComponent } from './add-compte-web-component/add-compte-web-component.component';
-import { DashbordComponent } from './dashbord/dashbord.component';
 import { AdminWebComponentComponent } from './admin-web-component.component';
-import { HelpComponent } from './help/help.component';
-import { AddCompteServerComponent } from './add-compte-server/add-compte-server.component';
-import { CompteServerDetailsComponent } from './compte-server-details/compte-server-details.component';
-import { IpAdresseComponent } from './ip-adresse/ip-adresse.component';
-import { AccessLogComponent } from './access-log/access-log.component';
-import { ListTraccarComponent } from './list-traccar/list-traccar.component';
-import { CompteAdminComponent } from './compte-admin/compte-admin.component';
-import { AddAdminCompteComponent } from './add-admin-compte/add-admin-compte.component';
-import { ConfigurationWebComponentComponent } from "./configuration-web-component/configuration-web-component.component";
-import { RecalculWebComponent } from "./recalcul-web/recalcul-web.component";
-import { ArchiveComponent } from "./archive/archive.component";
-import { VehiculeInfoComponent } from "./vehicule-info/vehicule-info.component";
-import { AddAdresseIpComponent } from "./add-adresse-ip/add-adresse-ip.component";
+import { roleGuard } from '../guards/role.guard';
 
 export const ADMIN_WEB_ROUTES: Routes = [{
   path: '',
@@ -29,71 +13,83 @@ export const ADMIN_WEB_ROUTES: Routes = [{
     },
     {
       path: 'dashboard',
-      component: DashbordComponent
+      loadComponent: () => import('./dashboard/dashboard.component').then(m => m.DashboardComponent),
+      canMatch: [roleGuard(['WEBADMIN', 'GLOBALADMINDESC'])]
+    },
+    {
+      path: 'global-dashboard',
+      loadComponent: () => import('./global-dashboard/global-dashboard.component').then(m => m.GlobalDashboardComponent),
+      canMatch: [roleGuard(['GLOBALADMINDESC'])]
     },
     {
       path: 'adminCompte',
-      component: CompteAdminComponent
+      loadComponent: () => import('./compte-admin/compte-admin.component').then(m => m.CompteAdminComponent),
+      canMatch: [roleGuard(['GLOBALADMINDESC'])]
     },
     {
       path: 'addAdminCompte',
-      component: AddAdminCompteComponent
+      loadComponent: () => import('./add-admin-compte/add-admin-compte.component').then(m => m.AddAdminCompteComponent),
+      canMatch: [roleGuard(['GLOBALADMINDESC'])]
     },
     {
       path: 'addCompteServer',
-      component: AddCompteServerComponent
+      loadComponent: () => import('./add-compte-server/add-compte-server.component').then(m => m.AddCompteServerComponent),
+      canMatch: [roleGuard(['WEBADMIN', 'GLOBALADMINDESC'])]
     },
     {
       path: 'configurations/:idCompteClientWeb',
-      component: ConfigurationWebComponentComponent
+      loadComponent: () => import('./configuration-web-component/configuration-web-component.component').then(m => m.ConfigurationWebComponentComponent),
+      canMatch: [roleGuard(['WEBADMIN', 'GLOBALADMINDESC'])]
     },
     {
       path: 'compteDetails/:idCompteClientServer',
-      component: CompteServerDetailsComponent
+      loadComponent: () => import('./compte-server-details/compte-server-details.component').then(m => m.CompteServerDetailsComponent),
+      canMatch: [roleGuard(['WEBADMIN', 'GLOBALADMINDESC'])]
     },
     {
       path: 'addAdressIp',
-      component: AddAdresseIpComponent
+      loadComponent: () => import('./add-adresse-ip/add-adresse-ip.component').then(m => m.AddAdresseIpComponent),
+      canMatch: [roleGuard(['GLOBALADMINDESC'])]
     },
     {
       path: 'listAdressIp',
-      component: IpAdresseComponent
+      loadComponent: () => import('./ip-adresse/ip-adresse.component').then(m => m.IpAdresseComponent),
+      canMatch: [roleGuard(['GLOBALADMINDESC'])]
     },
     {
       path: 'addCompteWeb',
-      component: AddCompteWebComponentComponent
+      loadComponent: () => import('./add-compte-web-component/add-compte-web-component.component').then(m => m.AddCompteWebComponentComponent),
+      canMatch: [roleGuard(['WEBADMIN', 'GLOBALADMINDESC'])]
     },
     {
       path: 'listServers',
-      component: ComptesServerComponentComponent
+      loadComponent: () => import('./comptes-server-component/comptes-server-component.component').then(m => m.ComptesServerComponentComponent),
+      canMatch: [roleGuard(['WEBADMIN', 'GLOBALADMINDESC'])]
     },
     {
       path: 'listWebs',
-      component: ComptesWebComponentComponent
+      loadComponent: () => import('./comptes-web-component/comptes-web-component.component').then(m => m.ComptesWebComponentComponent),
+      canMatch: [roleGuard(['AGENT', 'WEBADMIN', 'GLOBALADMINDESC'])]
     },
     {
       path: 'archiveBoitier/:numBoitier',
-      component: ArchiveComponent
-    },
-    {
-      path: 'recalcule/:idCompteClientWeb/:numBoitier',
-      component: RecalculWebComponent
-    },
-    {
-      path: 'intervention',
-      component: HelpComponent
-    },
-    {
-      path: 'technicianIntervention',
-      component: VehiculeInfoComponent
+      loadComponent: () => import('./archive/archive.component').then(m => m.ArchiveComponent),
+      canMatch: [roleGuard(['WEBADMIN', 'GLOBALADMINDESC'])]
     },
     {
       path: 'accessLog',
-      component: AccessLogComponent
+      loadComponent: () => import('./access-log/access-log.component').then(m => m.AccessLogComponent),
+      canMatch: [roleGuard(['AGENT', 'WEBADMIN', 'GLOBALADMINDESC'])]
     },
     {
       path: 'traccar',
-      component: ListTraccarComponent
+      loadComponent: () => import('./list-traccar/list-traccar.component').then(m => m.ListTraccarComponent),
+      canMatch: [roleGuard(['WEBADMIN', 'GLOBALADMINDESC'])]
+    },
+    {
+      path: 'billing',
+      loadComponent: () => import('./billing/billing.component').then(m => m.BillingComponent),
+      canMatch: [roleGuard(['GLOBALADMINDESC'])]
     }
   ],
 }];

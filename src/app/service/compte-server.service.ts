@@ -1,9 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import { Boitier, CompteServer } from "../data/data";
+import { CompteServer } from "../data/data";
 import { Observable } from "rxjs";
 import { environment } from '../../environments/environment';
-import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,23 +10,18 @@ import { AuthService } from './auth.service';
 export class CompteServerService {
 
   private readonly http = inject(HttpClient);
-  private readonly authService = inject(AuthService);
 
   // Compte Server CRUD
-  createServerCompte(compteServer: CompteServer): Observable<any> {
-    return this.http.post<any>(`${environment.apiBaseUrl}compteServer`, compteServer);
-  }
-
   updateServerCompte(id: number, compteServer: CompteServer): Observable<any> {
     return this.http.put<any>(`${environment.apiBaseUrl}compteServer/${id}`, compteServer);
   }
 
-  deleteCompteServer(id: number): Observable<any> {
-    return this.http.delete<any>(`${environment.apiBaseUrl}compteServer/${id}`);
+  deleteCompteServer(id: number): Observable<void> {
+    return this.http.delete<void>(`${environment.apiBaseUrl}compteServer/${id}`);
   }
 
-  getAllServerCompte(keyword: string, page: number, size: number): Observable<any> {
-    return this.http.get<any>(`${environment.apiBaseUrl}compteServer?keyWord=${keyword}&page=${page}&size=${size}`);
+  getAllServerAccount(keyWord: string, page: number, size: number): Observable<any> {
+    return this.http.get<any>(`${environment.apiBaseUrl}compteServer?keyWord=${keyWord}&page=${page}&size=${size}`);
   }
 
   getCompteServerById(id: number): Observable<any> {
@@ -39,42 +33,32 @@ export class CompteServerService {
     return this.http.post<any>(`${environment.apiBaseUrl}compteServer/${idCompteServer}?nombreBoitier=${nbrBoitiers}`, null);
   }
 
-  getAllBoitierofIdcompte(idCompteServer: number): Observable<any> {
-    return this.http.get<any>(`${environment.apiBaseUrl}/compteServer/${idCompteServer}/listBoitiers`);
+  getAllBoitierofIdcompte(idCompteServer: number, page: number = 0, size: number = 10000): Observable<any> {
+    return this.http.get<any>(`${environment.apiBaseUrl}compteServer/${idCompteServer}/Boitiers?page=${page}&size=${size}`);
   }
 
   extendIntervalOfBoitiers(idCompteServer: number): Observable<any> {
-    return this.http.put<any>(`${environment.apiBaseUrl}/compteServer/${idCompteServer}/newInterval`, null);
+    return this.http.post<any>(`${environment.apiBaseUrl}compteServer/${idCompteServer}/newInterval`, null);
   }
 
-  // Web Admin perspective
-  getAllServerAccount(keyWord: string, page: number, size: number): Observable<any> {
-    return this.http.get<any>(`${environment.apiBaseUrl}/compteServerWeb?keyWord=${keyWord}&page=${page}&size=${size}&userName=${this.authService.getCurrentUserName()}`);
-  }
-
-  getServerAccountById(id: number): Observable<any> {
-    return this.http.get<any>(`${environment.apiBaseUrl}/compteServerWeb/${id}`);
-  }
-
-  getAllServerAccountForForm(): Observable<any> {
-    const keyWord = "";
-    return this.http.get<any>(`${environment.apiBaseUrl}/compteServerWeb?keyWord=${keyWord}&size=1000000&userName=${this.authService.getCurrentUserName()}`);
+  getAllServerAccountForForm(): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.apiBaseUrl}compteServer/AllNames`);
   }
 
   createServerComptewithBoitier(compteServer: CompteServer, nbrBoitiers: number): Observable<any> {
-    return this.http.post<any>(`${environment.apiBaseUrl}compteServer/addNewComptewithBoitier?nombreBoitier=${nbrBoitiers}&username=${this.authService.getCurrentUserName()}`, compteServer);
+    return this.http.post<any>(`${environment.apiBaseUrl}compteServer/addNewComptewithBoitier?nombreBoitier=${nbrBoitiers}`, compteServer);
   }
 
   // Misc
   isExistPseudo(pseudo: string): Observable<any> {
-    return this.http.get<any>(`${environment.apiBaseUrl}/compteServer/pseudo?pseudo=${pseudo}`);
+    return this.http.get<any>(`${environment.apiBaseUrl}compteServer/pseudo?pseudo=${pseudo}`);
   }
 
   isExistLogin(login: string): Observable<any> {
-    return this.http.get<any>(`${environment.apiBaseUrl}/compteServer/login?login=${login}`);
+    return this.http.get<any>(`${environment.apiBaseUrl}compteServer/login?login=${login}`);
   }
 
   ExportListComptesServer(comptesServer: CompteServer[]): Observable<Blob> {
-    return this.http.post(`${environment.apiBaseUrl}/compteServerWeb/export`, comptesServer, { responseType: 'blob' });
+    return this.http.post(`${environment.apiBaseUrl}compteServer/export`, comptesServer, { responseType: 'blob' });
   }
 }

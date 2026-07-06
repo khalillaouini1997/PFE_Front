@@ -1,13 +1,17 @@
 import { Router } from '@angular/router';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CompteServer, CompteWeb, IpAddress } from 'src/app/data/data';
 import { WebAccountService } from "../../service/web-account.service";
-import { AuthService } from "../../service/auth.service";
+
 import { CompteServerService } from "../../service/compte-server.service";
 import { IpAddressService } from "../../service/ip-address.service";
 import { ToastrService } from "ngx-toastr";
+import { NOTIFICATION_SUBQUERIES } from '../../shared/constants';
+import { withToast } from '../../utils/toast.helpers';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { DatePickerModule } from 'primeng/datepicker';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 
 
 @Component({
@@ -15,26 +19,27 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
     standalone: true,
     templateUrl: './add-compte-web-component.component.html',
     styleUrls: ['./add-compte-web-component.component.css'],
-    imports: [ReactiveFormsModule, BsDatepickerModule]
+    imports: [ReactiveFormsModule, DatePickerModule, TranslateModule, PageHeaderComponent]
 })
-export class AddCompteWebComponentComponent implements OnInit {
+export class AddCompteWebComponentComponent {
 
   webForm!: FormGroup;
-  serverAccounts = signal<CompteServer[]>([]);
+  serverAccounts = signal<any[]>([]);
   codesPays = signal<any[]>([]);
   ipAddresses = signal<IpAddress[]>([]);
   regions = ['Tunis', 'Sfax', 'Sousse'];
-  notifSubs = ['date_sub(NOW(), INTERVAL 6 hour)', 'date_sub(NOW(), INTERVAL 1 DAY)', 'date_sub(NOW(), INTERVAL 2 DAY)'];
+  notifSubs = NOTIFICATION_SUBQUERIES;
   checked = signal<boolean>(false);
 
 
   private readonly router = inject(Router);
   private readonly toastr = inject(ToastrService);
   private readonly webAccountService = inject(WebAccountService);
-  private readonly authService = inject(AuthService);
+
   private readonly ipAddressService = inject(IpAddressService);
   private readonly compteServerService = inject(CompteServerService);
   private readonly fb = inject(FormBuilder);
+  private readonly translate = inject(TranslateService);
 
   constructor() {
     this.initForm();
@@ -63,25 +68,31 @@ export class AddCompteWebComponentComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (!this.authService.isAuthenticated()) {
-      this.router.navigate(['/error']);
-      return;
-    }
 
-    this.compteServerService.getAllServerAccountForForm().subscribe(res => {
-      this.serverAccounts.set(res.content);
+
+    this.webAccountService.getAllWebAccountNames().subscribe({
+      next: (res: any) => {
+        const responseData = res?.data || res;
+        this.serverAccounts.set(Array.isArray(responseData) ? responseData : []);
+      },
+      error: (err) => {
+      }
     });
 
     this.codesPays.set(this.webAccountService.codesPays);
-    this.ipAddressService.getAllIps().subscribe(res => {
-      this.ipAddresses.set(res);
+    this.ipAddressService.getAllIpAddresses('', 0, 100).subscribe(res => {
+      const content = res?.content || res;
+      this.ipAddresses.set(Array.isArray(content) ? content : []);
     });
   }
 
 
   addCompteWeb() {
     if (this.webForm.invalid) {
-      this.toastr.warning('Please fill all required fields', 'Warning');
+      this.toastr.warning(
+        this.translate.instant('WEB_ACCOUNTS.FILL_REQUIRED'), 
+        this.translate.instant('COMMON.WARNING')
+      );
       return;
     }
 
@@ -92,21 +103,19 @@ export class AddCompteWebComponentComponent implements OnInit {
     };
 
     const idCompteServer = formValue.idCompte;
-    const selectedServer = this.serverAccounts().find(s => s.idCompteClientServer == idCompteServer);
+    const selectedServer = this.serverAccounts().find(s => s.idCompteClientWeb == idCompteServer);
     if (selectedServer) {
       compteWeb.compteClientServer = selectedServer;
     }
 
 
-    this.webAccountService.addCompteWeb(compteWeb).subscribe({
-      next: (_compteWeb) => {
-        this.webAccountService.associateCompteWebToCompteServer(_compteWeb.idCompteClientWeb, idCompteServer).subscribe();
-        this.toastr.success('Web Account is added successfully', 'Success!');
-        this.router.navigate(['/adminWeb/listWebs']);
-      },
-      error: () => {
-        this.toastr.error('There is a mistake', 'Error!');
-      }
-    });
+    withToast(this.webAccountService.addCompteWeb(compteWeb), this.toastr, this.translate, 'WEB_ACCOUNTS.ADD_SUCCESS')
+      .subscribe({
+        next: (_compteWeb) => {
+          this.webAccountService.associateCompteWebToCompteServer(_compteWeb.idCompteClientWeb, idCompteServer).subscribe();
+          this.router.navigate(['/adminWeb/listWebs']);
+        },
+        error: () => {}
+      });
   }
 }
