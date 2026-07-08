@@ -11,6 +11,7 @@
 }
 .input-group {
   position: relative;
+  width: 100%;
 }
 .form-control {
   display: block;
@@ -37,6 +38,14 @@
   border-color: #757575;
   outline: none;
   box-shadow: none;
+
+  ~ label {
+    color: #03a9f4;
+  }
+  
+  ~ .form-bar:before, ~ .form-bar:after {
+    background: #03a9f4;
+  }
 }
 
 /* -- label styles ---------------------------------- */
@@ -84,15 +93,6 @@ label {
 
 /* input colors ---- */
 /* default */
-.form-control:focus {
-  ~ label {
-    color: #03a9f4;
-  }
-  
-  ~ .form-bar:before, ~ .form-bar:after {
-    background: #03a9f4;
-  }
-}
 
 
 
@@ -123,10 +123,6 @@ label {
 
 .input-group-addon, .input-group-btn {
   width: inherit;
-}
-
-.input-group {
-  width: 100%;
 }
 
 @media (min-width: 768px) {
@@ -190,14 +186,6 @@ label {
 }
 
 /* -- highlighter animation --------------------------- */
-@-webkit-keyframes inputHighlighter {
-  from { background:#5264AE; }
-  to { width:0; background:transparent; }
-}
-@-moz-keyframes inputHighlighter {
-  from { background:#5264AE; }
-  to { width:0; background:transparent; }
-}
 @keyframes inputHighlighter {
   from { background:#5264AE; }
   to { width:0; background:transparent; }
@@ -255,17 +243,13 @@ label {
   border-bottom: 4px solid #03a9f4;
   border-top: 1px solid rgba(0,0,0,0);
   border-right: 1px solid rgba(0,0,0,0);
+  border-left-color: #03a9f4;
+  border-bottom-color: #03a9f4;
   -webkit-transform: rotate(-45deg) scaleY(0.5);
   -moz-transform: rotate(-45deg) scaleY(0.5);
   -ms-transform: rotate(-45deg) scaleY(0.5);
   -o-transform: rotate(-45deg) scaleY(0.5);
   transform: rotate(-45deg) scaleY(0.5);
-}
-
-/* Checkbox colors */
-.checkbox .chk-span.checked {
-  border-left-color: #03a9f4;
-  border-bottom-color: #03a9f4;
 }
 
 /* focus state */
