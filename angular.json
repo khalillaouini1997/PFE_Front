@@ -107,7 +107,11 @@
           "options": {
             "buildTarget": "web_admin:build",
             "tsConfig": "tsconfig.spec.json",
-            "providersFile": "src/test-providers.ts"
+            "providersFile": "src/test-providers.ts",
+            "coverageReporters": [
+              "html",
+              "lcov"
+            ]
           }
         }
       }
