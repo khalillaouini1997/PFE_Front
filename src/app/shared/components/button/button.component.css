@@ -115,7 +115,7 @@ button.loading .spinner {
 }
 
 button.loading .icon,
-button.loading ::ng-content {
+button.loading :host ::ng-content {
   opacity: 0.5;
 }
 

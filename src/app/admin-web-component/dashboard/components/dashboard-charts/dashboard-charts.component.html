@@ -3,7 +3,7 @@
   <div class="chart-card chart-card-full">
     <div class="d-flex justify-content-between align-items-center mb-3">
       <h3 class="m-0">Device Installation Evolution</h3>
-      <select class="form-select form-select-sm" style="width: auto;" (change)="onGranularityChange($event)">
+      <select id="granularitySelect" class="form-select form-select-sm" style="width: auto;" (change)="onGranularityChange($event)" aria-label="Chart granularity">
         <option value="month" [selected]="granularity() === 'month'">Month</option>
         <option value="trimester" [selected]="granularity() === 'trimester'">Trimester</option>
         <option value="year" [selected]="granularity() === 'year'">Year</option>

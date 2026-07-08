@@ -231,7 +231,7 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
     if (!this.deviceIconMap.has(tram.deviceid)) {
       this.deviceIconMap.set(
         tram.deviceid,
-        CAR_STYLES[Math.floor(Math.random() * CAR_STYLES.length)]
+        CAR_STYLES[tram.deviceid % CAR_STYLES.length]
       );
     }
     

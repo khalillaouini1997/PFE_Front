@@ -107,7 +107,15 @@
           "options": {
             "buildTarget": "web_admin:build",
             "tsConfig": "tsconfig.spec.json",
-            "providersFile": "src/test-providers.ts"
+            "providersFile": "src/test-providers.ts",
+            "codeCoverage": true,
+            "coverageReporters": ["lcov", "text"],
+            "codeCoverageExclude": [
+              "src/**/*.spec.ts",
+              "src/test-providers.ts",
+              "src/test-setup.ts",
+              "src/__mocks__/**"
+            ]
           }
         }
       }

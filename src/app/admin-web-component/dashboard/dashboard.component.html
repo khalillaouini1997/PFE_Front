@@ -17,6 +17,7 @@
 
           <!-- Account selector -->
           <form [formGroup]="dashboardForm" class="d-flex align-items-center gap-2 m-0">
+            <label for="compteWebSelect" class="visually-hidden">{{ 'DASHBOARD.CHOOSE_ACCOUNT' | translate }}</label>
             <select formControlName="compteWeb" id="compteWebSelect" class="dashboard-select"
               (change)="getAllLastTramByCompteWeb()" title="{{ 'DASHBOARD.CHOOSE_ACCOUNT' | translate }}">
               <option [ngValue]="null" disabled selected>

@@ -476,6 +476,7 @@
                                         <div class="form-check form-switch p-0 m-0 d-flex align-items-center">
                                             <input class="form-check-input cursor-pointer m-0 ms-0"
                                                 style="width: 2.2em; height: 1.1em;" type="checkbox" role="switch"
+                                                [attr.aria-checked]="configForm.get(opt.key)?.value"
                                                 [formControlName]="opt.key" [id]="'opt'+opt.key" [title]="opt.label">
                                         </div>
                                     </div>

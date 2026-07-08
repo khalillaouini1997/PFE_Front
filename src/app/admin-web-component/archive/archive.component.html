@@ -9,7 +9,7 @@
             </button>
             <div class="d-flex align-items-center gap-2" [formGroup]="archiveForm">
                 <div class="input-group input-group-sm limit-input-group shadow-sm">
-                    <span class="input-group-text bg-white bg-opacity-10 text-white border-0">{{ 'ARCHIVE.LIMIT' | translate }}</span>
+                    <label class="input-group-text bg-white bg-opacity-10 text-white border-0" for="limit">{{ 'ARCHIVE.LIMIT' | translate }}</label>
                     <input type="number" id="limit" class="form-control border-0 bg-white bg-opacity-10 text-white" 
                         formControlName="limit" title="{{ 'ARCHIVE.LIMIT' | translate }}" placeholder="200">
                 </div>

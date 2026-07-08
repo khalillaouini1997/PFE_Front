@@ -211,8 +211,10 @@
               <label class="status-toggle">
                 <input 
                   type="checkbox" 
+                  id="paymentStatusToggle"
                   [checked]="billingResult.paymentStatus === 'PAID'"
                   (change)="togglePaymentStatus()"
+                  aria-label="Payment status"
                 />
                 <span class="status-toggle-slider"></span>
               </label>
@@ -462,10 +464,10 @@
         <p>{{ 'BILLING.CALC_BATCH_DESC' | translate }}</p>
         <div class="calc-period-fields mt-2" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()" role="group" aria-label="Billing period">
           <div class="d-flex gap-2 align-items-center">
-            <input type="number" [(ngModel)]="calcStartYear" class="form-control form-control-sm" 
-                   placeholder="Year" min="2000" max="2100" style="width: 100px;">
+            <input type="number" id="calcStartYear" [(ngModel)]="calcStartYear" class="form-control form-control-sm" 
+                   placeholder="Year" min="2000" max="2100" style="width: 100px;" aria-label="Start year">
             <span class="text-muted">-</span>
-            <select [(ngModel)]="calcStartMonth" class="form-select form-select-sm" style="width: 130px;">
+            <select id="calcStartMonth" [(ngModel)]="calcStartMonth" class="form-select form-select-sm" style="width: 130px;" aria-label="Start month">
               <option [value]="1">January</option>
               <option [value]="2">February</option>
               <option [value]="3">March</option>

@@ -77,10 +77,11 @@
             <h5 class="fw-bold m-0"><i class="fa fa-list me-2 text-primary"></i> {{ 'SERVER_DETAILS.CONNECTED_TERMINALS' | translate }}</h5>
             <form [formGroup]="searchForm" (ngSubmit)="searchBoitiers()" class="d-flex">
                 <div class="input-group input-group-sm">
-                    <input type="text" class="form-control border-0 shadow-sm px-3 search-input-fancy" 
+                    <input type="text" id="searchBoitier" class="form-control border-0 shadow-sm px-3 search-input-fancy" 
                         formControlName="searchBoitier" 
                         placeholder="{{ 'SERVER_DETAILS.FILTER_PLACEHOLDER' | translate }}" 
-                        title="{{ 'SERVER_DETAILS.FILTER_PLACEHOLDER' | translate }}">
+                        title="{{ 'SERVER_DETAILS.FILTER_PLACEHOLDER' | translate }}"
+                        aria-label="{{ 'SERVER_DETAILS.FILTER_PLACEHOLDER' | translate }}">
                     <button class="btn btn-primary px-3 search-btn-fancy" type="submit" 
                         title="{{ 'COMMON.SEARCH' | translate }}">
                         <i class="fa fa-search"></i>
@@ -116,7 +117,7 @@
                 <tr class="align-middle">
                     <td>
                         <div class="form-check form-switch d-flex justify-content-center">
-                            <input class="form-check-input custom-switch-lg" type="checkbox" role="switch" 
+                            <input id="switch-{{boitier.numBoitier}}" class="form-check-input custom-switch-lg" type="checkbox" role="switch" 
                                 [(ngModel)]="boitier.stat" 
                                 [attr.aria-checked]="boitier.stat"
                                 [disabled]="boitier.etatBoitier === 'INSTALLED'"
