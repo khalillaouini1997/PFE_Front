@@ -1,5 +1,5 @@
 import { Component, OnInit, inject, signal, computed, ViewChild, ElementRef } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import {
   Boitier,
   CompteServer,
@@ -19,7 +19,6 @@ import { WebAccountService } from "../../service/web-account.service";
 import { BoitierService } from "../../service/boitier.service";
 import { IpAddressService } from "../../service/ip-address.service";
 import { CompteServerService } from "../../service/compte-server.service";
-import { of } from "rxjs";
 import { catchError } from "rxjs/operators";
 import { NOTIFICATION_SUBQUERIES } from '../../shared/constants';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -237,7 +236,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
         });
 
         const currentServer = this.serverAccount();
-        if (currentServer && currentServer.date_Expiration && Date.now() < currentServer.date_Expiration) {
+        if (currentServer?.date_Expiration && Date.now() < currentServer.date_Expiration) {
           this.serverAccount.update(s => ({ ...s, expired: false, during: true }));
         } else if (currentServer) {
           this.serverAccount.update(s => ({ ...s, expired: true, during: false }));

@@ -10,8 +10,10 @@ export interface ErrorContext {
   action?: string;
   userMessage?: string;
   timestamp?: Date;
-  errorType?: 'network' | 'validation' | 'business' | 'system';
+  errorType?: ErrorType;
 }
+
+export type ErrorType = 'network' | 'validation' | 'business' | 'system';
 
 @Injectable({
   providedIn: 'root'
@@ -48,7 +50,7 @@ export class ErrorHandlerService {
     return throwError(() => context.error);
   }
 
-  private categorizeError(error: Error | HttpErrorResponse): 'network' | 'validation' | 'business' | 'system' {
+  private categorizeError(error: Error | HttpErrorResponse): ErrorType {
     if (error instanceof HttpErrorResponse) {
       if (error.status === 0 || error.status >= 500) {
         return 'network';
@@ -108,7 +110,7 @@ export class ErrorHandlerService {
     this.errors.set([]);
   }
 
-  getErrorsByType(errorType: 'network' | 'validation' | 'business' | 'system'): ErrorContext[] {
+  getErrorsByType(errorType: ErrorType): ErrorContext[] {
     return this.errors().filter(e => e.errorType === errorType);
   }
 
