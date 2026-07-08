@@ -3,6 +3,7 @@ import { AccessLogComponent } from './access-log.component';
 import { AccessLogService } from '../../service/access-log.service';
 import { of, throwError } from 'rxjs';
 import { TranslateModule } from '@ngx-translate/core';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('AccessLogComponent', () => {
   let component: AccessLogComponent;
@@ -17,12 +18,14 @@ describe('AccessLogComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [AccessLogComponent, TranslateModule.forRoot()],
+      schemas: [NO_ERRORS_SCHEMA],
       providers: [
         { provide: AccessLogService, useValue: accessLogService }
       ]
     }).compileComponents();
 
-    component = TestBed.inject(AccessLogComponent);
+    const fixture = TestBed.createComponent(AccessLogComponent);
+    component = fixture.componentInstance;
   });
 
   afterEach(() => {

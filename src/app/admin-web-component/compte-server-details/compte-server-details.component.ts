@@ -167,6 +167,7 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
       },
       error: (err) => {
+        this.boitiers = [];
         this.loadingInProgress = false;
         this.cdr.detectChanges();
       }

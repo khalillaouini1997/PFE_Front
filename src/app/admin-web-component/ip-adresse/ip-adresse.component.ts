@@ -62,6 +62,10 @@ export class IpAdresseComponent implements OnInit {
         const responseData = res?.data || res;
         this.ips = responseData?.content || [];
         this.pagination.bigTotalItems = responseData?.page?.totalElements || responseData?.totalElements || 0;
+      },
+      error: () => {
+        this.ips = [];
+        this.pagination.bigTotalItems = 0;
       }
     });
   }

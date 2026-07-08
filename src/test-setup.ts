@@ -33,6 +33,28 @@ if (!window.ResizeObserver) {
   };
 }
 
+// Mock HTMLDialogElement methods on HTMLElement.prototype for jsdom compatibility
+if (typeof window !== 'undefined') {
+  const mockMethods = (proto: any) => {
+    if (proto) {
+      if (!proto.showModal) {
+        proto.showModal = function(this: any) {
+          this.setAttribute('open', '');
+        };
+      }
+      if (!proto.close) {
+        proto.close = function(this: any) {
+          this.removeAttribute('open');
+        };
+      }
+    }
+  };
+  mockMethods(window.HTMLElement.prototype);
+  mockMethods((window as any).HTMLDialogElement?.prototype);
+  mockMethods((window as any).HTMLUnknownElement?.prototype);
+}
+
+
 // Mock window.getComputedStyle to handle null/undefined elements (Chart.js needs this)
 const mockComputedStyle = {
   getPropertyValue: () => '',

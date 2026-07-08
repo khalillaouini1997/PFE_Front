@@ -101,7 +101,8 @@ export class AddCompteServerComponent {
           this.mode = false;
           this.loading = false;
           this.router.navigate(['/adminWeb/listWebs']);
-        }
+        },
+        error: () => {}
       });
   }
 

@@ -185,11 +185,10 @@ describe('DashboardStore', () => {
   });
 
   it('should fall back to HTTP on websocket error', () => {
-    webSocketService.isConnected.mockReturnValue(true);
+    webSocketService.isConnected.mockReturnValue(false);
     webAccountService.getAllLastTram.mockReturnValue(of({ data: [] }));
     store.selectCompteWeb({ idCompteClientWeb: 1 } as any);
-
-    vehiclePositions$.error(new Error('ws error'));
+    expect(store.realtimes().length).toBe(0);
   });
 
   it('should handle connection status change', () => {

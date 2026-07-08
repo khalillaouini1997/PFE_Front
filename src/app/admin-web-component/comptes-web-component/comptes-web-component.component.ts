@@ -101,7 +101,7 @@ export class ComptesWebComponentComponent implements OnInit {
       next: (res: any) => {
         const responseData = res?.data || res;
         const totalElements = responseData?.page?.totalElements || responseData?.totalElements || 0;
-        const loaded = responseData?.content || [];
+        const loaded = responseData?.content || (Array.isArray(responseData) ? responseData : []);
 
         for (const compte of loaded) {
           if (Date.now() < new Date(compte.date_expiration).getTime()) {

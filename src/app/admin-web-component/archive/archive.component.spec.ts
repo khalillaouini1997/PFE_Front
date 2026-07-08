@@ -1,10 +1,11 @@
 import { TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ArchiveComponent } from './archive.component';
 import { BoitierService } from '../../service/boitier.service';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { of } from 'rxjs';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 
 describe('ArchiveComponent', () => {
   let component: ArchiveComponent;
@@ -26,7 +27,8 @@ describe('ArchiveComponent', () => {
     location = { back: vi.fn() };
 
     await TestBed.configureTestingModule({
-      imports: [ArchiveComponent, TranslateModule.forRoot()],
+      imports: [ArchiveComponent, TranslateModule.forRoot({ loader: { provide: TranslateLoader, useValue: { getTranslation: () => of({}) } } })],
+      schemas: [NO_ERRORS_SCHEMA],
       providers: [
         { provide: BoitierService, useValue: boitierService },
         { provide: Location, useValue: location },
@@ -34,7 +36,8 @@ describe('ArchiveComponent', () => {
       ]
     }).compileComponents();
 
-    component = TestBed.inject(ArchiveComponent);
+    const fixture = TestBed.createComponent(ArchiveComponent);
+    component = fixture.componentInstance;
     component.ngOnInit();
   });
 

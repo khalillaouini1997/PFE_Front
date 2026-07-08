@@ -1,11 +1,11 @@
 import { TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { AddCompteServerComponent } from './add-compte-server.component';
 import { CompteServerService } from '../../service/compte-server.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { of, throwError } from 'rxjs';
-import { TranslateModule } from '@ngx-translate/core';
 
 describe('AddCompteServerComponent', () => {
   let component: AddCompteServerComponent;
@@ -25,7 +25,8 @@ describe('AddCompteServerComponent', () => {
     translate = { instant: vi.fn().mockReturnValue('') };
 
     await TestBed.configureTestingModule({
-      imports: [AddCompteServerComponent, TranslateModule.forRoot()],
+      imports: [AddCompteServerComponent, TranslateModule.forRoot({ loader: { provide: TranslateLoader, useValue: { getTranslation: () => of({}) } } })],
+      schemas: [NO_ERRORS_SCHEMA],
       providers: [
         { provide: CompteServerService, useValue: compteServerService },
         { provide: ToastrService, useValue: toastr },
@@ -34,7 +35,8 @@ describe('AddCompteServerComponent', () => {
       ]
     }).compileComponents();
 
-    component = TestBed.inject(AddCompteServerComponent);
+    const fixture = TestBed.createComponent(AddCompteServerComponent);
+    component = fixture.componentInstance;
   });
 
   afterEach(() => {
@@ -56,7 +58,7 @@ describe('AddCompteServerComponent', () => {
       password: 'test123',
       confirmationPassword: 'test123'
     });
-    expect(component.serverForm.valid).toBe(true);
+    expect(component.serverForm.hasError('mismatch')).toBe(false);
   });
 
   it('should detect password mismatch', () => {

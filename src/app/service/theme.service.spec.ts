@@ -7,7 +7,7 @@ import { ThemeService } from './theme.service';
 describe('ThemeService', () => {
   let service: ThemeService;
   let mockDocument: Document;
-  let mockHtmlElement: HTMLElement;
+  let mockHtmlElement: any;
 
   beforeEach(() => {
     Object.defineProperty(window, 'matchMedia', {
@@ -25,18 +25,17 @@ describe('ThemeService', () => {
       })),
     });
     localStorage.clear();
-    mockHtmlElement = document.createElement('div') as unknown as HTMLElement;
-    const setAttributeSpy = vi.fn();
-    const removeAttributeSpy = vi.fn();
+
     const classList = {
       add: vi.fn(),
       remove: vi.fn(),
     };
     mockHtmlElement = {
-      setAttribute: setAttributeSpy,
-      removeAttribute: removeAttributeSpy,
+      setAttribute: vi.fn(),
+      removeAttribute: vi.fn(),
       classList,
-    } as unknown as HTMLElement;
+      dataset: {} as Record<string, string>,
+    };
 
     mockDocument = {
       documentElement: mockHtmlElement,
@@ -85,16 +84,16 @@ describe('ThemeService', () => {
   });
 
   describe('applyTheme', () => {
-    it('should set data-theme attribute on documentElement', async () => {
+    it('should set data-theme attribute on documentElement', () => {
       service.currentTheme.set('light');
       service.toggleTheme();
       TestBed.inject(ApplicationRef).tick();
 
-      expect(mockHtmlElement.setAttribute).toHaveBeenCalledWith('data-theme', 'dark');
-      expect(mockHtmlElement.setAttribute).toHaveBeenCalledWith('data-bs-theme', 'dark');
+      expect(mockHtmlElement.dataset['theme']).toBe('dark');
+      expect(mockHtmlElement.dataset['bsTheme']).toBe('dark');
     });
 
-    it('should remove old theme classes and add new ones', async () => {
+    it('should remove old theme classes and add new ones', () => {
       service.toggleTheme();
       TestBed.inject(ApplicationRef).tick();
       expect(mockHtmlElement.classList.remove).toHaveBeenCalledWith('light-theme', 'dark-theme');

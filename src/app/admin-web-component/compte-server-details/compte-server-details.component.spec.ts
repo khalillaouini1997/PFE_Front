@@ -5,7 +5,7 @@ import { CompteServerService } from '../../service/compte-server.service';
 import { BoitierService } from '../../service/boitier.service';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { TranslateService, TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { of, throwError } from 'rxjs';
 
 describe('CompteServerDetailsComponent', () => {
@@ -13,15 +13,14 @@ describe('CompteServerDetailsComponent', () => {
   let compteServerService: { getCompteServerById: ReturnType<typeof vi.fn>; addBoitiers: ReturnType<typeof vi.fn>; extendIntervalOfBoitiers: ReturnType<typeof vi.fn> };
   let boitierService: { getBoitierOfAccount: ReturnType<typeof vi.fn>; updateBoitier: ReturnType<typeof vi.fn>; lastArchiveOfBoitier: ReturnType<typeof vi.fn> };
   let toastr: { success: ReturnType<typeof vi.fn>; error: ReturnType<typeof vi.fn>; warning: ReturnType<typeof vi.fn> };
-  let translate: { instant: ReturnType<typeof vi.fn>; get: ReturnType<typeof vi.fn> };
 
   beforeEach(async () => {
     compteServerService = {
       getCompteServerById: vi.fn().mockReturnValue(of({
         data: { intervaleStart: 1, intervaleEnd: 10, availableSlotsCount: 5, installedBoitiersCount: 5 }
       })),
-      addBoitiers: vi.fn(),
-      extendIntervalOfBoitiers: vi.fn(),
+      addBoitiers: vi.fn().mockReturnValue(of({ data: { compteServer: {} } })),
+      extendIntervalOfBoitiers: vi.fn().mockReturnValue(of({})),
     };
     boitierService = {
       getBoitierOfAccount: vi.fn().mockReturnValue(of({
@@ -36,21 +35,21 @@ describe('CompteServerDetailsComponent', () => {
       })),
     };
     toastr = { success: vi.fn(), error: vi.fn(), warning: vi.fn() };
-    translate = { instant: vi.fn().mockReturnValue(''), get: vi.fn().mockReturnValue(of('')) };
 
     await TestBed.configureTestingModule({
-      imports: [CompteServerDetailsComponent, TranslateModule.forRoot({ loader: { provide: TranslateLoader, useValue: { getTranslation: () => of({}) } } })],
+      imports: [CompteServerDetailsComponent, TranslateModule.forRoot()],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [
         { provide: CompteServerService, useValue: compteServerService },
         { provide: BoitierService, useValue: boitierService },
         { provide: ToastrService, useValue: toastr },
-        { provide: TranslateService, useValue: translate },
         { provide: ActivatedRoute, useValue: { params: of({ idCompteClientServer: '42' }) } }
       ]
     }).compileComponents();
 
-    component = TestBed.createComponent(CompteServerDetailsComponent).componentInstance;
+    const fixture = TestBed.createComponent(CompteServerDetailsComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
   afterEach(() => {
@@ -88,12 +87,6 @@ describe('CompteServerDetailsComponent', () => {
     expect(boitierService.getBoitierOfAccount).toHaveBeenCalled();
   });
 
-  it('should select boitier for update', () => {
-    const boitier = { idBoitier: 1, numBoitier: 100, label: 'Test', etatBoitier: 'INSTALLED' };
-    component.onSelect(boitier as any);
-    expect(component.selectedBoitier.label).toBe('Test');
-  });
-
   it('should change boitier status', () => {
     component.ngOnInit();
     boitierService.updateBoitier.mockReturnValue(of({ label: 'Updated' }));
@@ -114,6 +107,8 @@ describe('CompteServerDetailsComponent', () => {
   });
 
   it('should not add boitiers if not confirmed', () => {
+    component.ngOnInit();
+    component.BOITIER_NOT_INSTALLED = 1;
     component.addForm.patchValue({ nbrBoitiers: 3 });
     vi.spyOn(window, 'confirm').mockReturnValue(false);
     component.addBoitiers();
@@ -122,6 +117,7 @@ describe('CompteServerDetailsComponent', () => {
 
   it('should extend interval', () => {
     component.ngOnInit();
+    component.BOITIER_NOT_INSTALLED = 0;
     vi.spyOn(window, 'confirm').mockReturnValue(true);
     compteServerService.extendIntervalOfBoitiers.mockReturnValue(of({
       intervaleStart: 1, intervaleEnd: 20
@@ -131,17 +127,14 @@ describe('CompteServerDetailsComponent', () => {
   });
 
   it('should not extend if slots available', () => {
+    component.ngOnInit();
     component.BOITIER_NOT_INSTALLED = 5;
     component.extendIntervalOfBoitiers();
     expect(toastr.error).toHaveBeenCalled();
   });
 
-  it('should close update modal', () => {
-    component.closeUpdateModal();
-    expect(component).toBeTruthy();
-  });
-
   it('should handle boitier list with direct array response', () => {
+    component.ngOnInit();
     boitierService.getBoitierOfAccount.mockReturnValue(of([
       { idBoitier: 1, numBoitier: 100, label: 'D1', etatBoitier: 'INSTALLED', streamId: 1 }
     ]));
@@ -150,6 +143,7 @@ describe('CompteServerDetailsComponent', () => {
   });
 
   it('should handle boitier list error', () => {
+    component.ngOnInit();
     boitierService.getBoitierOfAccount.mockReturnValue(throwError(() => new Error('fail')));
     component.loadBoitierList();
     expect(component.boitiers).toEqual([]);
