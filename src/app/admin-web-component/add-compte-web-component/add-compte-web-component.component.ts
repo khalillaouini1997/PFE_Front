@@ -1,6 +1,6 @@
 import { Router } from '@angular/router';
 import { Component, inject, signal, OnInit } from '@angular/core';
-import { CompteServer, CompteWeb, IpAddress } from 'src/app/data/data';
+import { CompteWeb, IpAddress } from 'src/app/data/data';
 import { WebAccountService } from "../../service/web-account.service";
 
 import { CompteServerService } from "../../service/compte-server.service";

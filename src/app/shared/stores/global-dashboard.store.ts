@@ -44,7 +44,7 @@ export class GlobalDashboardStore implements OnDestroy {
   private readonly webSocketService = inject(WebSocketService);
   private vehiclePositionSubscription?: Subscription;
   private connectionStatusSubscription?: Subscription;
-  private previousPositions = new Map<number, { speed: number; status: string }>();
+  private readonly previousPositions = new Map<number, { speed: number; status: string }>();
 
   private readonly state = signal<GlobalDashboardState>({
     comptesWeb: [],
@@ -162,67 +162,72 @@ export class GlobalDashboardStore implements OnDestroy {
         this.updateState({ summaries: list as RealTimeSummary[], loading: false });
         this.recalculateStats();
 
-        // Seed initial positions to enable event generation on the very first WebSocket message
-        for (const item of list) {
-          if (item.deviceid) {
-            this.previousPositions.set(item.deviceid, {
-              speed: item.speed ?? 0,
-              status: item.status || ''
-            });
-          }
-        }
-
-        // Pre-populate activity feed with recent events from actual summaries to avoid blank display
-        const initialEvents: ActivityEvent[] = [];
-        const now = new Date();
-        let eventCount = 0;
-
-        for (const item of list) {
-          if (eventCount >= 5) break;
-          const time = item.record_time ? new Date(item.record_time) : new Date(now.getTime() - eventCount * 60000);
-          
-          if (item.speed > 0) {
-            initialEvents.push({
-              time: time,
-              icon: '🟢',
-              message: `Device #${item.deviceid} is moving`,
-              type: 'move'
-            });
-            eventCount++;
-          } else if (item.status === STATUS_TYPES.TECHNICAL_ISSUE) {
-            initialEvents.push({
-              time: time,
-              icon: '⚠️',
-              message: `Device #${item.deviceid} signal lost`,
-              type: 'signal'
-            });
-            eventCount++;
-          }
-        }
-
-        if (eventCount < 5) {
-          for (const item of list) {
-            if (eventCount >= 5) break;
-            if (item.speed === 0 && item.status !== STATUS_TYPES.TECHNICAL_ISSUE) {
-              const time = item.record_time ? new Date(item.record_time) : new Date(now.getTime() - eventCount * 60000);
-              initialEvents.push({
-                time: time,
-                icon: '🔴',
-                message: `Device #${item.deviceid} is stopped`,
-                type: 'stop'
-              });
-              eventCount++;
-            }
-          }
-        }
-
-        initialEvents.sort((a, b) => b.time.getTime() - a.time.getTime());
-        this.updateState({ activityFeed: initialEvents });
+        this.seedPreviousPositions(list);
+        this.populateInitialActivityFeed(list);
       },
       error: () => {
         this.updateState({ loading: false, error: 'Failed to load fleet data' });
       }
     });
+  }
+
+  private seedPreviousPositions(list: RealTimeSummary[]) {
+    for (const item of list) {
+      if (item.deviceid) {
+        this.previousPositions.set(item.deviceid, {
+          speed: item.speed ?? 0,
+          status: item.status || ''
+        });
+      }
+    }
+  }
+
+  private populateInitialActivityFeed(list: RealTimeSummary[]) {
+    const initialEvents: ActivityEvent[] = [];
+    const now = new Date();
+    let eventCount = 0;
+
+    eventCount = this.collectMovingAndSignalEvents(list, now, initialEvents, eventCount);
+    eventCount = this.collectStoppedEvents(list, now, initialEvents, eventCount);
+
+    initialEvents.sort((a, b) => b.time.getTime() - a.time.getTime());
+    this.updateState({ activityFeed: initialEvents });
+  }
+
+  private collectMovingAndSignalEvents(
+    list: RealTimeSummary[], now: Date, events: ActivityEvent[], count: number
+  ): number {
+    for (const item of list) {
+      if (count >= 5) break;
+      const time = this.parseRecordTime(item.record_time, count, now);
+
+      if (item.speed > 0) {
+        events.push({ time, icon: '🟢', message: `Device #${item.deviceid} is moving`, type: 'move' });
+        count++;
+      } else if (item.status === STATUS_TYPES.TECHNICAL_ISSUE) {
+        events.push({ time, icon: '⚠️', message: `Device #${item.deviceid} signal lost`, type: 'signal' });
+        count++;
+      }
+    }
+    return count;
+  }
+
+  private collectStoppedEvents(
+    list: RealTimeSummary[], now: Date, events: ActivityEvent[], count: number
+  ): number {
+    for (const item of list) {
+      if (count >= 5) break;
+      if (item.speed === 0 && item.status !== STATUS_TYPES.TECHNICAL_ISSUE) {
+        const time = this.parseRecordTime(item.record_time, count, now);
+        events.push({ time, icon: '🔴', message: `Device #${item.deviceid} is stopped`, type: 'stop' });
+        count++;
+      }
+    }
+    return count;
+  }
+
+  private parseRecordTime(recordTime: any, index: number, now: Date): Date {
+    return recordTime ? new Date(recordTime) : new Date(now.getTime() - index * 60000);
   }
 
   /** Load full RealTime objects (with coordinates) for map - from lightweight cached endpoint */
@@ -263,16 +268,8 @@ export class GlobalDashboardStore implements OnDestroy {
     for (const pos of positions) {
       const prev = this.previousPositions.get(pos.deviceid);
       if (prev) {
-        if (prev.speed === 0 && pos.speed > 0) {
-          newEvents.push({ time: now, icon: '🟢', message: `Device #${pos.deviceid} started moving${pos.login ? ` (${pos.login})` : ''}`, type: 'move' });
-        } else if (prev.speed > 0 && pos.speed === 0) {
-          newEvents.push({ time: now, icon: '🔴', message: `Device #${pos.deviceid} stopped${pos.login ? ` (${pos.login})` : ''}`, type: 'stop' });
-        }
-        if (prev.status === STATUS_TYPES.VALID && pos.status === STATUS_TYPES.TECHNICAL_ISSUE) {
-          newEvents.push({ time: now, icon: '⚠️', message: `Device #${pos.deviceid} signal lost${pos.login ? ` (${pos.login})` : ''}`, type: 'signal' });
-        } else if (prev.status === STATUS_TYPES.TECHNICAL_ISSUE && pos.status === STATUS_TYPES.VALID) {
-          newEvents.push({ time: now, icon: '✅', message: `Device #${pos.deviceid} reconnected${pos.login ? ` (${pos.login})` : ''}`, type: 'reconnect' });
-        }
+        this.checkSpeedTransition(prev, pos, now, newEvents);
+        this.checkStatusTransition(prev, pos, now, newEvents);
       }
       this.previousPositions.set(pos.deviceid, { speed: pos.speed, status: pos.status });
     }
@@ -280,6 +277,28 @@ export class GlobalDashboardStore implements OnDestroy {
     if (newEvents.length > 0) {
       const currentFeed = this.state().activityFeed;
       this.updateState({ activityFeed: [...newEvents, ...currentFeed].slice(0, 50) });
+    }
+  }
+
+  private checkSpeedTransition(
+    prev: { speed: number; status: string }, pos: RealTime, now: Date, events: ActivityEvent[]
+  ) {
+    const suffix = pos.login ? ` (${pos.login})` : '';
+    if (prev.speed === 0 && pos.speed > 0) {
+      events.push({ time: now, icon: '🟢', message: `Device #${pos.deviceid} started moving${suffix}`, type: 'move' });
+    } else if (prev.speed > 0 && pos.speed === 0) {
+      events.push({ time: now, icon: '🔴', message: `Device #${pos.deviceid} stopped${suffix}`, type: 'stop' });
+    }
+  }
+
+  private checkStatusTransition(
+    prev: { speed: number; status: string }, pos: RealTime, now: Date, events: ActivityEvent[]
+  ) {
+    const suffix = pos.login ? ` (${pos.login})` : '';
+    if (prev.status === STATUS_TYPES.VALID && pos.status === STATUS_TYPES.TECHNICAL_ISSUE) {
+      events.push({ time: now, icon: '⚠️', message: `Device #${pos.deviceid} signal lost${suffix}`, type: 'signal' });
+    } else if (prev.status === STATUS_TYPES.TECHNICAL_ISSUE && pos.status === STATUS_TYPES.VALID) {
+      events.push({ time: now, icon: '✅', message: `Device #${pos.deviceid} reconnected${suffix}`, type: 'reconnect' });
     }
   }
 

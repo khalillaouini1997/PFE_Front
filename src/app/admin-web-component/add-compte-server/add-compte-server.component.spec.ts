@@ -1,30 +1,132 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideHttpClient } from '@angular/common/http';
-import { provideRouter } from '@angular/router';
-import { importProvidersFrom } from '@angular/core';
-import { ToastrModule } from 'ngx-toastr';
-import { TranslateModule } from '@ngx-translate/core';
-
+import { TestBed } from '@angular/core/testing';
 import { AddCompteServerComponent } from './add-compte-server.component';
+import { CompteServerService } from '../../service/compte-server.service';
+import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import { of, throwError } from 'rxjs';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('AddCompteServerComponent', () => {
   let component: AddCompteServerComponent;
-  let fixture: ComponentFixture<AddCompteServerComponent>;
+  let compteServerService: { createServerComptewithBoitier: ReturnType<typeof vi.fn>; isExistPseudo: ReturnType<typeof vi.fn>; isExistLogin: ReturnType<typeof vi.fn> };
+  let toastr: { success: ReturnType<typeof vi.fn>; error: ReturnType<typeof vi.fn>; warning: ReturnType<typeof vi.fn> };
+  let router: { navigate: ReturnType<typeof vi.fn> };
+  let translate: { instant: ReturnType<typeof vi.fn> };
 
   beforeEach(async () => {
-    TestBed.resetTestingModule();
+    compteServerService = {
+      createServerComptewithBoitier: vi.fn(),
+      isExistPseudo: vi.fn().mockReturnValue(of({ data: false })),
+      isExistLogin: vi.fn().mockReturnValue(of({ data: false })),
+    };
+    toastr = { success: vi.fn(), error: vi.fn(), warning: vi.fn() };
+    router = { navigate: vi.fn() };
+    translate = { instant: vi.fn().mockReturnValue('') };
+
     await TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot(), AddCompteServerComponent]
+      imports: [AddCompteServerComponent, TranslateModule.forRoot()],
+      providers: [
+        { provide: CompteServerService, useValue: compteServerService },
+        { provide: ToastrService, useValue: toastr },
+        { provide: Router, useValue: router },
+        { provide: TranslateService, useValue: translate }
+      ]
     }).compileComponents();
+
+    component = TestBed.inject(AddCompteServerComponent);
   });
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(AddCompteServerComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+  afterEach(() => {
+    vi.clearAllMocks();
   });
 
-  it('should be created', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should initialize form', () => {
+    expect(component.serverForm).toBeTruthy();
+    expect(component.serverForm.get('pseudo')).toBeTruthy();
+    expect(component.serverForm.get('login')).toBeTruthy();
+  });
+
+  it('should validate password match', () => {
+    component.serverForm.patchValue({
+      password: 'test123',
+      confirmationPassword: 'test123'
+    });
+    expect(component.serverForm.valid).toBe(true);
+  });
+
+  it('should detect password mismatch', () => {
+    component.serverForm.patchValue({
+      password: 'test123',
+      confirmationPassword: 'different'
+    });
+    expect(component.serverForm.errors?.['mismatch']).toBe(true);
+  });
+
+  it('should get numberBoitier', () => {
+    component.serverForm.patchValue({ numberBoitier: 5 });
+    expect(component.numberBoitier).toBe(5);
+  });
+
+  it('should get numberBoitier default', () => {
+    expect(component.numberBoitier).toBe(0);
+  });
+
+  it('should add compte server', () => {
+    component.serverForm.patchValue({
+      pseudo: 'test', login: 'user', password: 'pass123',
+      confirmationPassword: 'pass123', numberBoitier: 2,
+      date_Expiration: new Date()
+    });
+    compteServerService.createServerComptewithBoitier.mockReturnValue(of({}));
+    component.addCompteServer();
+    expect(compteServerService.createServerComptewithBoitier).toHaveBeenCalled();
+    expect(router.navigate).toHaveBeenCalledWith(['/adminWeb/listWebs']);
+  });
+
+  it('should not add when form invalid', () => {
+    component.addCompteServer();
+    expect(toastr.warning).toHaveBeenCalled();
+  });
+
+  it('should handle add error', () => {
+    component.serverForm.patchValue({
+      pseudo: 'test', login: 'user', password: 'pass123',
+      confirmationPassword: 'pass123', numberBoitier: 2,
+      date_Expiration: new Date()
+    });
+    compteServerService.createServerComptewithBoitier.mockReturnValue(throwError(() => ({
+      error: { message: 'Duplicate' }
+    })));
+    component.addCompteServer();
+    expect(component.mode).toBe(true);
+    expect(component.messageError).toBe('Duplicate');
+  });
+
+  it('should check pseudo existence', () => {
+    component.serverForm.patchValue({ pseudo: 'test' });
+    component.onKeyPseudo();
+    expect(compteServerService.isExistPseudo).toHaveBeenCalledWith('test');
+  });
+
+  it('should check login existence', () => {
+    component.serverForm.patchValue({ login: 'user' });
+    component.onKeyLogin();
+    expect(compteServerService.isExistLogin).toHaveBeenCalledWith('user');
+  });
+
+  it('should handle empty pseudo', () => {
+    component.serverForm.patchValue({ pseudo: '' });
+    component.onKeyPseudo();
+    expect(compteServerService.isExistPseudo).not.toHaveBeenCalled();
+  });
+
+  it('should reinitialise', () => {
+    component.reinitialisation();
+    expect(component.serverForm.get('numberBoitier')?.value).toBe(0);
   });
 });

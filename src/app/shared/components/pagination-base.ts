@@ -1,5 +1,3 @@
-import { signal } from '@angular/core';
-
 export interface PaginationState {
   maxSize: number;
   bigTotalItems: number;

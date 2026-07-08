@@ -1,5 +1,4 @@
 import { OptionInfoDTO } from './option.model';
-import { IpAddress } from './device.model';
 
 export interface CompteServer {
   idCompteClientServer: number;

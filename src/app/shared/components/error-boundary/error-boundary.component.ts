@@ -37,15 +37,12 @@ export class ErrorBoundaryComponent {
 
     if (message.includes('network') || message.includes('fetch') || message.includes('connection')) {
       type = 'network';
-      retryable = true;
       suggestedAction = 'Check your internet connection and retry';
     } else if (message.includes('timeout') || message.includes('timed out')) {
       type = 'timeout';
-      retryable = true;
       suggestedAction = 'The request took too long. Please try again';
     } else if (message.includes('500') || message.includes('server error') || message.includes('internal server')) {
       type = 'server';
-      retryable = true;
       suggestedAction = 'Our servers are experiencing issues. Please try again';
     } else if (message.includes('404') || message.includes('not found')) {
       type = 'client';

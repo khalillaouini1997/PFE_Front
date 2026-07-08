@@ -8,7 +8,7 @@ export class KeyboardFocusDirective implements OnInit {
   focusOnMount = input<boolean>(false);
   focusOnKey = input<string | null>(null);
   
-  constructor(private el: ElementRef<HTMLElement>) {}
+  constructor(private readonly el: ElementRef<HTMLElement>) {}
 
   ngOnInit() {
     if (this.focusOnMount()) {

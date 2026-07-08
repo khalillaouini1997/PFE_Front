@@ -8,7 +8,7 @@ export class ImgFallbackDirective {
   fallbackSrc = input<string>('');
   fallbackIcon = input<string>('image');
 
-  constructor(private el: ElementRef<HTMLImageElement>) {}
+  constructor(private readonly el: ElementRef<HTMLImageElement>) {}
 
   @HostListener('error')
   onError() {
@@ -36,7 +36,7 @@ export class ImgFallbackDirective {
           color: var(--slate-400);
           font-size: 48px;
         `;
-        parent.insertBefore(placeholder, img);
+        img.before(placeholder);
       }
     }
   }

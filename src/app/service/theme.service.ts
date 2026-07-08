@@ -57,10 +57,10 @@ export class ThemeService {
     htmlElement.classList.add(`${theme}-theme`);
     
     // Set data attribute for CSS selectors (PrimeNG & custom)
-    htmlElement.setAttribute('data-theme', theme);
+    htmlElement.dataset['theme'] = theme;
     
     // Set data attribute for Bootstrap 5.3
-    htmlElement.setAttribute('data-bs-theme', theme);
+    htmlElement.dataset['bsTheme'] = theme;
   }
   
   isDarkMode(): boolean {

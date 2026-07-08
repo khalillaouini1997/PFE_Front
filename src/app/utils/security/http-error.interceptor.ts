@@ -2,7 +2,7 @@ import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, throwError, retry, timer } from 'rxjs';
-import { ProblemDetail, isProblemDetail } from '../../shared/models/problem-detail.model';
+import { isProblemDetail } from '../../shared/models/problem-detail.model';
 
 // Error tracking for retry logic
 const retryableErrors = new Set<string>();

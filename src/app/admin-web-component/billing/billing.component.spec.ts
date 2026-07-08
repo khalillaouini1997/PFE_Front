@@ -1,181 +1,209 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideHttpClient } from '@angular/common/http';
-import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { of, throwError } from 'rxjs';
-import { TranslateModule } from '@ngx-translate/core';
+import { TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { BillingComponent } from './billing.component';
-import { BillingService } from 'src/app/service/billing.service';
-import { BillingAnalyticsService } from 'src/app/service/billing-analytics.service';
-import { WebAccountService } from 'src/app/service/web-account.service';
+import { BillingService } from '../../service/billing.service';
+import { BillingAnalyticsService } from '../../service/billing-analytics.service';
+import { WebAccountService } from '../../service/web-account.service';
 import { ToastrService } from 'ngx-toastr';
+import { TranslateService, TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { of, throwError } from 'rxjs';
 
 describe('BillingComponent', () => {
   let component: BillingComponent;
-  let fixture: ComponentFixture<BillingComponent>;
-
-  const mockBillingService = {
-    checkExistingInvoice: vi.fn().mockReturnValue(of({ data: null })),
-    getAllInvoicesByAccount: vi.fn().mockReturnValue(of({ data: [] })),
-    generateBatchBilling: vi.fn().mockReturnValue(of({ data: [] })),
-    triggerAllAccountsBilling: vi.fn().mockReturnValue(of({})),
-    triggerAccountBilling: vi.fn().mockReturnValue(of({ data: {} })),
-    refreshMonthlyBilling: vi.fn().mockReturnValue(of({ data: {} })),
-    downloadPdfReport: vi.fn().mockReturnValue(of(new Blob())),
-    updatePaymentStatus: vi.fn().mockReturnValue(of({}))
-  };
-
-  const mockAnalyticsService = {
-    getBillingAnalytics: vi.fn().mockReturnValue(of({
-      data: {
-        topDevices: [],
-        revenueByMonth: [],
-        revenueByAccount: [],
-        statusBreakdown: []
-      }
-    })),
-    getRevenueHistory: vi.fn().mockReturnValue(of({ data: [] })),
-    getRevenueForecast: vi.fn().mockReturnValue(of({ predictions: [] }))
-  };
-
-  const mockWebAccountService = {
-    getAllWebAccountNames: vi.fn().mockReturnValue(of({ data: [] }))
-  };
-
-  const mockToastr = {
-    success: vi.fn(),
-    error: vi.fn(),
-    info: vi.fn(),
-    warning: vi.fn()
-  };
+  let billingService: { checkExistingInvoice: ReturnType<typeof vi.fn>; generateBatchBilling: ReturnType<typeof vi.fn>; triggerAllAccountsBilling: ReturnType<typeof vi.fn>; triggerAccountBilling: ReturnType<typeof vi.fn>; refreshMonthlyBilling: ReturnType<typeof vi.fn>; downloadPdfReport: ReturnType<typeof vi.fn>; updatePaymentStatus: ReturnType<typeof vi.fn>; getAllInvoicesByAccount: ReturnType<typeof vi.fn> };
+  let analyticsService: { getBillingAnalytics: ReturnType<typeof vi.fn>; getRevenueHistory: ReturnType<typeof vi.fn>; getRevenueForecast: ReturnType<typeof vi.fn> };
+  let webAccountService: { getAllWebAccountNames: ReturnType<typeof vi.fn> };
+  let toastr: { success: ReturnType<typeof vi.fn>; error: ReturnType<typeof vi.fn>; warning: ReturnType<typeof vi.fn> };
+  let translate: { instant: ReturnType<typeof vi.fn>; get: ReturnType<typeof vi.fn> };
 
   beforeEach(async () => {
-    vi.clearAllMocks();
+    billingService = {
+      checkExistingInvoice: vi.fn(),
+      generateBatchBilling: vi.fn(),
+      triggerAllAccountsBilling: vi.fn(),
+      triggerAccountBilling: vi.fn(),
+      refreshMonthlyBilling: vi.fn(),
+      downloadPdfReport: vi.fn(),
+      updatePaymentStatus: vi.fn(),
+      getAllInvoicesByAccount: vi.fn(),
+    };
+    analyticsService = {
+      getBillingAnalytics: vi.fn().mockReturnValue(of({ data: { topDevices: [], revenueByMonth: [], revenueByAccount: [], statusBreakdown: [] } })),
+      getRevenueHistory: vi.fn().mockReturnValue(of({ data: [] })),
+      getRevenueForecast: vi.fn().mockReturnValue(of({ predictions: [] })),
+    };
+    webAccountService = { getAllWebAccountNames: vi.fn().mockReturnValue(of({ data: [] })) };
+    toastr = { success: vi.fn(), error: vi.fn(), warning: vi.fn() };
+    translate = { instant: vi.fn().mockReturnValue(''), get: vi.fn().mockReturnValue(of('')) };
 
     await TestBed.configureTestingModule({
-      imports: [BillingComponent, TranslateModule.forRoot()],
+      imports: [BillingComponent, TranslateModule.forRoot({ loader: { provide: TranslateLoader, useValue: { getTranslation: () => of({}) } } })],
+      schemas: [NO_ERRORS_SCHEMA],
       providers: [
-        provideHttpClient(),
-        { provide: BillingService, useValue: mockBillingService },
-        { provide: BillingAnalyticsService, useValue: mockAnalyticsService },
-        { provide: WebAccountService, useValue: mockWebAccountService },
-        { provide: ToastrService, useValue: mockToastr }
+        { provide: BillingService, useValue: billingService },
+        { provide: BillingAnalyticsService, useValue: analyticsService },
+        { provide: WebAccountService, useValue: webAccountService },
+        { provide: ToastrService, useValue: toastr },
+        { provide: TranslateService, useValue: translate }
       ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(BillingComponent);
-    component = fixture.componentInstance;
+    component = TestBed.createComponent(BillingComponent).componentInstance;
   });
 
   afterEach(() => {
-    vi.restoreAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should create', () => {
-    fixture.detectChanges();
     expect(component).toBeTruthy();
   });
 
-  it('should initialize with dashboard tab active', () => {
-    fixture.detectChanges();
-    expect(component.activeTab).toBe('dashboard');
-  });
-
-  it('should switch to invoice tab', () => {
-    fixture.detectChanges();
-    component.switchTab('invoice');
-    expect(component.activeTab).toBe('invoice');
-  });
-
-  it('should switch back to dashboard tab', () => {
-    fixture.detectChanges();
-    component.switchTab('invoice');
-    component.switchTab('dashboard');
-    expect(component.activeTab).toBe('dashboard');
-  });
-
-  it('should initialize billing form', () => {
-    fixture.detectChanges();
-    expect(component.billingForm).toBeDefined();
+  it('should initialize form on init', () => {
+    component.ngOnInit();
+    expect(component.billingForm).toBeTruthy();
     expect(component.billingForm.get('accountId')).toBeTruthy();
-    expect(component.billingForm.get('year')).toBeTruthy();
-    expect(component.billingForm.get('month')).toBeTruthy();
   });
 
-  it('should load web accounts on init', () => {
-    mockWebAccountService.getAllWebAccountNames.mockReturnValue(of({
-      data: [{ idCompteClientWeb: 1, login: 'account1' }]
-    }));
-    fixture.detectChanges();
-    expect(mockWebAccountService.getAllWebAccountNames).toHaveBeenCalled();
-    expect(component.webAccounts.length).toBe(1);
-  });
-
-  it('should handle empty web accounts response', () => {
-    mockWebAccountService.getAllWebAccountNames.mockReturnValue(of({}));
-    fixture.detectChanges();
+  it('should load web accounts', () => {
+    component.ngOnInit();
+    expect(webAccountService.getAllWebAccountNames).toHaveBeenCalled();
     expect(component.webAccounts).toEqual([]);
   });
 
   it('should handle web accounts error', () => {
-    mockWebAccountService.getAllWebAccountNames.mockReturnValue(throwError(() => new Error('fail')));
-    fixture.detectChanges();
-    expect(component.loadingAccounts).toBe(false);
-    expect(mockToastr.error).toHaveBeenCalled();
+    webAccountService.getAllWebAccountNames.mockReturnValue(throwError(() => new Error('fail')));
+    component.ngOnInit();
+    expect(toastr.error).toHaveBeenCalled();
   });
 
-  it('should schedule analytics load on init', () => {
-    fixture.detectChanges();
-    expect(component.analyticsLoading).toBe(false);
-  });
-
-  it('should schedule forecast load on init', () => {
-    fixture.detectChanges();
-    expect(component.analyticsLoading).toBe(false);
-  });
-
-  it('searchInvoice should show error when no account selected', () => {
-    fixture.detectChanges();
+  it('should search invoice', () => {
+    component.ngOnInit();
+    component.billingForm.patchValue({ accountId: '123' });
+    billingService.checkExistingInvoice.mockReturnValue(of({ data: { billingPeriod: '2024-01' } }));
     component.searchInvoice();
-    expect(mockToastr.error).toHaveBeenCalled();
+    expect(billingService.checkExistingInvoice).toHaveBeenCalled();
   });
 
-  it('searchInvoice should call checkExistingInvoice when account selected', () => {
-    fixture.detectChanges();
-    component.billingForm.patchValue({ accountId: 1 });
+  it('should show error when no account selected', () => {
+    component.ngOnInit();
     component.searchInvoice();
-    expect(mockBillingService.checkExistingInvoice).toHaveBeenCalled();
+    expect(toastr.error).toHaveBeenCalled();
   });
 
-  it('backToSingleInvoice should reset view', () => {
-    fixture.detectChanges();
-    component.showAllInvoicesView = true;
-    component.allInvoices = [{ id: 1 }];
+  it('should check existing invoice', () => {
+    component.ngOnInit();
+    component.billingForm.patchValue({ accountId: '123', year: 2024, month: 1 });
+    billingService.checkExistingInvoice.mockReturnValue(of({ data: { billingPeriod: '2024-01' } }));
+    component.checkExistingInvoice();
+    expect(component.billingResult).toBeTruthy();
+  });
+
+  it('should handle no existing invoice', () => {
+    component.ngOnInit();
+    component.billingForm.patchValue({ accountId: '123' });
+    billingService.checkExistingInvoice.mockReturnValue(of({ data: null }));
+    component.checkExistingInvoice();
+    expect(component.noExistingInvoice).toBe(true);
+  });
+
+  it('should calculate billing', () => {
+    component.ngOnInit();
+    component.billingForm.patchValue({ accountId: '123' });
+    billingService.generateBatchBilling.mockReturnValue(of({ data: [{ billingPeriod: '2024-01' }] }));
+    component.calculateBilling();
+    expect(component.loading).toBe(false);
+  });
+
+  it('should show error when no account for calculate', () => {
+    component.ngOnInit();
+    component.calculateBilling();
+    expect(toastr.error).toHaveBeenCalled();
+  });
+
+  it('should calculate all accounts', () => {
+    billingService.triggerAllAccountsBilling.mockReturnValue(of({}));
+    component.calculateAllAccounts();
+    expect(component.loading).toBe(false);
+  });
+
+  it('should calculate specific account', () => {
+    component.ngOnInit();
+    component.billingForm.patchValue({ accountId: '123' });
+    billingService.triggerAccountBilling.mockReturnValue(of({ data: {} }));
+    component.calculateSpecificAccount();
+    expect(component.loading).toBe(false);
+  });
+
+  it('should refresh billing', () => {
+    component.ngOnInit();
+    component.billingForm.patchValue({ accountId: '123', year: 2024, month: 1 });
+    billingService.refreshMonthlyBilling.mockReturnValue(of({ data: { billingPeriod: '2024-01' } }));
+    component.refreshBilling();
+    expect(component.billingResult).toBeTruthy();
+  });
+
+  it('should toggle payment status', () => {
+    component.billingResult = { paymentStatus: 'PAID' };
+    component.ngOnInit();
+    component.billingForm.patchValue({ accountId: '123', year: 2024, month: 1 });
+    billingService.updatePaymentStatus.mockReturnValue(of({}));
+    component.togglePaymentStatus();
+    expect(component.billingResult.paymentStatus).toBe('UNPAID');
+  });
+
+  it('should not toggle when no result', () => {
+    component.billingResult = null;
+    component.togglePaymentStatus();
+    expect(billingService.updatePaymentStatus).not.toHaveBeenCalled();
+  });
+
+  it('should switch tabs', () => {
+    component.switchTab('invoice');
+    expect(component.activeTab).toBe('invoice');
+    component.switchTab('dashboard');
+    expect(component.activeTab).toBe('dashboard');
+  });
+
+  it('should format currency', () => {
+    const result = component.formatCurrency(1234.567);
+    expect(result).toContain('TND');
+  });
+
+  it('should fetch all invoices', () => {
+    component.ngOnInit();
+    component.billingForm.patchValue({ accountId: '123' });
+    billingService.getAllInvoicesByAccount.mockReturnValue(of({ data: [{ billingPeriod: '2024-01' }] }));
+    component.fetchAllInvoices();
+    expect(component.allInvoices.length).toBe(1);
+    expect(component.showAllInvoicesView).toBe(true);
+  });
+
+  it('should back to single invoice', () => {
     component.backToSingleInvoice();
     expect(component.showAllInvoicesView).toBe(false);
-    expect(component.allInvoices).toEqual([]);
   });
 
-  it('totalDevicePages should return 0 when no billing result', () => {
-    fixture.detectChanges();
-    expect(component.totalDevicePages).toBe(0);
+  it('should view invoice', () => {
+    component.viewInvoice({ billingPeriod: '2024-01', totalAmount: 100 });
+    expect(component.billingResult.billingPeriod).toBe('2024-01');
+    expect(component.showAllInvoicesView).toBe(false);
   });
 
-  it('pagedDevices should return empty when no billing result', () => {
-    fixture.detectChanges();
-    expect(component.pagedDevices).toEqual([]);
+  it('should compute totalDevicePages', () => {
+    component.billingResult = { deviceBreakdown: Array(25) };
+    component.pageSize = 10;
+    expect(component.totalDevicePages).toBe(3);
   });
 
-  it('formatCurrency should format amount', () => {
-    fixture.detectChanges();
-    const result = component.formatCurrency(1234.567);
-    expect(typeof result).toBe('string');
-    expect(result.length).toBeGreaterThan(0);
+  it('should compute pagedDevices', () => {
+    component.billingResult = { deviceBreakdown: Array.from({ length: 25 }, (_, i) => ({ id: i })) };
+    component.pageSize = 10;
+    component.devicePage = 1;
+    expect(component.pagedDevices.length).toBe(10);
   });
 
-  it('should call checkExistingInvoice when account selected', () => {
-    fixture.detectChanges();
-    component.billingForm.patchValue({ accountId: 1 });
-    component.checkExistingInvoice();
-    expect(mockBillingService.checkExistingInvoice).toHaveBeenCalled();
+  it('should destroy chart instances', () => {
+    expect(() => component.ngOnDestroy()).not.toThrow();
   });
 });

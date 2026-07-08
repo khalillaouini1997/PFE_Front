@@ -10,7 +10,7 @@ export interface LoadingState {
   providedIn: 'root'
 })
 export class LoadingService {
-  private loadingStates = signal<Map<string, LoadingState>>(new Map());
+  private readonly loadingStates = signal<Map<string, LoadingState>>(new Map());
 
   readonly isLoading = computed(() => {
     const states = this.loadingStates();

@@ -193,7 +193,7 @@ export class BillingComponent implements OnInit, OnDestroy {
     this.billingService.checkExistingInvoice(accountId, year, month).subscribe({
       next: (res: any) => {
         const data = res?.data || res;
-        if (data && data.billingPeriod) {
+        if (data?.billingPeriod) {
           this.billingResult = data;
           this.noExistingInvoice = false;
         } else {
@@ -231,7 +231,7 @@ export class BillingComponent implements OnInit, OnDestroy {
         next: (res: any) => {
           const data = res?.data || res;
           this.allInvoices = Array.isArray(data) ? data : [];
-          this.billingResult = this.allInvoices.length > 0 ? this.allInvoices[this.allInvoices.length - 1] : null;
+          this.billingResult = this.allInvoices.length > 0 ? this.allInvoices.at(-1) : null;
           this.showAllInvoicesView = this.allInvoices.length > 0;
         },
         error: () => {
@@ -334,7 +334,7 @@ export class BillingComponent implements OnInit, OnDestroy {
             a.download = `billing_report_${accountId}_${year}-${month}.pdf`;
             document.body.appendChild(a);
             a.click();
-            document.body.removeChild(a);
+            a.remove();
             window.URL.revokeObjectURL(url);
             this.toastr.success(this.translate.instant('BILLING.PDF_DOWNLOAD_SUCCESS'), this.translate.instant('COMMON.SUCCESS'));
           } else {
@@ -413,8 +413,7 @@ export class BillingComponent implements OnInit, OnDestroy {
     const predictions: number[] = forecast?.predictions || [];
     const confidenceLower: number[] = forecast?.confidence_lower || [];
     const confidenceUpper: number[] = forecast?.confidence_upper || [];
-    const trend: number[] = forecast?.trend || [];
-    const lastMonth = actualLabels[actualLabels.length - 1] || '';
+    const lastMonth = actualLabels.at(-1) ?? '';
 
     const predictedLabels = predictions.map((_: number, i: number) => {
       const [year, month] = lastMonth.split('-').map(Number);
@@ -426,17 +425,17 @@ export class BillingComponent implements OnInit, OnDestroy {
     const actualValues = [...actualData, ...new Array(predictedLabels.length).fill(null)];
     const predictedValues = [
       ...new Array(actualLabels.length - 1).fill(null),
-      actualData[actualData.length - 1],
+      actualData.at(-1),
       ...predictions
     ];
     const lowerBand = [
       ...new Array(actualLabels.length - 1).fill(null),
-      actualData[actualData.length - 1],
+      actualData.at(-1),
       ...confidenceLower
     ];
     const upperBand = [
       ...new Array(actualLabels.length - 1).fill(null),
-      actualData[actualData.length - 1],
+      actualData.at(-1),
       ...confidenceUpper
     ];
 

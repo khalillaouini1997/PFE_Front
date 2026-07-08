@@ -1,9 +1,8 @@
 import { Component, input, viewChild, inject, AfterViewInit, OnDestroy, ElementRef, effect, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslateModule } from '@ngx-translate/core';
-import { GlobalDashboardStats, GlobalRealTime } from '../../../../shared/stores/global-dashboard.store';
-import { CHART_CONSTANTS, SPEED_BANDS, SIM_CARD_PREFIXES, STATUS_TYPES } from '../../../../shared/constants/app.constants';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { GlobalDashboardStats } from '../../../../shared/stores/global-dashboard.store';
+import { CHART_CONSTANTS, SPEED_BANDS, SIM_CARD_PREFIXES } from '../../../../shared/constants/app.constants';
 import { Chart, registerables } from 'chart.js';
 
 Chart.register(...registerables);
@@ -41,7 +40,7 @@ export class GlobalChartsComponent implements AfterViewInit, OnDestroy {
   private signalChartInstance?: Chart;
   private healthChartInstance?: Chart;
 
-  private translate = inject(TranslateService);
+  private readonly translate = inject(TranslateService);
 
   healthScore = computed(() => {
     const s = this.stats();

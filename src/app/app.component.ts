@@ -31,7 +31,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     window.removeEventListener('show-error-banner', this.handleShowErrorBanner);
   }
 
-  private handleShowErrorBanner = (event: Event) => {
+  private readonly handleShowErrorBanner = (event: Event) => {
     const customEvent = event as CustomEvent<ErrorBannerData>;
     if (this.errorBanner && customEvent.detail) {
       this.errorBanner.showError(customEvent.detail);

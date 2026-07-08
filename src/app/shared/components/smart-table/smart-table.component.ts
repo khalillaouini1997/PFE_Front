@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ContentChild, TemplateRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableModule, TableLazyLoadEvent } from 'primeng/table';
 import { EmptyTableComponent } from '../empty-table/empty-table.component';

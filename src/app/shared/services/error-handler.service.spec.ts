@@ -1,155 +1,157 @@
 import { TestBed } from '@angular/core/testing';
-import { provideHttpClient } from '@angular/common/http';
-import { HttpErrorResponse } from '@angular/common/http';
-import { provideRouter, Router } from '@angular/router';
 import { ErrorHandlerService } from './error-handler.service';
+import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 
 describe('ErrorHandlerService', () => {
   let service: ErrorHandlerService;
-  let navigateSpy: ReturnType<typeof vi.fn>;
-  let router: Router;
+  let router: { navigate: ReturnType<typeof vi.fn> };
 
   beforeEach(() => {
-    TestBed.resetTestingModule();
+    router = { navigate: vi.fn() };
+
     TestBed.configureTestingModule({
       providers: [
-        provideHttpClient(),
-        provideRouter([]),
         ErrorHandlerService,
-      ],
+        { provide: Router, useValue: router }
+      ]
     });
+
     service = TestBed.inject(ErrorHandlerService);
-    router = TestBed.inject(Router);
-    navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValue(true) as any;
   });
 
   afterEach(() => {
-    vi.restoreAllMocks();
+    vi.clearAllMocks();
   });
 
-  describe('handleError', () => {
-    it('should return an observable that throws the error', () => {
-      const error = new Error('test error');
-      let caughtError: any;
-      service.handleError({ error }).subscribe({
-        error: (err) => {
-          caughtError = err;
-        },
-      });
-      expect(caughtError).toBe(error);
-    });
-
-    it('should add error to errors signal', () => {
-      const error = new Error('test');
-      service.handleError({ error, component: 'TestComponent' });
-
-      const errors = service.errors$();
-      expect(errors.length).toBe(1);
-      expect(errors[0].error).toBe(error);
-      expect(errors[0].component).toBe('TestComponent');
-      expect(errors[0].timestamp).toBeDefined();
-    });
+  it('should be created', () => {
+    expect(service).toBeTruthy();
   });
 
-  describe('HttpErrorResponse handling', () => {
-    it('should categorize network errors (status 0)', () => {
-      const error = new HttpErrorResponse({ status: 0, statusText: 'Unknown Error' });
-      service.handleError({ error });
-
-      const errors = service.errors$();
-      expect(errors[0].errorType).toBe('network');
-    });
-
-    it('should categorize server errors (status 500)', () => {
-      const error = new HttpErrorResponse({ status: 500, statusText: 'Server Error' });
-      service.handleError({ error });
-
-      const errors = service.errors$();
-      expect(errors[0].errorType).toBe('network');
-    });
-
-    it('should categorize validation errors (status 400)', () => {
-      const error = new HttpErrorResponse({ status: 400, statusText: 'Bad Request' });
-      service.handleError({ error });
-
-      const errors = service.errors$();
-      expect(errors[0].errorType).toBe('validation');
-    });
+  it('should handle network error (status 0)', () => {
+    const error = new HttpErrorResponse({ status: 0 });
+    service.handleError({ error, component: 'test' });
+    expect(service.errors$().length).toBe(1);
+    expect(service.errors$()[0].errorType).toBe('network');
   });
 
-  describe('navigation on critical errors', () => {
-    it('should navigate to /error on 403', () => {
-      const error = new HttpErrorResponse({ status: 403, statusText: 'Forbidden' });
-      service.handleError({ error, component: 'TestComponent' });
-
-      expect(navigateSpy).toHaveBeenCalledWith(
-        ['/error'],
-        expect.objectContaining({
-          queryParams: expect.objectContaining({
-            component: 'TestComponent',
-          }),
-        })
-      );
-    });
-
-    it('should navigate to /error on 500', () => {
-      const error = new HttpErrorResponse({ status: 500, statusText: 'Server Error' });
-      service.handleError({ error });
-
-      expect(navigateSpy).toHaveBeenCalledWith(['/error'], expect.any(Object));
-    });
-
-    it('should not navigate on 400', () => {
-      const error = new HttpErrorResponse({ status: 400, statusText: 'Bad Request' });
-      service.handleError({ error });
-
-      expect(navigateSpy).not.toHaveBeenCalled();
-    });
-
-    it('should not navigate on 401', () => {
-      const error = new HttpErrorResponse({ status: 401, statusText: 'Unauthorized' });
-      service.handleError({ error });
-
-      expect(navigateSpy).not.toHaveBeenCalled();
-    });
+  it('should handle server error (status 500)', () => {
+    const error = new HttpErrorResponse({ status: 500 });
+    service.handleError({ error, component: 'test' });
+    expect(service.errors$()[0].errorType).toBe('network');
+    expect(router.navigate).toHaveBeenCalled();
   });
 
-  describe('clearErrors', () => {
-    it('should clear all errors', () => {
-      service.handleError({ error: new Error('a') });
-      service.handleError({ error: new Error('b') });
-      expect(service.errors$().length).toBe(2);
-
-      service.clearErrors();
-      expect(service.errors$().length).toBe(0);
-    });
+  it('should handle validation error (status 400)', () => {
+    const error = new HttpErrorResponse({ status: 400 });
+    service.handleError({ error, component: 'test' });
+    expect(service.errors$()[0].errorType).toBe('validation');
   });
 
-  describe('getErrorsByType', () => {
-    it('should filter errors by type', () => {
-      service.handleError({ error: new HttpErrorResponse({ status: 0 }) });
-      service.handleError({ error: new Error('test'), errorType: 'business' });
-
-      const networkErrors = service.getErrorsByType('network');
-      expect(networkErrors.length).toBe(1);
-      expect(networkErrors[0].errorType).toBe('network');
-    });
+  it('should handle forbidden error (status 403)', () => {
+    const error = new HttpErrorResponse({ status: 403 });
+    service.handleError({ error, component: 'test' });
+    expect(router.navigate).toHaveBeenCalled();
   });
 
-  describe('getRecentErrors', () => {
-    it('should return last N errors', () => {
-      for (let i = 0; i < 5; i++) {
-        service.handleError({ error: new Error(`err${i}`) });
-      }
+  it('should handle not found error (status 404)', () => {
+    const error = new HttpErrorResponse({ status: 404 });
+    service.handleError({ error, component: 'test' });
+    expect(service.errors$()[0].errorType).toBe('validation');
+  });
 
-      const recent = service.getRecentErrors(3);
-      expect(recent.length).toBe(3);
-    });
+  it('should handle generic error', () => {
+    const error = new Error('something went wrong');
+    service.handleError({ error, component: 'test' });
+    expect(service.errors$().length).toBe(1);
+    expect(service.errors$()[0].errorType).toBe('system');
+  });
 
-    it('should return all errors when count exceeds total', () => {
-      service.handleError({ error: new Error('a') });
-      const recent = service.getRecentErrors(10);
-      expect(recent.length).toBe(1);
+  it('should detect network error in message', () => {
+    const error = new Error('network connection failed');
+    service.handleError({ error });
+    expect(service.errors$()[0].errorType).toBe('network');
+  });
+
+  it('should detect validation error in message', () => {
+    const error = new Error('validation failed');
+    service.handleError({ error });
+    expect(service.errors$()[0].errorType).toBe('validation');
+  });
+
+  it('should provide default message for status 0', () => {
+    const error = new HttpErrorResponse({ status: 0 });
+    const result = service.handleError({ error });
+    result.subscribe({ error: () => {} });
+  });
+
+  it('should provide default message for status 401', () => {
+    const error = new HttpErrorResponse({ status: 401 });
+    service.handleError({ error });
+    expect(service.errors$().length).toBe(1);
+  });
+
+  it('should provide default message for status 500', () => {
+    const error = new HttpErrorResponse({ status: 500 });
+    service.handleError({ error });
+    expect(service.errors$().length).toBe(1);
+  });
+
+  it('should handle ProblemDetail error format', () => {
+    const error = new HttpErrorResponse({
+      status: 400,
+      error: { type: 'about:blank', title: 'Bad Request', detail: 'Invalid input' }
     });
+    service.handleError({ error });
+    expect(service.errors$().length).toBe(1);
+  });
+
+  it('should handle legacy ApiResponse error format', () => {
+    const error = new HttpErrorResponse({
+      status: 400,
+      error: { message: 'Something went wrong' }
+    });
+    service.handleError({ error });
+    expect(service.errors$().length).toBe(1);
+  });
+
+  it('should clear errors', () => {
+    service.handleError({ error: new Error('test') });
+    service.clearErrors();
+    expect(service.errors$()).toEqual([]);
+  });
+
+  it('should get errors by type', () => {
+    service.handleError({ error: new HttpErrorResponse({ status: 0 }) });
+    service.handleError({ error: new HttpErrorResponse({ status: 400 }) });
+    const networkErrors = service.getErrorsByType('network');
+    expect(networkErrors.length).toBe(1);
+  });
+
+  it('should get recent errors', () => {
+    for (let i = 0; i < 15; i++) {
+      service.handleError({ error: new Error(`err ${i}`) });
+    }
+    const recent = service.getRecentErrors(5);
+    expect(recent.length).toBe(5);
+  });
+
+  it('should use custom error type when provided', () => {
+    service.handleError({ error: new Error('test'), errorType: 'business' });
+    expect(service.errors$()[0].errorType).toBe('business');
+  });
+
+  it('should add timestamp', () => {
+    service.handleError({ error: new Error('test') });
+    expect(service.errors$()[0].timestamp).toBeInstanceOf(Date);
+  });
+
+  it('should return observable', () => {
+    const error = new Error('test');
+    let caught = false;
+    service.handleError({ error }).subscribe({
+      error: (e) => { caught = true; expect(e).toBe(error); }
+    });
+    expect(caught).toBe(true);
   });
 });

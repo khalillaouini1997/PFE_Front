@@ -7,9 +7,9 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class BillingService {
-  private apiBaseUrl = environment.apiBaseUrl;
+  private readonly apiBaseUrl = environment.apiBaseUrl;
 
-  constructor(private http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {}
 
   calculateMonthlyBilling(accountId: number, year: number, month: number): Observable<any> {
     return this.http.get(`${this.apiBaseUrl}billing/account/${accountId}/${year}/${month}`);

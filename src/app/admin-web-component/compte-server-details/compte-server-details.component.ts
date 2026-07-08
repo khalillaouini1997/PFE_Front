@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, inject, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Params, RouterModule } from '@angular/router';
-import { Boitier, BoitierRealTime, CompteServer, createCompteServer, createBoitier } from 'src/app/data/data';
+import { Boitier, CompteServer, createCompteServer, createBoitier } from 'src/app/data/data';
 import { CompteServerService } from "../../service/compte-server.service";
 import { BoitierService } from "../../service/boitier.service";
 
@@ -176,43 +176,13 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
   private refreshBoitierArchives() {
     this.boitiers.forEach(boitier => {
       this.boitierService.lastArchiveOfBoitier(boitier.numBoitier).subscribe((res: any) => {
-        // Handle nested response structure
         const arch = res.data || res;
-        
-        // Handle dateLastTrame - could be timestamp (number) or string
+
         if (arch.dateLastTrame) {
-          if (typeof arch.dateLastTrame === 'number') {
-            // It's a timestamp
-            boitier.dateLastTrame = new Date(arch.dateLastTrame);
-          } else if (typeof arch.dateLastTrame === 'string') {
-            // Parse date from DD-MM-YYYY HH:mm:ss format or ISO format to Date object
-            if (arch.dateLastTrame.includes('T')) {
-              // ISO format
-              boitier.dateLastTrame = new Date(arch.dateLastTrame);
-            } else {
-              // DD-MM-YYYY HH:mm:ss format
-              const parts = arch.dateLastTrame.split(' ');
-              if (parts.length === 2) {
-                const dateParts = parts[0].split('-');
-                const timeParts = parts[1].split(':');
-                if (dateParts.length === 3 && timeParts.length === 3) {
-                  boitier.dateLastTrame = new Date(
-                    Number.parseInt(dateParts[2]), // year
-                    Number.parseInt(dateParts[1]) - 1, // month (0-indexed)
-                    Number.parseInt(dateParts[0]), // day
-                    Number.parseInt(timeParts[0]), // hours
-                    Number.parseInt(timeParts[1]), // minutes
-                    Number.parseInt(timeParts[2]) // seconds
-                  );
-                }
-              }
-            }
-          }
+          boitier.dateLastTrame = this.parseDateLastTrame(arch.dateLastTrame);
         }
         if (arch.emplacement) {
           boitier.emplacement = arch.emplacement;
-        } else if (arch.vitesse !== undefined) {
-          // Fallback if needed, but BoitierRealTime should have it
         }
         boitier.latitude = arch.latitude;
         boitier.longitude = arch.longitude;
@@ -222,6 +192,37 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
       });
     });
+  }
+
+  private parseDateLastTrame(value: number | string): Date | undefined {
+    if (typeof value === 'number') {
+      return new Date(value);
+    }
+    if (typeof value === 'string') {
+      if (value.includes('T')) {
+        return new Date(value);
+      }
+      return this.parseDDMMYYYY(value);
+    }
+    return undefined;
+  }
+
+  private parseDDMMYYYY(dateStr: string): Date | undefined {
+    const parts = dateStr.split(' ');
+    if (parts.length !== 2) return undefined;
+
+    const dateParts = parts[0].split('-');
+    const timeParts = parts[1].split(':');
+    if (dateParts.length !== 3 || timeParts.length !== 3) return undefined;
+
+    return new Date(
+      Number.parseInt(dateParts[2]),
+      Number.parseInt(dateParts[1]) - 1,
+      Number.parseInt(dateParts[0]),
+      Number.parseInt(timeParts[0]),
+      Number.parseInt(timeParts[1]),
+      Number.parseInt(timeParts[2])
+    );
   }
 
   searchBoitiers() {

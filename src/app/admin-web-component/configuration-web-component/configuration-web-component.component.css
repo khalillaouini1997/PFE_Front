@@ -129,10 +129,6 @@ table>thead>tr>th,
   margin: 32px 0 0 0;
 }
 
-.fade-in {
-  animation: fadeIn 0.3s ease-in-out;
-}
-
 .modal-backdrop-custom {
   position: fixed;
   top: 0;
@@ -245,16 +241,6 @@ table>thead>tr>th,
 
 .header-gradient {
   background: var(--primary-600);
-}
-
-.btn-purple {
-  background: var(--primary-600);
-  color: white;
-  transition: all var(--transition-fast) var(--ease-default);
-}
-
-.btn-purple:hover {
-  background: var(--primary-700);
 }
 
 .scale-110 {
