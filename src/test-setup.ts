@@ -33,18 +33,59 @@ if (!window.ResizeObserver) {
   };
 }
 
-// Mock HTMLCanvasElement.getContext for Chart.js in jsdom
+// Mock window.getComputedStyle to handle null/undefined elements (Chart.js needs this)
+const mockComputedStyle = {
+  getPropertyValue: () => '',
+  fontSize: '14px',
+  fontFamily: 'sans-serif',
+  width: '300px',
+  height: '150px',
+  display: 'block',
+  visibility: 'visible',
+  position: 'static',
+  overflow: 'visible',
+  boxSizing: 'content-box',
+  borderStyle: 'none',
+  borderWidth: '0px',
+  padding: '0px',
+  margin: '0px',
+};
+(window as any).getComputedStyle = (_el: any, _pseudo?: string | null) => mockComputedStyle;
+
+// Mock HTMLCanvasElement to provide parentElement chain for Chart.js
 {
-  const originalGetContext = HTMLCanvasElement.prototype.getContext;
+  const origGetContext = HTMLCanvasElement.prototype.getContext;
+
+  // Provide parentElement on the prototype so it's available before getContext is called
+  const mockParent = {
+    ownerDocument: { defaultView: window },
+    style: {},
+    getBoundingClientRect: () => ({ width: 300, height: 150, top: 0, left: 0, right: 300, bottom: 150 }),
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    parentNode: null as any,
+    parentElement: null as any,
+  };
+  mockParent.parentNode = mockParent;
+  mockParent.parentElement = mockParent;
+
+  Object.defineProperty(HTMLCanvasElement.prototype, 'parentElement', {
+    get() { return mockParent; },
+    configurable: true,
+  });
+  Object.defineProperty(HTMLCanvasElement.prototype, 'parentNode', {
+    get() { return mockParent; },
+    configurable: true,
+  });
+  Object.defineProperty(HTMLCanvasElement.prototype, 'ownerDocument', {
+    value: { defaultView: window },
+    configurable: true,
+  });
+
   HTMLCanvasElement.prototype.getContext = function (...args: any[]) {
-    const ctx = originalGetContext.call(this, ...args as [string, any?]);
+    const ctx = origGetContext.call(this, ...args as [string, any?]);
     if (ctx) return ctx;
-    if (!this.ownerDocument) {
-      Object.defineProperty(this, 'ownerDocument', {
-        value: { defaultView: window },
-        writable: false,
-      });
-    }
+
     return {
       fillRect: () => {}, clearRect: () => {}, strokeRect: () => {},
       fillText: () => {}, strokeText: () => {},
@@ -66,26 +107,16 @@ if (!window.ResizeObserver) {
   };
 }
 
-// Suppress Chart.js console warnings in jsdom
+// Suppress noisy Chart.js/console warnings in jsdom
 const originalError = console.error;
 console.error = (...args: any[]) => {
   const msg = args[0]?.toString?.() ?? '';
-  if (msg.includes('chart') || msg.includes('Chart') || msg.includes('getContext') || msg.includes('Not implemented')) {
+  if (msg.includes('chart') || msg.includes('Chart') || msg.includes('getContext')
+    || msg.includes('Not implemented') || msg.includes('ownerDocument')) {
     return;
   }
   originalError.apply(console, args);
 };
-
-// Mock window.getComputedStyle for Chart.js in jsdom
-if (!window.getComputedStyle) {
-  (window as any).getComputedStyle = () => ({
-    getPropertyValue: () => '',
-    fontSize: '14px',
-    fontFamily: 'sans-serif',
-    width: '300px',
-    height: '150px',
-  });
-}
 
 // Ensure exactly one platform is initialized
 if (getPlatform()) {

@@ -6,8 +6,23 @@ import { ToastrModule } from 'ngx-toastr';
 import { TranslateModule } from '@ngx-translate/core';
 import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
+import { vi } from 'vitest';
 
 import { DashboardComponent } from './dashboard.component';
+
+vi.mock('chart.js', () => {
+  return {
+    Chart: class {
+      static register() {}
+      constructor(public ctx: any, public config: any) {}
+      destroy() {}
+      update() {}
+      set data(val: any) {}
+      get data() { return {}; }
+    },
+    registerables: []
+  };
+});
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
@@ -28,6 +43,10 @@ describe('DashboardComponent', () => {
     fixture = TestBed.createComponent(DashboardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   it('should create', () => {

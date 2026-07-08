@@ -3,6 +3,20 @@ import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { TranslateModule } from '@ngx-translate/core';
 import { GlobalChartsComponent } from './global-charts.component';
 
+vi.mock('chart.js', () => {
+  return {
+    Chart: class {
+      static register() {}
+      constructor(public ctx: any, public config: any) {}
+      destroy() {}
+      update() {}
+      set data(val: any) {}
+      get data() { return {}; }
+    },
+    registerables: []
+  };
+});
+
 describe('GlobalChartsComponent', () => {
   let component: GlobalChartsComponent;
   let fixture: ComponentFixture<GlobalChartsComponent>;

@@ -1,10 +1,24 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { DashboardChartsComponent } from './dashboard-charts.component';
 import { TranslateService } from '@ngx-translate/core';
 import { DashboardStore } from '../../../../shared/stores';
 import { RealTime } from '../../../../data/data';
 import { DeviceInstallationEvolution } from '../../../../data/models/analysis.model';
+
+vi.mock('chart.js', () => {
+  return {
+    Chart: class {
+      static register() {}
+      constructor(public ctx: any, public config: any) {}
+      destroy() {}
+      update() {}
+      set data(val: any) {}
+      get data() { return {}; }
+    },
+    registerables: []
+  };
+});
 
 describe('DashboardChartsComponent', () => {
   let component: DashboardChartsComponent;
@@ -13,14 +27,6 @@ describe('DashboardChartsComponent', () => {
   let mockStore: { setGranularity: ReturnType<typeof vi.fn> };
 
   beforeEach(async () => {
-    HTMLCanvasElement.prototype.getContext = vi.fn(() => ({
-      fillRect: vi.fn(), clearRect: vi.fn(), strokeRect: vi.fn(),
-      fillText: vi.fn(), strokeText: vi.fn(), measureText: vi.fn(() => ({ width: 0 })),
-      beginPath: vi.fn(), closePath: vi.fn(), moveTo: vi.fn(), lineTo: vi.fn(),
-      stroke: vi.fn(), fill: vi.fn(), arc: vi.fn(), rect: vi.fn(),
-      createLinearGradient: vi.fn(() => ({ addColorStop: vi.fn() })),
-      canvas: { width: 300, height: 150 },
-    })) as any;
     mockTranslate = { instant: vi.fn((key: string) => key) };
     mockStore = { setGranularity: vi.fn() };
 

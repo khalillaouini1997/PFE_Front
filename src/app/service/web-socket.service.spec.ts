@@ -7,29 +7,17 @@ vi.mock('sockjs-client', () => ({
 }));
 
 vi.mock('@stomp/stompjs', () => {
-  const mockInstance = {
-    activate: vi.fn(),
-    deactivate: vi.fn(),
-    subscribe: vi.fn(),
-    _connected: false,
-    _active: false,
-    onConnect: null as any,
-    onStompError: null as any,
-    onDisconnect: null as any,
-  };
   return {
     Client: class MockClient {
-      constructor(_options?: any) {
-        Object.assign(this, mockInstance);
-      }
-      activate = mockInstance.activate;
-      deactivate = mockInstance.deactivate;
-      subscribe = mockInstance.subscribe;
-      _connected = mockInstance._connected;
-      _active = mockInstance._active;
-      onConnect = mockInstance.onConnect;
-      onStompError = mockInstance.onStompError;
-      onDisconnect = mockInstance.onDisconnect;
+      activate = vi.fn();
+      deactivate = vi.fn();
+      subscribe = vi.fn();
+      connected = false;
+      active = false;
+      onConnect: any = null;
+      onStompError: any = null;
+      onDisconnect: any = null;
+      constructor(_options?: any) {}
     },
   };
 });
@@ -68,8 +56,9 @@ describe('WebSocketService', () => {
   });
 
   it('connect should call client.activate', () => {
-    service.connect();
     const client = (service as any).client;
-    expect(client.activate).toHaveBeenCalled();
+    const activateSpy = vi.spyOn(client, 'activate');
+    service.connect();
+    expect(activateSpy).toHaveBeenCalled();
   });
 });
