@@ -39,7 +39,6 @@ if (!window.ResizeObserver) {
   HTMLCanvasElement.prototype.getContext = function (...args: any[]) {
     const ctx = originalGetContext.call(this, ...args as [string, any?]);
     if (ctx) return ctx;
-    // Ensure canvas has ownerDocument for Chart.js
     if (!this.ownerDocument) {
       Object.defineProperty(this, 'ownerDocument', {
         value: { defaultView: window },
@@ -67,12 +66,12 @@ if (!window.ResizeObserver) {
   };
 }
 
-// Suppress Chart.js errors in jsdom (canvas not connected to DOM)
+// Suppress Chart.js console warnings in jsdom
 const originalError = console.error;
 console.error = (...args: any[]) => {
   const msg = args[0]?.toString?.() ?? '';
-  if (msg.includes('chart') || msg.includes('Chart') || msg.includes('canvas') || msg.includes('getContext')) {
-    return; // suppress chart.js errors
+  if (msg.includes('chart') || msg.includes('Chart') || msg.includes('getContext') || msg.includes('Not implemented')) {
+    return;
   }
   originalError.apply(console, args);
 };

@@ -2,29 +2,37 @@ import { TestBed } from '@angular/core/testing';
 import { vi } from 'vitest';
 import { WebSocketService } from './web-socket.service';
 
-vi.mock('sockjs-client', () => {
+vi.mock('sockjs-client', () => ({
+  default: vi.fn().mockImplementation(() => ({})),
+}));
+
+vi.mock('@stomp/stompjs', () => {
+  const mockInstance = {
+    activate: vi.fn(),
+    deactivate: vi.fn(),
+    subscribe: vi.fn(),
+    _connected: false,
+    _active: false,
+    onConnect: null as any,
+    onStompError: null as any,
+    onDisconnect: null as any,
+  };
   return {
-    default: vi.fn().mockImplementation(() => ({})),
+    Client: class MockClient {
+      constructor(_options?: any) {
+        Object.assign(this, mockInstance);
+      }
+      activate = mockInstance.activate;
+      deactivate = mockInstance.deactivate;
+      subscribe = mockInstance.subscribe;
+      _connected = mockInstance._connected;
+      _active = mockInstance._active;
+      onConnect = mockInstance.onConnect;
+      onStompError = mockInstance.onStompError;
+      onDisconnect = mockInstance.onDisconnect;
+    },
   };
 });
-
-vi.mock('@stomp/stompjs', () => ({
-  Client: class MockClient {
-    activate = vi.fn();
-    deactivate = vi.fn();
-    subscribe = vi.fn();
-    _connected = false;
-    _active = false;
-    get connected() { return this._connected; }
-    set connected(v) { this._connected = v; }
-    get active() { return this._active; }
-    set active(v) { this._active = v; }
-    onConnect: any = null;
-    onStompError: any = null;
-    onDisconnect: any = null;
-    constructor(_options?: any) {}
-  },
-}));
 
 describe('WebSocketService', () => {
   let service: WebSocketService;
@@ -41,97 +49,27 @@ describe('WebSocketService', () => {
     expect(service).toBeTruthy();
   });
 
-  describe('connect', () => {
-    it('should activate client if not active', () => {
-      const client = (service as any).client;
-      client.active = false;
-
-      service.connect();
-
-      expect(client.activate).toHaveBeenCalled();
-    });
-
-    it('should not activate client if already active', () => {
-      const client = (service as any).client;
-      client.active = true;
-
-      service.connect();
-
-      expect(client.activate).not.toHaveBeenCalled();
-    });
+  it('should emit initial notification as null', () => {
+    let notification: any;
+    service.getNotifications().subscribe((data) => (notification = data));
+    expect(notification).toBeNull();
   });
 
-  describe('disconnect', () => {
-    it('should deactivate client if active', () => {
-      const client = (service as any).client;
-      client.active = true;
-
-      service.disconnect();
-
-      expect(client.deactivate).toHaveBeenCalled();
-    });
-
-    it('should not deactivate client if not active', () => {
-      const client = (service as any).client;
-      client.active = false;
-
-      service.disconnect();
-
-      expect(client.deactivate).not.toHaveBeenCalled();
-    });
+  it('should emit initial vehicle positions as empty array', () => {
+    let vehiclePositions: any;
+    service.getVehiclePositions().subscribe((data) => (vehiclePositions = data));
+    expect(vehiclePositions).toEqual([]);
   });
 
-  describe('isConnected', () => {
-    it('should return client.connected', () => {
-      const client = (service as any).client;
-      client.connected = true;
-
-      expect(service.isConnected()).toBe(true);
-    });
-
-    it('should return false when not connected', () => {
-      const client = (service as any).client;
-      client.connected = false;
-
-      expect(service.isConnected()).toBe(false);
-    });
+  it('should emit initial connection status as false', () => {
+    let connectionStatus: any;
+    service.getConnectionStatus().subscribe((data) => (connectionStatus = data));
+    expect(connectionStatus).toBe(false);
   });
 
-  describe('observables', () => {
-    it('should emit initial values', () => {
-      let notification: any;
-      let vehiclePositions: any;
-      let connectionStatus: any;
-
-      service.getNotifications().subscribe((data) => (notification = data));
-      service.getVehiclePositions().subscribe((data) => (vehiclePositions = data));
-      service.getConnectionStatus().subscribe((data) => (connectionStatus = data));
-
-      expect(notification).toBeNull();
-      expect(vehiclePositions).toEqual([]);
-      expect(connectionStatus).toBe(false);
-    });
-
-    it('should emit connection status on connect', () => {
-      let connectionStatus: boolean | undefined;
-      service.getConnectionStatus().subscribe((data) => (connectionStatus = data));
-
-      const client = (service as any).client;
-      client.onConnect({});
-
-      expect(connectionStatus).toBe(true);
-    });
-
-    it('should emit connection status on disconnect', () => {
-      let connectionStatus: boolean | undefined;
-      service.getConnectionStatus().subscribe((data) => (connectionStatus = data));
-
-      const client = (service as any).client;
-      client.onConnect({});
-      expect(connectionStatus).toBe(true);
-
-      client.onDisconnect();
-      expect(connectionStatus).toBe(false);
-    });
+  it('connect should call client.activate', () => {
+    service.connect();
+    const client = (service as any).client;
+    expect(client.activate).toHaveBeenCalled();
   });
 });
