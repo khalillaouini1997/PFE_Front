@@ -3,6 +3,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { importProvidersFrom } from '@angular/core';
 import { ToastrModule } from 'ngx-toastr';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { IpAdresseComponent } from './ip-adresse.component';
 
@@ -11,8 +12,9 @@ describe('IpAdresseComponent', () => {
   let fixture: ComponentFixture<IpAdresseComponent>;
 
   beforeEach(async () => {
-    TestBed.configureTestingModule({
-    imports: [IpAdresseComponent]
+    TestBed.resetTestingModule();
+    await TestBed.configureTestingModule({
+    imports: [IpAdresseComponent, TranslateModule.forRoot()]
 })
     .compileComponents();
   });

@@ -3,6 +3,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { importProvidersFrom } from '@angular/core';
 import { ToastrModule } from 'ngx-toastr';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { AddAdminCompteComponent } from './add-admin-compte.component';
 
@@ -11,10 +12,10 @@ describe('AddAdminCompteComponent', () => {
   let fixture: ComponentFixture<AddAdminCompteComponent>;
 
   beforeEach(async () => {
-    TestBed.configureTestingModule({
-    imports: [AddAdminCompteComponent]
-})
-    .compileComponents();
+    TestBed.resetTestingModule();
+    await TestBed.configureTestingModule({
+      imports: [TranslateModule.forRoot(), AddAdminCompteComponent]
+    }).compileComponents();
   });
 
   beforeEach(() => {

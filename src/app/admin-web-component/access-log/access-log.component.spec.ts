@@ -3,6 +3,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { importProvidersFrom } from '@angular/core';
 import { ToastrModule } from 'ngx-toastr';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { AccessLogComponent } from './access-log.component';
 
@@ -11,10 +12,10 @@ describe('AccessLogComponent', () => {
   let fixture: ComponentFixture<AccessLogComponent>;
 
   beforeEach(async () => {
-    TestBed.configureTestingModule({
-    imports: [AccessLogComponent]
-})
-    .compileComponents();
+    TestBed.resetTestingModule();
+    await TestBed.configureTestingModule({
+      imports: [TranslateModule.forRoot(), AccessLogComponent]
+    }).compileComponents();
   });
 
   beforeEach(() => {

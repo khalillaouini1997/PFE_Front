@@ -3,19 +3,28 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { importProvidersFrom } from '@angular/core';
 import { ToastrModule } from 'ngx-toastr';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { ArchiveComponent } from './archive.component';
+
+if (!window.ResizeObserver) {
+  (window as any).ResizeObserver = class {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  };
+}
 
 describe('ArchiveComponent', () => {
   let component: ArchiveComponent;
   let fixture: ComponentFixture<ArchiveComponent>;
 
   beforeEach(async () => {
+    TestBed.resetTestingModule();
     await TestBed.configureTestingModule({
-    providers: [provideHttpClient(), provideRouter([]), importProvidersFrom(ToastrModule.forRoot())],
-    imports: [ArchiveComponent]
-})
-    .compileComponents();
+      providers: [provideHttpClient(), provideRouter([]), importProvidersFrom(ToastrModule.forRoot())],
+      imports: [TranslateModule.forRoot(), ArchiveComponent]
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ArchiveComponent);
     component = fixture.componentInstance;

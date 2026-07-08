@@ -1,7 +1,7 @@
 @for (i of getArray(count()); track $index) {
   <div 
     class="skeleton skeleton-{{ variant() }}" 
-    [class]="className()"
+    [ngClass]="className()"
     [style.width]="variant() === 'text' || variant() === 'rectangular' ? width() : null"
     [style.height]="typeof height() === 'number' ? height() + 'px' : height()"
   >

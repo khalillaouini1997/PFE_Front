@@ -3,6 +3,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { importProvidersFrom } from '@angular/core';
 import { ToastrModule } from 'ngx-toastr';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { ListTraccarComponent } from './list-traccar.component';
 
@@ -11,8 +12,9 @@ describe('ListTraccarComponent', () => {
   let fixture: ComponentFixture<ListTraccarComponent>;
 
   beforeEach(async () => {
-    TestBed.configureTestingModule({
-    imports: [ListTraccarComponent]
+    TestBed.resetTestingModule();
+    await TestBed.configureTestingModule({
+    imports: [ListTraccarComponent, TranslateModule.forRoot()]
 })
     .compileComponents();
   });

@@ -17,6 +17,6 @@ export class SkeletonComponent {
   className = input<string>('');
 
   getArray(count: number): number[] {
-    return Array(count);
+    return Array.from({ length: count }, (_, i) => i);
   }
 }

@@ -3,6 +3,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { importProvidersFrom } from '@angular/core';
 import { ToastrModule } from 'ngx-toastr';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { ConfigurationWebComponentComponent } from './configuration-web-component.component';
 
@@ -11,9 +12,10 @@ describe('ConfigurationWebComponentComponent', () => {
   let fixture: ComponentFixture<ConfigurationWebComponentComponent>;
 
   beforeEach(async () => {
+    TestBed.resetTestingModule();
     await TestBed.configureTestingModule({
     providers: [provideHttpClient(), provideRouter([]), importProvidersFrom(ToastrModule.forRoot())],
-    imports: [ConfigurationWebComponentComponent]
+    imports: [ConfigurationWebComponentComponent, TranslateModule.forRoot()]
 })
     .compileComponents();
 

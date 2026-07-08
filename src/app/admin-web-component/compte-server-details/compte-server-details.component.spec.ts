@@ -3,6 +3,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { importProvidersFrom } from '@angular/core';
 import { ToastrModule } from 'ngx-toastr';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { CompteServerDetailsComponent } from './compte-server-details.component';
 
@@ -11,13 +12,14 @@ describe('CompteServerDetailsComponent', () => {
   let fixture: ComponentFixture<CompteServerDetailsComponent>;
 
   beforeEach(async () => {
+    TestBed.resetTestingModule();
     await TestBed.configureTestingModule({
       providers: [
         provideHttpClient(),
         provideRouter([]),
         importProvidersFrom(ToastrModule.forRoot())
       ],
-      imports: [CompteServerDetailsComponent]
+      imports: [CompteServerDetailsComponent, TranslateModule.forRoot()]
     }).compileComponents();
 
     fixture = TestBed.createComponent(CompteServerDetailsComponent);
