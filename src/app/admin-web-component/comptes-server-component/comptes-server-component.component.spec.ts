@@ -90,9 +90,9 @@ describe('ComptesServerComponentComponent', () => {
 
   it('should update compte server', () => {
     component.updateModal = { nativeElement: { showModal: vi.fn(), close: vi.fn() } } as any;
+    vi.spyOn(component, 'closeUpdateModal').mockImplementation(() => {});
     component.ngOnInit();
-    const compte = { idCompteClientServer: 1, pseudo: 'updated', login: 'user', password: 'pass', idIpAdresse: 1 };
-    component.updateServerForm.patchValue(compte);
+    component.updateServerForm.patchValue({ idCompteClientServer: 1, pseudo: 'updated', login: 'user', password: 'pass', idIpAdresse: 1 });
     compteServerService.updateServerCompte.mockReturnValue(of({
       idCompteClientServer: 1, pseudo: 'updated', date_Expiration: Date.now() + 86400000
     }));
