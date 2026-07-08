@@ -422,7 +422,7 @@
 
 <!-- Calculate Modal -->
 @if (showCalcModal) {
-<button type="button" class="modal-backdrop" (click)="showCalcModal = false" (keydown.escape)="showCalcModal = false" tabindex="0"></button>
+<button type="button" class="modal-backdrop" (click)="showCalcModal = false" (keydown.escape)="showCalcModal = false" tabindex="0" aria-label="Close modal"></button>
 <div class="calc-modal">
   <div class="calc-modal-header">
     <h4><i class="fa fa-calculator me-2 text-primary"></i> {{ 'BILLING.CALCULATE' | translate }}</h4>
@@ -462,7 +462,7 @@
       <div class="calc-option-info">
         <h5>{{ 'BILLING.CALC_CUSTOM_PERIOD' | translate }}</h5>
         <p>{{ 'BILLING.CALC_BATCH_DESC' | translate }}</p>
-        <fieldset class="calc-period-fields mt-2" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()" aria-label="Billing period">
+        <fieldset class="calc-period-fields mt-2" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()" aria-label="Billing period" tabindex="0">
           <div class="d-flex gap-2 align-items-center">
             <input type="number" id="calcStartYear" [(ngModel)]="calcStartYear" class="form-control form-control-sm" 
                    placeholder="Year" min="2000" max="2100" style="width: 100px;" aria-label="Start year">
