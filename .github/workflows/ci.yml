@@ -33,7 +33,7 @@ jobs:
         run: npm run lint
 
       - name: Test with coverage
-        run: npx ng test --code-coverage --watch=false
+        run: npx ng test --coverage --watch=false
 
       - name: npm audit
         run: npm audit --audit-level=high
