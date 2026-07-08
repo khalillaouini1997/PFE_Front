@@ -15,5 +15,7 @@
   @if (icon() && !loading()) {
     <i class="material-icons icon">{{ icon() }}</i>
   }
-  <ng-content></ng-content>
+  <span class="button-text">
+    <ng-content></ng-content>
+  </span>
 </button>
