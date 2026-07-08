@@ -197,12 +197,12 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
                 const timeParts = parts[1].split(':');
                 if (dateParts.length === 3 && timeParts.length === 3) {
                   boitier.dateLastTrame = new Date(
-                    parseInt(dateParts[2]), // year
-                    parseInt(dateParts[1]) - 1, // month (0-indexed)
-                    parseInt(dateParts[0]), // day
-                    parseInt(timeParts[0]), // hours
-                    parseInt(timeParts[1]), // minutes
-                    parseInt(timeParts[2]) // seconds
+                    Number.parseInt(dateParts[2]), // year
+                    Number.parseInt(dateParts[1]) - 1, // month (0-indexed)
+                    Number.parseInt(dateParts[0]), // day
+                    Number.parseInt(timeParts[0]), // hours
+                    Number.parseInt(timeParts[1]), // minutes
+                    Number.parseInt(timeParts[2]) // seconds
                   );
                 }
               }

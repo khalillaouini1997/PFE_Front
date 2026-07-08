@@ -1,5 +1,5 @@
 import { Router } from '@angular/router';
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { CompteServer, CompteWeb, IpAddress } from 'src/app/data/data';
 import { WebAccountService } from "../../service/web-account.service";
 
@@ -21,7 +21,7 @@ import { PageHeaderComponent } from '../../shared/components/page-header/page-he
     styleUrls: ['./add-compte-web-component.component.css'],
     imports: [ReactiveFormsModule, DatePickerModule, TranslateModule, PageHeaderComponent]
 })
-export class AddCompteWebComponentComponent {
+export class AddCompteWebComponentComponent implements OnInit {
 
   webForm!: FormGroup;
   serverAccounts = signal<any[]>([]);

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { AccessLog } from 'src/app/data/data';
 import { AccessLogService } from 'src/app/service/access-log.service';
@@ -17,7 +17,7 @@ import { EmptyTableComponent } from '../../shared/components/empty-table/empty-t
     styleUrls: ['./access-log.component.css'],
     imports: [CommonModule, TableModule, DatePipe, TranslateModule, PageHeaderComponent, SearchInputComponent, EmptyTableComponent]
 })
-export class AccessLogComponent implements OnInit {
+export class AccessLogComponent {
 
   loading: boolean = false;
   accessLogs: AccessLog[] = [];
@@ -26,9 +26,6 @@ export class AccessLogComponent implements OnInit {
 
   private readonly accessLogService = inject(AccessLogService);
   private readonly cdr = inject(ChangeDetectorRef);
-
-  ngOnInit() {
-  }
 
   onPageChanged(event: any): void {
     pageChanged(event, this.pagination);

@@ -15,8 +15,8 @@ export class ErrorComponent implements OnInit {
   component: string = '';
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router
+    private readonly route: ActivatedRoute,
+    private readonly router: Router
   ) {}
 
   ngOnInit() {

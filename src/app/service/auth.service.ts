@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable, map, catchError, of } from 'rxjs';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { AdministratorCompte } from '../data/data';
 import { WebSocketService } from './web-socket.service';

@@ -95,7 +95,7 @@ export class ComptesWebComponentComponent implements OnInit {
 
     const keyWord = this.currentKeyWord;
     const region = this.searchForm?.get('region')?.value || '';
-    const pool = this.searchForm?.get('pool')?.value ? parseInt(this.searchForm?.get('pool')?.value) : undefined;
+    const pool = this.searchForm?.get('pool')?.value ? Number.parseInt(this.searchForm?.get('pool')?.value) : undefined;
 
     this.webAccountService.getAllWebAccountByKeyWord(keyWord, page, size, region, pool).subscribe({
       next: (res: any) => {

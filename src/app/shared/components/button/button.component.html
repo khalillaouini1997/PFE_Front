@@ -7,7 +7,7 @@
   [class.full-width]="fullWidth()"
   [class.loading]="loading()"
   [disabled]="disabled() || loading()"
-  (click)="click.emit()"
+  (click)="clicked.emit()"
 >
   @if (loading()) {
     <span class="spinner"></span>

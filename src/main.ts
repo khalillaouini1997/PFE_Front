@@ -19,7 +19,7 @@ import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { ServiceWorkerModule } from '@angular/service-worker';
 
 export class CustomTranslateLoader implements TranslateLoader {
-  constructor(private http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {}
   getTranslation(lang: string): Observable<any> {
     return this.http.get(`./assets/i18n/${lang}.json`);
   }

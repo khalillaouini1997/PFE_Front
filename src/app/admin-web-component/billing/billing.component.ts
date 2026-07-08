@@ -174,8 +174,8 @@ export class BillingComponent implements OnInit, OnDestroy {
     this.billingResult = invoice;
     this.noExistingInvoice = false;
     this.billingForm.patchValue({
-      year: parseInt(invoice.billingPeriod.split('-')[0]),
-      month: parseInt(invoice.billingPeriod.split('-')[1])
+      year: Number.parseInt(invoice.billingPeriod.split('-')[0]),
+      month: Number.parseInt(invoice.billingPeriod.split('-')[1])
     });
   }
 

@@ -41,7 +41,7 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
   private signalChartInstance?: Chart;
   private evolutionChartInstance?: Chart;
 
-  private translate = inject(TranslateService);
+  private readonly translate = inject(TranslateService);
   private readonly store = inject(DashboardStore);
 
   constructor() {

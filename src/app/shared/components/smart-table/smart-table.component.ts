@@ -13,7 +13,7 @@ import { TranslateModule } from '@ngx-translate/core';
       <p-table
         [value]="data"
         [lazy]="lazy"
-        (onLazyLoad)="onLazyLoad.emit($event)"
+        (onLazyLoad)="lazyLoad.emit($event)"
         [paginator]="paginator"
         [rows]="rows"
         [totalRecords]="totalRecords"
@@ -64,10 +64,10 @@ export class SmartTableComponent {
 
   @Input() rowTemplate!: TemplateRef<any>;
 
-  @Output() onLazyLoad = new EventEmitter<TableLazyLoadEvent>();
-  @Output() onPageChange = new EventEmitter<TableLazyLoadEvent>();
+  @Output() lazyLoad = new EventEmitter<TableLazyLoadEvent>();
+  @Output() pageChange = new EventEmitter<TableLazyLoadEvent>();
 
   onPage(event: TableLazyLoadEvent) {
-    this.onPageChange.emit(event);
+    this.pageChange.emit(event);
   }
 }

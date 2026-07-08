@@ -1,6 +1,5 @@
-import { Injectable, signal, effect } from '@angular/core';
+import { Injectable, signal, effect, inject } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { inject } from '@angular/core';
 
 export type Theme = 'light' | 'dark';
 
@@ -8,7 +7,7 @@ export type Theme = 'light' | 'dark';
   providedIn: 'root'
 })
 export class ThemeService {
-  private document = inject(DOCUMENT);
+  private readonly document = inject(DOCUMENT);
   private readonly THEME_KEY = 'theme';
   
   // Signal for current theme

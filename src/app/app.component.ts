@@ -10,7 +10,7 @@ import { ErrorBannerComponent, ErrorBannerData } from './shared/components/error
 })
 export class AppComponent implements AfterViewInit, OnDestroy {
   title = 'web_admin';
-  private translate = inject(TranslateService);
+  private readonly translate = inject(TranslateService);
   
   @ViewChild(ErrorBannerComponent) errorBanner?: ErrorBannerComponent;
 

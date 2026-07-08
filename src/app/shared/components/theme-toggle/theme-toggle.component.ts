@@ -10,7 +10,7 @@ import { ThemeService } from '../../../service/theme.service';
   styleUrls: ['./theme-toggle.component.scss']
 })
 export class ThemeToggleComponent {
-  private themeService = inject(ThemeService);
+  private readonly themeService = inject(ThemeService);
   
   toggleTheme() {
     this.themeService.toggleTheme();

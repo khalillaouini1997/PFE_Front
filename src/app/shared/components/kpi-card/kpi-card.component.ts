@@ -111,7 +111,12 @@ export class KpiCardComponent implements AfterViewInit, OnDestroy {
     const canvas = this.sparkline()?.nativeElement;
     if (!canvas) return;
 
-    const color = this.trend() === 'up' ? '#10b981' : this.trend() === 'down' ? '#f43f5e' : '#4f46e5';
+    let color: string;
+    switch (this.trend()) {
+      case 'up': color = '#10b981'; break;
+      case 'down': color = '#f43f5e'; break;
+      default: color = '#4f46e5';
+    }
 
     this.sparklineChart = new Chart(canvas, {
       type: 'line',

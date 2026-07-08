@@ -1,7 +1,6 @@
 import { Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { KpiCardComponent } from '../../../../shared/components/kpi-card/kpi-card.component';
-import { CHART_CONSTANTS } from '../../../../shared/constants/app.constants';
 
 @Component({
   selector: 'app-dashboard-kpi',

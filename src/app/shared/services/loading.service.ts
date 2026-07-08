@@ -1,4 +1,4 @@
-import { Injectable, inject, signal, computed } from '@angular/core';
+import { Injectable, signal, computed } from '@angular/core';
 
 export interface LoadingState {
   key: string;

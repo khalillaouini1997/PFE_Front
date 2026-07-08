@@ -1,8 +1,7 @@
-import { Component, input, output, viewChild, inject, AfterViewInit, OnDestroy, ElementRef, effect, signal, computed } from '@angular/core';
+import { Component, input, output, viewChild, inject, AfterViewInit, OnDestroy, ElementRef, effect, signal, computed, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RealTime } from '../../../../data/data';
 import { MAP_CONSTANTS, CAR_STYLES, VALID_ANGLES, TIMEOUTS, REALTIME_CONSTANTS } from '../../../../shared/constants/app.constants';
-import { ChangeDetectorRef } from '@angular/core';
 
 declare const L: any;
 
@@ -20,10 +19,10 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
 
   map?: any;
   private markerClusterGroup?: any;
-  private deviceIconMap = new Map<number, string>();
-  private markerMap = new Map<number, any>();
-  private previousPositions = new Map<number, { lat: number; lng: number }>();
-  private cdr = inject(ChangeDetectorRef);
+  private readonly deviceIconMap = new Map<number, string>();
+  private readonly markerMap = new Map<number, any>();
+  private readonly previousPositions = new Map<number, { lat: number; lng: number }>();
+  private readonly cdr = inject(ChangeDetectorRef);
   private animationFrameId?: number;
   
   // Map error state
@@ -124,7 +123,7 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
 
     const bounds: any[] = [];
     
-    const newFleetHash = this.realtimes().map(t => t.deviceid).sort().join(',');
+    const newFleetHash = this.realtimes().map(t => t.deviceid).sort((a, b) => a - b).join(',');
     const fleetChanged = newFleetHash !== this.currentFleetHash;
 
     this.realtimes().forEach(tram => {

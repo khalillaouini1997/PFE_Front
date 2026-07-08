@@ -7,7 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import { catchError } from "rxjs/operators";
 import { Router } from "@angular/router";
 import { withToast } from '../../utils/toast.helpers';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 
@@ -22,7 +22,7 @@ import { PageHeaderComponent } from '../../shared/components/page-header/page-he
 })
 export class AddCompteServerComponent {
 
-  serverForm!: FormGroup;
+  serverForm!: ReturnType<typeof this.fb.group>;
   @ViewChild('progressModal') progressModal!: ElementRef<HTMLDialogElement>;
   public loading = false;
   mode: boolean = false;
@@ -59,7 +59,7 @@ export class AddCompteServerComponent {
     }, { validators: this.passwordMatchValidator });
   }
 
-  passwordMatchValidator(g: FormGroup) {
+  passwordMatchValidator(g: { get: (key: string) => { value: any } | null }) {
     return g.get('password')?.value === g.get('confirmationPassword')?.value
       ? null : { 'mismatch': true };
   }

@@ -1,10 +1,10 @@
-import { Directive, ElementRef, HostListener, input } from '@angular/core';
+import { Directive, ElementRef, HostListener, input, OnInit } from '@angular/core';
 
 @Directive({
   selector: '[appKeyboardFocus]',
   standalone: true
 })
-export class KeyboardFocusDirective {
+export class KeyboardFocusDirective implements OnInit {
   focusOnMount = input<boolean>(false);
   focusOnKey = input<string | null>(null);
   

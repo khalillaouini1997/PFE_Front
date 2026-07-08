@@ -780,7 +780,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
 
     const deviceId = deviceIds[0];
     const formattedQueries = queries[type].map((query: string) => {
-      return query.replace(/\?/g, deviceId.toString());
+      return query.replaceAll('?', deviceId.toString());
     });
 
     this.sqlQuery = formattedQueries.join('\n\n');

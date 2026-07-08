@@ -5,8 +5,8 @@
       <p class="subtitle">{{ 'BILLING_DASHBOARD.SUBTITLE' | translate }}</p>
     </div>
     <div class="year-selector">
-      <label>Year:</label>
-      <select [(ngModel)]="selectedYear" (change)="loadAnalytics()" class="form-control">
+      <label for="billingYear">Year:</label>
+      <select id="billingYear" [(ngModel)]="selectedYear" (change)="loadAnalytics()" class="form-control">
         <option *ngFor="let y of [selectedYear-2, selectedYear-1, selectedYear, selectedYear+1]" [value]="y">{{ y }}</option>
       </select>
     </div>

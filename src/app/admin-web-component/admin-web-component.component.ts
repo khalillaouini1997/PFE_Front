@@ -1,4 +1,4 @@
-import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { SidebarComponent } from '../shared/components/sidebar/sidebar.component';

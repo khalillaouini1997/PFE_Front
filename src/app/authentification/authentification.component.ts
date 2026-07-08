@@ -1,4 +1,4 @@
-import { Component, inject, AfterViewInit, ElementRef } from '@angular/core';
+import { Component, inject, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../service/auth.service';
 import { WebSocketService } from '../service/web-socket.service';

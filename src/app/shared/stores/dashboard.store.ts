@@ -1,4 +1,4 @@
-import { Injectable, inject, signal, computed, effect, OnDestroy } from '@angular/core';
+import { Injectable, inject, signal, computed, OnDestroy } from '@angular/core';
 import { CompteClientWebInfoDTO, DeviceInstallationEvolution, RealTime } from '../../data/data';
 import { WebAccountService } from '../../service/web-account.service';
 import { WebSocketService } from '../../service/web-socket.service';

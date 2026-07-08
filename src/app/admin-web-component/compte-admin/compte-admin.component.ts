@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { AdministratorCompte } from 'src/app/data/data';
@@ -19,7 +19,7 @@ import { EmptyTableComponent } from '../../shared/components/empty-table/empty-t
   styleUrls: ['./compte-admin.component.css'],
   imports: [CommonModule, TableModule, TranslateModule, PageHeaderComponent, SearchInputComponent, EmptyTableComponent]
 })
-export class CompteAdminComponent implements OnInit {
+export class CompteAdminComponent {
   pagination = createPaginationState();
   adminComptes: AdministratorCompte[] = [];
   loading: boolean = false;
@@ -27,10 +27,6 @@ export class CompteAdminComponent implements OnInit {
 
   private readonly adminAccountService = inject(AdminAccountService);
   private readonly cdr = inject(ChangeDetectorRef);
-
-  ngOnInit() {
-    // Initial load will be triggered by PrimeNG table's onLazyLoad
-  }
 
   getAllAdminComptes(keyWord: string, page: number, size: number) {
     if (this.loadingInProgress) return;

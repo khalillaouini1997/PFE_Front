@@ -20,6 +20,6 @@ export class ButtonComponent {
   icon = input<string>('');
   type = input<'button' | 'submit' | 'reset'>('button');
   
-  click = output<void>();
+  clicked = output<void>();
 }
 
