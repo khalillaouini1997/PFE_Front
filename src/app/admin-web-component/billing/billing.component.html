@@ -422,7 +422,7 @@
 
 <!-- Calculate Modal -->
 @if (showCalcModal) {
-<div class="modal-backdrop" (click)="showCalcModal = false" (keydown.escape)="showCalcModal = false" role="button" tabindex="0"></div>
+<button type="button" class="modal-backdrop" (click)="showCalcModal = false" (keydown.escape)="showCalcModal = false" tabindex="0"></button>
 <div class="calc-modal">
   <div class="calc-modal-header">
     <h4><i class="fa fa-calculator me-2 text-primary"></i> {{ 'BILLING.CALCULATE' | translate }}</h4>
@@ -430,39 +430,39 @@
   </div>
   <div class="calc-modal-body">
     <!-- Option 1: All accounts, previous month -->
-    <div class="calc-option" (click)="calculateAllAccounts(); showCalcModal = false"
-         (keydown.enter)="calculateAllAccounts(); showCalcModal = false" role="button" tabindex="0">
+    <button type="button" class="calc-option" (click)="calculateAllAccounts(); showCalcModal = false"
+         (keydown.enter)="calculateAllAccounts(); showCalcModal = false" tabindex="0">
       <div class="calc-option-icon">🌐</div>
       <div class="calc-option-info">
         <h5>{{ 'BILLING.CALC_ALL_ACCOUNTS' | translate }}</h5>
         <p>{{ 'BILLING.CALC_PREVIOUS_MONTH' | translate }}</p>
       </div>
       <i class="fa fa-chevron-right calc-option-arrow"></i>
-    </div>
+    </button>
 
     <!-- Option 2: Specific account, previous month -->
-    <div class="calc-option" 
+    <button type="button" class="calc-option" 
          (click)="calculateSpecificAccount(); showCalcModal = false"
          (keydown.enter)="calculateSpecificAccount(); showCalcModal = false"
-         [class.disabled]="!billingForm.get('accountId')?.value" role="button" tabindex="0">
+         [class.disabled]="!billingForm.get('accountId')?.value" tabindex="0">
       <div class="calc-option-icon">👤</div>
       <div class="calc-option-info">
         <h5>{{ 'BILLING.CALC_SPECIFIC_ACCOUNT' | translate }}</h5>
         <p>{{ 'BILLING.CALC_PREVIOUS_MONTH' | translate }}</p>
       </div>
       <i class="fa fa-chevron-right calc-option-arrow"></i>
-    </div>
+    </button>
 
     <!-- Option 3: Chosen period -->
-    <div class="calc-option" 
+    <button type="button" class="calc-option" 
          (click)="calculateBilling(); showCalcModal = false"
          (keydown.enter)="calculateBilling(); showCalcModal = false"
-         [class.disabled]="!billingForm.get('accountId')?.value" role="button" tabindex="0">
+         [class.disabled]="!billingForm.get('accountId')?.value" tabindex="0">
       <div class="calc-option-icon">📅</div>
       <div class="calc-option-info">
         <h5>{{ 'BILLING.CALC_CUSTOM_PERIOD' | translate }}</h5>
         <p>{{ 'BILLING.CALC_BATCH_DESC' | translate }}</p>
-        <div class="calc-period-fields mt-2" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()" role="group" aria-label="Billing period">
+        <fieldset class="calc-period-fields mt-2" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()" aria-label="Billing period">
           <div class="d-flex gap-2 align-items-center">
             <input type="number" id="calcStartYear" [(ngModel)]="calcStartYear" class="form-control form-control-sm" 
                    placeholder="Year" min="2000" max="2100" style="width: 100px;" aria-label="Start year">
@@ -482,10 +482,10 @@
               <option [value]="12">December</option>
             </select>
           </div>
-        </div>
+        </fieldset>
       </div>
       <i class="fa fa-chevron-right calc-option-arrow"></i>
-    </div>
+    </button>
   </div>
 </div>
 }
