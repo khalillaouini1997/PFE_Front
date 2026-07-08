@@ -10,6 +10,8 @@ import { vi } from 'vitest';
 
 import { DashboardComponent } from './dashboard.component';
 
+import { AuthService } from 'src/app/service/auth.service';
+
 vi.mock('chart.js', () => {
   return {
     Chart: class {
@@ -35,7 +37,8 @@ describe('DashboardComponent', () => {
         provideHttpClient(),
         provideRouter([]),
         importProvidersFrom(ToastrModule.forRoot()),
-        { provide: ActivatedRoute, useValue: { queryParams: of({}) } }
+        { provide: ActivatedRoute, useValue: { queryParams: of({}) } },
+        { provide: AuthService, useValue: { isAuthenticated: () => true } }
       ],
       imports: [DashboardComponent, TranslateModule.forRoot()]
     }).compileComponents();

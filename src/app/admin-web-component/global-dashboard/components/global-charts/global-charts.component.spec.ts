@@ -4,15 +4,14 @@ import { TranslateModule } from '@ngx-translate/core';
 import { GlobalChartsComponent } from './global-charts.component';
 
 vi.mock('chart.js', () => {
+  class MockChart {
+    data = { labels: [], datasets: [] };
+    update = vi.fn();
+    destroy = vi.fn();
+    static register = vi.fn();
+  }
   return {
-    Chart: class {
-      static register() {}
-      constructor(public ctx: any, public config: any) {}
-      destroy() {}
-      update() {}
-      set data(val: any) {}
-      get data() { return {}; }
-    },
+    Chart: MockChart,
     registerables: []
   };
 });
