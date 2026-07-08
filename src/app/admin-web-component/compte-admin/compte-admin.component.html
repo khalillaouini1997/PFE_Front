@@ -1,6 +1,6 @@
 <div class="main-panel p-4">
     <app-page-header titleKey="ADMIN_ACCOUNTS.TITLE" subtitleKey="ADMIN_ACCOUNTS.SUBTITLE">
-        <app-search-input placeholder="ADMIN_ACCOUNTS.SEARCH_PLACEHOLDER" (search)="searchWebAccount($event)" />
+        <app-search-input placeholder="ADMIN_ACCOUNTS.SEARCH_PLACEHOLDER" (searchQuery)="searchWebAccount($event)" />
         <button class="btn btn-glass btn-sm rounded-circle" routerLink="/adminWeb/addAdminCompte" title="{{ 'ADMIN_ACCOUNTS.ADD' | translate }}">
             <i class="fa fa-plus"></i>
         </button>

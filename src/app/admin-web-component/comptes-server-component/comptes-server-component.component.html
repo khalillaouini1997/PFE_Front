@@ -1,6 +1,6 @@
 <div class="main-panel p-4">
     <app-page-header titleKey="SERVER_ACCOUNTS.TITLE" subtitleKey="SERVER_ACCOUNTS.SUBTITLE">
-        <app-search-input placeholder="SERVER_ACCOUNTS.SEARCH_PLACEHOLDER" (search)="searchAccount($event)" />
+        <app-search-input placeholder="SERVER_ACCOUNTS.SEARCH_PLACEHOLDER" (searchQuery)="searchAccount($event)" />
         <button class="btn btn-glass btn-sm rounded-circle" routerLink="/adminWeb/addCompteServer" title="{{ 'SERVER_ACCOUNTS.ADD' | translate }}">
             <i class="fa fa-plus"></i>
         </button>

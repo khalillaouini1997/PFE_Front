@@ -29,7 +29,7 @@ describe('SearchInputComponent', () => {
 
   it('should emit search event on form submit', () => {
     const spy = vi.fn();
-    component.search.subscribe(spy);
+    component.searchQuery.subscribe(spy);
 
     component.form.get('keyWord')?.setValue('test query');
     component.onSearch();
@@ -39,7 +39,7 @@ describe('SearchInputComponent', () => {
 
   it('should emit empty string when input is empty', () => {
     const spy = vi.fn();
-    component.search.subscribe(spy);
+    component.searchQuery.subscribe(spy);
 
     component.onSearch();
 

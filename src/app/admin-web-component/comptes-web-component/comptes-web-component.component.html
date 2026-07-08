@@ -1,6 +1,6 @@
 <div class="main-panel p-4">
     <app-page-header titleKey="WEB_ACCOUNTS.TITLE" subtitleKey="WEB_ACCOUNTS.SUBTITLE">
-        <app-search-input placeholder="WEB_ACCOUNTS.SEARCH_PLACEHOLDER" (search)="searchWebAccount($event)" />
+        <app-search-input placeholder="WEB_ACCOUNTS.SEARCH_PLACEHOLDER" (searchQuery)="searchWebAccount($event)" />
         <button *ngIf="canDelete()" class="btn btn-glass btn-sm rounded-circle" routerLink="/adminWeb/addCompteWeb" title="{{ 'WEB_ACCOUNTS.ADD' | translate }}">
             <i class="fa fa-plus text-white"></i>
         </button>

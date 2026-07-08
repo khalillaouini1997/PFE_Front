@@ -76,8 +76,7 @@ export class WebSocketService {
                     const positions = JSON.parse(message.body) as RealTime[];
                     this.vehiclePositionSubject.next(positions);
                 } catch (error) {
-                    // Notify error handler service for tracking
-                    // Continue with empty positions to avoid breaking the stream
+                    console.warn('Failed to parse vehicle positions:', error);
                     this.vehiclePositionSubject.next([]);
                 }
             }

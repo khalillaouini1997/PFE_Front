@@ -22,7 +22,7 @@ import { TranslateModule } from '@ngx-translate/core';
 })
 export class SearchInputComponent {
   placeholder = input<string>('COMMON.SEARCH');
-  search = output<string>();
+  searchQuery = output<string>();
 
   readonly form: FormGroup;
 
@@ -32,6 +32,6 @@ export class SearchInputComponent {
   }
 
   onSearch() {
-    this.search.emit(this.form.get('keyWord')?.value || '');
+    this.searchQuery.emit(this.form.get('keyWord')?.value || '');
   }
 }

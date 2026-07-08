@@ -89,7 +89,7 @@
 
 .nav li a:hover {
     background: rgba(255, 255, 255, 0.06);
-    color: white;
+    color: #f1f5f9;
 }
 
 .nav li.active a {
@@ -195,7 +195,7 @@
     border-radius: 10px;
     background: rgba(255, 255, 255, 0.08);
     border: none;
-    color: white;
+    color: #f1f5f9;
     cursor: pointer;
     transition: all 0.2s;
     flex-shrink: 0;

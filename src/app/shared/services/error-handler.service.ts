@@ -82,7 +82,7 @@ export class ErrorHandlerService {
       }
 
       // Check for ApiResponse format (legacy)
-      if (error.error && error.error.message) {
+      if (error.error?.message) {
         return error.error.message;
       }
 

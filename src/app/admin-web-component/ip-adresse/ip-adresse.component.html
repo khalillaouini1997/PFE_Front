@@ -1,6 +1,6 @@
 <div class="main-panel p-4">
     <app-page-header titleKey="IP_ADDRESS.TITLE" subtitleKey="IP_ADDRESS.SUBTITLE">
-        <app-search-input placeholder="IP_ADDRESS.SEARCH_PLACEHOLDER" (search)="searchIpAddress($event)" />
+        <app-search-input placeholder="IP_ADDRESS.SEARCH_PLACEHOLDER" (searchQuery)="searchIpAddress($event)" />
         <button class="btn btn-glass btn-sm rounded-circle" routerLink="/adminWeb/addIp" title="{{ 'IP_ADDRESS.ADD' | translate }}">
             <i class="fa fa-plus"></i>
         </button>

@@ -188,7 +188,7 @@ export class GlobalDashboardStore implements OnDestroy {
     let eventCount = 0;
 
     eventCount = this.collectMovingAndSignalEvents(list, now, initialEvents, eventCount);
-    eventCount = this.collectStoppedEvents(list, now, initialEvents, eventCount);
+    this.collectStoppedEvents(list, now, initialEvents, eventCount);
 
     initialEvents.sort((a, b) => b.time.getTime() - a.time.getTime());
     this.updateState({ activityFeed: initialEvents });
