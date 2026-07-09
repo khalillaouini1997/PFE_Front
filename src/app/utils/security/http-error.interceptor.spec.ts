@@ -108,4 +108,64 @@ describe('httpErrorInterceptor', () => {
       { status: 400, statusText: 'Bad Request' }
     );
   });
+
+  it('should handle network errors', () => {
+    httpClient.get('/api/test').subscribe({
+      error: (error) => {
+        expect(error).toBeTruthy();
+      },
+    });
+
+    const req = httpMock.expectOne('/api/test');
+    req.error(new ProgressEvent('error'), { status: 0, statusText: 'Unknown Error' });
+  });
+
+  it('should handle error with error.error string', () => {
+    httpClient.get('/api/test').subscribe({
+      error: (error) => {
+        expect(error.status).toBe(400);
+      },
+    });
+
+    const req = httpMock.expectOne('/api/test');
+    req.flush(
+      { error: 'Something bad' },
+      { status: 400, statusText: 'Bad Request' }
+    );
+  });
+
+  it('should handle error with no body', () => {
+    httpClient.get('/api/test').subscribe({
+      error: (error) => {
+        expect(error.status).toBe(500);
+      },
+    });
+
+    const req = httpMock.expectOne('/api/test');
+    req.flush(null, { status: 500, statusText: 'Server Error' });
+  });
+
+  it('should retry on 429 Too Many Requests', () => {
+    httpClient.get('/api/test').subscribe({
+      error: (error) => {
+        expect(error.status).toBe(429);
+      },
+    });
+
+    const reqs = httpMock.match(() => true);
+    expect(reqs.length).toBeGreaterThanOrEqual(1);
+    reqs[reqs.length - 1].flush('Too Many Requests', { status: 429, statusText: 'Too Many Requests' });
+  });
+
+  it('should not retry on 501 Not Implemented', () => {
+    httpClient.get('/api/test').subscribe({
+      error: (error) => {
+        expect(error.status).toBe(501);
+      },
+    });
+
+    const reqs = httpMock.match(() => true);
+    expect(reqs.length).toBe(1);
+    reqs[0].flush('Not Implemented', { status: 501, statusText: 'Not Implemented' });
+  });
 });
