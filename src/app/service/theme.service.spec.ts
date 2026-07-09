@@ -87,7 +87,7 @@ describe('ThemeService', () => {
     it('should set data-theme attribute on documentElement', () => {
       service.currentTheme.set('light');
       service.toggleTheme();
-      TestBed.inject(ApplicationRef).tick();
+      TestBed.flushEffects();
 
       expect(mockHtmlElement.dataset['theme']).toBe('dark');
       expect(mockHtmlElement.dataset['bsTheme']).toBe('dark');
@@ -95,7 +95,7 @@ describe('ThemeService', () => {
 
     it('should remove old theme classes and add new ones', () => {
       service.toggleTheme();
-      TestBed.inject(ApplicationRef).tick();
+      TestBed.flushEffects();
       expect(mockHtmlElement.classList.remove).toHaveBeenCalledWith('light-theme', 'dark-theme');
       expect(mockHtmlElement.classList.add).toHaveBeenCalledWith('dark-theme');
     });
