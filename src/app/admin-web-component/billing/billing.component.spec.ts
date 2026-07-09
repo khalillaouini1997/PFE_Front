@@ -215,4 +215,196 @@ describe('BillingComponent', () => {
     component.ngOnInit();
     expect(() => component.ngOnDestroy()).not.toThrow();
   });
+
+  it('should handle checkExistingInvoice error', () => {
+    component.ngOnInit();
+    component.billingForm.patchValue({ accountId: '123', year: 2024, month: 1 });
+    billingService.checkExistingInvoice.mockReturnValue(throwError(() => new Error('fail')));
+    component.checkExistingInvoice();
+    expect(component.noExistingInvoice).toBe(true);
+    expect(component.loading).toBe(false);
+  });
+
+  it('should handle calculateBilling error', () => {
+    component.ngOnInit();
+    component.billingForm.patchValue({ accountId: '123' });
+    billingService.generateBatchBilling.mockReturnValue(throwError(() => new Error('fail')));
+    component.calculateBilling();
+    expect(component.loading).toBe(false);
+  });
+
+  it('should handle calculateAllAccounts error', () => {
+    component.ngOnInit();
+    billingService.triggerAllAccountsBilling.mockReturnValue(throwError(() => new Error('fail')));
+    component.calculateAllAccounts();
+    expect(component.loading).toBe(false);
+  });
+
+  it('should handle calculateSpecificAccount error', () => {
+    component.ngOnInit();
+    component.billingForm.patchValue({ accountId: '123' });
+    billingService.triggerAccountBilling.mockReturnValue(throwError(() => new Error('fail')));
+    component.calculateSpecificAccount();
+    expect(component.loading).toBe(false);
+  });
+
+  it('should show error when no account for calculateSpecificAccount', () => {
+    component.ngOnInit();
+    component.billingForm.patchValue({ accountId: '' });
+    component.calculateSpecificAccount();
+    expect(toastr.error).toHaveBeenCalled();
+  });
+
+  it('should handle refreshBilling error', () => {
+    component.ngOnInit();
+    component.billingForm.patchValue({ accountId: '123', year: 2024, month: 1 });
+    billingService.refreshMonthlyBilling.mockReturnValue(throwError(() => new Error('fail')));
+    component.refreshBilling();
+    expect(component.loading).toBe(false);
+  });
+
+  it('should show error when no account for refreshBilling', () => {
+    component.ngOnInit();
+    component.billingForm.patchValue({ accountId: '' });
+    component.refreshBilling();
+    expect(toastr.error).toHaveBeenCalled();
+  });
+
+  it('should downloadPdf with valid blob', () => {
+    component.ngOnInit();
+    component.billingForm.patchValue({ accountId: '123', year: 2024, month: 1 });
+    const blob = new Blob(['test'], { type: 'application/pdf' });
+    billingService.downloadPdfReport.mockReturnValue(of(blob));
+    component.downloadPdf();
+    expect(component.downloadingPdf).toBe(false);
+  });
+
+  it('should downloadPdf with empty blob', () => {
+    component.ngOnInit();
+    component.billingForm.patchValue({ accountId: '123', year: 2024, month: 1 });
+    const blob = new Blob([], { type: 'application/json' });
+    billingService.downloadPdfReport.mockReturnValue(of(blob));
+    component.downloadPdf();
+    expect(component.downloadingPdf).toBe(false);
+  });
+
+  it('should handle downloadPdf error', () => {
+    component.ngOnInit();
+    component.billingForm.patchValue({ accountId: '123', year: 2024, month: 1 });
+    billingService.downloadPdfReport.mockReturnValue(throwError(() => new Error('fail')));
+    component.downloadPdf();
+    expect(component.downloadingPdf).toBe(false);
+  });
+
+  it('should show error when no account for downloadPdf', () => {
+    component.ngOnInit();
+    component.billingForm.patchValue({ accountId: '' });
+    component.downloadPdf();
+    expect(toastr.error).toHaveBeenCalled();
+  });
+
+  it('should handle fetchAllInvoices error', () => {
+    component.ngOnInit();
+    component.billingForm.patchValue({ accountId: '123' });
+    billingService.getAllInvoicesByAccount.mockReturnValue(throwError(() => new Error('fail')));
+    component.fetchAllInvoices();
+    expect(component.allInvoices).toEqual([]);
+    expect(component.loadingAllInvoices).toBe(false);
+  });
+
+  it('should not fetchAllInvoices without account', () => {
+    component.ngOnInit();
+    component.billingForm.patchValue({ accountId: '' });
+    component.fetchAllInvoices();
+    expect(billingService.getAllInvoicesByAccount).not.toHaveBeenCalled();
+  });
+
+  it('should toggle payment status from UNPAID to PAID', () => {
+    component.ngOnInit();
+    component.billingResult = { paymentStatus: 'UNPAID' };
+    component.billingForm.patchValue({ accountId: '123', year: 2024, month: 1 });
+    billingService.updatePaymentStatus.mockReturnValue(of({}));
+    component.togglePaymentStatus();
+    expect(component.billingResult.paymentStatus).toBe('PAID');
+  });
+
+  it('should handle togglePaymentStatus error', () => {
+    component.ngOnInit();
+    component.billingResult = { paymentStatus: 'PAID' };
+    component.billingForm.patchValue({ accountId: '123', year: 2024, month: 1 });
+    billingService.updatePaymentStatus.mockReturnValue(throwError(() => new Error('fail')));
+    component.togglePaymentStatus();
+    expect(toastr.error).toHaveBeenCalled();
+  });
+
+  it('should loadAnalytics with data', () => {
+    component.ngOnInit();
+    component.analyticsLoading = false;
+    component.loadAnalytics();
+    expect(component.analyticsLoading).toBe(false);
+  });
+
+  it('should handle loadAnalytics error', () => {
+    analyticsService.getBillingAnalytics.mockReturnValue(throwError(() => new Error('fail')));
+    component.ngOnInit();
+    component.loadAnalytics();
+    expect(component.analyticsLoading).toBe(false);
+  });
+
+  it('should loadForecast with history data', () => {
+    analyticsService.getRevenueHistory.mockReturnValue(of({ data: [{ billing_period: '2024-01', total: 100 }, { billing_period: '2024-02', total: 200 }] }));
+    analyticsService.getRevenueForecast.mockReturnValue(of({ predictions: [300] }));
+    component.ngOnInit();
+    component.loadForecast();
+  });
+
+  it('should handle loadForecast with empty history', () => {
+    analyticsService.getRevenueHistory.mockReturnValue(of({ data: [] }));
+    component.ngOnInit();
+    component.loadForecast();
+  });
+
+  it('should handle loadForecast error', () => {
+    analyticsService.getRevenueHistory.mockReturnValue(throwError(() => new Error('fail')));
+    component.ngOnInit();
+    component.loadForecast();
+  });
+
+  it('should switchTab to dashboard and load analytics', () => {
+    component.ngOnInit();
+    component.switchTab('dashboard');
+    expect(component.activeTab).toBe('dashboard');
+  });
+
+  it('should viewInvoice and patch form', () => {
+    component.ngOnInit();
+    component.viewInvoice({ billingPeriod: '2024-06', totalAmount: 500 });
+    expect(component.billingResult.billingPeriod).toBe('2024-06');
+    expect(component.billingForm.get('year')?.value).toBe(2024);
+    expect(component.billingForm.get('month')?.value).toBe(6);
+  });
+
+  it('should compute pagedDevices with empty breakdown', () => {
+    component.billingResult = null;
+    expect(component.pagedDevices).toEqual([]);
+  });
+
+  it('should compute totalDevicePages with no breakdown', () => {
+    component.billingResult = null;
+    expect(component.totalDevicePages).toBe(0);
+  });
+
+  it('should checkExistingInvoice with no accountId', () => {
+    component.ngOnInit();
+    component.billingForm.patchValue({ accountId: '' });
+    component.checkExistingInvoice();
+    expect(component.loading).toBe(false);
+  });
+
+  it('should searchInvoice without account', () => {
+    component.ngOnInit();
+    component.billingForm.patchValue({ accountId: '' });
+    component.searchInvoice();
+    expect(toastr.error).toHaveBeenCalled();
+  });
 });

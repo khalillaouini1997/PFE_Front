@@ -123,4 +123,92 @@ describe('ComptesWebComponentComponent', () => {
     expect(component.regionControl).toBeTruthy();
     expect(component.poolControl).toBeTruthy();
   });
+
+  it('should select web account and navigate', () => {
+    const router = TestBed.inject(Router);
+    component.ngOnInit();
+    const compte = { idCompteClientWeb: 1, date_expiration: new Date(Date.now() + 86400000) };
+    component.onSelect(compte as any);
+    expect(router.navigate).toHaveBeenCalledWith(['/adminWeb/configurations', 1]);
+  });
+
+  it('should handle select with UTC hours 23', () => {
+    const router = TestBed.inject(Router);
+    component.ngOnInit();
+    const date = new Date(Date.now() + 86400000);
+    date.setUTCHours(23);
+    const compte = { idCompteClientWeb: 1, date_expiration: date };
+    component.onSelect(compte as any);
+    expect(component.dt).toBeTruthy();
+  });
+
+  it('should load web accounts with pagination event', () => {
+    component.ngOnInit();
+    component.loadWebAccounts({ first: 0, rows: 10 });
+    expect(webAccountService.getAllWebAccountByKeyWord).toHaveBeenCalled();
+  });
+
+  it('should handle pool as string value', () => {
+    component.ngOnInit();
+    component.searchForm.patchValue({ pool: '2' });
+    component.loadWebAccounts();
+    expect(webAccountService.getAllWebAccountByKeyWord).toHaveBeenCalled();
+  });
+
+  it('should handle page changed', () => {
+    component.ngOnInit();
+    component.onPageChanged({ first: 10, rows: 10 });
+    expect(component.pagination.bigCurrentPage).toBe(2);
+  });
+
+  it('should handle expired account', () => {
+    webAccountService.getAllWebAccountByKeyWord.mockReturnValue(of({
+      data: { content: [{ idCompteClientWeb: 1, login: 'test', date_expiration: new Date(Date.now() - 86400000) }], totalElements: 1 }
+    }));
+    component.ngOnInit();
+    expect(component.comptesWeb[0].expired).toBe(true);
+  });
+
+  it('should handle non-expired account', () => {
+    component.ngOnInit();
+    expect(component.comptesWeb[0].expired).toBe(false);
+    expect(component.comptesWeb[0].during).toBe(true);
+  });
+
+  it('should handle delete web account error', () => {
+    component.ngOnInit();
+    component.selectedWebAccount = { idCompteClientWeb: 1 } as any;
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+    webAccountService.deleteWebAccount.mockReturnValue(throwError(() => new Error('fail')));
+    component.deleteWebAccount();
+  });
+
+  it('should have owner from environment', () => {
+    expect(component.owner).toBeTruthy();
+  });
+
+  it('should handle loadWebAccounts with page data', () => {
+    component.ngOnInit();
+    webAccountService.getAllWebAccountByKeyWord.mockReturnValue(of({
+      data: { content: [{ idCompteClientWeb: 1, login: 'test', date_expiration: new Date(Date.now() + 86400000) }], page: { totalElements: 5 } }
+    }));
+    component.loadWebAccounts();
+    expect(component.pagination.bigTotalItems).toBe(5);
+  });
+
+  it('should handle loadWebAccounts with totalElements', () => {
+    component.ngOnInit();
+    webAccountService.getAllWebAccountByKeyWord.mockReturnValue(of({
+      data: { content: [], totalElements: 10 }
+    }));
+    component.loadWebAccounts();
+    expect(component.pagination.bigTotalItems).toBe(10);
+  });
+
+  it('should guard against concurrent loadWebAccounts', () => {
+    component.ngOnInit();
+    (component as any).loadingInProgress = true;
+    component.loadWebAccounts();
+    expect(webAccountService.getAllWebAccountByKeyWord).toHaveBeenCalledTimes(1);
+  });
 });

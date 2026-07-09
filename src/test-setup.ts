@@ -140,13 +140,4 @@ console.error = (...args: any[]) => {
   originalError.apply(console, args);
 };
 
-// Ensure exactly one platform is initialized
-if (getPlatform()) {
-  destroyPlatform();
-}
-
-getTestBed().initTestEnvironment(
-  BrowserDynamicTestingModule,
-  platformBrowserDynamicTesting(),
-  { teardown: { destroyAfterEach: true } }
-);
+// TestBed.initTestEnvironment is handled by the Angular builder (setupFiles)

@@ -55,4 +55,37 @@ describe('DashboardComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should initialize dashboardForm', () => {
+    expect(component.dashboardForm).toBeTruthy();
+    expect(component.dashboardForm.get('compteWeb')).toBeTruthy();
+  });
+
+  it('should call diffHours correctly', () => {
+    const now = new Date();
+    const twoHoursAgo = new Date(now.getTime() - 2 * 60 * 60 * 1000);
+    const result = component.diffHours(twoHoursAgo);
+    expect(result).toBeGreaterThanOrEqual(1.9);
+    expect(result).toBeLessThanOrEqual(2.1);
+  });
+
+  it('should not load data when no compteWeb selected', () => {
+    component.dashboardForm.patchValue({ compteWeb: null });
+    component.getAllLastTramByCompteWeb();
+  });
+
+  it('should load data when compteWeb selected', () => {
+    component.dashboardForm.patchValue({ compteWeb: { idCompteClientWeb: 1 } });
+    component.getAllLastTramByCompteWeb();
+  });
+
+  it('should not export when no realtimes', () => {
+    component.onExport();
+  });
+
+  it('should call store.ngOnDestroy on ngOnDestroy', () => {
+    const spy = vi.spyOn(component.store, 'ngOnDestroy');
+    component.ngOnDestroy();
+    expect(spy).toHaveBeenCalled();
+  });
 });

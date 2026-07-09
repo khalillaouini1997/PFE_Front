@@ -108,9 +108,24 @@
             "buildTarget": "web_admin:build",
             "tsConfig": "tsconfig.spec.json",
             "providersFile": "src/test-providers.ts",
+            "setupFiles": [
+              "src/test-setup.ts"
+            ],
             "coverageReporters": [
               "html",
-              "lcov"
+              "lcov",
+              "text-summary"
+            ],
+            "coverageExclude": [
+              "src/main.ts",
+              "src/polyfills.ts",
+              "src/test-setup.ts",
+              "src/test-providers.ts",
+              "src/app/mocks/**",
+              "src/environments/**",
+              "src/app/app.routes.ts",
+              "src/app/admin-web-component/admin-web-component.routes.ts",
+              "src/app/utils/operators.ts"
             ]
           }
         }

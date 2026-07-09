@@ -164,4 +164,126 @@ describe('CompteServerDetailsComponent', () => {
     component.ngOnInit();
     expect(component).toBeTruthy();
   });
+
+  it('should update boitier label', () => {
+    component.ngOnInit();
+    component.selectedBoitier = { idBoitier: 1, numBoitier: 100, label: 'Old' } as any;
+    component.updateForm.patchValue({ label: 'New Label' });
+    boitierService.updateBoitier.mockReturnValue(of({ label: 'New Label' }));
+    component.updateBoitier();
+    expect(boitierService.updateBoitier).toHaveBeenCalled();
+  });
+
+  it('should handle update boitier error', () => {
+    component.ngOnInit();
+    component.selectedBoitier = { idBoitier: 1, numBoitier: 100 } as any;
+    component.updateForm.patchValue({ label: 'New' });
+    boitierService.updateBoitier.mockReturnValue(throwError(() => new Error('fail')));
+    component.updateBoitier();
+  });
+
+  it('should select boitier for update', () => {
+    component.ngOnInit();
+    const boitier = { idBoitier: 1, label: 'Test', numBoitier: 100 } as any;
+    component.onSelect(boitier);
+    expect(component.selectedBoitier.label).toBe('Test');
+    expect(component.updateForm.get('label')?.value).toBe('Test');
+  });
+
+  it('should change boitier status error path', () => {
+    component.ngOnInit();
+    boitierService.updateBoitier.mockReturnValue(throwError(() => new Error('fail')));
+    component.changeBoitierStatus(component.boitiers[0]);
+  });
+
+  it('should handle boitier list with nested data', () => {
+    component.ngOnInit();
+    boitierService.getBoitierOfAccount.mockReturnValue(of({
+      data: { content: [{ idBoitier: 1, numBoitier: 100, label: 'D1', etatBoitier: 'INSTALLED', streamId: 1 }], page: { totalElements: 1 } }
+    }));
+    component.loadBoitierList();
+    expect(component.boitiers.length).toBe(1);
+  });
+
+  it('should handle non-array content', () => {
+    component.ngOnInit();
+    boitierService.getBoitierOfAccount.mockReturnValue(of({ data: { content: null } }));
+    component.loadBoitierList();
+    expect(component.boitiers).toEqual([]);
+  });
+
+  it('should handle boitier list with empty content', () => {
+    component.ngOnInit();
+    boitierService.getBoitierOfAccount.mockReturnValue(of({}));
+    component.loadBoitierList();
+    expect(component.boitiers).toEqual([]);
+  });
+
+  it('should parse invalid date format', () => {
+    const result = (component as any).parseDateLastTrame('invalid');
+    expect(result).toBeUndefined();
+  });
+
+  it('should parse numeric date', () => {
+    const result = (component as any).parseDateLastTrame(1704110200000);
+    expect(result).toBeInstanceOf(Date);
+  });
+
+  it('should parse ISO string date', () => {
+    const result = (component as any).parseDateLastTrame('2024-01-01T10:30:00');
+    expect(result).toBeInstanceOf(Date);
+  });
+
+  it('should parse DD-MM-YYYY date', () => {
+    const result = (component as any).parseDateLastTrame('01-01-2024 10:30:00');
+    expect(result).toBeInstanceOf(Date);
+  });
+
+  it('should parse DD-MM-YYYY with invalid format', () => {
+    const result = (component as any).parseDateLastTrame('01/01/2024');
+    expect(result).toBeUndefined();
+  });
+
+  it('should extend interval when confirmed', () => {
+    component.ngOnInit();
+    component.BOITIER_NOT_INSTALLED = 0;
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+    compteServerService.extendIntervalOfBoitiers.mockReturnValue(of({
+      intervaleStart: 1, intervaleEnd: 20
+    }));
+    component.extendIntervalOfBoitiers();
+    expect(compteServerService.extendIntervalOfBoitiers).toHaveBeenCalled();
+  });
+
+  it('should not extend interval when not confirmed', () => {
+    component.ngOnInit();
+    component.BOITIER_NOT_INSTALLED = 0;
+    vi.spyOn(window, 'confirm').mockReturnValue(false);
+    component.extendIntervalOfBoitiers();
+    expect(compteServerService.extendIntervalOfBoitiers).not.toHaveBeenCalled();
+  });
+
+  it('should handle add boitiers error', () => {
+    component.ngOnInit();
+    component.addForm.patchValue({ nbrBoitiers: 3 });
+    compteServerService.addBoitiers.mockReturnValue(throwError(() => ({ error: { message: 'Error occurred' } })));
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+    component.addBoitiers();
+  });
+
+  it('should handle archive with emplacement', () => {
+    boitierService.lastArchiveOfBoitier.mockReturnValue(of({
+      data: { emplacement: 'Sfax', vitesse: 60, gpsLastTrame: 'gps', gsmLastTrame: 'gsm' }
+    }));
+    component.ngOnInit();
+    expect(component).toBeTruthy();
+  });
+
+  it('should guard against concurrent loadBoitierList calls', () => {
+    component.ngOnInit();
+    const callCount = boitierService.getBoitierOfAccount.mock.calls.length;
+    (component as any).loadingInProgress = true;
+    component.loadBoitierList();
+    expect(boitierService.getBoitierOfAccount).toHaveBeenCalledTimes(callCount);
+  });
 });

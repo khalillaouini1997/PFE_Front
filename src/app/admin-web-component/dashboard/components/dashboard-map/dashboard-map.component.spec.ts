@@ -131,4 +131,69 @@ describe('DashboardMapComponent', () => {
     expect((component as any).markerMap.size).toBe(0);
     expect((component as any).previousPositions.size).toBe(0);
   });
+
+  it('should call invalidateSize', () => {
+    vi.useFakeTimers();
+    fixture.detectChanges();
+    component.invalidateSize();
+    vi.advanceTimersByTime(500);
+    vi.useRealTimers();
+  });
+
+  it('should handle ngOnDestroy with animationFrameId', () => {
+    fixture.detectChanges();
+    (component as any).animationFrameId = 123;
+    component.ngOnDestroy();
+    expect(mockMap.remove).toHaveBeenCalled();
+  });
+
+  it('should handle createMarker with realtimes data', () => {
+    fixture.detectChanges();
+    const realtimes: RealTime[] = [
+      { deviceid: 1, matricule: 'T-001', status: 'VALID', latitude: 33.88, longitude: 9.53, validity: true, speed: 60, ignition: true, record_time: new Date(), numPuce: '8921601001', imei: '123', version: 'v1' }
+    ];
+    fixture.componentRef.setInput('realtimes', realtimes);
+    fixture.detectChanges();
+    expect(component.realtimes().length).toBe(1);
+  });
+
+  it('should handle updateMarkers with empty realtimes', () => {
+    fixture.detectChanges();
+    fixture.componentRef.setInput('realtimes', []);
+    fixture.detectChanges();
+    expect((component as any).markerMap.size).toBe(0);
+  });
+
+  it('should handle getCarIcon with different device ids', () => {
+    fixture.detectChanges();
+    const getCarIcon = (component as any).getCarIcon.bind(component);
+    const tram = { deviceid: 42, rotation_angle: 45 } as any;
+    const icon = getCarIcon(tram);
+    expect(icon).toBeTruthy();
+  });
+
+  it('should cache car icons in deviceIconMap', () => {
+    fixture.detectChanges();
+    const getCarIcon = (component as any).getCarIcon.bind(component);
+    const tram = { deviceid: 99, rotation_angle: 0 } as any;
+    getCarIcon(tram);
+    getCarIcon(tram);
+    expect((component as any).deviceIconMap.size).toBe(1);
+  });
+
+  it('should handle mapError signal', () => {
+    fixture.detectChanges();
+    component.mapError.set('Test error');
+    expect(component.hasMapError()).toBe(true);
+    component.mapError.set(null);
+    expect(component.hasMapError()).toBe(false);
+  });
+
+  it('should handle retryMapLoad with existing map', () => {
+    fixture.detectChanges();
+    (component as any).map = mockMap;
+    component.retryMapLoad();
+    expect(component.isMapLoading()).toBe(true);
+    expect(mockMap.remove).toHaveBeenCalled();
+  });
 });

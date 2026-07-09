@@ -65,4 +65,36 @@ describe('DashboardKpiComponent', () => {
     fixture.componentRef.setInput('stats', { total: 200, valid: 180, technicalIssue: 10, moving: 150 });
     expect(component.stats().total).toBe(200);
   });
+
+  it('should render stats in template', () => {
+    fixture.componentRef.setInput('stats', {
+      total: 100,
+      valid: 80,
+      technicalIssue: 10,
+      moving: 60
+    });
+    fixture.detectChanges();
+    const el = fixture.debugElement.nativeElement;
+    expect(el).toBeTruthy();
+  });
+
+  it('should handle zero values', () => {
+    fixture.componentRef.setInput('stats', {
+      total: 0,
+      valid: 0,
+      technicalIssue: 0,
+      moving: 0
+    });
+    expect(component.stats().total).toBe(0);
+  });
+
+  it('should handle large values', () => {
+    fixture.componentRef.setInput('stats', {
+      total: 999999,
+      valid: 888888,
+      technicalIssue: 111111,
+      moving: 777777
+    });
+    expect(component.stats().total).toBe(999999);
+  });
 });

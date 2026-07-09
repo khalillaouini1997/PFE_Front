@@ -198,4 +198,75 @@ describe('DashboardStore', () => {
 
     connectionStatus$.next(false);
   });
+
+  it('should load realtimes via websocket when connected', () => {
+    webSocketService.isConnected.mockReturnValue(true);
+    webAccountService.getAllLastTram.mockReturnValue(of({ data: [] }));
+    store.selectCompteWeb({ idCompteClientWeb: 1 } as any);
+    expect(webSocketService.connect).not.toHaveBeenCalled();
+    expect(webAccountService.getAllLastTram).toHaveBeenCalledWith(1);
+  });
+
+  it('should handle websocket position error and fall back', () => {
+    webSocketService.isConnected.mockReturnValue(true);
+    webAccountService.getAllLastTram.mockReturnValue(of({ data: [] }));
+    store.selectCompteWeb({ idCompteClientWeb: 1 } as any);
+
+    vehiclePositions$.error(new Error('ws error'));
+  });
+
+  it('should return empty array for non-array comptesWeb', () => {
+    (store as any).updateState({ comptesWeb: null });
+    expect(store.comptesWeb()).toEqual([]);
+  });
+
+  it('should return empty array for non-array realtimes', () => {
+    (store as any).updateState({ realtimes: null });
+    expect(store.realtimes()).toEqual([]);
+  });
+
+  it('should return empty array for non-array installationEvolution', () => {
+    (store as any).updateState({ installationEvolution: null });
+    expect(store.installationEvolution()).toEqual([]);
+  });
+
+  it('should compute stats correctly with mixed statuses', () => {
+    webSocketService.isConnected.mockReturnValue(false);
+    webAccountService.getAllLastTram.mockReturnValue(of({
+      data: [
+        { deviceid: 1, speed: 50, status: 'VALID' },
+        { deviceid: 2, speed: 0, status: 'VALID' },
+        { deviceid: 3, speed: 30, status: 'TECHNICAL_ISSUE' },
+        { deviceid: 4, speed: 0, status: 'NON_VALID' }
+      ]
+    }));
+    store.selectCompteWeb({ idCompteClientWeb: 1 } as any);
+    const stats = store.stats();
+    expect(stats.total).toBe(4);
+    expect(stats.valid).toBe(2);
+    expect(stats.technicalIssue).toBe(1);
+    expect(stats.moving).toBe(2);
+  });
+
+  it('should load installation evolution error silently', () => {
+    webAccountService.getDeviceInstallationEvolution.mockReturnValue(throwError(() => new Error('fail')));
+    webAccountService.getAllLastTram.mockReturnValue(of({ data: [] }));
+    store.selectCompteWeb({ idCompteClientWeb: 1 } as any);
+    expect(store.installationEvolution()).toEqual([]);
+  });
+
+  it('should handle non-array evolution data', () => {
+    webAccountService.getDeviceInstallationEvolution.mockReturnValue(of({ data: null }));
+    webAccountService.getAllLastTram.mockReturnValue(of({ data: [] }));
+    store.selectCompteWeb({ idCompteClientWeb: 1 } as any);
+    expect(store.installationEvolution()).toEqual([]);
+  });
+
+  it('should maintain selected compte after stats calculation', () => {
+    webSocketService.isConnected.mockReturnValue(false);
+    webAccountService.getAllLastTram.mockReturnValue(of({ data: [{ deviceid: 1, speed: 10, status: 'VALID' }] }));
+    const compte = { idCompteClientWeb: 1, login: 'test' };
+    store.selectCompteWeb(compte as any);
+    expect(store.selectedCompteWeb()?.login).toBe('test');
+  });
 });
