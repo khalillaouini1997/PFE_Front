@@ -1,36 +1,31 @@
 import { TestBed } from '@angular/core/testing';
 import { vi } from 'vitest';
+import { Client } from '@stomp/stompjs';
 import { WebSocketService } from './web-socket.service';
-
-vi.mock('sockjs-client', () => ({
-  default: vi.fn().mockImplementation(() => ({})),
-}));
-
-vi.mock('@stomp/stompjs', () => {
-  return {
-    Client: class MockClient {
-      activate = vi.fn();
-      deactivate = vi.fn();
-      subscribe = vi.fn();
-      connected = false;
-      active = false;
-      onConnect: any = null;
-      onStompError: any = null;
-      onDisconnect: any = null;
-      constructor(_options?: any) {}
-    },
-  };
-});
 
 describe('WebSocketService', () => {
   let service: WebSocketService;
+  let activateSpy: any;
+  let deactivateSpy: any;
+  let subscribeSpy: any;
 
   beforeEach(() => {
     vi.clearAllMocks();
+
+    activateSpy = vi.spyOn(Client.prototype, 'activate').mockImplementation(() => {});
+    deactivateSpy = vi.spyOn(Client.prototype, 'deactivate').mockImplementation(() => Promise.resolve());
+    subscribeSpy = vi.spyOn(Client.prototype, 'subscribe').mockImplementation(() => {
+      return { unsubscribe: () => {} } as any;
+    });
+
     TestBed.configureTestingModule({
       providers: [WebSocketService],
     });
     service = TestBed.inject(WebSocketService);
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   it('should be created', () => {
@@ -56,9 +51,8 @@ describe('WebSocketService', () => {
   });
 
   it('connect should call client.activate', () => {
-    const client = (service as any).client;
     service.connect();
-    expect(client.activate).toHaveBeenCalled();
+    expect(activateSpy).toHaveBeenCalled();
   });
 
   it('onDisconnect should set connection status to false', () => {

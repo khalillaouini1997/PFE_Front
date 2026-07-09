@@ -120,6 +120,8 @@ const mockComputedStyle = {
       canvas: this,
       save: () => {}, restore: () => {},
       scale: () => {}, translate: () => {}, rotate: () => {},
+      setTransform: () => {}, transform: () => {}, resetTransform: () => {},
+      drawImage: () => {},
       setLineDash: () => {},
       lineDashOffset: 0, shadowBlur: 0,
       globalAlpha: 1, strokeStyle: '#000', fillStyle: '#000',

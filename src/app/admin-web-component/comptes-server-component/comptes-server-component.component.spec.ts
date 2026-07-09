@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComptesServerComponentComponent } from './comptes-server-component.component';
 import { CompteServerService } from '../../service/compte-server.service';
@@ -11,6 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 
 describe('ComptesServerComponentComponent', () => {
   let component: ComptesServerComponentComponent;
+  let fixture: ComponentFixture<ComptesServerComponentComponent>;
   let compteServerService: { getAllServerAccount: ReturnType<typeof vi.fn>; deleteCompteServer: ReturnType<typeof vi.fn>; updateServerCompte: ReturnType<typeof vi.fn>; ExportListComptesServer: ReturnType<typeof vi.fn> };
   let ipAddressService: { getAllIpAddresses: ReturnType<typeof vi.fn> };
   let authService: { hasRole: ReturnType<typeof vi.fn> };
@@ -41,12 +42,13 @@ describe('ComptesServerComponentComponent', () => {
       ]
     }).compileComponents();
 
-    const fixture = TestBed.createComponent(ComptesServerComponentComponent);
+    fixture = TestBed.createComponent(ComptesServerComponentComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
   afterEach(() => {
+    fixture.destroy();
     vi.clearAllMocks();
   });
 
