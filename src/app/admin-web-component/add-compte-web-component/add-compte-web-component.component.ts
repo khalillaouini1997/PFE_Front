@@ -70,7 +70,7 @@ export class AddCompteWebComponentComponent implements OnInit {
   ngOnInit() {
 
 
-    this.webAccountService.getAllWebAccountNames().subscribe({
+    this.compteServerService.getAllServerAccountForForm().subscribe({
       next: (res: any) => {
         const responseData = res?.data || res;
         this.serverAccounts.set(Array.isArray(responseData) ? responseData : []);
@@ -103,7 +103,7 @@ export class AddCompteWebComponentComponent implements OnInit {
     };
 
     const idCompteServer = formValue.idCompte;
-    const selectedServer = this.serverAccounts().find(s => s.idCompteClientWeb == idCompteServer);
+    const selectedServer = this.serverAccounts().find(s => s.idCompteClientServer == idCompteServer);
     if (selectedServer) {
       compteWeb.compteClientServer = selectedServer;
     }

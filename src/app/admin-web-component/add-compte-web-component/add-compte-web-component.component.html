@@ -39,8 +39,8 @@
                             <div class="form-group mb-3 custom-form-group">
                                 <label for="idCompte" class="premium-label">{{ 'WEB_ACCOUNTS.SERVER_ACCOUNT' | translate }}</label>
                                 <select formControlName="idCompte" class="form-select premium-input" id="idCompte" title="{{ 'WEB_ACCOUNTS.SERVER_ACCOUNT' | translate }}">
-                                    @for (server of serverAccounts(); track server.idCompteClientWeb) {
-                                        <option [value]="server.idCompteClientWeb">{{server.login}}</option>
+                                    @for (server of serverAccounts(); track server.idCompteClientServer) {
+                                        <option [value]="server.idCompteClientServer">{{server.login}}</option>
                                     }
                                 </select>
                             </div>
