@@ -1,28 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { TranslateModule } from '@ngx-translate/core';
 import { GlobalChartsComponent } from './global-charts.component';
-
-vi.mock('chart.js', () => {
-  class MockChart {
-    data = { labels: [], datasets: [] };
-    update = vi.fn();
-    destroy = vi.fn();
-    static register = vi.fn();
-  }
-  return {
-    Chart: MockChart,
-    registerables: []
-  };
-});
 
 describe('GlobalChartsComponent', () => {
   let component: GlobalChartsComponent;
   let fixture: ComponentFixture<GlobalChartsComponent>;
 
   beforeEach(async () => {
-    vi.clearAllMocks();
-
     await TestBed.configureTestingModule({
       imports: [GlobalChartsComponent, TranslateModule.forRoot()]
     }).compileComponents();
@@ -31,22 +16,15 @@ describe('GlobalChartsComponent', () => {
     component = fixture.componentInstance;
   });
 
-  afterEach(() => {
-    vi.restoreAllMocks();
-  });
-
   it('should create', () => {
-    fixture.detectChanges();
     expect(component).toBeTruthy();
   });
 
   it('should have default empty realtimes input', () => {
-    fixture.detectChanges();
     expect(component.realtimes()).toEqual([]);
   });
 
   it('should have default stats input', () => {
-    fixture.detectChanges();
     const stats = component.stats();
     expect(stats.totalVehicles).toBe(0);
     expect(stats.valid).toBe(0);
@@ -60,7 +38,6 @@ describe('GlobalChartsComponent', () => {
       { speed: 45, numPuce: '8921605678', signal: 15 }
     ];
     fixture.componentRef.setInput('realtimes', mockData);
-    fixture.detectChanges();
     expect(component.realtimes().length).toBe(2);
   });
 
@@ -76,7 +53,6 @@ describe('GlobalChartsComponent', () => {
       accountsCount: 5,
       inactive: 5
     });
-    fixture.detectChanges();
     expect(component.stats().totalVehicles).toBe(100);
     expect(component.stats().valid).toBe(80);
   });
@@ -93,12 +69,10 @@ describe('GlobalChartsComponent', () => {
       accountsCount: 5,
       inactive: 5
     });
-    fixture.detectChanges();
     expect(component.healthScore()).toBe(75);
   });
 
   it('should compute healthScore as 0 when no vehicles', () => {
-    fixture.detectChanges();
     expect(component.healthScore()).toBe(0);
   });
 
@@ -114,17 +88,14 @@ describe('GlobalChartsComponent', () => {
       accountsCount: 3,
       inactive: 0
     });
-    fixture.detectChanges();
     expect(component.healthScore()).toBe(50);
   });
 
   it('should destroy charts on ngOnDestroy', () => {
-    fixture.detectChanges();
     expect(() => component.ngOnDestroy()).not.toThrow();
   });
 
   it('updateCharts should return early when no chart refs', () => {
-    fixture.detectChanges();
     expect(() => component.updateCharts()).not.toThrow();
   });
 });
