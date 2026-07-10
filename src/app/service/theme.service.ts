@@ -1,4 +1,4 @@
-import { Injectable, signal, effect, inject } from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 
 export type Theme = 'light' | 'dark';
@@ -16,11 +16,6 @@ export class ThemeService {
   constructor() {
     // Apply theme on initialization
     this.applyTheme(this.currentTheme());
-    
-    // Watch for theme changes and apply them
-    effect(() => {
-      this.applyTheme(this.currentTheme());
-    });
   }
   
   private getStoredTheme(): Theme {
@@ -45,6 +40,7 @@ export class ThemeService {
     const newTheme: Theme = this.currentTheme() === 'light' ? 'dark' : 'light';
     this.currentTheme.set(newTheme);
     localStorage.setItem(this.THEME_KEY, newTheme);
+    this.applyTheme(newTheme);
   }
   
   private applyTheme(theme: Theme): void {
