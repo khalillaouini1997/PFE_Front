@@ -62,7 +62,7 @@ body {
 .header-gradient {
   background: linear-gradient(135deg, var(--surface-card) 0%, var(--surface-elevated) 100%);
   border: 1px solid var(--surface-border);
-  color: white !important;
+  color: var(--text-primary) !important;
   position: relative;
   overflow: hidden;
 }
@@ -219,4 +219,164 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .radar-ring { animation: none; }
   * { transition-duration: 0.01ms !important; }
+}
+
+/* ── Bootstrap Component Overrides for Theme Support ── */
+.form-control,
+.form-select {
+  background-color: var(--bs-white) !important;
+  border-color: var(--bs-border-color) !important;
+  color: var(--bs-body-color) !important;
+}
+
+.form-control:focus,
+.form-select:focus {
+  background-color: var(--bs-white) !important;
+  border-color: var(--accent-primary) !important;
+  color: var(--bs-body-color) !important;
+}
+
+.form-control::placeholder {
+  color: var(--text-muted) !important;
+}
+
+.form-floating > .form-control,
+.form-floating > .form-select {
+  background-color: var(--bs-white) !important;
+  color: var(--bs-body-color) !important;
+}
+
+.form-floating > label {
+  color: var(--text-muted) !important;
+}
+
+.modal-content {
+  background-color: var(--bs-white) !important;
+  color: var(--bs-body-color) !important;
+  border-color: var(--bs-border-color) !important;
+}
+
+.card {
+  background-color: var(--bs-white) !important;
+  border-color: var(--bs-border-color) !important;
+  color: var(--bs-body-color) !important;
+}
+
+.list-group-item {
+  background-color: var(--bs-white) !important;
+  border-color: var(--bs-border-color) !important;
+  color: var(--bs-body-color) !important;
+}
+
+.table {
+  --bs-table-bg: transparent;
+  --bs-table-color: var(--bs-body-color);
+  --bs-table-border-color: var(--bs-border-color);
+}
+
+.table > :not(caption) > * > * {
+  background-color: transparent !important;
+  color: var(--bs-body-color) !important;
+}
+
+.dropdown-menu {
+  background-color: var(--bs-white) !important;
+  border-color: var(--bs-border-color) !important;
+  color: var(--bs-body-color) !important;
+}
+
+.dropdown-item {
+  color: var(--bs-body-color) !important;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+  background-color: var(--bs-light) !important;
+  color: var(--bs-body-color) !important;
+}
+
+.page-link {
+  color: var(--accent-primary) !important;
+}
+
+.page-item.active .page-link {
+  background-color: var(--accent-primary) !important;
+  border-color: var(--accent-primary) !important;
+}
+
+.alert-warning {
+  background-color: var(--color-warning-light) !important;
+  border-color: var(--color-warning) !important;
+  color: var(--color-warning-dark) !important;
+}
+
+.alert-danger {
+  background-color: var(--color-error-light) !important;
+  border-color: var(--color-error) !important;
+  color: var(--color-error-dark) !important;
+}
+
+.alert-success {
+  background-color: var(--color-success-light) !important;
+  border-color: var(--color-success) !important;
+  color: var(--color-success-dark) !important;
+}
+
+.alert-info {
+  background-color: var(--color-info-light) !important;
+  border-color: var(--color-info) !important;
+  color: var(--color-info-dark) !important;
+}
+
+.btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+[data-theme="light"] .btn-close {
+  filter: none;
+}
+
+/* ── Bootstrap Text Utility Overrides for Theme ── */
+.text-dark {
+  color: var(--bs-dark) !important;
+}
+
+.text-muted {
+  color: var(--text-muted) !important;
+}
+
+.text-secondary {
+  color: var(--bs-secondary) !important;
+}
+
+.bg-white {
+  background-color: var(--bs-white) !important;
+}
+
+.bg-light {
+  background-color: var(--bs-light) !important;
+}
+
+.bg-dark {
+  background-color: var(--bs-dark) !important;
+}
+
+.bg-secondary {
+  background-color: var(--bs-secondary) !important;
+}
+
+.border-light {
+  border-color: var(--bs-light) !important;
+}
+
+.border-secondary {
+  border-color: var(--bs-secondary) !important;
+}
+
+.bg-body-tertiary {
+  background-color: var(--bs-tertiary-bg) !important;
+}
+
+.bg-body-secondary {
+  background-color: var(--bs-secondary-bg) !important;
 }

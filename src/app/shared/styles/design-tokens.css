@@ -152,6 +152,26 @@
   --text-primary: #e2e8f0;
   --text-secondary: #94a3b8;
   --text-muted: #64748b;
+
+  /* ===== Bootstrap 5.3 Variable Overrides (Dark Theme) ===== */
+  --bs-body-bg: #0c1222;
+  --bs-body-color: #e2e8f0;
+  --bs-border-color: #1e2d45;
+  --bs-emphasis-color: #e2e8f0;
+  --bs-white: #151d2e;
+  --bs-white-rgb: 21, 29, 46;
+  --bs-light: #1c2640;
+  --bs-light-rgb: 28, 38, 64;
+  --bs-dark: #e2e8f0;
+  --bs-dark-rgb: 226, 232, 240;
+  --bs-secondary: #94a3b8;
+  --bs-secondary-rgb: 148, 163, 184;
+  --bs-secondary-bg: #1c2640;
+  --bs-secondary-bg-rgb: 28, 38, 64;
+  --bs-tertiary-bg: #151d2e;
+  --bs-tertiary-bg-rgb: 21, 29, 46;
+  --bs-link-color: #14b8a6;
+  --bs-link-hover-color: #2dd4bf;
 }
 
 /* ===== Accessibility: High Contrast Mode ===== */
@@ -182,4 +202,24 @@
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
   --shadow-glow: 0 0 20px rgba(20, 184, 166, 0.1);
+
+  /* ===== Bootstrap 5.3 Variable Overrides (Light Theme) ===== */
+  --bs-body-bg: #ffffff;
+  --bs-body-color: #212529;
+  --bs-border-color: #dee2e6;
+  --bs-emphasis-color: #000000;
+  --bs-white: #ffffff;
+  --bs-white-rgb: 255, 255, 255;
+  --bs-light: #f8f9fa;
+  --bs-light-rgb: 248, 249, 250;
+  --bs-dark: #212529;
+  --bs-dark-rgb: 33, 37, 41;
+  --bs-secondary: #6c757d;
+  --bs-secondary-rgb: 108, 117, 125;
+  --bs-secondary-bg: #f8f9fa;
+  --bs-secondary-bg-rgb: 248, 249, 250;
+  --bs-tertiary-bg: #ffffff;
+  --bs-tertiary-bg-rgb: 255, 255, 255;
+  --bs-link-color: #0d9488;
+  --bs-link-hover-color: #0f766e;
 }
