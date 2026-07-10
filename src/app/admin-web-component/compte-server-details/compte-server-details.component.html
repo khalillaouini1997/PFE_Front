@@ -195,7 +195,7 @@
             </div>
             
             <form [formGroup]="updateForm">
-                <div class="modal-body p-4 bg-light bg-opacity-50">
+                <div class="modal-body p-4">
                     <p class="small text-secondary mb-4">{{ 'SERVER_DETAILS.UPDATE_FOR_BOX' | translate }} #{{selectedBoitier.idBoitier}}</p>
                     <div class="form-floating shadow-sm">
                         <input type="text" class="form-control border-0" formControlName="label" id="labelUpdate" placeholder="{{ 'SERVER_DETAILS.SOFTWARE_LABEL' | translate }}">
@@ -203,7 +203,7 @@
                     </div>
                 </div>
                 
-                <div class="modal-footer p-3 bg-white border-0">
+                <div class="modal-footer p-3 border-0">
                     <button type="button" class="btn btn-light px-4" (click)="closeUpdateModal()">{{ 'COMMON.CANCEL' | translate }}</button>
                     <button type="button" class="btn btn-warning px-5 fw-bold" (click)="updateBoitier()" [disabled]="!updateForm.valid">
                         {{ 'COMMON.UPDATE' | translate }}

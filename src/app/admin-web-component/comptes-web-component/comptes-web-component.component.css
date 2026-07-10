@@ -2,12 +2,8 @@
 
 :host {
   display: block;
-  background-color: var(--slate-50);
+  background-color: var(--surface-base);
   min-height: 100vh;
-}
-
-[data-theme='dark'] :host {
-  background-color: var(--slate-900);
 }
 
 .clickable-row {

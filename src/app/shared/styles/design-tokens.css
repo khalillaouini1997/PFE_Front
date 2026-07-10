@@ -126,6 +126,13 @@
   --z-tooltip: 1070;
   --z-error-banner: 9999;
 
+  /* ===== Sidebar Tokens ===== */
+  --sidebar-bg: #1e293b;
+  --sidebar-text: #ffffff;
+  --sidebar-text-muted: rgba(255, 255, 255, 0.35);
+  --sidebar-hover-bg: rgba(255, 255, 255, 0.06);
+  --sidebar-border: rgba(255, 255, 255, 0.1);
+
   /* ===== Component Tokens ===== */
   --card-padding: var(--spacing-xl);
   --card-border-radius: var(--radius-2xl);
@@ -195,6 +202,13 @@
   --text-primary: #0f172a;
   --text-secondary: #475569;
   --text-muted: #94a3b8;
+
+  /* ===== Sidebar Tokens (Light Theme) ===== */
+  --sidebar-bg: #ffffff;
+  --sidebar-text: #1e293b;
+  --sidebar-text-muted: rgba(30, 41, 59, 0.5);
+  --sidebar-hover-bg: rgba(30, 41, 59, 0.05);
+  --sidebar-border: rgba(30, 41, 59, 0.1);
 
   --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);

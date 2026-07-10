@@ -9,8 +9,8 @@
             </button>
             <div class="d-flex align-items-center gap-2" [formGroup]="archiveForm">
                 <div class="input-group input-group-sm limit-input-group shadow-sm">
-                    <label class="input-group-text bg-white bg-opacity-10 text-white border-0" for="limit">{{ 'ARCHIVE.LIMIT' | translate }}</label>
-                    <input type="number" id="limit" class="form-control border-0 bg-white bg-opacity-10 text-white" 
+                    <label class="input-group-text border-0" for="limit">{{ 'ARCHIVE.LIMIT' | translate }}</label>
+                    <input type="number" id="limit" class="form-control border-0" 
                         formControlName="limit" title="{{ 'ARCHIVE.LIMIT' | translate }}" placeholder="200">
                 </div>
                 <button type="button" class="btn btn-white shadow-sm fw-bold" (click)="getArchives()" title="{{ 'COMMON.SHOW' | translate }}">
@@ -21,7 +21,7 @@
     </app-page-header>
 
     <!-- Main Content -->
-    <div class="premium-card p-0 overflow-hidden shadow-sm bg-white">
+    <div class="premium-card p-0 overflow-hidden shadow-sm">
         <p-tabs value="0" styleClass="premium-tabview">
             <p-tablist>
                 <p-tab value="0">{{ 'ARCHIVE.TERMINAL_ARCHIVE' | translate }}</p-tab>
@@ -91,7 +91,7 @@
                 </p-tabpanel>
                 
                 <p-tabpanel value="1">
-                    <div class="p-3 bg-light bg-opacity-50 border-bottom d-flex align-items-center gap-3">
+                    <div class="p-3 border-bottom d-flex align-items-center gap-3">
                         <span class="badge bg-primary px-3 rounded-pill shadow-sm">Total: {{rawData().count}}</span>
                         <button class="btn btn-sm btn-outline-primary border-0" (click)="getAllRaws()"><i class="fa fa-refresh me-1"></i> {{ 'ARCHIVE.RELOAD_RAW' | translate }}</button>
                     </div>
@@ -109,14 +109,14 @@
                         <ng-template pTemplate="body" let-raw>
                             <tr>
                                 <td class="fw-bold">{{raw.idTram}}</td>
-                                <td><code class="text-primary bg-light p-1 rounded opacity-75">{{raw.gprmc}}</code></td>
+                                <td><code class="text-primary p-1 rounded opacity-75">{{raw.gprmc}}</code></td>
                             </tr>
                         </ng-template>
                     </p-table>
                 </p-tabpanel>
                 
                 <p-tabpanel value="2">
-                    <div class="ai-panel p-4 bg-light bg-opacity-10">
+                    <div class="ai-panel p-4">
                         <!-- Header / Trame limit selector -->
                         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
                             <div>
@@ -153,7 +153,7 @@
                                 <div class="row g-3">
                                     <!-- Health Score -->
                                     <div class="col-md-3 col-6">
-                                        <div class="premium-card p-3 text-center shadow-sm border bg-white h-100">
+                                        <div class="premium-card p-3 text-center shadow-sm border h-100">
                                             <small class="text-muted d-block mb-1">Health Score</small>
                                             <div class="d-flex align-items-center justify-content-center gap-2">
                                                 <span class="display-6 fw-bold" [style.color]="data.healthScore >= 85 ? '#2ec4b6' : (data.healthScore >= 60 ? '#ff9f1c' : '#e71d36')">{{data.healthScore}}</span>
@@ -167,7 +167,7 @@
 
                                     <!-- Anomaly Rate -->
                                     <div class="col-md-3 col-6">
-                                        <div class="premium-card p-3 text-center shadow-sm border bg-white h-100">
+                                        <div class="premium-card p-3 text-center shadow-sm border h-100">
                                             <small class="text-muted d-block mb-1">Anomaly Rate</small>
                                             <div class="d-flex align-items-center justify-content-center gap-2">
                                                 <span class="display-6 fw-bold" [style.color]="data.anomalyRate >= 20 ? '#e71d36' : (data.anomalyRate >= 5 ? '#ff9f1c' : '#2ec4b6')">{{data.anomalyRate}}</span>
@@ -181,7 +181,7 @@
 
                                     <!-- Uptime -->
                                     <div class="col-md-3 col-6">
-                                        <div class="premium-card p-3 text-center shadow-sm border bg-white h-100">
+                                        <div class="premium-card p-3 text-center shadow-sm border h-100">
                                             <small class="text-muted d-block mb-1">Uptime</small>
                                             <div class="d-flex align-items-center justify-content-center gap-2">
                                                 <span class="display-6 fw-bold text-dark">{{data.uptimePercentage}}</span>
@@ -195,7 +195,7 @@
 
                                     <!-- Top Anomaly -->
                                     <div class="col-md-3 col-6">
-                                        <div class="premium-card p-3 text-center shadow-sm border bg-white h-100">
+                                        <div class="premium-card p-3 text-center shadow-sm border h-100">
                                             <small class="text-muted d-block mb-1">Top Anomaly</small>
                                             <div class="d-flex align-items-center justify-content-center">
                                                 <span class="fw-bold text-danger fs-5" *ngIf="getTopAnomaly() as top">{{top.name}}</span>
@@ -209,46 +209,46 @@
 
                             <!-- Detection Analysis Card -->
                             <div class="col-12">
-                                <div class="premium-card p-4 shadow-sm border bg-white prediction-glow-card" 
+                                <div class="premium-card p-4 shadow-sm border prediction-glow-card" 
                                     [style.border-left-color]="data.anomalyRate >= 20 ? '#e71d36' : (data.anomalyRate >= 5 ? '#ff9f1c' : '#2ec4b6')"
                                     style="border-left-width: 6px;">
-                                    <h5 class="fw-bold text-dark mb-3"><i class="fa fa-search me-2 text-primary"></i>Detection Analysis</h5>
-                                    <p class="fs-5 lh-base text-dark bg-light p-3 rounded border border-light opacity-90">{{data.prediction}}</p>
+                                    <h5 class="fw-bold mb-3"><i class="fa fa-search me-2 text-primary"></i>Detection Analysis</h5>
+                                    <p class="fs-5 lh-base p-3 rounded border opacity-90">{{data.prediction}}</p>
                                     
                                     <!-- Stats Row -->
                                     <div class="row g-3 mt-3">
                                         <div class="col-md-2 col-4">
-                                            <div class="text-center p-2 rounded bg-light">
+                                            <div class="text-center p-2 rounded">
                                                 <small class="text-muted d-block">Analyzed</small>
-                                                <span class="fw-bold text-dark fs-5">{{selectedLimit}}</span>
+                                                <span class="fw-bold fs-5">{{selectedLimit}}</span>
                                             </div>
                                         </div>
                                         <div class="col-md-2 col-4">
-                                            <div class="text-center p-2 rounded bg-light">
+                                            <div class="text-center p-2 rounded">
                                                 <small class="text-muted d-block">Anomalous</small>
                                                 <span class="fw-bold fs-5" [style.color]="data.anomalyCount > 0 ? '#e71d36' : '#2ec4b6'">{{data.anomalyCount}}</span>
                                             </div>
                                         </div>
                                         <div class="col-md-2 col-4">
-                                            <div class="text-center p-2 rounded bg-light">
+                                            <div class="text-center p-2 rounded">
                                                 <small class="text-muted d-block">Anomaly Rate</small>
                                                 <span class="fw-bold fs-5" [style.color]="data.anomalyRate >= 20 ? '#e71d36' : (data.anomalyRate >= 5 ? '#ff9f1c' : '#2ec4b6')">{{data.anomalyRate}}%</span>
                                             </div>
                                         </div>
                                         <div class="col-md-2 col-4">
-                                            <div class="text-center p-2 rounded bg-light">
+                                            <div class="text-center p-2 rounded">
                                                 <small class="text-muted d-block">Structural</small>
                                                 <span class="fw-bold text-danger fs-5">{{data.structuralAnomalies || 0}}</span>
                                             </div>
                                         </div>
                                         <div class="col-md-2 col-4">
-                                            <div class="text-center p-2 rounded bg-light">
+                                            <div class="text-center p-2 rounded">
                                                 <small class="text-muted d-block">Logical</small>
                                                 <span class="fw-bold text-warning fs-5">{{data.logicalAnomalies || 0}}</span>
                                             </div>
                                         </div>
                                         <div class="col-md-2 col-4">
-                                            <div class="text-center p-2 rounded bg-light">
+                                            <div class="text-center p-2 rounded">
                                                 <small class="text-muted d-block">ML</small>
                                                 <span class="fw-bold text-info fs-5">{{data.mlAnomalies || 0}}</span>
                                             </div>
@@ -259,7 +259,7 @@
                                     <div *ngIf="data.topAnomalyTypes" class="mt-4">
                                         <small class="text-muted d-block mb-2">Top Anomaly Types Detected:</small>
                                         <div class="d-flex flex-wrap gap-2">
-                                            <span *ngFor="let type of getAnomalyTypes()" class="badge bg-light text-dark border px-2 py-1">
+                                            <span *ngFor="let type of getAnomalyTypes()" class="badge border px-2 py-1">
                                                 <i class="fa" [ngClass]="type.name.includes('FOREST') ? 'fa-magic text-info' : (type.name.includes('TIME') || type.name.includes('GPS') ? 'fa-clock text-warning' : 'fa-exclamation-triangle text-danger')"></i>
                                                 {{type.name}}: <strong>{{type.count}}</strong>
                                             </span>

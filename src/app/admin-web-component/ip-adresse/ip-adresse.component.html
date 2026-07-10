@@ -63,7 +63,7 @@
             </div>
             
             <form [formGroup]="updateIpForm" (ngSubmit)="updateIpAdress()">
-                <div class="modal-body p-4 bg-light bg-opacity-50">
+                <div class="modal-body p-4">
                     <div class="row g-3">
                         <div class="col-md-6">
                             <div class="form-floating shadow-sm">
@@ -114,7 +114,7 @@
                     </div>
                 </div>
                 
-                <div class="modal-footer p-3 bg-white border-0">
+                <div class="modal-footer p-3 border-0">
                     <button type="button" class="btn btn-light px-4" (click)="closeUpdateModal()">{{ 'COMMON.CANCEL' | translate }}</button>
                     <button type="submit" class="btn btn-warning px-5 fw-bold" [disabled]="updateIpForm.invalid">
                         {{ 'COMMON.SAVE' | translate }}

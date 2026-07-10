@@ -21,7 +21,7 @@
 .p-datepicker-label, .premium-label {
     font-size: 0.85rem;
     font-weight: 600;
-    color: #4318ff;
+    color: var(--accent-primary);
     margin-bottom: 8px;
     margin-left: 4px;
     display: block;
