@@ -3,12 +3,8 @@
 
 :host {
   display: block;
-  background-color: white;
+  background-color: var(--surface-card);
   min-height: 100vh;
-}
-
-[data-theme='dark'] :host {
-  background-color: var(--slate-900);
 }
 
 .limit-input-group {
@@ -17,13 +13,9 @@
 
 .btn-refresh-archive {
     border-radius: 10px;
-    background: white;
-    color: var(--primary-600);
-}
-
-[data-theme='dark'] .btn-refresh-archive {
-    background: var(--slate-700);
-    color: var(--primary-300);
+    background: var(--surface-card);
+    color: var(--accent-primary);
+    border: 1px solid var(--surface-border);
 }
 
 .table-container-70vh {
@@ -35,11 +27,7 @@
 }
 
 table tbody {
-  background-color: white;
-}
-
-[data-theme='dark'] table tbody {
-  background-color: var(--slate-800);
+  background-color: var(--surface-card);
 }
 table thead {
   background-color: #e9423e;
@@ -138,16 +126,16 @@ th {
 }
 
 .table-responsive::-webkit-scrollbar-track {
-    background: #f8f9fa;
+    background: var(--surface-elevated);
     border-radius: 4px;
 }
 
 .table-responsive::-webkit-scrollbar-thumb {
-    background: #dee2e6;
+    background: var(--slate-400);
     border-radius: 4px;
 }
 
 .table-responsive::-webkit-scrollbar-thumb:hover {
-    background: #ced4da;
+    background: var(--slate-500);
 }
 

@@ -50,7 +50,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group mb-3 custom-datepicker-container">
-                            <label for="configExp" class="p-datepicker-label" style="font-size: 0.85rem; color: #6c757d;">{{ 'SERVER_ACCOUNTS.EXPIRATION_DATE' | translate }}</label>
+                            <label for="configExp" class="p-datepicker-label" style="font-size: 0.85rem; color: var(--text-muted);">{{ 'SERVER_ACCOUNTS.EXPIRATION_DATE' | translate }}</label>
                             <p-datepicker formControlName="date_expiration" id="configExp"
                                 dateFormat="dd-mm-yy" [showIcon]="true" [appendTo]="'body'"
                                 styleClass="w-100" inputStyleClass="form-control bg-light border-0 shadow-sm px-3 py-2 text-dark w-100">
@@ -343,7 +343,7 @@
         <div class="d-flex flex-column flex-grow-1 overflow-hidden bg-light rounded-4">
             <!-- Header -->
             <div class="header-gradient border-0 px-4 py-3 d-flex justify-content-between align-items-center flex-shrink-0"
-                style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);">
+                style="background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-600) 100%);">
                 <div class="text-white d-flex flex-column gap-1">
                     <h4 class="m-0 fw-bold fs-5"><i class="fa fa-cogs me-2"></i>{{ 'WEB_CONFIG.RECALC_TITLE' | translate }}</h4>
                     <p class="m-0 small text-white-50">{{ 'SERVER_DETAILS.TERMINAL' | translate }}: <span class="fw-bold text-white">{{selectedBoitierId()}}</span></p>
@@ -382,7 +382,7 @@
                     <div class="d-flex flex-wrap gap-2">
                         @for (id of selectedBoitiersIds(); track id) {
                         <span class="badge bg-indigo-50 text-indigo border border-indigo-200 rounded-pill px-3 py-2 text-primary"
-                            style="background: #eef2ff; color: #4f46e5;">{{id}}</span>
+                            style="background: var(--accent-primary-dim); color: var(--accent-primary);">{{id}}</span>
                         }
                     </div>
                 </div>

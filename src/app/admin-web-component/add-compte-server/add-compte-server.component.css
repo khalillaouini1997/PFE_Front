@@ -32,34 +32,24 @@
     height: 55px !important;
     width: 100% !important;
     border-radius: 12px !important;
-    border: 1.5px solid #e0e5f2 !important;
-    background-color: #ffffff !important;
+    border: 1.5px solid var(--surface-border) !important;
+    background-color: var(--surface-card) !important;
     display: flex !important;
     align-items: center;
     overflow: hidden;
-}
-
-[data-theme='dark'] :host ::ng-deep .p-datepicker {
-    background-color: var(--slate-700) !important;
-    border-color: var(--slate-600) !important;
 }
 
 .premium-input {
     height: 55px !important;
     width: 100% !important;
     border-radius: 12px !important;
-    border: 1.5px solid #e0e5f2 !important;
-    background-color: #ffffff !important;
+    border: 1.5px solid var(--surface-border) !important;
+    background-color: var(--surface-card) !important;
     padding: 0 1rem !important;
     font-size: 1.1rem !important;
     box-shadow: none !important;
     outline: none !important;
-}
-
-[data-theme='dark'] .premium-input {
-    background-color: var(--slate-700) !important;
-    border-color: var(--slate-600) !important;
-    color: var(--slate-200) !important;
+    color: var(--text-primary) !important;
 }
 
 /* PrimeNG datepicker inner input only — no border, fills the wrapper */
@@ -76,10 +66,10 @@
 
 /* PrimeNG calendar icon button */
 :host ::ng-deep .p-datepicker .p-datepicker-trigger {
-    background: #f4f7fe !important;
+    background: var(--surface-elevated) !important;
     border: none !important;
-    border-left: 1.5px solid #e0e5f2 !important;
-    color: #4318ff !important;
+    border-left: 1.5px solid var(--surface-border) !important;
+    color: var(--accent-primary) !important;
     height: 100% !important;
     width: 45px !important;
     border-radius: 0 !important;
@@ -91,25 +81,27 @@
 /* Focus states */
 :host ::ng-deep .p-datepicker:focus-within,
 .premium-input:focus {
-    border-color: #4318ff !important;
-    box-shadow: 0 4px 20px -5px rgba(67, 24, 255, 0.15) !important;
+    border-color: var(--accent-primary) !important;
+    box-shadow: 0 4px 20px -5px var(--accent-primary-dim) !important;
 }
 
 .form-control {
     font-size: 1.1rem;
     border-radius: 12px;
-    border: 1.5px solid #e0e5f2;
+    border: 1.5px solid var(--surface-border);
     transition: all 0.3s ease;
+    background-color: var(--surface-card);
+    color: var(--text-primary);
 }
 
 .form-control:focus {
-    border-color: #4318ff;
-    box-shadow: 0 4px 20px -5px rgba(67, 24, 255, 0.15);
+    border-color: var(--accent-primary);
+    box-shadow: 0 4px 20px -5px var(--accent-primary-dim);
 }
 
 h5.fw-bold {
     margin-bottom: 2rem !important;
-    color: #2b3674;
+    color: var(--text-primary);
     letter-spacing: -0.02em;
 }
 
@@ -151,14 +143,11 @@ h5.mt-4 {
 
   .modal-content {
     position: relative;
-    background-color: #fff;
+    background-color: var(--surface-card);
     -webkit-background-clip: padding-box;
     background-clip: padding-box;
-    border: 1px solid #999;
-    border: 0px solid rgba(0,0,0,.2);}
-
-[data-theme='dark'] .modal-content {
-    background-color: var(--slate-800);
+    border: 0px solid rgba(0,0,0,.2);
+    color: var(--text-primary);
 }
 
     h1 {
@@ -171,9 +160,9 @@ h5.mt-4 {
         }
 
         .alert-warning {
-            color: #856404;
-            background-color: #fff3cd;
-            border-color: #ffeeba;
+            color: var(--color-warning-dark);
+            background-color: var(--color-warning-light);
+            border-color: var(--color-warning);
             padding: 40px;
             border-radius: 12px;
         }

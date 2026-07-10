@@ -2,12 +2,9 @@
 
 :host {
   display: block;
-  background-color: white;
+  background-color: var(--surface-card);
   min-height: 100vh;
-}
-
-[data-theme='dark'] :host {
-  background-color: var(--slate-900);
+  color: var(--text-primary);
 }
 
 .center {
@@ -63,7 +60,7 @@
 .open>.navbar .navbar-nav>li>a.btn.btn-success.dropdown-toggle,
 .open>.navbar .navbar-nav>li>a.btn.btn-success.dropdown-toggle:focus,
 .open>.navbar .navbar-nav>li>a.btn.btn-success.dropdown-toggle:hover {
-  background-color: green;
+  background-color: var(--color-success);
   color: #FFFFFF;
 }
 
@@ -92,7 +89,7 @@ input[type=checkbox] {
 label.control-label {
   font-size: 15px;
   line-height: 1.07143;
-  color: #AAAAAA;
+  color: var(--text-muted);
   font-weight: 400;
   margin: 16px 0 0 0;
 }
@@ -237,6 +234,8 @@ table>thead>tr>th,
   border-radius: 20px !important;
   overflow: hidden;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+  background: var(--surface-card);
+  color: var(--text-primary);
 }
 
 .header-gradient {
@@ -250,12 +249,9 @@ table>thead>tr>th,
 /* Layout Stability Overrides */
 .premium-card {
   position: relative !important;
-  background-color: #ffffff !important;
+  background-color: var(--surface-card) !important;
   z-index: 1;
-}
-
-[data-theme='dark'] .premium-card {
-  background-color: var(--slate-800) !important;
+  color: var(--text-primary);
 }
 
 .premium-card-overflow {
@@ -270,25 +266,26 @@ table>thead>tr>th,
 .premium-multiselect .dropdown-list {
     z-index: 9999 !important;
     position: absolute !important;
-    background: #fff !important;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
+    background: var(--surface-card) !important;
+    box-shadow: var(--shadow-md) !important;
 }
 
 .premium-multiselect .multiselect-dropdown .dropdown-btn {
-    border: 1px solid rgba(0,0,0,0.05) !important;
+    border: 1px solid var(--surface-border) !important;
     border-radius: 12px !important;
     padding: 0.75rem 1rem !important;
-    background-color: #f8fafc !important;
+    background-color: var(--surface-elevated) !important;
+    color: var(--text-primary) !important;
 }
 
 .premium-multiselect .multiselect-dropdown .dropdown-btn .selected-item {
-    background: #4f46e5 !important;
-    border: 1px solid #4f46e5 !important;
+    background: var(--accent-primary) !important;
+    border: 1px solid var(--accent-primary) !important;
 }
 
 .modal-content-premium .premium-card {
-  border: 1px solid rgba(0,0,0,0.05) !important;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+  border: 1px solid var(--surface-border) !important;
+  box-shadow: var(--shadow-md) !important;
 }
 
 .modal-body label:not(.form-check-label):not(.toggle-option-label) {
@@ -298,7 +295,7 @@ table>thead>tr>th,
   opacity: 1 !important;
   visibility: visible !important;
   margin-bottom: 6px !important;
-  color: #64748b !important;
+  color: var(--text-muted) !important;
   font-size: 0.75rem !important;
   font-weight: 700 !important;
   text-transform: uppercase !important;
@@ -309,7 +306,7 @@ table>thead>tr>th,
 .toggle-option-label {
   display: inline !important;
   margin-bottom: 0 !important;
-  color: #1e293b !important;
+  color: var(--text-primary) !important;
   font-size: 0.8rem !important;
   font-weight: 700 !important;
   text-transform: capitalize !important;
@@ -337,23 +334,19 @@ table>thead>tr>th,
 
 .modal-body select.form-select,
 .modal-body input.form-control {
-  background-color: #f8fafc !important;
-  border: 1px solid transparent !important;
+  background-color: var(--surface-elevated) !important;
+  border: 1px solid var(--surface-border) !important;
   border-radius: 8px !important;
   padding: 0.6rem 0.75rem !important;
   transition: all 0.2s ease !important;
+  color: var(--text-primary) !important;
 }
 
 .modal-body select.form-select:focus,
 .modal-body input.form-control:focus {
-  background-color: #ffffff !important;
-  border-color: #6366f1 !important;
-  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1) !important;
-}
-
-[data-theme='dark'] .modal-body select.form-select:focus,
-[data-theme='dark'] .modal-body input.form-control:focus {
-  background-color: var(--slate-700) !important;
+  background-color: var(--surface-card) !important;
+  border-color: var(--accent-primary) !important;
+  box-shadow: 0 0 0 4px var(--accent-primary-dim) !important;
 }
 
 .btn-reset-fixed-height,
@@ -384,7 +377,7 @@ dialog::backdrop {
     position: relative !important;
     font-size: 0.85rem !important;
     font-weight: 800 !important;
-    color: #4f46e5 !important;
+    color: var(--accent-primary) !important;
     text-transform: uppercase !important;
     letter-spacing: 0.05em !important;
     margin-bottom: 8px !important;
@@ -393,8 +386,8 @@ dialog::backdrop {
 
 /* SQL Query Box Styles */
 .sql-query-box {
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
+    background: var(--surface-elevated);
+    border: 1px solid var(--surface-border);
     border-radius: 12px;
     padding: 16px;
     margin-top: 20px;
@@ -403,7 +396,7 @@ dialog::backdrop {
 }
 
 .sql-query-title {
-    color: #4f46e5;
+    color: var(--accent-primary);
     font-weight: 600;
     margin-bottom: 12px;
     display: flex;
@@ -413,8 +406,8 @@ dialog::backdrop {
 }
 
 .sql-query-content {
-    background: #1e293b;
-    color: #e2e8f0;
+    background: var(--surface-base);
+    color: var(--text-primary);
     padding: 16px;
     border-radius: 8px;
     font-family: 'Courier New', monospace;
@@ -424,18 +417,15 @@ dialog::backdrop {
     white-space: pre-wrap;
     word-wrap: break-word;
     margin: 0;
+    border: 1px solid var(--surface-border);
 }
 
 /* Tab Navigation Styles */
 .tab-nav-container {
-    background-color: #ffffff;
+    background-color: var(--surface-card);
     gap: 8px;
     padding-top: 10px !important;
     padding-bottom: 10px !important;
-}
-
-[data-theme='dark'] .tab-nav-container {
-    background-color: var(--slate-800);
 }
 
 .tab-nav-btn {
@@ -445,7 +435,7 @@ dialog::backdrop {
     padding: 0.6rem 1.2rem;
     font-size: 0.85rem;
     font-weight: 700;
-    color: #64748b;
+    color: var(--text-muted);
     border-radius: 8px;
     transition: all 0.2s ease-in-out;
     display: flex;
@@ -455,13 +445,13 @@ dialog::backdrop {
 }
 
 .tab-nav-btn:hover {
-    color: #1e293b;
-    background-color: #f1f5f9;
+    color: var(--text-primary);
+    background-color: var(--surface-elevated);
 }
 
 .tab-nav-btn.active {
-    color: #4f46e5;
-    background-color: #eef2ff;
+    color: var(--accent-primary);
+    background-color: var(--accent-primary-dim);
 }
 
 .badge-dot {
@@ -471,31 +461,31 @@ dialog::backdrop {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    border: 1.5px solid #ffffff;
+    border: 1.5px solid var(--surface-card);
 }
 
 /* Premium Options Switch Card */
 .option-card-premium {
-    background: #ffffff;
-    border: 1px solid rgba(0, 0, 0, 0.08);
+    background: var(--surface-card);
+    border: 1px solid var(--surface-border);
     border-radius: 12px;
     padding: 0.85rem 1rem;
     transition: all 0.2s ease-in-out;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+    box-shadow: var(--shadow-xs);
 }
 
 .option-card-premium:hover {
-    border-color: rgba(99, 102, 241, 0.25);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    border-color: var(--accent-primary);
+    box-shadow: var(--shadow-sm);
     transform: translateY(-1px);
 }
 
 .option-card-premium.active {
-    background-color: #fafbfe;
-    border-color: rgba(99, 102, 241, 0.35);
+    background-color: var(--accent-primary-dim);
+    border-color: var(--accent-primary);
 }
 
 .option-icon-container {
@@ -505,16 +495,16 @@ dialog::backdrop {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #f1f5f9;
-    color: #475569;
+    background-color: var(--surface-elevated);
+    color: var(--text-secondary);
     font-size: 0.95rem;
     flex-shrink: 0;
     transition: all 0.2s ease;
 }
 
 .option-card-premium.active .option-icon-container {
-    background-color: #eef2ff;
-    color: #4f46e5;
+    background-color: var(--accent-primary-dim);
+    color: var(--accent-primary);
 }
 
 .option-label {
@@ -524,13 +514,13 @@ dialog::backdrop {
 
 /* Terminal Console Styles */
 .console-terminal {
-    background-color: #0f172a;
-    border: 1px solid #1e293b;
+    background-color: var(--surface-base);
+    border: 1px solid var(--surface-border);
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
 }
 
 .console-terminal-header {
-    background-color: #1e293b;
+    background-color: var(--surface-elevated);
 }
 
 .console-terminal-dot {
@@ -542,24 +532,24 @@ dialog::backdrop {
 }
 
 .console-terminal-dot.bg-danger {
-    background-color: #ef4444 !important;
+    background-color: var(--color-error) !important;
 }
 
 .console-terminal-dot.bg-warning {
-    background-color: #f59e0b !important;
+    background-color: var(--color-warning) !important;
 }
 
 .console-terminal-dot.bg-success {
-    background-color: #10b981 !important;
+    background-color: var(--color-success) !important;
 }
 
 .console-terminal-body {
-    background-color: #0f172a;
-    color: #f8fafc;
+    background-color: var(--surface-base);
+    color: var(--text-primary);
 }
 
 .hover-bg-terminal-line:hover {
-    background-color: rgba(255, 255, 255, 0.03);
+    background-color: var(--surface-hover);
 }
 
 /* Button & Animation Custom Styles */

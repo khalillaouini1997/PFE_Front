@@ -30,11 +30,7 @@ dialog::backdrop,
   border-radius: var(--radius-xl, 12px);
   padding: var(--spacing-xl, 24px);
   box-shadow: var(--shadow-sm);
-}
-
-[data-theme='dark'] .premium-card {
-  background: var(--card-bg, #1e293b);
-  border: 1px solid var(--slate-700, #334155);
+  color: var(--text-primary);
 }
 
 /* -- Fade In Animation -- */

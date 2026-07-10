@@ -19,11 +19,11 @@
 .error-content {
   text-align: center;
   max-width: 500px;
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
+  background: var(--surface-card);
+  border: 1px solid var(--surface-border);
   border-radius: 16px;
   padding: 2.5rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-md);
 }
 
 .error-icon-wrapper {
@@ -35,15 +35,15 @@
 }
 
 .error-boundary.severity-error .error-icon {
-  color: #dc2626;
+  color: var(--color-error);
 }
 
 .error-boundary.severity-warning .error-icon {
-  color: #d97706;
+  color: var(--color-warning);
 }
 
 .error-boundary.severity-info .error-icon {
-  color: #4f46e5;
+  color: var(--accent-primary);
 }
 
 .error-text-content {
@@ -51,26 +51,26 @@
 }
 
 .error-title {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-family-base);
   font-size: 24px;
   font-weight: 700;
-  color: #1e293b;
+  color: var(--text-primary);
   margin: 0 0 1rem;
   letter-spacing: -0.5px;
 }
 
 .error-message {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-family-base);
   font-size: 16px;
-  color: #475569;
+  color: var(--text-secondary);
   margin: 0 0 0.75rem;
   line-height: 1.5;
 }
 
 .error-suggestion {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-family-base);
   font-size: 14px;
-  color: #64748b;
+  color: var(--text-muted);
   margin: 0;
   font-style: italic;
 }
@@ -89,7 +89,7 @@
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
   border-radius: 10px;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-family-base);
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
@@ -100,17 +100,17 @@
 
 .btn-primary:focus-visible,
 .btn-secondary:focus-visible {
-  outline: 2px solid #4f46e5;
+  outline: 2px solid var(--accent-primary);
   outline-offset: 2px;
 }
 
 .btn-primary {
-  background: #4f46e5;
+  background: var(--accent-primary);
   color: white;
 }
 
 .btn-primary:hover {
-  background: #4338ca;
+  background: var(--primary-700);
   transform: translateY(-1px);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
@@ -120,14 +120,14 @@
 }
 
 .btn-secondary {
-  background: #f1f5f9;
-  color: #334155;
-  border: 1px solid #cbd5e1;
+  background: var(--surface-elevated);
+  color: var(--text-secondary);
+  border: 1px solid var(--surface-border);
 }
 
 .btn-secondary:hover {
-  background: #e2e8f0;
-  color: #1e293b;
+  background: var(--surface-hover);
+  color: var(--text-primary);
   transform: translateY(-1px);
 }
 
@@ -137,8 +137,8 @@
 
 .error-details {
   text-align: left;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  background: var(--surface-elevated);
+  border: 1px solid var(--surface-border);
   border-radius: 10px;
   padding: 1rem;
   margin-top: 1.5rem;
@@ -146,28 +146,28 @@
 
 .error-details summary {
   cursor: pointer;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-family-base);
   font-size: 13px;
   font-weight: 600;
-  color: #475569;
+  color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   user-select: none;
 }
 
 .error-details summary:hover {
-  color: #1e293b;
+  color: var(--text-primary);
 }
 
 .error-details pre {
   margin: 1rem 0 0 0;
   font-size: 12px;
-  color: #64748b;
+  color: var(--text-muted);
   overflow-x: auto;
-  background: #ffffff;
+  background: var(--surface-card);
   padding: 0.75rem;
   border-radius: 6px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--surface-border);
 }
 
 /* Responsive adjustments */

@@ -8,13 +8,9 @@
 }
 
 .btn-search {
-    background: white;
-    color: var(--primary);
-}
-
-[data-theme='dark'] .btn-search {
-    background: var(--slate-700);
-    color: var(--primary-300);
+    background: var(--surface-card);
+    color: var(--accent-primary);
+    border: 1px solid var(--surface-border);
 }
 
 .table-container-70vh {

@@ -3,57 +3,41 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: var(--slate-800);
+  background: var(--surface-base);
   padding: 20px;
 }
 
 .error-card {
-  background: white;
+  background: var(--surface-card);
   border-radius: 12px;
   padding: 40px;
   max-width: 500px;
   width: 100%;
   text-align: center;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-}
-
-[data-theme='dark'] .error-card {
-  background: var(--slate-800);
-  color: var(--slate-200);
-}
-
-[data-theme='dark'] .error-card h1 {
-  color: var(--slate-100);
-}
-
-[data-theme='dark'] .error-message {
-  color: var(--slate-400);
-}
-
-[data-theme='dark'] .error-component {
-  color: var(--slate-500);
+  color: var(--text-primary);
 }
 
 .error-icon {
-  color: #e53e3e;
+  color: var(--color-error);
   margin-bottom: 20px;
 }
 
 .error-card h1 {
-  color: #2d3748;
+  color: var(--text-primary);
   font-size: 2rem;
   margin-bottom: 16px;
 }
 
 .error-message {
-  color: #4a5568;
+  color: var(--text-secondary);
   font-size: 1.1rem;
   margin-bottom: 24px;
   line-height: 1.6;
 }
 
 .error-component {
-  color: #718096;
+  color: var(--text-muted);
   margin-bottom: 32px;
   font-size: 0.875rem;
 }
