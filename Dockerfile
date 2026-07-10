@@ -16,3 +16,4 @@ USER appuser
 EXPOSE 4200
 HEALTHCHECK --interval=15s --timeout=5s --retries=3 --start-period=10s \
   CMD wget --spider -q http://localhost:4200/ || exit 1
+CMD ["nginx", "-g", "daemon off;"]
