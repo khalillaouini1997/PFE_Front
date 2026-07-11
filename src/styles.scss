@@ -35,14 +35,18 @@ body {
 /* ── Tables: white bg, black borders ── */
 .table,
 .table > :not(caption) > * > *,
+.p-datatable,
 .p-datatable .p-datatable-thead > tr > th,
 .p-datatable .p-datatable-tbody > tr > td,
+.p-datatable .p-datatable-tbody > tr,
+.p-datatable .p-datatable-wrapper,
+.p-datatable .p-datatable-header,
 .billing-table,
 .analytics-table,
 .premium-table {
   background-color: #ffffff !important;
   color: #0f172a !important;
-  border-color: #000000 !important;
+  border-color: #e2e8f0 !important;
 }
 .table > :not(caption) > * > *,
 .billing-table th,
@@ -99,15 +103,51 @@ select:focus {
   outline: none !important;
 }
 
+/* ── PrimeNG: Force light theme on all surfaces ── */
+:root {
+  --p-datatable-header-background: #ffffff;
+  --p-datatable-header-color: #0f172a;
+  --p-datatable-body-background: #ffffff;
+  --p-datatable-body-color: #0f172a;
+  --p-datatable-row-background: #ffffff;
+  --p-datatable-row-hover-background: #f8f8f8;
+  --p-datatable-row-hover-color: #0f172a;
+  --p-datatable-header-border-color: #e2e8f0;
+  --p-datatable-border-color: #e2e8f0;
+  --p-datatable-column-title-color: #0f172a;
+  --p-datatable-column-title-font-weight: 600;
+  --p-paginator-background: #ffffff;
+  --p-paginator-color: #0f172a;
+  --p-paginator-icon-color: #0f172a;
+  --p-paginator-hover-icon-color: #0d9488;
+  --p-datepicker-background: #ffffff;
+  --p-datepicker-header-background: #f0f0f0;
+  --p-datepicker-header-color: #0f172a;
+  --p-datepicker-date-color: #0f172a;
+  --p-datepicker-icon-color: #0f172a;
+  --p-datepicker-hover-background: #e0e0e0;
+  --p-datepicker-hover-color: #0f172a;
+  --p-select-background: #ffffff;
+  --p-select-color: #0f172a;
+  --p-select-border-color: #e2e8f0;
+  --p-inputtext-background: #ffffff;
+  --p-inputtext-color: #0f172a;
+  --p-inputtext-border-color: #e2e8f0;
+  --p-dialog-background: #ffffff;
+  --p-dialog-color: #0f172a;
+  --p-menu-background: #ffffff;
+  --p-menu-color: #0f172a;
+}
+
 /* ── PrimeNG Datepicker ── */
 .p-datepicker {
-  border: 1px solid #000000 !important;
+  border: 1px solid #e2e8f0 !important;
   border-radius: 6px !important;
   background: #ffffff !important;
 }
 .p-datepicker .p-datepicker-header {
   background: #f0f0f0 !important;
-  border-bottom: 1px solid #000000 !important;
+  border-bottom: 1px solid #e2e8f0 !important;
 }
 .p-datepicker .p-datepicker-day,
 .p-datepicker .p-datepicker-month,
@@ -213,6 +253,19 @@ select:focus {
 }
 .page-header p {
   font-size: 0.8rem !important;
+}
+
+.header-gradient {
+  background: linear-gradient(135deg, var(--primary-700), var(--primary-500));
+  border: none;
+}
+.header-gradient h2 {
+  color: #ffffff !important;
+}
+.header-gradient .subtitle-text {
+  color: rgba(255, 255, 255, 0.75) !important;
+  font-size: 0.8rem !important;
+  margin-top: 2px;
 }
 
 /* ── Reduced Motion ── */
