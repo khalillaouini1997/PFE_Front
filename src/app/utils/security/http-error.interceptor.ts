@@ -5,7 +5,6 @@ import { catchError, throwError, retry, timer } from 'rxjs';
 import { isProblemDetail } from '../../shared/models/problem-detail.model';
 
 // Error tracking for retry logic
-const retryableErrors = new Set<string>();
 const MAX_RETRIES = 2;
 const RETRY_DELAY_MS = 1000;
 

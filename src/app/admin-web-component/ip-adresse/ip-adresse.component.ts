@@ -81,7 +81,7 @@ export class IpAdresseComponent implements OnInit {
     if (res) {
       withToast(this.ipAddressService.deleteIpAddress(id), this.toastr, this.translate, 'WEB_ACCOUNTS.DELETE_SUCCESS')
         .pipe(
-          catchError(error => {
+          catchError(_error => {
             return of(null);
           })
         )

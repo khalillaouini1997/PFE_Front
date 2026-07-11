@@ -166,7 +166,7 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
         this.loadingInProgress = false;
         this.cdr.detectChanges();
       },
-      error: (err) => {
+      error: (_err) => {
         this.boitiers = [];
         this.loadingInProgress = false;
         this.cdr.detectChanges();
@@ -287,7 +287,7 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
           this.addForm.reset({ nbrBoitiers: 0 });
           this.cdr.detectChanges();
         },
-        error: (err) => {
+      error: (err) => {
           this.mode = true;
           this.messageError = err.error?.message || this.translate.instant('COMMON.ERROR_OCCURRED');
           this.cdr.detectChanges();

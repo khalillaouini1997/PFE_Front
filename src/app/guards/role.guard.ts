@@ -4,7 +4,7 @@ import { Observable, of } from 'rxjs';
 import { AuthService } from '../service/auth.service';
 
 export function roleGuard(allowedRoles: string[]): CanMatchFn {
-    return (route: Route, segments: UrlSegment[]): Observable<boolean | UrlTree> => {
+    return (_route: Route, _segments: UrlSegment[]): Observable<boolean | UrlTree> => {
         const router = inject(Router);
         const authService = inject(AuthService);
 

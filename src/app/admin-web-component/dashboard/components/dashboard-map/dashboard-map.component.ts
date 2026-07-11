@@ -72,7 +72,7 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
       });
 
       // Handle tile loading errors
-      tileLayer.on('tileerror', (event: any) => {
+      tileLayer.on('tileerror', (_event: any) => {
         this.mapError.set('Map tiles failed to load. Check your internet connection.');
         this.isMapLoading.set(false);
       });

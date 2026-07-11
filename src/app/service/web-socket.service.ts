@@ -19,20 +19,20 @@ export class WebSocketService {
         this.client = new Client({
             webSocketFactory: () => new SockJS(this.getSocketUrl()),
             connectHeaders: {},
-            debug: (str) => {
+            debug: (_str) => {
             },
             reconnectDelay: REALTIME_CONSTANTS.WEBSOCKET_RECONNECT_DELAY,
             heartbeatIncoming: 4000,
             heartbeatOutgoing: 4000,
         });
 
-        this.client.onConnect = (frame) => {
+        this.client.onConnect = (_frame) => {
             this.connectionStatusSubject.next(true);
             this.subscribeToNotifications();
             this.subscribeToVehiclePositions();
         };
 
-        this.client.onStompError = (frame) => {
+        this.client.onStompError = (_frame) => {
         };
 
         this.client.onDisconnect = () => {

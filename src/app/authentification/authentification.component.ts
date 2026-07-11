@@ -56,7 +56,7 @@ export class AuthentificationComponent implements AfterViewInit {
           this.router.navigate(['/adminWeb/dashboard']);
         }
       },
-      error: (error) => {
+      error: (_error) => {
         this.loading = false;
         this.errorVisible = true;
         this.errorMessage = "Login or password is incorrect";

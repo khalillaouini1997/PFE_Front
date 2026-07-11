@@ -45,7 +45,7 @@ export class CompteAdminComponent {
           this.loadingInProgress = false;
           this.cdr.detectChanges();
         },
-        error: (error) => {
+        error: (_error) => {
           this.loading = false;
           this.loadingInProgress = false;
           this.cdr.detectChanges();

@@ -119,7 +119,7 @@ export class ComptesWebComponentComponent implements OnInit {
         this.loadingInProgress = false;
         this.cdr.detectChanges();
       },
-      error: (err) => {
+      error: (_err) => {
         this.loading = false;
         this.loadingInProgress = false;
         this.cdr.detectChanges();
@@ -168,7 +168,7 @@ export class ComptesWebComponentComponent implements OnInit {
         const poolsArray = Array.isArray(responseData) ? responseData : (responseData?.content || []);
         this.availablePools = poolsArray.sort((a, b) => a - b);
       },
-      error: (err) => {
+      error: (_err) => {
       }
     });
   }

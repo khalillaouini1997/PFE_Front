@@ -64,7 +64,7 @@ export class DashboardStore implements OnDestroy {
         const comptes = res?.data || res;
         this.updateState({ comptesWeb: Array.isArray(comptes) ? comptes : [], loading: false });
       },
-      error: (err) => {
+      error: (_err) => {
         this.updateState({ loading: false, error: 'Failed to load web accounts' });
       }
     });
@@ -91,7 +91,7 @@ export class DashboardStore implements OnDestroy {
           this.updateState({ realtimes: Array.isArray(realtimes) ? realtimes : [], loading: false, useWebSocket: true });
           this.calculateStats();
         },
-        error: (err) => {
+        error: (_err) => {
           this.updateState({ loading: false, error: 'Failed to load real-time data' });
         }
       });
@@ -104,7 +104,7 @@ export class DashboardStore implements OnDestroy {
           this.updateState({ realtimes: Array.isArray(realtimes) ? realtimes : [], loading: false, useWebSocket: false });
           this.calculateStats();
         },
-        error: (err) => {
+        error: (_err) => {
           this.updateState({ loading: false, error: 'Failed to load real-time data' });
         }
       });
@@ -125,7 +125,7 @@ export class DashboardStore implements OnDestroy {
           this.updateState({ realtimes, loading: false });
           this.calculateStats();
         },
-        error: (err) => {
+        error: (_err) => {
           // Fall back to HTTP polling on error
           this.updateState({ useWebSocket: false });
           const compte = this.state().selectedCompteWeb;
@@ -151,7 +151,7 @@ export class DashboardStore implements OnDestroy {
         const evolutionData = res?.data || res;
         this.updateState({ installationEvolution: Array.isArray(evolutionData) ? evolutionData : [] });
       },
-      error: (err) => {
+      error: (_err) => {
       }
     });
   }

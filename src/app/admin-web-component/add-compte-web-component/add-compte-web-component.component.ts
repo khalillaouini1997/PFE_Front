@@ -75,7 +75,7 @@ export class AddCompteWebComponentComponent implements OnInit {
         const responseData = res?.data || res;
         this.serverAccounts.set(Array.isArray(responseData) ? responseData : []);
       },
-      error: (err) => {
+      error: (_err) => {
       }
     });
 
