@@ -48,7 +48,7 @@
                 <form [formGroup]="addForm" (ngSubmit)="addBoitiers()">
                     <div class="d-flex align-items-center gap-3">
                         <div class="form-floating flex-grow-1">
-                            <input type="number" min="1" class="form-control border-0 bg-light" formControlName="nbrBoitiers" id="nbrBoitiers" placeholder="{{ 'SERVER_DETAILS.QTY_TO_ADD' | translate }}">
+                            <input type="number" min="1" class="form-control border-0" style="background: var(--surface-elevated); color: var(--text-primary);" formControlName="nbrBoitiers" id="nbrBoitiers" placeholder="{{ 'SERVER_DETAILS.QTY_TO_ADD' | translate }}">
                             <label for="nbrBoitiers">{{ 'SERVER_DETAILS.QTY_TO_ADD' | translate }}</label>
                         </div>
                         <div class="btn-group gap-2">
@@ -73,7 +73,7 @@
 
     <!-- Devices List -->
     <div class="premium-card p-0 overflow-hidden shadow-sm">
-        <div class="d-flex justify-content-between align-items-center p-3 border-bottom bg-light bg-opacity-25">
+        <div class="d-flex justify-content-between align-items-center p-3 border-bottom" style="background: var(--surface-elevated);">
             <h5 class="fw-bold m-0"><i class="fa fa-list me-2 text-primary"></i> {{ 'SERVER_DETAILS.CONNECTED_TERMINALS' | translate }}</h5>
             <form [formGroup]="searchForm" (ngSubmit)="searchBoitiers()" class="d-flex">
                 <div class="input-group input-group-sm">
@@ -131,7 +131,7 @@
                     </td>
                     <td>
                         <div class="d-flex align-items-center gap-2">
-                            <span class="badge bg-light text-dark">{{boitier.label || ('SERVER_DETAILS.NO_LABEL' | translate)}}</span>
+                            <span class="badge" style="background: var(--surface-elevated); color: var(--text-primary);">{{boitier.label || ('SERVER_DETAILS.NO_LABEL' | translate)}}</span>
                         </div>
                     </td>
                     <td>

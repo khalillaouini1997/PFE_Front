@@ -27,10 +27,10 @@
                 <tr class="align-middle border-bottom border-light">
                     <td class="fw-bold text-primary">{{access.login}}</td>
                     <td>
-                        <div class="fw-bold text-dark">{{access.date | date:'dd MMM yyyy'}}</div>
+                        <div class="fw-bold" style="color: var(--text-primary);">{{access.date | date:'dd MMM yyyy'}}</div>
                         <div class="small text-secondary">{{access.date | date:'HH:mm:ss'}}</div>
                     </td>
-                    <td><span class="badge bg-light text-dark fw-bold border">{{access.ipAddress}}</span></td>
+                    <td><span class="badge fw-bold border" style="background: var(--surface-elevated); color: var(--text-primary); border-color: var(--surface-border) !important;">{{access.ipAddress}}</span></td>
                     <td><small class="text-secondary font-monospace d-block text-truncate agent-text-trunc" title="{{access.agent}}">{{access.agent}}</small></td>
                 </tr>
             </ng-template>

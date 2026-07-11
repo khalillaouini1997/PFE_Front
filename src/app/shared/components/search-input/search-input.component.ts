@@ -10,7 +10,8 @@ import { TranslateModule } from '@ngx-translate/core';
   template: `
     <form class="d-flex align-items-center" [formGroup]="form" (ngSubmit)="onSearch()">
       <div class="input-group shadow-sm search-container-premium">
-        <input type="text" class="form-control border-0 px-3 search-input-premium bg-white bg-opacity-10 text-white"
+        <input type="text" class="form-control border-0 px-3 search-input-premium"
+          style="background: var(--surface-elevated); color: var(--text-primary);"
           formControlName="keyWord" placeholder="{{ placeholder() | translate }}"
           title="{{ placeholder() | translate }}">
         <button class="btn btn-glass border-0" type="submit" title="{{ 'COMMON.SEARCH' | translate }}">

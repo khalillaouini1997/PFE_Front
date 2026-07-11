@@ -34,14 +34,14 @@
 
             <ng-template pTemplate="body" let-adminCompte>
                 <tr class="align-middle">
-                    <td><span class="badge bg-light text-dark fw-bold border">{{adminCompte.idAdministratorCompte}}</span></td>
+                    <td><span class="badge fw-bold border" style="background: var(--surface-elevated); color: var(--text-primary); border-color: var(--surface-border) !important;">{{adminCompte.idAdministratorCompte}}</span></td>
                     <td class="fw-bold text-primary">{{adminCompte.username}}</td>
                     <td><code class="small">{{adminCompte.password}}</code></td>
                     <td><span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-10">{{adminCompte.numLastBoitierAvailable}}</span></td>
                     <td>
                         <span class="badge rounded-pill px-3" [ngClass]="{
-                            'bg-primary bg-opacity-10 text-dark border border-primary border-opacity-10': adminCompte.role === 'GLOBALADMINDESC',
-                            'bg-info bg-opacity-10 text-dark border border-info border-opacity-10': adminCompte.role === 'AGENT',
+                            'bg-primary bg-opacity-10 border border-primary border-opacity-10': adminCompte.role === 'GLOBALADMINDESC',
+                            'bg-info bg-opacity-10 border border-info border-opacity-10': adminCompte.role === 'AGENT',
                             'bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-10': !adminCompte.role.includes('ADMIN')
                         }">
                             @if (adminCompte.role === 'GLOBALADMINDESC') {
@@ -62,9 +62,9 @@
                     </td>
                     <td class="small">{{adminCompte.mailSupport || '—'}}</td>
                     <td class="text-end small">
-                        <div>{{ 'ADMIN_ACCOUNTS.COST' | translate }}: <strong class="text-dark">{{adminCompte.deviceCostByDay}}</strong>/j</div>
-                        <div>{{ 'ADMIN_ACCOUNTS.FREE' | translate }}: <strong class="text-dark">{{adminCompte.accountFreePerMonth}}</strong>/m</div>
-                        <div>{{ 'ADMIN_ACCOUNTS.FEE' | translate }}: <strong class="text-dark">{{adminCompte.transctionFee}}</strong>%</div>
+                        <div>{{ 'ADMIN_ACCOUNTS.COST' | translate }}: <strong style="color: var(--text-primary);">{{adminCompte.deviceCostByDay}}</strong>/j</div>
+                        <div>{{ 'ADMIN_ACCOUNTS.FREE' | translate }}: <strong style="color: var(--text-primary);">{{adminCompte.accountFreePerMonth}}</strong>/m</div>
+                        <div>{{ 'ADMIN_ACCOUNTS.FEE' | translate }}: <strong style="color: var(--text-primary);">{{adminCompte.transctionFee}}</strong>%</div>
                     </td>
                     <td class="text-end">
                         <div class="btn-group gap-2">

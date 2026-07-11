@@ -61,7 +61,7 @@
 
             <ng-template pTemplate="body" let-compteWeb>
                 <tr class="align-middle clickable-row" (click)="onSelect(compteWeb)" (keydown.enter)="onSelect(compteWeb)">
-                    <td><span class="badge bg-light text-dark">{{compteWeb.idCompteClientWeb}}</span></td>
+                    <td><span class="badge" style="background: var(--surface-elevated); color: var(--text-primary);">{{compteWeb.idCompteClientWeb}}</span></td>
                     <td class="fw-bold text-primary">{{compteWeb.login}}</td>
                     <td><code>{{compteWeb.rawPassword}}</code></td>
                     <td><span class="small opacity-75">{{compteWeb.date_creation | date:'dd/MM/yyyy'}}</span></td>

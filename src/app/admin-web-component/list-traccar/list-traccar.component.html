@@ -36,7 +36,7 @@
 
             <ng-template pTemplate="body" let-trac>
                 <tr class="align-middle">
-                    <td><span class="badge bg-light text-dark">{{trac.id}}</span></td>
+                    <td><span class="badge" style="background: var(--surface-elevated); color: var(--text-primary);">{{trac.id}}</span></td>
                     <td class="fw-bold">{{trac.name}}</td>
                     <td><code>{{trac.imei}}</code></td>
                     <td><small>{{trac.iccid || 'N/A'}}</small></td>

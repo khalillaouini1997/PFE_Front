@@ -53,7 +53,7 @@
                         <ng-template pTemplate="body" let-archive>
                             <tr class="align-middle">
                                 <td class="small fw-medium text-nowrap">{{archive.date | date: 'dd/MM HH:mm:ss'}}</td>
-                                <td><span class="badge bg-warning bg-opacity-10 text-dark border border-warning border-opacity-10">{{archive.trame_id}}</span></td>
+                                <td><span class="badge bg-warning bg-opacity-10 border border-warning border-opacity-10" style="color: var(--text-primary);">{{archive.trame_id}}</span></td>
                                 <td class="small">
                                     <div class="text-secondary">{{archive.latitude | number: '.4-4'}}</div>
                                     <div class="text-secondary">{{archive.longitude | number: '.4-4'}}</div>
@@ -120,7 +120,7 @@
                         <!-- Header / Trame limit selector -->
                         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
                             <div>
-                                <h4 class="m-0 fw-bold text-dark"><i class="fa fa-shield-alt me-2 text-danger"></i>Anomaly Detection</h4>
+                                <h4 class="m-0 fw-bold" style="color: var(--text-primary);"><i class="fa fa-shield-alt me-2 text-danger"></i>Anomaly Detection</h4>
                                 <small class="text-muted">Structural, logical & ML-based anomaly analysis using Isolation Forest</small>
                             </div>
                             <div class="d-flex align-items-center gap-2">
@@ -184,7 +184,7 @@
                                         <div class="premium-card p-3 text-center shadow-sm border h-100">
                                             <small class="text-muted d-block mb-1">Uptime</small>
                                             <div class="d-flex align-items-center justify-content-center gap-2">
-                                                <span class="display-6 fw-bold text-dark">{{data.uptimePercentage}}</span>
+                                                <span class="display-6 fw-bold" style="color: var(--text-primary);">{{data.uptimePercentage}}</span>
                                                 <span class="text-muted fs-5">%</span>
                                             </div>
                                             <span class="badge mt-1" [ngClass]="data.uptimePercentage >= 95 ? 'bg-success bg-opacity-10 text-success' : (data.uptimePercentage >= 80 ? 'bg-warning bg-opacity-10 text-warning' : 'bg-danger bg-opacity-10 text-danger')">
@@ -201,7 +201,7 @@
                                                 <span class="fw-bold text-danger fs-5" *ngIf="getTopAnomaly() as top">{{top.name}}</span>
                                                 <span class="text-muted fs-5" *ngIf="!getTopAnomaly()">N/A</span>
                                             </div>
-                                            <span class="badge mt-1 bg-light text-dark border" *ngIf="getTopAnomaly()">{{getTopAnomaly()!.count}} occurrences</span>
+                                            <span class="badge mt-1 border" style="background: var(--surface-elevated); color: var(--text-primary); border-color: var(--surface-border) !important;" *ngIf="getTopAnomaly()">{{getTopAnomaly()!.count}} occurrences</span>
                                         </div>
                                     </div>
                                 </div>

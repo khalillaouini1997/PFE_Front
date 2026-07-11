@@ -42,7 +42,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating mb-3">
-                                <select formControlName="typeConnection" class="form-select border-0 bg-light" id="typeConnection" title="{{ 'IP_ADDRESS.CONN_TYPE' | translate }}">
+                                <select formControlName="typeConnection" class="form-select border-0" style="background: var(--surface-elevated); color: var(--text-primary);" id="typeConnection" title="{{ 'IP_ADDRESS.CONN_TYPE' | translate }}">
                                     @for (type of typeConnection; track type.type) {
                                         <option [value]="type.type">{{type.type}}</option>
                                     }

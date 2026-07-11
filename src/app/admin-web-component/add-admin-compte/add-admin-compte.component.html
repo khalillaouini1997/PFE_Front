@@ -32,7 +32,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating mb-3">
-                                <select formControlName="role" class="form-select border-0 bg-light" id="role" title="{{ 'ADMIN_ACCOUNTS.ASSIGNED_ROLE' | translate }}">
+                                <select formControlName="role" class="form-select border-0" style="background: var(--surface-elevated); color: var(--text-primary);" id="role" title="{{ 'ADMIN_ACCOUNTS.ASSIGNED_ROLE' | translate }}">
                                     @for (r of roles; track r) {
                                         <option [value]="r">{{ r }}</option>
                                     }
@@ -52,7 +52,7 @@
                     
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <div class="premium-card bg-light border-0 shadow-none d-flex align-items-center justify-content-between p-3 mb-3">
+                            <div class="premium-card border-0 shadow-none d-flex align-items-center justify-content-between p-3 mb-3" style="background: var(--surface-elevated);">
                                 <label class="fw-medium mb-0" for="useFcm">{{ 'ADMIN_ACCOUNTS.ENABLE_FCM' | translate }}</label>
                                 <div class="form-check form-switch p-0">
                                     <input class="form-check-input ms-0 scale-125" type="checkbox" formControlName="useFcm" id="useFcm" title="{{ 'ADMIN_ACCOUNTS.ENABLE_FCM' | translate }}">

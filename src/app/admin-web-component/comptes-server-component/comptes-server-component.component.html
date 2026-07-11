@@ -35,7 +35,7 @@
 
             <ng-template pTemplate="body" let-compteServer>
                 <tr class="align-middle">
-                    <td><span class="badge bg-light text-dark fw-bold border">{{compteServer.idCompteClientServer}}</span></td>
+                    <td><span class="badge fw-bold border" style="background: var(--surface-elevated); color: var(--text-primary); border-color: var(--surface-border) !important;">{{compteServer.idCompteClientServer}}</span></td>
                     <td class="fw-bold text-primary">{{compteServer.pseudo}}</td>
                     <td><code>{{compteServer.ipAdresse || ('COMMON.NOT_CONFIGURED' | translate)}}</code></td>
                     <td class="text-end">
