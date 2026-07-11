@@ -112,6 +112,7 @@ describe('ComptesServerComponentComponent', () => {
   });
 
   it('should select compte server', () => {
+    component.ngOnInit();
     component.updateModal = { nativeElement: { showModal: vi.fn(), close: vi.fn() } } as any;
     const compte = { idCompteClientServer: 1, pseudo: 'test', date_Expiration: Date.now() };
     component.onSelect(compte as any);
