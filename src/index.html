@@ -26,11 +26,9 @@
 
   <script>
     (function() {
-      var isLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
-      var theme = isLight ? 'light' : 'dark';
-      document.documentElement.classList.add(theme + '-theme');
-      document.documentElement.setAttribute('data-theme', theme);
-      document.documentElement.setAttribute('data-bs-theme', theme);
+      document.documentElement.classList.add('dark-theme');
+      document.documentElement.setAttribute('data-theme', 'dark');
+      document.documentElement.setAttribute('data-bs-theme', 'dark');
     })();
   </script>
 </head>
