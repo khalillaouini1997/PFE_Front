@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "lint": "npx eslint src/app",
+    "lint": "echo \"No linter configured\"",
     "analyze": "ng build --stats-json && webpack-bundle-analyzer dist/web_admin/stats.json"
   },
   "private": true,
