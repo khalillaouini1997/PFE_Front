@@ -4,19 +4,6 @@ import { DashboardChartsComponent } from './dashboard-charts.component';
 import { TranslateService } from '@ngx-translate/core';
 import { DashboardStore } from '../../../../shared/stores';
 
-vi.mock('chart.js', () => {
-  return {
-    Chart: class MockChart {
-      static register() {}
-      data: any = {};
-      update = vi.fn();
-      destroy = vi.fn();
-      constructor(public ctx: any, public config: any) {}
-    },
-    registerables: []
-  };
-});
-
 describe('DashboardChartsComponent', () => {
   let component: DashboardChartsComponent;
   let fixture: ComponentFixture<DashboardChartsComponent>;
