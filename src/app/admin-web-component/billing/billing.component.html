@@ -159,14 +159,14 @@
             paginatorPosition="bottom">
             <ng-template pTemplate="header">
               <tr>
-                <th>{{ 'BILLING.PERIOD' | translate }}</th>
-                <th>{{ 'BILLING.ACCOUNT_NAME' | translate }}</th>
-                <th>{{ 'BILLING.SUBTOTAL' | translate }} (HT)</th>
-                <th>{{ 'BILLING.TVA' | translate }}</th>
-                <th>{{ 'BILLING.TOTAL' | translate }} (TTC)</th>
-                <th>Status</th>
-                <th>{{ 'BILLING.GENERATED_AT' | translate }}</th>
-                <th>Actions</th>
+                <th scope="col">{{ 'BILLING.PERIOD' | translate }}</th>
+                <th scope="col">{{ 'BILLING.ACCOUNT_NAME' | translate }}</th>
+                <th scope="col">{{ 'BILLING.SUBTOTAL' | translate }} (HT)</th>
+                <th scope="col">{{ 'BILLING.TVA' | translate }}</th>
+                <th scope="col">{{ 'BILLING.TOTAL' | translate }} (TTC)</th>
+                <th scope="col">Status</th>
+                <th scope="col">{{ 'BILLING.GENERATED_AT' | translate }}</th>
+                <th scope="col">Actions</th>
               </tr>
             </ng-template>
             <ng-template pTemplate="body" let-invoice>
@@ -285,12 +285,12 @@
               paginatorPosition="bottom">
               <ng-template pTemplate="header">
                 <tr>
-                  <th>#</th>
-                  <th>{{ 'BILLING.DEVICE_ID' | translate }}</th>
-                  <th>{{ 'BILLING.DEVICE_LABEL' | translate }}</th>
-                  <th>{{ 'BILLING.WORKING_DAYS' | translate }}</th>
-                  <th>Fee Configuration</th>
-                  <th>{{ 'BILLING.SUBTOTAL' | translate }} (HT)</th>
+                  <th scope="col">#</th>
+                  <th scope="col">{{ 'BILLING.DEVICE_ID' | translate }}</th>
+                  <th scope="col">{{ 'BILLING.DEVICE_LABEL' | translate }}</th>
+                  <th scope="col">{{ 'BILLING.WORKING_DAYS' | translate }}</th>
+                  <th scope="col">Fee Configuration</th>
+                  <th scope="col">{{ 'BILLING.SUBTOTAL' | translate }} (HT)</th>
                 </tr>
               </ng-template>
               <ng-template pTemplate="body" let-device let-rowIndex="rowIndex">
@@ -376,10 +376,10 @@
                 responsiveLayout="scroll">
                 <ng-template pTemplate="header">
                   <tr>
-                    <th>Device</th>
-                    <th>Label</th>
-                    <th>Working Days</th>
-                    <th>Total (HT)</th>
+                    <th scope="col">Device</th>
+                    <th scope="col">Label</th>
+                    <th scope="col">Working Days</th>
+                    <th scope="col">Total (HT)</th>
                   </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-device>
@@ -451,7 +451,7 @@
       <div class="calc-option-info">
         <h5>{{ 'BILLING.CALC_CUSTOM_PERIOD' | translate }}</h5>
         <p>{{ 'BILLING.CALC_BATCH_DESC' | translate }}</p>
-        <fieldset class="calc-period-fields mt-2" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()" aria-label="Billing period" tabindex="0">
+        <fieldset class="calc-period-fields mt-2" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()" aria-label="Billing period">
           <div class="d-flex gap-2 align-items-center">
             <input type="number" id="calcStartYear" [(ngModel)]="calcStartYear" class="form-control form-control-sm" 
                    placeholder="Year" min="2000" max="2100" style="width: 100px;" aria-label="Start year">
