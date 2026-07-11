@@ -1,6 +1,4 @@
 /* ===== COMMAND CONSOLE DASHBOARD ===== */
-@import '../../shared/styles/design-tokens.css';
-
 :host {
   display: block;
   background-color: var(--surface-base);
@@ -269,7 +267,7 @@
 
 .global-spinner {
   padding: var(--spacing-3xl);
-  background: rgba(12, 18, 34, 0.85);
+  background: var(--surface-card);
   backdrop-filter: blur(10px);
 }
 

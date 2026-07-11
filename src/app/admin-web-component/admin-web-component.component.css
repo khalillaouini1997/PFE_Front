@@ -1,5 +1,3 @@
-@import '../shared/styles/design-tokens.css';
-
 :host {
     display: block;
 }
