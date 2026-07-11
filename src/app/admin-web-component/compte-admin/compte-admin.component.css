@@ -1,7 +1,5 @@
 :host {
   display: block;
-  background-color: var(--surface-base);
-  min-height: 100vh;
 }
 
 .search-group {

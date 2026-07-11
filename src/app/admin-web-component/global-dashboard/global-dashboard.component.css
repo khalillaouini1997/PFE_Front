@@ -1,8 +1,5 @@
 :host {
   display: block;
-  background-color: var(--surface-base);
-  color: var(--text-primary);
-  min-height: 100vh;
   overflow-y: auto;
   overflow-x: hidden;
 }

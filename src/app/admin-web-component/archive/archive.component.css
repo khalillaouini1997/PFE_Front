@@ -1,8 +1,6 @@
 /*created by AHMED HAYEL*/
 :host {
   display: block;
-  background-color: var(--surface-card);
-  min-height: 100vh;
 }
 
 .limit-input-group {

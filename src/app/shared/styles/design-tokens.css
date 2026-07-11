@@ -1,4 +1,4 @@
-/* ===== DESIGN TOKENS — Command Console ===== */
+/* ===== DESIGN TOKENS ===== */
 
 :root {
   /* ===== Spacing Scale ===== */
@@ -43,12 +43,12 @@
   --slate-800: #1e293b;
   --slate-900: #0f172a;
 
-  /* ===== Surface Palette (dark console) ===== */
-  --surface-base: #0c1222;
-  --surface-card: #151d2e;
-  --surface-elevated: #1c2640;
-  --surface-border: #1e2d45;
-  --surface-hover: #223352;
+  /* ===== Surface Palette (light) ===== */
+  --surface-base: #f8fafc;
+  --surface-card: #ffffff;
+  --surface-elevated: #f1f5f9;
+  --surface-border: #e2e8f0;
+  --surface-hover: #f1f5f9;
 
   /* ===== Accent Colors ===== */
   --accent-primary: #14b8a6;
@@ -76,11 +76,11 @@
   --color-info-dark: #0284c7;
 
   /* ===== Shadow Scale ===== */
-  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px -1px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
   --shadow-glow: 0 0 20px rgba(20, 184, 166, 0.15);
 
   /* ===== Typography Scale ===== */
@@ -127,11 +127,11 @@
   --z-error-banner: 9999;
 
   /* ===== Sidebar Tokens ===== */
-  --sidebar-bg: #1e293b;
-  --sidebar-text: #ffffff;
-  --sidebar-text-muted: rgba(255, 255, 255, 0.35);
-  --sidebar-hover-bg: rgba(255, 255, 255, 0.06);
-  --sidebar-border: rgba(255, 255, 255, 0.1);
+  --sidebar-bg: #ffffff;
+  --sidebar-text: #1e293b;
+  --sidebar-text-muted: rgba(30, 41, 59, 0.5);
+  --sidebar-hover-bg: rgba(30, 41, 59, 0.05);
+  --sidebar-border: rgba(30, 41, 59, 0.1);
 
   /* ===== Component Tokens ===== */
   --card-padding: var(--spacing-xl);
@@ -156,29 +156,9 @@
   --focus-ring-offset: 2px;
 
   /* ===== Text Colors ===== */
-  --text-primary: #e2e8f0;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-
-  /* ===== Bootstrap 5.3 Variable Overrides (Dark Theme) ===== */
-  --bs-body-bg: #0c1222;
-  --bs-body-color: #e2e8f0;
-  --bs-border-color: #1e2d45;
-  --bs-emphasis-color: #e2e8f0;
-  --bs-white: #151d2e;
-  --bs-white-rgb: 21, 29, 46;
-  --bs-light: #1c2640;
-  --bs-light-rgb: 28, 38, 64;
-  --bs-dark: #e2e8f0;
-  --bs-dark-rgb: 226, 232, 240;
-  --bs-secondary: #94a3b8;
-  --bs-secondary-rgb: 148, 163, 184;
-  --bs-secondary-bg: #1c2640;
-  --bs-secondary-bg-rgb: 28, 38, 64;
-  --bs-tertiary-bg: #151d2e;
-  --bs-tertiary-bg-rgb: 21, 29, 46;
-  --bs-link-color: #14b8a6;
-  --bs-link-hover-color: #2dd4bf;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
 }
 
 /* ===== Accessibility: High Contrast Mode ===== */
@@ -186,8 +166,6 @@
   :root {
     --card-border: 2px solid var(--slate-500);
     --input-border: 2px solid var(--slate-500);
-    --text-primary: #ffffff;
+    --text-primary: #000000;
   }
 }
-
-/* ===== High Contrast Mode ===== */
