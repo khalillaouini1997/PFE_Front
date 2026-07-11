@@ -21,8 +21,8 @@
       </button>
     </div>
 
-    <button class="theme-toggle" (click)="toggleTheme()" [attr.aria-label]="currentTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'">
-      <i class="pi" [class.pi-sun]="currentTheme === 'dark'" [class.pi-moon]="currentTheme === 'light'"></i>
+    <button class="theme-toggle" (click)="toggleTheme()" [attr.aria-label]="currentTheme() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'">
+      <i class="pi" [class.pi-sun]="currentTheme() === 'dark'" [class.pi-moon]="currentTheme() === 'light'"></i>
     </button>
   </div>
 </nav>
