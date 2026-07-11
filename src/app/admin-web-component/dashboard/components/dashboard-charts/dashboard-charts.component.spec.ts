@@ -57,9 +57,7 @@ describe('DashboardChartsComponent', () => {
   });
 
   it('should accept stats input', () => {
-    fixture.componentRef.setInput('stats', {
-      total: 100, valid: 75, technicalIssue: 15, moving: 50
-    });
+    fixture.componentRef.setInput('stats', { total: 100, valid: 75, technicalIssue: 15, moving: 50 });
     expect(component.stats().total).toBe(100);
   });
 
@@ -69,5 +67,154 @@ describe('DashboardChartsComponent', () => {
       { periodLabel: '2024-02', cumulativeCount: 25 } as any,
     ]);
     expect(component.installationEvolution().length).toBe(2);
+  });
+
+  it('updateCharts should return early when view children are null', () => {
+    expect(() => component.updateCharts()).not.toThrow();
+  });
+
+  it('ngAfterViewInit should call updateCharts', () => {
+    const spy = vi.spyOn(component, 'updateCharts');
+    component.ngAfterViewInit();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('updateCharts with missing statusChart should return early', () => {
+    fixture.componentRef.setInput('realtimes', [
+      { deviceid: 1, speed: 0, status: 'VALID', numPuce: '8921601001', signal: 25, matricule: 'T-001', latitude: 33.88, longitude: 9.53, validity: true, ignition: true, record_time: new Date(), imei: '123', version: 'v1' },
+    ]);
+    expect(() => component.updateCharts()).not.toThrow();
+  });
+
+  it('updateCharts with all view children present should not throw', () => {
+    const mockCanvas = { nativeElement: document.createElement('canvas') };
+    vi.spyOn(component, 'statusChart' as any).mockReturnValue(mockCanvas);
+    vi.spyOn(component, 'speedChart' as any).mockReturnValue(mockCanvas);
+    vi.spyOn(component, 'puceChart' as any).mockReturnValue(mockCanvas);
+    vi.spyOn(component, 'signalChart' as any).mockReturnValue(mockCanvas);
+    expect(() => component.updateCharts()).not.toThrow();
+  });
+
+  it('updateStateChart with null canvas should return early', () => {
+    vi.spyOn(component, 'statusChart' as any).mockReturnValue(null);
+    expect(() => (component as any).updateStateChart()).not.toThrow();
+  });
+
+  it('updateSpeedChart with null canvas should return early', () => {
+    vi.spyOn(component, 'speedChart' as any).mockReturnValue(null);
+    expect(() => (component as any).updateSpeedChart()).not.toThrow();
+  });
+
+  it('updatePuceChart with null canvas should return early', () => {
+    vi.spyOn(component, 'puceChart' as any).mockReturnValue(null);
+    expect(() => (component as any).updatePuceChart()).not.toThrow();
+  });
+
+  it('updateSignalChart with null canvas should return early', () => {
+    vi.spyOn(component, 'signalChart' as any).mockReturnValue(null);
+    expect(() => (component as any).updateSignalChart()).not.toThrow();
+  });
+
+  it('updateEvolutionChart with null canvas should return early', () => {
+    vi.spyOn(component, 'evolutionChart' as any).mockReturnValue(null);
+    expect(() => (component as any).updateEvolutionChart()).not.toThrow();
+  });
+
+  it('updateEvolutionChart with data should not throw', () => {
+    const mockCanvas = { nativeElement: document.createElement('canvas') };
+    vi.spyOn(component, 'evolutionChart' as any).mockReturnValue(mockCanvas);
+    fixture.componentRef.setInput('installationEvolution', [
+      { periodLabel: 'Jan', cumulativeCount: 10 },
+      { periodLabel: 'Feb', cumulativeCount: 20 },
+    ]);
+    expect(() => (component as any).updateEvolutionChart()).not.toThrow();
+  });
+
+  it('updateCharts should call all sub-update methods when view children exist', () => {
+    const mockCanvas = { nativeElement: document.createElement('canvas') };
+    vi.spyOn(component, 'statusChart' as any).mockReturnValue(mockCanvas);
+    vi.spyOn(component, 'speedChart' as any).mockReturnValue(mockCanvas);
+    vi.spyOn(component, 'puceChart' as any).mockReturnValue(mockCanvas);
+    vi.spyOn(component, 'signalChart' as any).mockReturnValue(mockCanvas);
+
+    const stateSpy = vi.spyOn(component as any, 'updateStateChart');
+    const speedSpy = vi.spyOn(component as any, 'updateSpeedChart');
+    const puceSpy = vi.spyOn(component as any, 'updatePuceChart');
+    const signalSpy = vi.spyOn(component as any, 'updateSignalChart');
+
+    component.updateCharts();
+
+    expect(stateSpy).toHaveBeenCalled();
+    expect(speedSpy).toHaveBeenCalled();
+    expect(puceSpy).toHaveBeenCalled();
+    expect(signalSpy).toHaveBeenCalled();
+  });
+
+  it('updateStateChart should create chart with correct data', () => {
+    const mockCanvas = { nativeElement: document.createElement('canvas') };
+    vi.spyOn(component, 'statusChart' as any).mockReturnValue(mockCanvas);
+    fixture.componentRef.setInput('stats', { total: 10, valid: 7, technicalIssue: 2, moving: 5 });
+    fixture.componentRef.setInput('realtimes', [
+      { deviceid: 1, status: 'VALID' },
+      { deviceid: 2, status: 'NON_VALID' },
+    ] as any[]);
+    expect(() => (component as any).updateStateChart()).not.toThrow();
+  });
+
+  it('updateSpeedChart should categorize speeds into bands', () => {
+    const mockCanvas = { nativeElement: document.createElement('canvas') };
+    vi.spyOn(component, 'speedChart' as any).mockReturnValue(mockCanvas);
+    fixture.componentRef.setInput('realtimes', [
+      { deviceid: 1, speed: 0 },
+      { deviceid: 2, speed: 15 },
+      { deviceid: 3, speed: 45 },
+      { deviceid: 4, speed: 80 },
+    ] as any[]);
+    expect(() => (component as any).updateSpeedChart()).not.toThrow();
+  });
+
+  it('updatePuceChart should categorize SIM cards', () => {
+    const mockCanvas = { nativeElement: document.createElement('canvas') };
+    vi.spyOn(component, 'puceChart' as any).mockReturnValue(mockCanvas);
+    fixture.componentRef.setInput('realtimes', [
+      { deviceid: 1, numPuce: '8921601001' },
+      { deviceid: 2, numPuce: '123456' },
+      { deviceid: 3, numPuce: null },
+    ] as any[]);
+    expect(() => (component as any).updatePuceChart()).not.toThrow();
+  });
+
+  it('updateSignalChart should categorize signal quality', () => {
+    const mockCanvas = { nativeElement: document.createElement('canvas') };
+    vi.spyOn(component, 'signalChart' as any).mockReturnValue(mockCanvas);
+    fixture.componentRef.setInput('realtimes', [
+      { deviceid: 1, signal: 25 },
+      { deviceid: 2, signal: 17 },
+      { deviceid: 3, signal: 12 },
+      { deviceid: 4, signal: 5 },
+    ] as any[]);
+    expect(() => (component as any).updateSignalChart()).not.toThrow();
+  });
+
+  it('ngOnDestroy should destroy all chart instances', () => {
+    (component as any).stateChart = { destroy: vi.fn() };
+    (component as any).speedChartInstance = { destroy: vi.fn() };
+    (component as any).puceChartInstance = { destroy: vi.fn() };
+    (component as any).signalChartInstance = { destroy: vi.fn() };
+    (component as any).evolutionChartInstance = { destroy: vi.fn() };
+
+    component.ngOnDestroy();
+
+    expect((component as any).stateChart.destroy).toHaveBeenCalled();
+    expect((component as any).speedChartInstance.destroy).toHaveBeenCalled();
+    expect((component as any).puceChartInstance.destroy).toHaveBeenCalled();
+    expect((component as any).signalChartInstance.destroy).toHaveBeenCalled();
+    expect((component as any).evolutionChartInstance.destroy).toHaveBeenCalled();
+  });
+
+  it('updateCharts should handle when no view children are present', () => {
+    vi.spyOn(component, 'statusChart' as any).mockReturnValue(undefined);
+    vi.spyOn(component, 'speedChart' as any).mockReturnValue(undefined);
+    expect(() => component.updateCharts()).not.toThrow();
   });
 });

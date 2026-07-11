@@ -24,6 +24,12 @@ const mockMarkerClusterGroup = {
   clearLayers: vi.fn()
 };
 
+const createTram = (overrides: Partial<RealTime> = {}): RealTime => ({
+  deviceid: 1, matricule: 'T-001', status: 'VALID', latitude: 33.88, longitude: 9.53,
+  validity: true, speed: 60, ignition: true, record_time: new Date(), numPuce: '8921601001',
+  imei: '123', version: 'v1', ...overrides
+});
+
 describe('DashboardMapComponent', () => {
   let component: DashboardMapComponent;
   let fixture: ComponentFixture<DashboardMapComponent>;
@@ -35,8 +41,10 @@ describe('DashboardMapComponent', () => {
       marker: vi.fn(() => ({
         bindPopup: vi.fn().mockReturnThis(),
         on: vi.fn().mockReturnThis(),
+        setLatLng: vi.fn(),
       })),
       icon: vi.fn(() => ({})),
+      latLng: vi.fn((lat, lng) => ({ lat, lng })),
       latLngBounds: vi.fn(() => ({})),
       markerClusterGroup: vi.fn(() => mockMarkerClusterGroup),
     };
@@ -51,7 +59,8 @@ describe('DashboardMapComponent', () => {
 
     fixture = TestBed.createComponent(DashboardMapComponent);
     component = fixture.componentInstance;
-    (component as any).map = { setView: vi.fn(), addLayer: vi.fn() };
+    (component as any).map = mockMap;
+    (component as any).markerClusterGroup = mockMarkerClusterGroup;
     fixture.detectChanges();
   });
 
@@ -60,44 +69,34 @@ describe('DashboardMapComponent', () => {
   });
 
   it('should create', () => {
-    fixture.detectChanges();
     expect(component).toBeTruthy();
   });
 
   it('should have default realtimes input as empty array', () => {
-    fixture.detectChanges();
     expect(component.realtimes()).toEqual([]);
   });
 
   it('should initialize map error state as null', () => {
-    fixture.detectChanges();
     expect(component.mapError()).toBeNull();
     expect(component.hasMapError()).toBe(false);
   });
 
   it('should initialize isMapLoading as true', () => {
-    fixture.detectChanges();
     expect(component.isMapLoading()).toBe(true);
   });
 
   it('should accept realtimes input', () => {
-    const realtimes: RealTime[] = [
-      { deviceid: 1, matricule: 'T-001', status: 'VALID', latitude: 33.88, longitude: 9.53, validity: true, speed: 60, ignition: true, record_time: new Date(), numPuce: '8921601001', imei: '123', version: 'v1' }
-    ];
+    const realtimes = [createTram()];
     fixture.componentRef.setInput('realtimes', realtimes);
-    fixture.detectChanges();
-
     expect(component.realtimes().length).toBe(1);
   });
 
   it('should call map.zoomIn', () => {
-    fixture.detectChanges();
     component.zoomIn();
     expect(mockMap.zoomIn).toHaveBeenCalled();
   });
 
   it('should call map.zoomOut', () => {
-    fixture.detectChanges();
     component.zoomOut();
     expect(mockMap.zoomOut).toHaveBeenCalled();
   });
@@ -105,84 +104,68 @@ describe('DashboardMapComponent', () => {
   it('should emit locateDevice output', () => {
     const spy = vi.fn();
     component.locateDevice.subscribe(spy);
-    fixture.detectChanges();
-
-    const tram: RealTime = { deviceid: 1, matricule: 'T-001', status: 'VALID', latitude: 33.88, longitude: 9.53, validity: true, speed: 60, ignition: true, record_time: new Date(), numPuce: '8921601001', imei: '123', version: 'v1' };
+    const tram = createTram();
     component.locateDevice.emit(tram);
     expect(spy).toHaveBeenCalledWith(tram);
   });
 
   it('should cleanup on destroy', () => {
-    fixture.detectChanges();
     component.ngOnDestroy();
     expect(mockMap.remove).toHaveBeenCalled();
     expect(mockMarkerClusterGroup.clearLayers).toHaveBeenCalled();
   });
 
   it('should set mapError on retryMapLoad', () => {
-    fixture.detectChanges();
     component.retryMapLoad();
     expect(component.mapError()).toBeNull();
     expect(component.isMapLoading()).toBe(true);
   });
 
   it('should have valid markerMap and previousPositions maps', () => {
-    fixture.detectChanges();
     expect((component as any).markerMap.size).toBe(0);
     expect((component as any).previousPositions.size).toBe(0);
   });
 
   it('should call invalidateSize', () => {
     vi.useFakeTimers();
-    fixture.detectChanges();
     component.invalidateSize();
     vi.advanceTimersByTime(500);
     vi.useRealTimers();
   });
 
   it('should handle ngOnDestroy with animationFrameId', () => {
-    fixture.detectChanges();
     (component as any).animationFrameId = 123;
     component.ngOnDestroy();
     expect(mockMap.remove).toHaveBeenCalled();
   });
 
   it('should handle createMarker with realtimes data', () => {
-    fixture.detectChanges();
-    const realtimes: RealTime[] = [
-      { deviceid: 1, matricule: 'T-001', status: 'VALID', latitude: 33.88, longitude: 9.53, validity: true, speed: 60, ignition: true, record_time: new Date(), numPuce: '8921601001', imei: '123', version: 'v1' }
-    ];
+    const realtimes = [createTram()];
     fixture.componentRef.setInput('realtimes', realtimes);
-    fixture.detectChanges();
     expect(component.realtimes().length).toBe(1);
   });
 
   it('should handle updateMarkers with empty realtimes', () => {
-    fixture.detectChanges();
     fixture.componentRef.setInput('realtimes', []);
-    fixture.detectChanges();
     expect((component as any).markerMap.size).toBe(0);
   });
 
   it('should handle getCarIcon with different device ids', () => {
-    fixture.detectChanges();
     const getCarIcon = (component as any).getCarIcon.bind(component);
-    const tram = { deviceid: 42, rotation_angle: 45 } as any;
+    const tram = createTram({ deviceid: 42, rotation_angle: 45 } as any);
     const icon = getCarIcon(tram);
     expect(icon).toBeTruthy();
   });
 
   it('should cache car icons in deviceIconMap', () => {
-    fixture.detectChanges();
     const getCarIcon = (component as any).getCarIcon.bind(component);
-    const tram = { deviceid: 99, rotation_angle: 0 } as any;
+    const tram = createTram({ deviceid: 99, rotation_angle: 0 } as any);
     getCarIcon(tram);
     getCarIcon(tram);
     expect((component as any).deviceIconMap.size).toBe(1);
   });
 
   it('should handle mapError signal', () => {
-    fixture.detectChanges();
     component.mapError.set('Test error');
     expect(component.hasMapError()).toBe(true);
     component.mapError.set(null);
@@ -190,10 +173,114 @@ describe('DashboardMapComponent', () => {
   });
 
   it('should handle retryMapLoad with existing map', () => {
-    fixture.detectChanges();
     (component as any).map = mockMap;
     component.retryMapLoad();
     expect(component.isMapLoading()).toBe(true);
     expect(mockMap.remove).toHaveBeenCalled();
+  });
+
+  it('getCarIcon should default rotation_angle to 0 when undefined', () => {
+    const getCarIcon = (component as any).getCarIcon.bind(component);
+    const tram = createTram({ deviceid: 100 } as any);
+    delete (tram as any).rotation_angle;
+    const icon = getCarIcon(tram);
+    expect(icon).toBeTruthy();
+  });
+
+  it('getCarIcon should snap angle to nearest valid angle', () => {
+    const getCarIcon = (component as any).getCarIcon.bind(component);
+    const tram = createTram({ rotation_angle: 37 } as any);
+    const icon = getCarIcon(tram);
+    expect(icon).toBeTruthy();
+  });
+
+  it('tile layer error handler should set mapError', () => {
+    mockTileLayer.on.mockImplementation((event: string, cb: any) => {
+      if (event === 'tileerror') cb({});
+      return mockTileLayer;
+    });
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    (window as any).L.map = vi.fn(() => {
+      mockTileLayer.on.mock.calls.length = 0;
+      return {
+        ...mockMap,
+        addLayer: vi.fn(),
+        setView: vi.fn().mockReturnThis(),
+      };
+    });
+    component.retryMapLoad();
+    warnSpy.mockRestore();
+  });
+
+  it('updateMarkers should remove markers for removed devices', () => {
+    const marker = { remove: vi.fn() };
+    (component as any).markerMap.set(1, marker);
+    (component as any).previousPositions.set(1, { lat: 33, lng: 9 });
+
+    fixture.componentRef.setInput('realtimes', []);
+    (component as any).currentFleetHash = '1';
+    (component as any).updateMarkers();
+
+    expect((component as any).markerMap.size).toBe(0);
+    expect((component as any).previousPositions.size).toBe(0);
+  });
+
+  it('updateMarkers should animate existing markers', () => {
+    const tram = createTram();
+    (component as any).previousPositions.set(1, { lat: 33.87, lng: 9.52 });
+
+    const markerInstance = {
+      bindPopup: vi.fn().mockReturnThis(),
+      on: vi.fn().mockReturnThis(),
+      setLatLng: vi.fn(),
+    };
+    (window as any).L.marker = vi.fn(() => markerInstance);
+
+    fixture.componentRef.setInput('realtimes', [tram]);
+    (component as any).currentFleetHash = '';
+    (component as any).updateMarkers();
+    expect((component as any).previousPositions.get(1)).toEqual({ lat: 33.88, lng: 9.53 });
+  });
+
+  it('updateMarkers with fleet change should call fitBounds', () => {
+    vi.useFakeTimers();
+    const tram = createTram();
+    fixture.componentRef.setInput('realtimes', [tram]);
+    (component as any).currentFleetHash = '';
+    (component as any).updateMarkers();
+    vi.advanceTimersByTime(150);
+    expect(mockMap.invalidateSize).toHaveBeenCalled();
+    vi.useRealTimers();
+  });
+
+  it('updateMarkers with no fleet change should only invalidateSize', () => {
+    vi.useFakeTimers();
+    const tram = createTram();
+    fixture.componentRef.setInput('realtimes', [tram]);
+    (component as any).currentFleetHash = '1';
+    (component as any).updateMarkers();
+    vi.advanceTimersByTime(150);
+    expect(mockMap.invalidateSize).toHaveBeenCalled();
+    vi.useRealTimers();
+  });
+
+  it('updateMarkers with null map should return early', () => {
+    (component as any).map = null;
+    expect(() => (component as any).updateMarkers()).not.toThrow();
+  });
+
+  it('createMarker click should emit locateDevice', () => {
+    const emitSpy = vi.spyOn(component.locateDevice, 'emit');
+    const tram = createTram();
+    const markerInstance = {
+      bindPopup: vi.fn().mockReturnThis(),
+      on: vi.fn().mockReturnThis(),
+    };
+    (window as any).L.marker = vi.fn(() => markerInstance);
+
+    (component as any).createMarker(tram);
+    const clickHandler = markerInstance.on.mock.calls.find((c: any[]) => c[0] === 'click')?.[1];
+    if (clickHandler) clickHandler();
+    expect(emitSpy).toHaveBeenCalledWith(tram);
   });
 });
