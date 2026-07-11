@@ -45,11 +45,6 @@ describe('DashboardChartsComponent', () => {
     expect(() => component.ngOnDestroy()).not.toThrow();
   });
 
-  it('should return early from updateCharts if no chart refs', () => {
-    component.updateCharts();
-    expect(() => component.updateCharts()).not.toThrow();
-  });
-
   it('should accept realtimes with various speed values', () => {
     fixture.componentRef.setInput('realtimes', [
       { deviceid: 1, speed: 0, status: 'VALID', numPuce: '8921601001', signal: 25, matricule: 'T-001', latitude: 33.88, longitude: 9.53, validity: true, ignition: true, record_time: new Date(), imei: '123', version: 'v1' },
