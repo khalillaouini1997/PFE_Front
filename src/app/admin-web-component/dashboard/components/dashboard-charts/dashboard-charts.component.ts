@@ -82,7 +82,7 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
 
   private updateStateChart() {
     const canvas = this.statusChart();
-    if (!canvas) return;
+    if (!canvas?.nativeElement) return;
 
     const stats = this.stats();
     const data = {
@@ -125,7 +125,7 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
 
   private updateSpeedChart() {
     const canvas = this.speedChart();
-    if (!canvas) return;
+    if (!canvas?.nativeElement) return;
 
     const r = this.realtimes();
     const bands = {
@@ -168,7 +168,7 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
 
   private updatePuceChart() {
     const canvas = this.puceChart();
-    if (!canvas) return;
+    if (!canvas?.nativeElement) return;
 
     const r = this.realtimes();
     const counts = {
@@ -215,7 +215,7 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
 
   private updateSignalChart() {
     const canvas = this.signalChart();
-    if (!canvas) return;
+    if (!canvas?.nativeElement) return;
 
     const r = this.realtimes() as any[];
     const signalDistribution = {
@@ -263,7 +263,7 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
 
   private updateEvolutionChart() {
     const canvas = this.evolutionChart();
-    if (!canvas) return;
+    if (!canvas?.nativeElement) return;
 
     const evolutionData = this.installationEvolution();
     const labels = evolutionData.map(d => d.periodLabel);
