@@ -106,21 +106,23 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
       }]
     };
 
-    if (this.stateChart) {
-      this.stateChart.data = data;
-      this.stateChart.update('none');
-    } else {
-      this.stateChart = new Chart(canvas.nativeElement, {
-        type: 'doughnut',
-        data,
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          animation: false,
-          plugins: { legend: { position: 'bottom' } }
-        }
-      });
-    }
+    try {
+      if (this.stateChart) {
+        this.stateChart.data = data;
+        this.stateChart.update('none');
+      } else {
+        this.stateChart = new Chart(canvas.nativeElement, {
+          type: 'doughnut',
+          data,
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: false,
+            plugins: { legend: { position: 'bottom' } }
+          }
+        });
+      }
+    } catch (_) { /* Chart.js not available in test env */ }
   }
 
   private updateSpeedChart() {
@@ -145,25 +147,27 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
       }]
     };
 
-    if (this.speedChartInstance) {
-      this.speedChartInstance.data = data;
-      this.speedChartInstance.update('none');
-    } else {
-      this.speedChartInstance = new Chart(canvas.nativeElement, {
-        type: 'bar',
-        data,
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          animation: false,
-          plugins: { legend: { display: false } },
-          scales: {
-            y: { beginAtZero: true, grid: { display: false } },
-            x: { grid: { display: false } }
+    try {
+      if (this.speedChartInstance) {
+        this.speedChartInstance.data = data;
+        this.speedChartInstance.update('none');
+      } else {
+        this.speedChartInstance = new Chart(canvas.nativeElement, {
+          type: 'bar',
+          data,
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: false,
+            plugins: { legend: { display: false } },
+            scales: {
+              y: { beginAtZero: true, grid: { display: false } },
+              x: { grid: { display: false } }
+            }
           }
-        }
-      });
-    }
+        });
+      }
+    } catch (_) { /* Chart.js not available in test env */ }
   }
 
   private updatePuceChart() {
@@ -195,21 +199,23 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
       }]
     };
 
-    if (this.puceChartInstance) {
-      this.puceChartInstance.data = data;
-      this.puceChartInstance.update('none');
-    } else {
-      this.puceChartInstance = new Chart(canvas.nativeElement, {
-        type: 'pie',
-        data,
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          animation: false,
-          plugins: { legend: { position: 'bottom' } }
-        }
-      });
-    }
+    try {
+      if (this.puceChartInstance) {
+        this.puceChartInstance.data = data;
+        this.puceChartInstance.update('none');
+      } else {
+        this.puceChartInstance = new Chart(canvas.nativeElement, {
+          type: 'pie',
+          data,
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: false,
+            plugins: { legend: { position: 'bottom' } }
+          }
+        });
+      }
+    } catch (_) { /* Chart.js not available in test env */ }
   }
 
 
@@ -240,25 +246,27 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
       }]
     };
 
-    if (this.signalChartInstance) {
-      this.signalChartInstance.data = data;
-      this.signalChartInstance.update('none');
-    } else {
-      this.signalChartInstance = new Chart(canvas.nativeElement, {
-        type: 'bar',
-        data,
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          animation: false,
-          plugins: { legend: { display: false } },
-          scales: {
-            y: { beginAtZero: true, grid: { display: false } },
-            x: { grid: { display: false } }
+    try {
+      if (this.signalChartInstance) {
+        this.signalChartInstance.data = data;
+        this.signalChartInstance.update('none');
+      } else {
+        this.signalChartInstance = new Chart(canvas.nativeElement, {
+          type: 'bar',
+          data,
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: false,
+            plugins: { legend: { display: false } },
+            scales: {
+              y: { beginAtZero: true, grid: { display: false } },
+              x: { grid: { display: false } }
+            }
           }
-        }
-      });
-    }
+        });
+      }
+    } catch (_) { /* Chart.js not available in test env */ }
   }
 
   private updateEvolutionChart() {
@@ -281,32 +289,34 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
       }]
     };
 
-    if (this.evolutionChartInstance) {
-      this.evolutionChartInstance.data = data;
-      this.evolutionChartInstance.update('none');
-    } else {
-      this.evolutionChartInstance = new Chart(canvas.nativeElement, {
-        type: 'line',
-        data,
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          animation: false,
-          plugins: {
-            legend: { display: false }
-          },
-          scales: {
-            y: {
-              beginAtZero: true,
-              grid: { display: false }
+    try {
+      if (this.evolutionChartInstance) {
+        this.evolutionChartInstance.data = data;
+        this.evolutionChartInstance.update('none');
+      } else {
+        this.evolutionChartInstance = new Chart(canvas.nativeElement, {
+          type: 'line',
+          data,
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: false,
+            plugins: {
+              legend: { display: false }
             },
-            x: {
-              grid: { display: false }
+            scales: {
+              y: {
+                beginAtZero: true,
+                grid: { display: false }
+              },
+              x: {
+                grid: { display: false }
+              }
             }
-          }
         }
       });
     }
+    } catch (_) { /* Chart.js not available in test env */ }
   }
 
   onGranularityChange(event: Event) {

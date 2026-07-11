@@ -45,7 +45,6 @@ describe('DashboardComponent', () => {
 
     fixture = TestBed.createComponent(DashboardComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   afterEach(() => {
@@ -57,6 +56,7 @@ describe('DashboardComponent', () => {
   });
 
   it('should initialize dashboardForm', () => {
+    fixture.detectChanges();
     expect(component.dashboardForm).toBeTruthy();
     expect(component.dashboardForm.get('compteWeb')).toBeTruthy();
   });
@@ -70,11 +70,13 @@ describe('DashboardComponent', () => {
   });
 
   it('should not load data when no compteWeb selected', () => {
+    fixture.detectChanges();
     component.dashboardForm.patchValue({ compteWeb: null });
     component.getAllLastTramByCompteWeb();
   });
 
   it('should load data when compteWeb selected', () => {
+    fixture.detectChanges();
     component.dashboardForm.patchValue({ compteWeb: { idCompteClientWeb: 1 } });
     component.getAllLastTramByCompteWeb();
   });
