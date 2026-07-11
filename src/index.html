@@ -26,16 +26,11 @@
 
   <script>
     (function() {
-      var t = localStorage.getItem('theme');
-      if (t === 'light' || t === 'dark') {
-        document.documentElement.classList.add(t + '-theme');
-        document.documentElement.setAttribute('data-theme', t);
-        document.documentElement.setAttribute('data-bs-theme', t);
-      } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-        document.documentElement.classList.add('light-theme');
-        document.documentElement.setAttribute('data-theme', 'light');
-        document.documentElement.setAttribute('data-bs-theme', 'light');
-      }
+      var isLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+      var theme = isLight ? 'light' : 'dark';
+      document.documentElement.classList.add(theme + '-theme');
+      document.documentElement.setAttribute('data-theme', theme);
+      document.documentElement.setAttribute('data-bs-theme', theme);
     })();
   </script>
 </head>

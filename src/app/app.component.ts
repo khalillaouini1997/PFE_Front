@@ -2,7 +2,6 @@ import { Component, inject, AfterViewInit, OnDestroy, ViewChild } from '@angular
 import { RouterOutlet } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { ErrorBannerComponent, ErrorBannerData } from './shared/components/error-banner/error-banner.component';
-import { ThemeService } from './service/theme.service';
 
 @Component({
     selector: 'app-root',
@@ -16,7 +15,6 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   @ViewChild(ErrorBannerComponent) errorBanner?: ErrorBannerComponent;
 
   constructor() {
-    inject(ThemeService); // eagerly initialize to prevent FOUC
 
     this.translate.addLangs(['fr', 'en']);
     this.translate.setDefaultLang('fr');

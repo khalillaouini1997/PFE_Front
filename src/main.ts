@@ -16,7 +16,6 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { ServiceWorkerModule } from '@angular/service-worker';
 
 export class CustomTranslateLoader implements TranslateLoader {
   constructor(private readonly http: HttpClient) {}
@@ -55,10 +54,6 @@ bootstrapApplication(AppComponent, {
           deps: [HttpClient]
         }
       }),
-      ServiceWorkerModule.register('ngsw-worker.js', {
-        enabled: environment.production,
-        registrationStrategy: 'registerWhenStable:30000'
-      })
     ),
     provideHttpClient(withInterceptors([authInterceptor, apiResponseInterceptor, httpErrorInterceptor, tokenRefreshInterceptor])),
     provideAnimations(),

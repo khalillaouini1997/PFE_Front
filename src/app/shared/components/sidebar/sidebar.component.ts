@@ -6,13 +6,12 @@ import { AdministratorCompte, createAdministratorCompte } from 'src/app/data/dat
 import { AuthService } from 'src/app/service/auth.service';
 import { WebAccountService } from 'src/app/service/web-account.service';
 import { WebSocketService } from 'src/app/service/web-socket.service';
-import { ThemeToggleComponent } from '../theme-toggle/theme-toggle.component';
 
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslateModule, ThemeToggleComponent],
+  imports: [CommonModule, RouterModule, TranslateModule],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css']
 })
