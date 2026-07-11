@@ -60,7 +60,10 @@
     "CLOSE": "Fermer",
     "ERRORS": "Erreurs",
     "OK": "Ok",
-    "APPLY": "Appliquer"
+    "APPLY": "Appliquer",
+    "YES": "Oui",
+    "NO": "Non",
+    "REQUIRED": "Ce champ est obligatoire"
   },
   "SERVER_DETAILS": {
     "TITLE": "Détails du Serveur",
@@ -375,11 +378,27 @@
   },
   "TRACCAR": {
     "TITLE": "Liste des Traccars",
-    "SUBTITLE": "Gestion des instances Traccar",
+    "SUBTITLE": "Gestion des appareils Traccar",
     "SEARCH_PLACEHOLDER": "Rechercher par nom ou IMEI...",
     "NO_DATA": "Aucun Traccar trouvé",
     "NO_CONFIGURED": "Aucun Traccar configuré pour cet utilisateur",
-    "LOAD_ERROR": "Erreur lors du chargement des Traccars"
+    "LOAD_ERROR": "Erreur lors du chargement des Traccars",
+    "ADD_DEVICE": "Ajouter un appareil",
+    "EDIT_DEVICE": "Modifier l'appareil",
+    "DELETE_DEVICE": "Supprimer l'appareil",
+    "DELETE_CONFIRM": "Êtes-vous sûr de vouloir supprimer cet appareil ?",
+    "NAME": "Nom de l'appareil",
+    "IMEI": "IMEI (ID unique)",
+    "CATEGORY": "Catégorie",
+    "PHONE": "Téléphone",
+    "MODEL": "Modèle",
+    "CONTACT": "Contact",
+    "CREATE_SUCCESS": "Appareil créé avec succès",
+    "UPDATE_SUCCESS": "Appareil mis à jour avec succès",
+    "DELETE_SUCCESS": "Appareil supprimé avec succès",
+    "CREATE_ERROR": "Erreur lors de la création de l'appareil",
+    "UPDATE_ERROR": "Erreur lors de la mise à jour de l'appareil",
+    "DELETE_ERROR": "Erreur lors de la suppression de l'appareil"
   },
   "INTERVENTION": {
     "LOAD_ERROR": "Erreur lors du chargement des interventions",

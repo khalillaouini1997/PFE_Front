@@ -1,6 +1,9 @@
 <div class="main-panel p-4">
     <app-page-header titleKey="TRACCAR.TITLE" subtitleKey="TRACCAR.SUBTITLE">
         <app-search-input placeholder="TRACCAR.SEARCH_PLACEHOLDER" (searchQuery)="searchWebAccount($event)" />
+        <button class="btn btn-glass btn-sm rounded-circle" (click)="openAddDialog()" title="{{ 'TRACCAR.ADD_DEVICE' | translate }}">
+            <i class="fa fa-plus"></i>
+        </button>
     </app-page-header>
 
     <div class="premium-card p-0 overflow-hidden shadow-sm">
@@ -31,6 +34,7 @@
                     <th scope="col" pSortableColumn="longitude">Longitude <p-sortIcon field="longitude"></p-sortIcon></th>
                     <th scope="col" pSortableColumn="lastupdate">Dernière Mise à Jour <p-sortIcon field="lastupdate"></p-sortIcon></th>
                     <th scope="col" pSortableColumn="disabled">Statut <p-sortIcon field="disabled"></p-sortIcon></th>
+                    <th scope="col" style="width: 120px">{{ 'COMMON.ACTIONS' | translate }}</th>
                 </tr>
             </ng-template>
 
@@ -54,11 +58,74 @@
                         <span class="badge bg-success">Actif</span>
                         }
                     </td>
+                    <td>
+                        <div class="btn-group gap-2">
+                            <button class="btn btn-sm btn-outline-warning border-0 p-2" title="{{ 'COMMON.EDIT' | translate }}" (click)="openEditDialog(trac)">
+                                <i class="fa fa-edit fs-5"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger border-0 p-2" title="{{ 'COMMON.DELETE' | translate }}" (click)="confirmDelete(trac)">
+                                <i class="fa fa-trash fs-5"></i>
+                            </button>
+                        </div>
+                    </td>
                 </tr>
             </ng-template>
 
-            <app-empty-table [colspan]="12" icon="fa-search" messageKey="TRACCAR.NO_DATA" />
+            <app-empty-table [colspan]="13" icon="fa-search" messageKey="TRACCAR.NO_DATA" />
         </p-table>
         }
     </div>
 </div>
+
+<p-dialog [header]="editMode ? ('TRACCAR.EDIT_DEVICE' | translate) : ('TRACCAR.ADD_DEVICE' | translate)"
+          [(visible)]="showDialog"
+          [modal]="true"
+          [style]="{ width: '500px' }"
+          [draggable]="false"
+          [resizable]="false"
+          styleClass="p-fluid">
+    <form [formGroup]="deviceForm" (ngSubmit)="saveDevice()">
+        <div class="form-group mb-3">
+            <label for="name" class="form-label">{{ 'TRACCAR.NAME' | translate }} *</label>
+            <input id="name" type="text" class="form-control" formControlName="name"
+                   [ngClass]="{'is-invalid': deviceForm.get('name')?.invalid && deviceForm.get('name')?.touched}" />
+            @if (deviceForm.get('name')?.invalid && deviceForm.get('name')?.touched) {
+                <div class="invalid-feedback">{{ 'COMMON.REQUIRED' | translate }}</div>
+            }
+        </div>
+        <div class="form-group mb-3">
+            <label for="imei" class="form-label">{{ 'TRACCAR.IMEI' | translate }} *</label>
+            <input id="imei" type="text" class="form-control" formControlName="imei"
+                   [ngClass]="{'is-invalid': deviceForm.get('imei')?.invalid && deviceForm.get('imei')?.touched}" />
+            @if (deviceForm.get('imei')?.invalid && deviceForm.get('imei')?.touched) {
+                <div class="invalid-feedback">{{ 'COMMON.REQUIRED' | translate }}</div>
+            }
+        </div>
+        <div class="form-group mb-3">
+            <label for="category" class="form-label">{{ 'TRACCAR.CATEGORY' | translate }}</label>
+            <input id="category" type="text" class="form-control" formControlName="category" />
+        </div>
+        <div class="form-group mb-3">
+            <label for="phone" class="form-label">{{ 'TRACCAR.PHONE' | translate }}</label>
+            <input id="phone" type="text" class="form-control" formControlName="phone" />
+        </div>
+        <div class="form-group mb-3">
+            <label for="model" class="form-label">{{ 'TRACCAR.MODEL' | translate }}</label>
+            <input id="model" type="text" class="form-control" formControlName="model" />
+        </div>
+        <div class="form-group mb-3">
+            <label for="contact" class="form-label">{{ 'TRACCAR.CONTACT' | translate }}</label>
+            <input id="contact" type="text" class="form-control" formControlName="contact" />
+        </div>
+    </form>
+    <ng-template pTemplate="footer">
+        <button class="btn btn-secondary" (click)="showDialog = false">
+            <i class="fa fa-times me-1"></i> {{ 'COMMON.CANCEL' | translate }}
+        </button>
+        <button class="btn btn-primary" (click)="saveDevice()" [disabled]="saving">
+            <i class="fa fa-check me-1"></i> {{ 'COMMON.SAVE' | translate }}
+        </button>
+    </ng-template>
+</p-dialog>
+
+<p-confirmDialog></p-confirmDialog>
