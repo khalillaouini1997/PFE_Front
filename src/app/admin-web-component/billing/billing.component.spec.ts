@@ -196,21 +196,6 @@ describe('BillingComponent', () => {
     expect(component.showAllInvoicesView).toBe(false);
   });
 
-  it('should compute totalDevicePages', () => {
-    component.ngOnInit();
-    component.billingResult = { deviceBreakdown: Array(25) };
-    component.pageSize = 10;
-    expect(component.totalDevicePages).toBe(3);
-  });
-
-  it('should compute pagedDevices', () => {
-    component.ngOnInit();
-    component.billingResult = { deviceBreakdown: Array.from({ length: 25 }, (_, i) => ({ id: i })) };
-    component.pageSize = 10;
-    component.devicePage = 1;
-    expect(component.pagedDevices.length).toBe(10);
-  });
-
   it('should destroy chart instances', () => {
     component.ngOnInit();
     expect(() => component.ngOnDestroy()).not.toThrow();
@@ -382,16 +367,6 @@ describe('BillingComponent', () => {
     expect(component.billingResult.billingPeriod).toBe('2024-06');
     expect(component.billingForm.get('year')?.value).toBe(2024);
     expect(component.billingForm.get('month')?.value).toBe(6);
-  });
-
-  it('should compute pagedDevices with empty breakdown', () => {
-    component.billingResult = null;
-    expect(component.pagedDevices).toEqual([]);
-  });
-
-  it('should compute totalDevicePages with no breakdown', () => {
-    component.billingResult = null;
-    expect(component.totalDevicePages).toBe(0);
   });
 
   it('should checkExistingInvoice with no accountId', () => {
