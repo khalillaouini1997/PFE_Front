@@ -17,16 +17,6 @@ h5.mt-4 {
     margin-top: 3rem !important;
 }
 
-.form-control, .form-select {
-    font-size: 1.1rem;
-    border-radius: 12px;
-    border: 1.5px solid var(--surface-border);
-    transition: all 0.3s ease;
-    height: 55px;
-    background-color: var(--surface-card);
-    color: var(--text-primary);
-}
-
 .form-floating > label {
     padding: 1rem 0.75rem;
     transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;

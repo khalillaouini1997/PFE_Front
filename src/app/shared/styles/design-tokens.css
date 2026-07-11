@@ -127,11 +127,11 @@
   --z-error-banner: 9999;
 
   /* ===== Sidebar Tokens ===== */
-  --sidebar-bg: #ffffff;
-  --sidebar-text: #1e293b;
-  --sidebar-text-muted: rgba(30, 41, 59, 0.5);
-  --sidebar-hover-bg: rgba(30, 41, 59, 0.05);
-  --sidebar-border: rgba(30, 41, 59, 0.1);
+  --sidebar-bg: #1e293b;
+  --sidebar-text: #ffffff;
+  --sidebar-text-muted: rgba(255, 255, 255, 0.35);
+  --sidebar-hover-bg: rgba(255, 255, 255, 0.06);
+  --sidebar-border: rgba(255, 255, 255, 0.1);
 
   /* ===== Component Tokens ===== */
   --card-padding: var(--spacing-xl);

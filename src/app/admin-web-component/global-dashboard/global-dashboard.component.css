@@ -149,44 +149,7 @@
   .radar-pulse { display: none; }
 }
 
-/* Premium Table Styling */
-.premium-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  background: transparent;
-  color: var(--text-primary);
-}
-
-.premium-table th {
-  background: var(--surface-elevated);
-  color: var(--text-secondary);
-  font-weight: 600;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  padding: var(--spacing-md) var(--spacing-lg);
-  border-bottom: 2px solid var(--surface-border);
-}
-
-.premium-table td {
-  padding: var(--spacing-md) var(--spacing-lg);
-  vertical-align: middle;
-  border-bottom: 1px solid var(--surface-border);
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-}
-
-.premium-table tr:last-child td {
-  border-bottom: none;
-}
-
-.premium-table tr {
-  transition: background-color var(--transition-fast) ease;
-}
-
-.premium-table tr:hover {
-  background-color: rgba(255, 255, 255, 0.02);
+/* ── Progress Bar ── */
 }
 
 .progress {

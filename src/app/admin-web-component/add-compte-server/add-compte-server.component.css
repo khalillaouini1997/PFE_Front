@@ -88,20 +88,6 @@
     box-shadow: 0 4px 20px -5px var(--accent-primary-dim) !important;
 }
 
-.form-control {
-    font-size: 1.1rem;
-    border-radius: 12px;
-    border: 1.5px solid var(--surface-border);
-    transition: all 0.3s ease;
-    background-color: var(--surface-card);
-    color: var(--text-primary);
-}
-
-.form-control:focus {
-    border-color: var(--accent-primary);
-    box-shadow: 0 4px 20px -5px var(--accent-primary-dim);
-}
-
 h5.fw-bold {
     margin-bottom: 2rem !important;
     color: var(--text-primary);

@@ -32,6 +32,144 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* ── Tables: white bg, black borders ── */
+.table,
+.table > :not(caption) > * > *,
+.p-datatable .p-datatable-thead > tr > th,
+.p-datatable .p-datatable-tbody > tr > td,
+.billing-table,
+.analytics-table,
+.premium-table {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #000000 !important;
+}
+.table > :not(caption) > * > *,
+.billing-table th,
+.billing-table td,
+.analytics-table th,
+.analytics-table td,
+.premium-table th,
+.premium-table td {
+  border: 1px solid #000000 !important;
+  padding: 0.5rem 0.75rem !important;
+}
+.table > thead,
+.billing-table thead,
+.analytics-table thead,
+.premium-table thead,
+.p-datatable .p-datatable-thead > tr > th {
+  background-color: #f0f0f0 !important;
+  color: #0f172a !important;
+  font-weight: 600 !important;
+  border-bottom: 2px solid #000000 !important;
+}
+.table > tbody tr:hover,
+.billing-table tbody tr:hover,
+.analytics-table tbody tr:hover,
+.premium-table tr:hover,
+.p-datatable .p-datatable-tbody > tr:hover {
+  background-color: #f8f8f8 !important;
+}
+
+/* ── Form Controls: white with black border ── */
+.form-control,
+.form-select,
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+textarea,
+select {
+  background-color: #ffffff !important;
+  border: 1px solid #000000 !important;
+  color: #0f172a !important;
+  border-radius: 6px !important;
+  padding: 0.5rem 0.75rem !important;
+  font-size: 0.875rem !important;
+}
+.form-control:focus,
+.form-select:focus,
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #0d9488 !important;
+  box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.25) !important;
+  outline: none !important;
+}
+
+/* ── PrimeNG Datepicker ── */
+.p-datepicker {
+  border: 1px solid #000000 !important;
+  border-radius: 6px !important;
+  background: #ffffff !important;
+}
+.p-datepicker .p-datepicker-header {
+  background: #f0f0f0 !important;
+  border-bottom: 1px solid #000000 !important;
+}
+.p-datepicker .p-datepicker-day,
+.p-datepicker .p-datepicker-month,
+.p-datepicker .p-datepicker-year {
+  color: #0f172a !important;
+  border-radius: 4px !important;
+}
+.p-datepicker .p-datepicker-day:hover {
+  background: #e0e0e0 !important;
+}
+.p-datepicker .p-datepicker-day.p-highlight {
+  background: #0d9488 !important;
+  color: #ffffff !important;
+}
+
+/* ── Cards & Modals ── */
+.card,
+.premium-card,
+.modal-content {
+  background-color: #ffffff !important;
+  border: 1px solid #000000 !important;
+  color: #0f172a !important;
+}
+
+/* ── Buttons ── */
+.btn {
+  border-radius: 6px !important;
+  font-weight: 600 !important;
+}
+
+/* ── Dropdowns ── */
+.dropdown-menu {
+  background-color: #ffffff !important;
+  border: 1px solid #000000 !important;
+  color: #0f172a !important;
+}
+.dropdown-item:hover,
+.dropdown-item:focus {
+  background-color: #f0f0f0 !important;
+  color: #0f172a !important;
+}
+
+/* ── Pagination ── */
+.page-link {
+  color: #0d9488 !important;
+  border: 1px solid #000000 !important;
+}
+.page-item.active .page-link {
+  background-color: #0d9488 !important;
+  border-color: #0d9488 !important;
+  color: #ffffff !important;
+}
+.p-paginator {
+  background: #ffffff !important;
+  border-top: 1px solid #000000 !important;
+  color: #0f172a !important;
+}
+.p-paginator .p-highlight {
+  background: #0d9488 !important;
+  color: #ffffff !important;
+}
+
 /* ── Radar Pulse Animation ── */
 .radar-pulse {
   position: absolute;
