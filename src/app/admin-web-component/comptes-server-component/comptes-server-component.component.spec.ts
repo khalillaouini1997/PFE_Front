@@ -44,7 +44,6 @@ describe('ComptesServerComponentComponent', () => {
 
     fixture = TestBed.createComponent(ComptesServerComponentComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   afterEach(() => {
