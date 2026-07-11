@@ -152,45 +152,45 @@
             <p>No invoices have been generated for this account yet.</p>
           </div>
         } @else {
-          <div class="table-responsive">
-            <table class="billing-table">
-              <thead>
-                <tr>
-                  <th>{{ 'BILLING.PERIOD' | translate }}</th>
-                  <th>{{ 'BILLING.ACCOUNT_NAME' | translate }}</th>
-                  <th>{{ 'BILLING.SUBTOTAL' | translate }} (HT)</th>
-                  <th>{{ 'BILLING.TVA' | translate }}</th>
-                  <th>{{ 'BILLING.TOTAL' | translate }} (TTC)</th>
-                  <th>Status</th>
-                  <th>{{ 'BILLING.GENERATED_AT' | translate }}</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (invoice of allInvoices; track invoice.billingPeriod) {
-                  <tr>
-                    <td><span class="device-id-badge">{{ invoice.billingPeriod }}</span></td>
-                    <td class="fw-bold">{{ invoice.accountName }}</td>
-                    <td>{{ formatCurrency(invoice.subtotal) }}</td>
-                    <td>{{ formatCurrency(invoice.tvaAmount) }}</td>
-                    <td><strong class="text-primary">{{ formatCurrency(invoice.totalAmount) }}</strong></td>
-                    <td>
-                      <span class="status-badge" [class.paid]="invoice.paymentStatus === 'PAID'" [class.unpaid]="invoice.paymentStatus !== 'PAID'">
-                        {{ invoice.paymentStatus || 'UNPAID' }}
-                      </span>
-                    </td>
-                    <td class="text-muted">{{ invoice.generatedAt }}</td>
-                    <td>
-                      <button type="button" class="btn btn-sm btn-outline-primary border-0" 
-                        (click)="viewInvoice(invoice)" title="View details">
-                        <i class="fa fa-eye me-1"></i> View
-                      </button>
-                    </td>
-                  </tr>
-                }
-              </tbody>
-            </table>
-          </div>
+          <p-table [value]="allInvoices" [paginator]="true" [rows]="10"
+            [rowsPerPageOptions]="[10, 25, 50]"
+            styleClass="p-datatable-sm p-datatable-gridlines premium-table-custom"
+            responsiveLayout="scroll"
+            paginatorPosition="bottom">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>{{ 'BILLING.PERIOD' | translate }}</th>
+                <th>{{ 'BILLING.ACCOUNT_NAME' | translate }}</th>
+                <th>{{ 'BILLING.SUBTOTAL' | translate }} (HT)</th>
+                <th>{{ 'BILLING.TVA' | translate }}</th>
+                <th>{{ 'BILLING.TOTAL' | translate }} (TTC)</th>
+                <th>Status</th>
+                <th>{{ 'BILLING.GENERATED_AT' | translate }}</th>
+                <th>Actions</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-invoice>
+              <tr>
+                <td><span class="device-id-badge">{{ invoice.billingPeriod }}</span></td>
+                <td class="fw-bold">{{ invoice.accountName }}</td>
+                <td>{{ formatCurrency(invoice.subtotal) }}</td>
+                <td>{{ formatCurrency(invoice.tvaAmount) }}</td>
+                <td><strong class="text-primary">{{ formatCurrency(invoice.totalAmount) }}</strong></td>
+                <td>
+                  <span class="status-badge" [class.paid]="invoice.paymentStatus === 'PAID'" [class.unpaid]="invoice.paymentStatus !== 'PAID'">
+                    {{ invoice.paymentStatus || 'UNPAID' }}
+                  </span>
+                </td>
+                <td class="text-muted">{{ invoice.generatedAt }}</td>
+                <td>
+                  <button type="button" class="btn btn-sm btn-outline-primary border-0" 
+                    (click)="viewInvoice(invoice)" title="View details">
+                    <i class="fa fa-eye me-1"></i> View
+                  </button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
         }
       </div>
     }
@@ -277,58 +277,42 @@
           <div class="billing-card table-card">
             <div class="table-header">
               <h3>{{ 'BILLING.DEVICE_BREAKDOWN' | translate }} ({{ billingResult.deviceBreakdown.length }} devices)</h3>
-              <div class="pagination-controls">
-                <label for="pageSize">Rows:</label>
-                <select id="pageSize" [(ngModel)]="pageSize" (change)="devicePage = 0" class="form-control-sm">
-                  <option [value]="10">10</option>
-                  <option [value]="25">25</option>
-                  <option [value]="50">50</option>
-                  <option [value]="100">100</option>
-                </select>
-              </div>
             </div>
-            <div class="table-responsive">
-              <table class="billing-table">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>{{ 'BILLING.DEVICE_ID' | translate }}</th>
-                    <th>{{ 'BILLING.DEVICE_LABEL' | translate }}</th>
-                    <th>{{ 'BILLING.WORKING_DAYS' | translate }}</th>
-                    <th>Fee Configuration</th>
-                    <th>{{ 'BILLING.SUBTOTAL' | translate }} (HT)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let device of pagedDevices; let i = index">
-                    <td class="text-muted">{{ devicePage * pageSize + i + 1 }}</td>
-                    <td><span class="device-id-badge">#{{ device.deviceId }}</span></td>
-                    <td><strong>{{ device.deviceLabel }}</strong><br><small class="text-muted">Box {{ device.numBoitier }}</small></td>
-                    <td>
-                      <span class="days-badge" [class.active-days]="device.workingDays > 0">
-                        {{ device.workingDays }} Days
-                      </span>
-                    </td>
-                    <td>
-                      <div class="fee-breakdown-details">
-                        <div>Daily: {{ formatCurrency(device.deviceFeeByDay) }}/day</div>
-                        <div>SIM: {{ formatCurrency(device.simCardFeePerMonth) }}/month</div>
-                      </div>
-                    </td>
-                    <td><strong class="text-primary">{{ formatCurrency(device.subtotal) }}</strong></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            @if (totalDevicePages > 1) {
-              <div class="pagination">
-                <button class="btn btn-sm btn-secondary" (click)="devicePage = 0" [disabled]="devicePage === 0">&laquo;</button>
-                <button class="btn btn-sm btn-secondary" (click)="devicePage = devicePage - 1" [disabled]="devicePage === 0">&lsaquo;</button>
-                <span class="page-info">Page {{ devicePage + 1 }} / {{ totalDevicePages }}</span>
-                <button class="btn btn-sm btn-secondary" (click)="devicePage = devicePage + 1" [disabled]="devicePage >= totalDevicePages - 1">&rsaquo;</button>
-                <button class="btn btn-sm btn-secondary" (click)="devicePage = totalDevicePages - 1" [disabled]="devicePage >= totalDevicePages - 1">&raquo;</button>
-              </div>
-            }
+            <p-table [value]="billingResult.deviceBreakdown" [paginator]="true" [rows]="10"
+              [rowsPerPageOptions]="[10, 25, 50, 100]"
+              styleClass="p-datatable-sm p-datatable-gridlines premium-table-custom"
+              responsiveLayout="scroll"
+              paginatorPosition="bottom">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>#</th>
+                  <th>{{ 'BILLING.DEVICE_ID' | translate }}</th>
+                  <th>{{ 'BILLING.DEVICE_LABEL' | translate }}</th>
+                  <th>{{ 'BILLING.WORKING_DAYS' | translate }}</th>
+                  <th>Fee Configuration</th>
+                  <th>{{ 'BILLING.SUBTOTAL' | translate }} (HT)</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-device let-rowIndex="rowIndex">
+                <tr>
+                  <td class="text-muted">{{ rowIndex + 1 }}</td>
+                  <td><span class="device-id-badge">#{{ device.deviceId }}</span></td>
+                  <td><strong>{{ device.deviceLabel }}</strong><br><small class="text-muted">Box {{ device.numBoitier }}</small></td>
+                  <td>
+                    <span class="days-badge" [class.active-days]="device.workingDays > 0">
+                      {{ device.workingDays }} Days
+                    </span>
+                  </td>
+                  <td>
+                    <div class="fee-breakdown-details">
+                      <div>Daily: {{ formatCurrency(device.deviceFeeByDay) }}/day</div>
+                      <div>SIM: {{ formatCurrency(device.simCardFeePerMonth) }}/month</div>
+                    </div>
+                  </td>
+                  <td><strong class="text-primary">{{ formatCurrency(device.subtotal) }}</strong></td>
+                </tr>
+              </ng-template>
+            </p-table>
           </div>
         }
 
@@ -386,25 +370,30 @@
         <div class="chart-card">
           <h3>Top Devices by Billing</h3>
           <div class="table-wrapper">
-            <table class="analytics-table" *ngIf="topDevices.length > 0">
-              <thead>
-                <tr>
-                  <th>Device</th>
-                  <th>Label</th>
-                  <th>Working Days</th>
-                  <th>Total (HT)</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let device of topDevices">
-                  <td><span class="device-badge">#{{ device.numBoitier }}</span></td>
-                  <td>{{ device.deviceLabel }}</td>
-                  <td>{{ device.totalWorkingDays }} days</td>
-                  <td class="fw-bold">{{ formatCurrency(device.totalSubtotal) }}</td>
-                </tr>
-              </tbody>
-            </table>
-            <p *ngIf="topDevices.length === 0 && !analyticsLoading" class="no-data">No billing data available for this year.</p>
+            @if (topDevices.length > 0) {
+              <p-table [value]="topDevices" [paginator]="true" [rows]="5"
+                styleClass="p-datatable-sm p-datatable-gridlines premium-table-custom"
+                responsiveLayout="scroll">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>Device</th>
+                    <th>Label</th>
+                    <th>Working Days</th>
+                    <th>Total (HT)</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-device>
+                  <tr>
+                    <td><span class="device-badge">#{{ device.numBoitier }}</span></td>
+                    <td>{{ device.deviceLabel }}</td>
+                    <td>{{ device.totalWorkingDays }} days</td>
+                    <td class="fw-bold">{{ formatCurrency(device.totalSubtotal) }}</td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            } @else {
+              <p *ngIf="!analyticsLoading" class="no-data">No billing data available for this year.</p>
+            }
           </div>
         </div>
       </div>

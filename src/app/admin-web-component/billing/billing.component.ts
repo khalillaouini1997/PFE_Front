@@ -8,6 +8,8 @@ import { Chart, registerables } from 'chart.js';
 import { BillingService } from 'src/app/service/billing.service';
 import { BillingAnalyticsService } from 'src/app/service/billing-analytics.service';
 import { WebAccountService } from 'src/app/service/web-account.service';
+import { TableModule } from 'primeng/table';
+import { PaginatorModule } from 'primeng/paginator';
 
 Chart.register(...registerables);
 
@@ -16,7 +18,7 @@ Chart.register(...registerables);
   standalone: true,
   templateUrl: './billing.component.html',
   styleUrls: ['./billing.component.css'],
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule]
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule, TableModule, PaginatorModule]
 })
 export class BillingComponent implements OnInit, OnDestroy {
   activeTab: 'invoice' | 'dashboard' = 'dashboard';
@@ -38,18 +40,6 @@ export class BillingComponent implements OnInit, OnDestroy {
   selectedYear = new Date().getFullYear();
   analyticsLoading = false;
   topDevices: any[] = [];
-
-  devicePage = 0;
-  pageSize = 10;
-
-  get totalDevicePages(): number {
-    return Math.ceil((this.billingResult?.deviceBreakdown?.length || 0) / this.pageSize);
-  }
-
-  get pagedDevices(): any[] {
-    const all = this.billingResult?.deviceBreakdown || [];
-    return all.slice(this.devicePage * this.pageSize, (this.devicePage + 1) * this.pageSize);
-  }
 
   revenueByMonthChart = viewChild<ElementRef>('revenueByMonthChart');
   revenueByAccountChart = viewChild<ElementRef>('revenueByAccountChart');
@@ -135,7 +125,6 @@ export class BillingComponent implements OnInit, OnDestroy {
     }
     this.billingResult = null;
     this.noExistingInvoice = false;
-    this.devicePage = 0;
     this.checkExistingInvoice();
   }
 
