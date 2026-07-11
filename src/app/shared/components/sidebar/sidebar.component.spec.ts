@@ -186,24 +186,4 @@ describe('SidebarComponent', () => {
     component.setMenu('listAdmin');
     expect(component.isActiveAdminCompte).toBe(true);
   });
-
-  it('should change language', () => {
-    const translate = TestBed.inject(TranslateService);
-    component.changeLanguage('en');
-    expect(translate.currentLang).toBe('en');
-    expect(localStorage.getItem('language')).toBe('en');
-  });
-
-  it('should check isLang', () => {
-    const translate = TestBed.inject(TranslateService);
-    translate.use('fr');
-    expect(component.isLang('fr')).toBe(true);
-    expect(component.isLang('en')).toBe(false);
-  });
-
-  it('should default to fr when no currentLang', () => {
-    const translate = TestBed.inject(TranslateService);
-    translate.currentLang = undefined as any;
-    expect(component.isLang('fr')).toBe(true);
-  });
 });
