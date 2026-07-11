@@ -98,6 +98,7 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
       }, 10000);
       
     } catch (error) {
+      console.warn('Map init error:', error);
       this.mapError.set('Failed to initialize map. Please refresh the page.');
       this.isMapLoading.set(false);
     }

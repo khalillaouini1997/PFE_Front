@@ -29,7 +29,7 @@
                     <th scope="col" pReorderableColumn pResizableColumn>{{ 'WEB_ACCOUNTS.PHONE' | translate }}</th>
                     <th scope="col" pReorderableColumn pResizableColumn>
                         <div class="d-flex flex-column">
-                            <span>{{ 'WEB_ACCOUNTS.REGION' | translate }}</span>
+                            <label for="regionFilter" class="mb-1">{{ 'WEB_ACCOUNTS.REGION' | translate }}</label>
                             <select id="regionFilter" class="form-select form-select-sm mt-1" 
                                 [formControl]="regionControl" (change)="searchWebAccount()">
                                 <option value="">All</option>
@@ -43,7 +43,7 @@
                     <th scope="col" pReorderableColumn pResizableColumn>{{ 'WEB_ACCOUNTS.CLIENT_TYPE' | translate }}</th>
                     <th scope="col" pReorderableColumn pResizableColumn>
                         <div class="d-flex flex-column">
-                            <span>{{ 'WEB_ACCOUNTS.POOL' | translate }}</span>
+                            <label for="poolFilter" class="mb-1">{{ 'WEB_ACCOUNTS.POOL' | translate }}</label>
                             <select id="poolFilter" class="form-select form-select-sm mt-1" 
                                 [formControl]="poolControl" (change)="searchWebAccount()">
                                 <option value="">All</option>

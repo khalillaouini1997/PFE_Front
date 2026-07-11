@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { AdministratorCompte, createAdministratorCompte } from 'src/app/data/data';
 import { AuthService } from 'src/app/service/auth.service';
 import { WebAccountService } from 'src/app/service/web-account.service';

@@ -1,11 +1,5 @@
 import 'zone.js';
 import 'zone.js/testing';
-import { getTestBed } from '@angular/core/testing';
-import {
-  BrowserDynamicTestingModule,
-  platformBrowserDynamicTesting
-} from '@angular/platform-browser-dynamic/testing';
-import { getPlatform, destroyPlatform } from '@angular/core';
 
 // Mock window.matchMedia for jsdom
 if (!window.matchMedia) {
@@ -24,12 +18,12 @@ if (!window.matchMedia) {
   });
 }
 
-// Mock ResizeObserver for PrimeNG
+// Mock ResizeObserver for PrimeNG (empty methods are intentional for jsdom)
 if (!window.ResizeObserver) {
   (window as any).ResizeObserver = class {
-    observe() {}
-    unobserve() {}
-    disconnect() {}
+    observe() {} // NOSONAR
+    unobserve() {} // NOSONAR
+    disconnect() {} // NOSONAR
   };
 }
 
