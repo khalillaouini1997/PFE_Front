@@ -31,8 +31,7 @@
                         <div class="d-flex flex-column">
                             <span>{{ 'WEB_ACCOUNTS.REGION' | translate }}</span>
                             <select id="regionFilter" class="form-select form-select-sm mt-1" 
-                                [formControl]="regionControl" (change)="searchWebAccount()" 
-                                title="Filter by region" aria-label="Filter by region">
+                                [formControl]="regionControl" (change)="searchWebAccount()">
                                 <option value="">All</option>
                                 <option value="TUNIS">TUNIS</option>
                                 <option value="sousse">sousse</option>
@@ -46,8 +45,7 @@
                         <div class="d-flex flex-column">
                             <span>{{ 'WEB_ACCOUNTS.POOL' | translate }}</span>
                             <select id="poolFilter" class="form-select form-select-sm mt-1" 
-                                [formControl]="poolControl" (change)="searchWebAccount()" 
-                                title="Filter by pool" aria-label="Filter by pool">
+                                [formControl]="poolControl" (change)="searchWebAccount()">
                                 <option value="">All</option>
                                 @for (pool of availablePools; track pool) {
                                     <option [ngValue]="pool">{{pool}}</option>

@@ -9,9 +9,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { PageHeaderComponent } from '../../shared/components';
-import { SearchInputComponent } from '../../shared/components';
-import { EmptyTableComponent } from '../../shared/components';
+import { PageHeaderComponent, SearchInputComponent, EmptyTableComponent } from '../../shared/components';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { withToast } from '../../utils/toast.helpers';
@@ -136,7 +134,6 @@ export class ListTraccarComponent implements OnInit, OnDestroy {
       : this.traccarService.createDevice(payload);
 
     const successKey = this.editMode ? 'TRACCAR.UPDATE_SUCCESS' : 'TRACCAR.CREATE_SUCCESS';
-    const errorKey = this.editMode ? 'TRACCAR.UPDATE_ERROR' : 'TRACCAR.CREATE_ERROR';
 
     withToast(operation, this.toastr, this.translate, successKey)
       .pipe(catchError(() => { this.saving = false; this.cdr.markForCheck(); return of(null); }))

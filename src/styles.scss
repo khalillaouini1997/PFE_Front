@@ -19,6 +19,39 @@
   --warning: var(--color-warning);
   --danger: var(--color-error);
   --info: var(--color-info);
+
+  --p-datatable-header-background: var(--surface-card);
+  --p-datatable-header-color: var(--text-primary);
+  --p-datatable-body-background: var(--surface-card);
+  --p-datatable-body-color: var(--text-primary);
+  --p-datatable-row-background: var(--surface-card);
+  --p-datatable-row-hover-background: var(--surface-hover);
+  --p-datatable-row-hover-color: var(--text-primary);
+  --p-datatable-header-border-color: var(--surface-border);
+  --p-datatable-border-color: var(--surface-border);
+  --p-datatable-column-title-color: var(--text-primary);
+  --p-datatable-column-title-font-weight: 600;
+  --p-paginator-background: var(--surface-card);
+  --p-paginator-color: var(--text-primary);
+  --p-paginator-icon-color: var(--text-primary);
+  --p-paginator-hover-icon-color: var(--primary);
+  --p-datepicker-background: var(--surface-card);
+  --p-datepicker-header-background: var(--surface-elevated);
+  --p-datepicker-header-color: var(--text-primary);
+  --p-datepicker-date-color: var(--text-primary);
+  --p-datepicker-icon-color: var(--text-primary);
+  --p-datepicker-hover-background: var(--surface-hover);
+  --p-datepicker-hover-color: var(--text-primary);
+  --p-select-background: var(--surface-card);
+  --p-select-color: var(--text-primary);
+  --p-select-border-color: var(--surface-border);
+  --p-inputtext-background: var(--surface-card);
+  --p-inputtext-color: var(--text-primary);
+  --p-inputtext-border-color: var(--surface-border);
+  --p-dialog-background: var(--surface-card);
+  --p-dialog-color: var(--text-primary);
+  --p-menu-background: var(--surface-card);
+  --p-menu-color: var(--text-primary);
 }
 
 /* ── Body ── */
@@ -101,42 +134,6 @@ select:focus {
   border-color: var(--primary) !important;
   box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.25) !important;
   outline: none !important;
-}
-
-/* ── PrimeNG: Force surfaces ── */
-:root {
-  --p-datatable-header-background: var(--surface-card);
-  --p-datatable-header-color: var(--text-primary);
-  --p-datatable-body-background: var(--surface-card);
-  --p-datatable-body-color: var(--text-primary);
-  --p-datatable-row-background: var(--surface-card);
-  --p-datatable-row-hover-background: var(--surface-hover);
-  --p-datatable-row-hover-color: var(--text-primary);
-  --p-datatable-header-border-color: var(--surface-border);
-  --p-datatable-border-color: var(--surface-border);
-  --p-datatable-column-title-color: var(--text-primary);
-  --p-datatable-column-title-font-weight: 600;
-  --p-paginator-background: var(--surface-card);
-  --p-paginator-color: var(--text-primary);
-  --p-paginator-icon-color: var(--text-primary);
-  --p-paginator-hover-icon-color: var(--primary);
-  --p-datepicker-background: var(--surface-card);
-  --p-datepicker-header-background: var(--surface-elevated);
-  --p-datepicker-header-color: var(--text-primary);
-  --p-datepicker-date-color: var(--text-primary);
-  --p-datepicker-icon-color: var(--text-primary);
-  --p-datepicker-hover-background: var(--surface-hover);
-  --p-datepicker-hover-color: var(--text-primary);
-  --p-select-background: var(--surface-card);
-  --p-select-color: var(--text-primary);
-  --p-select-border-color: var(--surface-border);
-  --p-inputtext-background: var(--surface-card);
-  --p-inputtext-color: var(--text-primary);
-  --p-inputtext-border-color: var(--surface-border);
-  --p-dialog-background: var(--surface-card);
-  --p-dialog-color: var(--text-primary);
-  --p-menu-background: var(--surface-card);
-  --p-menu-color: var(--text-primary);
 }
 
 /* ── PrimeNG Datepicker ── */

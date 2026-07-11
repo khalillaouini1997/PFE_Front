@@ -10,7 +10,7 @@ export class ThemeService {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
 
-  private mediaQuery: MediaQueryList | null = null;
+  private readonly mediaQuery: MediaQueryList | null = null;
 
   constructor() {
     if (this.isBrowser) {
@@ -52,6 +52,6 @@ export class ThemeService {
   }
 
   private apply(theme: Theme): void {
-    this.document.documentElement.setAttribute('data-theme', theme);
+    this.document.documentElement.dataset['theme'] = theme;
   }
 }

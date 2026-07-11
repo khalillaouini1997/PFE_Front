@@ -54,9 +54,9 @@
     @if (loading()) {
     <div
       class="global-spinner premium-card d-flex flex-column align-items-center justify-content-center text-center">
-      <div class="spinner-border" style="width:3rem;height:3rem;border-width:.3em;color:var(--accent-primary)" role="status">
+      <output class="spinner-border" style="width:3rem;height:3rem;border-width:.3em;color:var(--accent-primary)">
         <span class="visually-hidden">Loading…</span>
-      </div>
+      </output>
       <h4 class="mt-4 fw-bold" style="color:var(--text-primary)">{{ 'DASHBOARD.UPDATING_DATA' | translate }}</h4>
       <p class="m-0" style="color:var(--text-muted)">Loading your fleet insights…</p>
     </div>

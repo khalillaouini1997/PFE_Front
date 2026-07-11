@@ -122,7 +122,7 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
           }
         });
       }
-    } catch (_) { /* Chart.js not available in test env */ }
+    } catch (_) { console.warn('Chart.js not available:', _); }
   }
 
   private updateSpeedChart() {
@@ -167,7 +167,7 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
           }
         });
       }
-    } catch (_) { /* Chart.js not available in test env */ }
+    } catch (_) { console.warn('Chart.js not available:', _); }
   }
 
   private updatePuceChart() {
@@ -215,7 +215,7 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
           }
         });
       }
-    } catch (_) { /* Chart.js not available in test env */ }
+    } catch (_) { console.warn('Chart.js not available:', _); }
   }
 
 
@@ -266,7 +266,7 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
           }
         });
       }
-    } catch (_) { /* Chart.js not available in test env */ }
+    } catch (_) { console.warn('Chart.js not available:', _); }
   }
 
   private updateEvolutionChart() {
@@ -316,7 +316,7 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
         }
       });
     }
-    } catch (_) { /* Chart.js not available in test env */ }
+    } catch (_) { console.warn('Chart.js not available:', _); }
   }
 
   onGranularityChange(event: Event) {

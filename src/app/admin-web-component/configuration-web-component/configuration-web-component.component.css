@@ -295,7 +295,7 @@ table>thead>tr>th,
   font-size: 0.75rem !important;
   font-weight: 700 !important;
   text-transform: uppercase !important;
-  letter-spacing: 0.025em !important;
+  letter-spacing: 0.025em;
   pointer-events: auto !important;
 }
 
@@ -375,7 +375,7 @@ dialog::backdrop {
     font-weight: 800 !important;
     color: var(--accent-primary) !important;
     text-transform: uppercase !important;
-    letter-spacing: 0.05em !important;
+    letter-spacing: 0.05em;
     margin-bottom: 8px !important;
 }
 
