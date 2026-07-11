@@ -24,7 +24,7 @@ concurrency:
 
 env:
   IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/pfe_front
-  NODE_VERSION: '20'
+  NODE_VERSION: '24'
 
 jobs:
   # ──────────────────────────────────────────────
