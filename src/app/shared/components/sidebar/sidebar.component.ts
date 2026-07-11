@@ -40,7 +40,6 @@ export class SidebarComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly webAccountService = inject(WebAccountService);
   private readonly webSocketService = inject(WebSocketService);
-  private readonly translate = inject(TranslateService);
 
   constructor() {
     this.currentUser = this.authService.getCurrentUser() || createAdministratorCompte();
@@ -92,14 +91,5 @@ export class SidebarComponent implements OnInit {
     this.isActiveAccessLog = menu === 'logs';
     this.isActiveTraccar = menu === 'traccar';
     this.isActiveBilling = menu === 'billing';
-  }
-
-  changeLanguage(lang: string) {
-    this.translate.use(lang);
-    localStorage.setItem('language', lang);
-  }
-
-  isLang(lang: string): boolean {
-    return this.translate.currentLang === lang || (lang === 'fr' && !this.translate.currentLang);
   }
 }

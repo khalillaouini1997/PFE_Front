@@ -50,7 +50,7 @@
   position: absolute;
   top: -4px; right: -4px;
   background: var(--color-error);
-  color: #fff;
+  color: #ffffff;
   border-radius: var(--radius-full);
   font-size: 0.6rem;
   font-weight: var(--font-weight-bold);
@@ -150,7 +150,6 @@
 }
 
 /* ── Progress Bar ── */
-}
 
 .progress {
   border-radius: 9999px;
@@ -209,16 +208,16 @@
 }
 
 .activity-event-item.move {
-  border-left-color: #10b981; /* Success (Green) */
+  border-left-color: var(--color-success);
 }
 .activity-event-item.stop {
-  border-left-color: #64748b; /* Secondary (Slate) */
+  border-left-color: var(--text-muted);
 }
 .activity-event-item.signal {
-  border-left-color: #ef4444; /* Danger (Red) */
+  border-left-color: var(--color-error);
 }
 .activity-event-item.reconnect {
-  border-left-color: #3b82f6; /* Info (Blue) */
+  border-left-color: var(--color-info);
 }
 
 .event-icon {
@@ -288,7 +287,7 @@
 }
 
 .bolt-icon {
-  color: #f59e0b;
+  color: var(--accent-warm);
 }
 
 .rss-icon {

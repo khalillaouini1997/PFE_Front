@@ -57,18 +57,18 @@
   box-shadow: var(--shadow-lg);
 }
 
-/* Specific colors for specific cards to look super custom */
+/* Specific colors for specific cards */
 .chart-card:nth-child(2) {
-  border-top-color: #3b82f6; /* Blue for speed */
+  border-top-color: var(--color-info);
 }
 .chart-card:nth-child(3) {
-  border-top-color: #a855f7; /* Purple for SIM */
+  border-top-color: #a855f7;
 }
 .chart-card:nth-child(4) {
-  border-top-color: #f59e0b; /* Amber for signal */
+  border-top-color: var(--accent-warm);
 }
 .chart-card.health-score-card {
-  border-top-color: #10b981; /* Green for health */
+  border-top-color: var(--color-success);
 }
 
 .chart-card h3 {

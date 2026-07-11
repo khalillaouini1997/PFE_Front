@@ -87,18 +87,6 @@
                     <p>{{ 'SIDEBAR.ACCESS_LOG' | translate }}</p>
                 </a>
             </li>
-            <li class="language-switcher-item">
-                <div class="language-switcher px-3 py-1 d-flex gap-2 align-items-center" [class.d-none]="isCollapsed()">
-                    <button (click)="changeLanguage('fr')" class="btn btn-sm py-1 px-2 lang-btn" 
-                        [class.active]="isLang('fr')" [class.opacity-50]="!isLang('fr')">
-                        FR
-                    </button>
-                    <button (click)="changeLanguage('en')" class="btn btn-sm py-1 px-2 lang-btn" 
-                        [class.active]="isLang('en')" [class.opacity-50]="!isLang('en')">
-                        EN
-                    </button>
-                </div>
-            </li>
             <li class="logout-item mt-2">
                 <button type="button" class="btn btn-link text-danger opacity-75 w-100 text-start d-flex align-items-center gap-2 px-3 py-2" (click)="logout()" [attr.aria-label]="'SIDEBAR.LOGOUT' | translate" [title]="isCollapsed() ? ('SIDEBAR.LOGOUT' | translate) : ''">
                     <i class="material-icons">power_settings_new</i>

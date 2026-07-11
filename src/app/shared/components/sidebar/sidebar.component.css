@@ -162,25 +162,6 @@
 }
 
 /* === LANGUAGE SWITCHER === */
-.language-switcher-item {
-    margin-top: 0.5rem;
-}
-
-.language-switcher {
-    flex-wrap: wrap;
-}
-
-/* === LANGUAGE BUTTONS === */
-.lang-btn {
-    border: 1px solid var(--sidebar-border);
-    color: var(--sidebar-text);
-    transition: all 0.2s ease;
-}
-
-.lang-btn.active {
-    background: var(--sidebar-hover-bg);
-    opacity: 0.8;
-}
 
 
 

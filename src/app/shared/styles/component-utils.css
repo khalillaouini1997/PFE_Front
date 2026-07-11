@@ -25,8 +25,8 @@ dialog::backdrop,
 
 /* -- Premium Card -- */
 .premium-card {
-  background: var(--card-bg, #ffffff);
-  border: var(--card-border, 1px solid #e2e8f0);
+  background: var(--card-bg);
+  border: var(--card-border);
   border-radius: var(--radius-xl, 12px);
   padding: var(--spacing-xl, 24px);
   box-shadow: var(--shadow-sm);

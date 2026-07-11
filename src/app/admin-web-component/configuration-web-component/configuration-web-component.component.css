@@ -57,7 +57,7 @@
 .open>.navbar .navbar-nav>li>a.btn.btn-success.dropdown-toggle:focus,
 .open>.navbar .navbar-nav>li>a.btn.btn-success.dropdown-toggle:hover {
   background-color: var(--color-success);
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 input[type=radio],
@@ -551,7 +551,7 @@ dialog::backdrop {
 /* Button & Animation Custom Styles */
 .btn-purple {
     background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%) !important;
-    color: white !important;
+    color: #ffffff !important;
 }
 
 .btn-purple:hover {

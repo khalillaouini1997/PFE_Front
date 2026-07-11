@@ -172,3 +172,42 @@
     --text-primary: #000000;
   }
 }
+
+/* ===== DARK MODE ===== */
+[data-theme="dark"] {
+  /* Surface Palette */
+  --surface-base: #0f172a;
+  --surface-card: #1e293b;
+  --surface-elevated: #334155;
+  --surface-border: #475569;
+  --surface-hover: #475569;
+
+  /* Text Colors */
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+
+  /* Background */
+  --bg-main: var(--surface-base);
+
+  /* Sidebar */
+  --sidebar-bg: #0f172a;
+  --sidebar-text: #e2e8f0;
+  --sidebar-text-muted: rgba(255, 255, 255, 0.4);
+  --sidebar-hover-bg: rgba(255, 255, 255, 0.08);
+  --sidebar-border: rgba(255, 255, 255, 0.1);
+
+  /* Semantic light variants for dark backgrounds */
+  --color-success-light: #064e3b;
+  --color-warning-light: #78350f;
+  --color-error-light: #7f1d1d;
+  --color-info-light: #0c4a6e;
+
+  /* Shadows — deeper for dark mode */
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px -1px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 0 20px rgba(20, 184, 166, 0.25);
+}

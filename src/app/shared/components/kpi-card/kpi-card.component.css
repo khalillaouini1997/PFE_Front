@@ -1,7 +1,7 @@
 /* ===== KPI CARD ===== */
 .kpi-card {
-  background: var(--surface-card, #151d2e);
-  border: 1px solid var(--surface-border, #1e2d45);
+  background: var(--surface-card);
+  border: 1px solid var(--surface-border);
   border-radius: var(--radius-xl, 12px);
   padding: var(--spacing-lg, 16px);
   box-shadow: var(--shadow-sm);
@@ -12,7 +12,7 @@
 .kpi-card:hover {
   transform: translateY(-1px);
   box-shadow: var(--shadow-md);
-  border-color: var(--accent-primary, #14b8a6);
+  border-color: var(--accent-primary);
 }
 
 .kpi-header {
@@ -37,19 +37,19 @@
 
 .trend-up .kpi-trend {
   background: rgba(16, 185, 129, 0.12);
-  color: #047857;
+  color: var(--color-success-dark);
 }
 
 .trend-down .kpi-trend {
   background: rgba(239, 68, 68, 0.12);
-  color: #b91c1c;
+  color: var(--color-error-dark);
 }
 
 .kpi-value {
   font-family: var(--font-family-display, 'Space Grotesk', sans-serif);
   font-size: clamp(1.6rem, 4vw, 2rem);
   font-weight: var(--font-weight-bold, 700);
-  color: var(--text-primary, #e2e8f0);
+  color: var(--text-primary);
   line-height: 1.05;
   margin-bottom: 2px;
 }
@@ -57,7 +57,7 @@
 .kpi-label {
   font-family: var(--font-family-base, 'Inter', sans-serif);
   font-size: var(--text-sm, 0.875rem);
-  color: var(--text-secondary, #94a3b8);
+  color: var(--text-secondary);
 }
 
 .sparkline-container {

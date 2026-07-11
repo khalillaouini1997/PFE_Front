@@ -7,7 +7,10 @@
 
     <app-sidebar (sidebarToggle)="onSidebarToggle($event)"></app-sidebar>
 
-    <main class="content" [class.collapsed]="isSidebarCollapsed">
-        <router-outlet></router-outlet>
-    </main>
+    <div class="content-area" [class.collapsed]="isSidebarCollapsed">
+        <app-navbar></app-navbar>
+        <main class="content">
+            <router-outlet></router-outlet>
+        </main>
+    </div>
 </div>

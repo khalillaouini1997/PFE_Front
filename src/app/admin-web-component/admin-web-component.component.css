@@ -8,26 +8,27 @@
 }
 
 /* ===== CONTENT AREA ===== */
-.content {
-    flex: 1;
-    margin-left: 280px;
-    transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* ===== CONTENT AREA ===== */
-.content {
+.content-area {
     flex: 1;
     margin-left: 280px;
     transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     background-color: var(--bg-main);
+    display: flex;
+    flex-direction: column;
 }
 
-.content.collapsed {
+.content-area.collapsed {
     margin-left: 80px;
 }
 
+.content {
+    flex: 1;
+    margin-top: 56px;
+    padding: var(--spacing-xl);
+}
+
 @media (max-width: 991px) {
-    .content {
+    .content-area {
         margin-left: 0;
     }
 }

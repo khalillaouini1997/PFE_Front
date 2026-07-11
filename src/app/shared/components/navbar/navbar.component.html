@@ -1,0 +1,28 @@
+<nav class="navbar">
+  <div class="navbar-brand">
+    <span class="navbar-title">PFE Admin</span>
+  </div>
+
+  <div class="navbar-actions">
+    <div class="language-switcher">
+      <button
+        (click)="changeLanguage('fr')"
+        class="lang-btn"
+        [class.active]="isLang('fr')"
+        [class.inactive]="!isLang('fr')">
+        FR
+      </button>
+      <button
+        (click)="changeLanguage('en')"
+        class="lang-btn"
+        [class.active]="isLang('en')"
+        [class.inactive]="!isLang('en')">
+        EN
+      </button>
+    </div>
+
+    <button class="theme-toggle" (click)="toggleTheme()" [attr.aria-label]="currentTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'">
+      <i class="pi" [class.pi-sun]="currentTheme === 'dark'" [class.pi-moon]="currentTheme === 'light'"></i>
+    </button>
+  </div>
+</nav>

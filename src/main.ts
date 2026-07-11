@@ -15,6 +15,7 @@ import { FormsModule } from '@angular/forms';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
+import { ThemeService } from './app/shared/services/theme.service';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 
 export class CustomTranslateLoader implements TranslateLoader {
@@ -62,11 +63,17 @@ bootstrapApplication(AppComponent, {
             preset: Aura,
             options: {
                 cssLayer: false,
-                darkModeSelector: false
+                darkModeSelector: '[data-theme="dark"]'
             }
         },
         ripple: true
-    })
+    }),
+    {
+      provide: 'APP_INITIALIZER',
+      useFactory: (themeService: ThemeService) => () => themeService.init(),
+      deps: [ThemeService],
+      multi: true
+    }
   ]
 })
   .catch(err => {});

@@ -32,7 +32,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ── Tables: white bg, black borders ── */
+/* ── Tables ── */
 .table,
 .table > :not(caption) > * > *,
 .p-datatable,
@@ -44,9 +44,9 @@ body {
 .billing-table,
 .analytics-table,
 .premium-table {
-  background-color: #ffffff !important;
-  color: #0f172a !important;
-  border-color: #e2e8f0 !important;
+  background-color: var(--surface-card) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--surface-border) !important;
 }
 .table > :not(caption) > * > *,
 .billing-table th,
@@ -55,7 +55,7 @@ body {
 .analytics-table td,
 .premium-table th,
 .premium-table td {
-  border: 1px solid #000000 !important;
+  border: 1px solid var(--surface-border) !important;
   padding: 0.5rem 0.75rem !important;
 }
 .table > thead,
@@ -63,20 +63,20 @@ body {
 .analytics-table thead,
 .premium-table thead,
 .p-datatable .p-datatable-thead > tr > th {
-  background-color: #f0f0f0 !important;
-  color: #0f172a !important;
+  background-color: var(--surface-elevated) !important;
+  color: var(--text-primary) !important;
   font-weight: 600 !important;
-  border-bottom: 2px solid #000000 !important;
+  border-bottom: 2px solid var(--surface-border) !important;
 }
 .table > tbody tr:hover,
 .billing-table tbody tr:hover,
 .analytics-table tbody tr:hover,
 .premium-table tr:hover,
 .p-datatable .p-datatable-tbody > tr:hover {
-  background-color: #f8f8f8 !important;
+  background-color: var(--surface-hover) !important;
 }
 
-/* ── Form Controls: white with black border ── */
+/* ── Form Controls ── */
 .form-control,
 .form-select,
 input[type="text"],
@@ -86,9 +86,9 @@ input[type="password"],
 input[type="search"],
 textarea,
 select {
-  background-color: #ffffff !important;
-  border: 1px solid #000000 !important;
-  color: #0f172a !important;
+  background-color: var(--surface-card) !important;
+  border: 1px solid var(--surface-border) !important;
+  color: var(--text-primary) !important;
   border-radius: 6px !important;
   padding: 0.5rem 0.75rem !important;
   font-size: 0.875rem !important;
@@ -98,68 +98,68 @@ select {
 input:focus,
 textarea:focus,
 select:focus {
-  border-color: #0d9488 !important;
+  border-color: var(--primary) !important;
   box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.25) !important;
   outline: none !important;
 }
 
-/* ── PrimeNG: Force light theme on all surfaces ── */
+/* ── PrimeNG: Force surfaces ── */
 :root {
-  --p-datatable-header-background: #ffffff;
-  --p-datatable-header-color: #0f172a;
-  --p-datatable-body-background: #ffffff;
-  --p-datatable-body-color: #0f172a;
-  --p-datatable-row-background: #ffffff;
-  --p-datatable-row-hover-background: #f8f8f8;
-  --p-datatable-row-hover-color: #0f172a;
-  --p-datatable-header-border-color: #e2e8f0;
-  --p-datatable-border-color: #e2e8f0;
-  --p-datatable-column-title-color: #0f172a;
+  --p-datatable-header-background: var(--surface-card);
+  --p-datatable-header-color: var(--text-primary);
+  --p-datatable-body-background: var(--surface-card);
+  --p-datatable-body-color: var(--text-primary);
+  --p-datatable-row-background: var(--surface-card);
+  --p-datatable-row-hover-background: var(--surface-hover);
+  --p-datatable-row-hover-color: var(--text-primary);
+  --p-datatable-header-border-color: var(--surface-border);
+  --p-datatable-border-color: var(--surface-border);
+  --p-datatable-column-title-color: var(--text-primary);
   --p-datatable-column-title-font-weight: 600;
-  --p-paginator-background: #ffffff;
-  --p-paginator-color: #0f172a;
-  --p-paginator-icon-color: #0f172a;
-  --p-paginator-hover-icon-color: #0d9488;
-  --p-datepicker-background: #ffffff;
-  --p-datepicker-header-background: #f0f0f0;
-  --p-datepicker-header-color: #0f172a;
-  --p-datepicker-date-color: #0f172a;
-  --p-datepicker-icon-color: #0f172a;
-  --p-datepicker-hover-background: #e0e0e0;
-  --p-datepicker-hover-color: #0f172a;
-  --p-select-background: #ffffff;
-  --p-select-color: #0f172a;
-  --p-select-border-color: #e2e8f0;
-  --p-inputtext-background: #ffffff;
-  --p-inputtext-color: #0f172a;
-  --p-inputtext-border-color: #e2e8f0;
-  --p-dialog-background: #ffffff;
-  --p-dialog-color: #0f172a;
-  --p-menu-background: #ffffff;
-  --p-menu-color: #0f172a;
+  --p-paginator-background: var(--surface-card);
+  --p-paginator-color: var(--text-primary);
+  --p-paginator-icon-color: var(--text-primary);
+  --p-paginator-hover-icon-color: var(--primary);
+  --p-datepicker-background: var(--surface-card);
+  --p-datepicker-header-background: var(--surface-elevated);
+  --p-datepicker-header-color: var(--text-primary);
+  --p-datepicker-date-color: var(--text-primary);
+  --p-datepicker-icon-color: var(--text-primary);
+  --p-datepicker-hover-background: var(--surface-hover);
+  --p-datepicker-hover-color: var(--text-primary);
+  --p-select-background: var(--surface-card);
+  --p-select-color: var(--text-primary);
+  --p-select-border-color: var(--surface-border);
+  --p-inputtext-background: var(--surface-card);
+  --p-inputtext-color: var(--text-primary);
+  --p-inputtext-border-color: var(--surface-border);
+  --p-dialog-background: var(--surface-card);
+  --p-dialog-color: var(--text-primary);
+  --p-menu-background: var(--surface-card);
+  --p-menu-color: var(--text-primary);
 }
 
 /* ── PrimeNG Datepicker ── */
 .p-datepicker {
-  border: 1px solid #e2e8f0 !important;
+  border: 1px solid var(--surface-border) !important;
   border-radius: 6px !important;
-  background: #ffffff !important;
+  background: var(--surface-card) !important;
 }
 .p-datepicker .p-datepicker-header {
-  background: #f0f0f0 !important;
-  border-bottom: 1px solid #e2e8f0 !important;
+  background: var(--surface-elevated) !important;
+  border-bottom: 1px solid var(--surface-border) !important;
 }
 .p-datepicker .p-datepicker-day,
 .p-datepicker .p-datepicker-month,
 .p-datepicker .p-datepicker-year {
-  color: #0f172a !important;
+  color: var(--text-primary) !important;
   border-radius: 4px !important;
 }
 .p-datepicker .p-datepicker-day:hover {
-  background: #e0e0e0 !important;
+  background: var(--surface-hover) !important;
 }
 .p-datepicker .p-datepicker-day.p-highlight {
-  background: #0d9488 !important;
+  background: var(--primary) !important;
   color: #ffffff !important;
 }
 
@@ -167,9 +167,9 @@ select:focus {
 .card,
 .premium-card,
 .modal-content {
-  background-color: #ffffff !important;
-  border: 1px solid #000000 !important;
-  color: #0f172a !important;
+  background-color: var(--surface-card) !important;
+  border: 1px solid var(--surface-border) !important;
+  color: var(--text-primary) !important;
 }
 
 /* ── Buttons ── */
@@ -180,33 +180,33 @@ select:focus {
 
 /* ── Dropdowns ── */
 .dropdown-menu {
-  background-color: #ffffff !important;
-  border: 1px solid #000000 !important;
-  color: #0f172a !important;
+  background-color: var(--surface-card) !important;
+  border: 1px solid var(--surface-border) !important;
+  color: var(--text-primary) !important;
 }
 .dropdown-item:hover,
 .dropdown-item:focus {
-  background-color: #f0f0f0 !important;
-  color: #0f172a !important;
+  background-color: var(--surface-hover) !important;
+  color: var(--text-primary) !important;
 }
 
 /* ── Pagination ── */
 .page-link {
-  color: #0d9488 !important;
-  border: 1px solid #000000 !important;
+  color: var(--primary) !important;
+  border: 1px solid var(--surface-border) !important;
 }
 .page-item.active .page-link {
-  background-color: #0d9488 !important;
-  border-color: #0d9488 !important;
+  background-color: var(--primary) !important;
+  border-color: var(--primary) !important;
   color: #ffffff !important;
 }
 .p-paginator {
-  background: #ffffff !important;
-  border-top: 1px solid #000000 !important;
-  color: #0f172a !important;
+  background: var(--surface-card) !important;
+  border-top: 1px solid var(--surface-border) !important;
+  color: var(--text-primary) !important;
 }
 .p-paginator .p-highlight {
-  background: #0d9488 !important;
+  background: var(--primary) !important;
   color: #ffffff !important;
 }
 
@@ -266,6 +266,21 @@ select:focus {
   color: rgba(255, 255, 255, 0.75) !important;
   font-size: 0.8rem !important;
   margin-top: 2px;
+}
+
+/* ── Leaflet Dark Mode ── */
+[data-theme="dark"] .leaflet-tile {
+  filter: invert(1) hue-rotate(180deg) brightness(0.85) contrast(0.9);
+}
+[data-theme="dark"] .leaflet-container {
+  background: var(--surface-base);
+}
+
+/* ── ngx-toastr Dark Mode ── */
+[data-theme="dark"] .toast-container .ngx-toastr {
+  background: var(--surface-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--surface-border);
 }
 
 /* ── Reduced Motion ── */
