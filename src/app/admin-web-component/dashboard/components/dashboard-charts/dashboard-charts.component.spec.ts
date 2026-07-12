@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { DashboardChartsComponent } from './dashboard-charts.component';
 import { TranslateService } from '@ngx-translate/core';
 import { DashboardStore } from '../../../../shared/stores';
@@ -21,6 +21,11 @@ describe('DashboardChartsComponent', () => {
 
     fixture = TestBed.createComponent(DashboardChartsComponent);
     component = fixture.componentInstance;
+  });
+
+  afterEach(() => {
+    component?.ngOnDestroy();
+    fixture?.destroy();
   });
 
   it('should create', () => {
