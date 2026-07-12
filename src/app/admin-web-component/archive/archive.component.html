@@ -104,12 +104,19 @@
                             <tr>
                                 <th scope="col" style="width: 100px" pReorderableColumn pResizableColumn>{{ 'COMMON.ID' | translate }}</th>
                                 <th scope="col" pReorderableColumn pResizableColumn>{{ 'ARCHIVE.RAW_DATA' | translate }}</th>
+                                <th scope="col" style="width: 80px"></th>
                             </tr>
                         </ng-template>
                         <ng-template pTemplate="body" let-raw>
                             <tr>
                                 <td class="fw-bold">{{raw.idTram}}</td>
                                 <td><code class="text-primary p-1 rounded opacity-75">{{raw.gprmc}}</code></td>
+                                <td class="text-end">
+                                    <button class="btn btn-sm btn-outline-danger border-0" (click)="deleteRaw(raw)"
+                                        title="{{ 'ARCHIVE.DELETE_RAW' | translate }}">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </td>
                             </tr>
                         </ng-template>
                     </p-table>

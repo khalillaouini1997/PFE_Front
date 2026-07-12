@@ -1,14 +1,15 @@
 import { CommonModule, DatePipe, DecimalPipe, Location, NgClass } from '@angular/common';
 import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Archive, Raws, BoitierAnalysis, createRaws } from "../../data/data";
+import { Archive, Raws, Raw, BoitierAnalysis, createRaws } from "../../data/data";
 
 import { BoitierService } from "../../service/boitier.service";
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { TabsModule } from 'primeng/tabs';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-archive',
@@ -34,7 +35,9 @@ export class ArchiveComponent implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly boitierService: BoitierService,
     private readonly router: Router,
-    private readonly fb: FormBuilder
+    private readonly fb: FormBuilder,
+    private readonly toastr: ToastrService,
+    private readonly translate: TranslateService
   ) { }
 
   ngOnInit(): void {
@@ -125,6 +128,23 @@ export class ArchiveComponent implements OnInit {
 
   changeDays(limit: number) {
     this.selectedLimit = limit;
+  }
+
+  deleteRaw(raw: Raw) {
+    if (!confirm(this.translate.instant('ARCHIVE.CONFIRM_DELETE_RAW'))) return;
+    this.boitierService.deleteRaw(this.numBoitier(), raw.idTram).subscribe({
+      next: () => {
+        const current = this.rawData();
+        this.rawData.set({
+          raws: current.raws.filter(r => r.idTram !== raw.idTram),
+          count: current.count - 1
+        });
+        this.toastr.success(this.translate.instant('ARCHIVE.RAW_DELETED'), this.translate.instant('COMMON.SUCCESS'));
+      },
+      error: () => {
+        this.toastr.error(this.translate.instant('COMMON.ERROR_OCCURRED'), this.translate.instant('COMMON.ERROR'));
+      }
+    });
   }
 
   getAnomalyTypes(): { name: string; count: number }[] {

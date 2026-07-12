@@ -191,7 +191,10 @@
     "G_SENSOR": "G-Sensor",
     "ENGINE": "Moteur",
     "MISC": "Divers",
-    "RELOAD_RAW": "Recharger Brutes"
+    "RELOAD_RAW": "Recharger Brutes",
+    "DELETE_RAW": "Supprimer la ligne",
+    "CONFIRM_DELETE_RAW": "Êtes-vous sûr de vouloir supprimer cette ligne brute ?",
+    "RAW_DELETED": "Ligne brute supprimée avec succès"
   },
   "ADMIN_ACCOUNTS": {
     "TITLE": "Comptes Administrateurs",

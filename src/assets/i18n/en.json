@@ -191,7 +191,10 @@
     "G_SENSOR": "G-Sensor",
     "ENGINE": "Engine",
     "MISC": "Misc",
-    "RELOAD_RAW": "Reload Raw"
+    "RELOAD_RAW": "Reload Raw",
+    "DELETE_RAW": "Delete Raw",
+    "CONFIRM_DELETE_RAW": "Are you sure you want to delete this raw frame?",
+    "RAW_DELETED": "Raw frame deleted successfully"
   },
   "ADMIN_ACCOUNTS": {
     "TITLE": "Admin Accounts",
