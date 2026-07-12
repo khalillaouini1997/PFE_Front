@@ -87,11 +87,10 @@ describe('DashboardChartsComponent', () => {
   });
 
   it('updateCharts with all view children present should not throw', () => {
-    const mockCanvas = { nativeElement: document.createElement('canvas') };
-    vi.spyOn(component, 'statusChart' as any).mockReturnValue(mockCanvas);
-    vi.spyOn(component, 'speedChart' as any).mockReturnValue(mockCanvas);
-    vi.spyOn(component, 'puceChart' as any).mockReturnValue(mockCanvas);
-    vi.spyOn(component, 'signalChart' as any).mockReturnValue(mockCanvas);
+    vi.spyOn(component, 'statusChart' as any).mockReturnValue({ nativeElement: document.createElement('canvas') });
+    vi.spyOn(component, 'speedChart' as any).mockReturnValue({ nativeElement: document.createElement('canvas') });
+    vi.spyOn(component, 'puceChart' as any).mockReturnValue({ nativeElement: document.createElement('canvas') });
+    vi.spyOn(component, 'signalChart' as any).mockReturnValue({ nativeElement: document.createElement('canvas') });
     expect(() => component.updateCharts()).not.toThrow();
   });
 
@@ -131,11 +130,10 @@ describe('DashboardChartsComponent', () => {
   });
 
   it('updateCharts should call all sub-update methods when view children exist', () => {
-    const mockCanvas = { nativeElement: document.createElement('canvas') };
-    vi.spyOn(component, 'statusChart' as any).mockReturnValue(mockCanvas);
-    vi.spyOn(component, 'speedChart' as any).mockReturnValue(mockCanvas);
-    vi.spyOn(component, 'puceChart' as any).mockReturnValue(mockCanvas);
-    vi.spyOn(component, 'signalChart' as any).mockReturnValue(mockCanvas);
+    vi.spyOn(component, 'statusChart' as any).mockReturnValue({ nativeElement: document.createElement('canvas') });
+    vi.spyOn(component, 'speedChart' as any).mockReturnValue({ nativeElement: document.createElement('canvas') });
+    vi.spyOn(component, 'puceChart' as any).mockReturnValue({ nativeElement: document.createElement('canvas') });
+    vi.spyOn(component, 'signalChart' as any).mockReturnValue({ nativeElement: document.createElement('canvas') });
 
     const stateSpy = vi.spyOn(component as any, 'updateStateChart');
     const speedSpy = vi.spyOn(component as any, 'updateSpeedChart');

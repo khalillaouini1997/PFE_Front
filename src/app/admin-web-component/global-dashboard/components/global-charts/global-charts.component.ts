@@ -1,9 +1,10 @@
 import { Component, input, viewChild, inject, AfterViewInit, OnDestroy, ElementRef, effect, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { GlobalDashboardStats } from '../../../../shared/stores/global-dashboard.store';
+import { GlobalDashboardStats } from '../../../../shared/stores';
 import { CHART_CONSTANTS, SPEED_BANDS, SIM_CARD_PREFIXES } from '../../../../shared/constants/app.constants';
 import { Chart, registerables } from 'chart.js';
+import { updateOrCreateChart } from '../../../../shared/utils/chart.utils';
 
 Chart.register(...registerables);
 
@@ -78,9 +79,6 @@ export class GlobalChartsComponent implements AfterViewInit, OnDestroy {
   }
 
   private updateStateChart() {
-    const canvas = this.statusChart();
-    if (!canvas) return;
-
     const stats = this.stats();
     const data = {
       labels: [
@@ -95,22 +93,17 @@ export class GlobalChartsComponent implements AfterViewInit, OnDestroy {
       }]
     };
 
-    if (this.stateChart) {
-      this.stateChart.data = data;
-      this.stateChart.update('none');
-    } else {
-      this.stateChart = new Chart(canvas.nativeElement, {
+    this.stateChart = updateOrCreateChart(
+      this.statusChart(), this.stateChart,
+      {
         type: 'doughnut',
         data,
-        options: { responsive: true, maintainAspectRatio: false, animation: false, plugins: { legend: { position: 'bottom' } } }
-      });
-    }
+        options: { plugins: { legend: { position: 'bottom' } } }
+      }
+    );
   }
 
   private updateSpeedChart() {
-    const canvas = this.speedChart();
-    if (!canvas) return;
-
     const r = this.realtimes();
     const bands = {
       [SPEED_BANDS.STOPPED]: r.filter(t => t.speed === 0).length,
@@ -129,26 +122,17 @@ export class GlobalChartsComponent implements AfterViewInit, OnDestroy {
       }]
     };
 
-    if (this.speedChartInstance) {
-      this.speedChartInstance.data = data;
-      this.speedChartInstance.update('none');
-    } else {
-      this.speedChartInstance = new Chart(canvas.nativeElement, {
+    this.speedChartInstance = updateOrCreateChart(
+      this.speedChart(), this.speedChartInstance,
+      {
         type: 'bar',
         data,
-        options: {
-          responsive: true, maintainAspectRatio: false, animation: false,
-          plugins: { legend: { display: false } },
-          scales: { y: { beginAtZero: true, grid: { display: false } }, x: { grid: { display: false } } }
-        }
-      });
-    }
+        options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { display: false } }, x: { grid: { display: false } } } }
+      }
+    );
   }
 
   private updatePuceChart() {
-    const canvas = this.puceChart();
-    if (!canvas) return;
-
     const r = this.realtimes();
     const counts = {
       'Orange Tunisie': r.filter(t => t.numPuce?.startsWith(SIM_CARD_PREFIXES.ORANGE_TUNISIE)).length,
@@ -171,22 +155,17 @@ export class GlobalChartsComponent implements AfterViewInit, OnDestroy {
       }]
     };
 
-    if (this.puceChartInstance) {
-      this.puceChartInstance.data = data;
-      this.puceChartInstance.update('none');
-    } else {
-      this.puceChartInstance = new Chart(canvas.nativeElement, {
+    this.puceChartInstance = updateOrCreateChart(
+      this.puceChart(), this.puceChartInstance,
+      {
         type: 'pie',
         data,
-        options: { responsive: true, maintainAspectRatio: false, animation: false, plugins: { legend: { position: 'bottom' } } }
-      });
-    }
+        options: { plugins: { legend: { position: 'bottom' } } }
+      }
+    );
   }
 
   private updateSignalChart() {
-    const canvas = this.signalChart();
-    if (!canvas) return;
-
     const r = this.realtimes() as any[];
     const signalDistribution = {
       'Excellent': r.filter(t => t.signal >= 20).length,
@@ -205,32 +184,23 @@ export class GlobalChartsComponent implements AfterViewInit, OnDestroy {
       }]
     };
 
-    if (this.signalChartInstance) {
-      this.signalChartInstance.data = data;
-      this.signalChartInstance.update('none');
-    } else {
-      this.signalChartInstance = new Chart(canvas.nativeElement, {
+    this.signalChartInstance = updateOrCreateChart(
+      this.signalChart(), this.signalChartInstance,
+      {
         type: 'bar',
         data,
-        options: {
-          responsive: true, maintainAspectRatio: false, animation: false,
-          plugins: { legend: { display: false } },
-          scales: { y: { beginAtZero: true, grid: { display: false } }, x: { grid: { display: false } } }
-        }
-      });
-    }
+        options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { display: false } }, x: { grid: { display: false } } } }
+      }
+    );
   }
 
   private updateHealthChart() {
-    const canvas = this.healthChart();
-    if (!canvas) return;
-
     const score = this.healthScore();
-    let color = '#10b981'; // Good (Green)
+    let color = '#10b981';
     if (score < 50) {
-      color = '#ef4444'; // Poor (Red)
+      color = '#ef4444';
     } else if (score < 80) {
-      color = '#f59e0b'; // Fair (Amber)
+      color = '#f59e0b';
     }
 
     const data = {
@@ -243,24 +213,13 @@ export class GlobalChartsComponent implements AfterViewInit, OnDestroy {
       }]
     };
 
-    if (this.healthChartInstance) {
-      this.healthChartInstance.data = data;
-      this.healthChartInstance.update('none');
-    } else {
-      this.healthChartInstance = new Chart(canvas.nativeElement, {
+    this.healthChartInstance = updateOrCreateChart(
+      this.healthChart(), this.healthChartInstance,
+      {
         type: 'doughnut',
         data,
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          animation: false,
-          plugins: {
-            legend: { display: false },
-            tooltip: { enabled: false }
-          },
-          cutout: '75%'
-        }
-      });
-    }
+        options: { plugins: { legend: { display: false }, tooltip: { enabled: false } }, cutout: '75%' }
+      }
+    );
   }
 }

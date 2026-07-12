@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { finalize, tap } from 'rxjs';
 import { Chart, registerables } from 'chart.js';
+import { updateOrCreateChart } from 'src/app/shared/utils/chart.utils';
 import { BillingService } from 'src/app/service/billing.service';
 import { BillingAnalyticsService } from 'src/app/service/billing-analytics.service';
 import { WebAccountService } from 'src/app/service/web-account.service';
@@ -396,9 +397,6 @@ export class BillingComponent implements OnInit, OnDestroy {
   }
 
   private renderForecastChart(actualLabels: string[], actualData: number[], forecast: any) {
-    const canvas = this.revenueForecastChart();
-    if (!canvas) return;
-
     const predictions: number[] = forecast?.predictions || [];
     const confidenceLower: number[] = forecast?.confidence_lower || [];
     const confidenceUpper: number[] = forecast?.confidence_upper || [];
@@ -428,15 +426,9 @@ export class BillingComponent implements OnInit, OnDestroy {
       ...confidenceUpper
     ];
 
-    if (this.revenueForecastInstance) {
-      this.revenueForecastInstance.data.labels = allLabels;
-      this.revenueForecastInstance.data.datasets[0].data = actualValues;
-      this.revenueForecastInstance.data.datasets[1].data = predictedValues;
-      this.revenueForecastInstance.data.datasets[2].data = upperBand;
-      this.revenueForecastInstance.data.datasets[3].data = lowerBand;
-      this.revenueForecastInstance.update('none');
-    } else {
-      this.revenueForecastInstance = new Chart(canvas.nativeElement, {
+    this.revenueForecastInstance = updateOrCreateChart(
+      this.revenueForecastChart(), this.revenueForecastInstance,
+      {
         type: 'line',
         data: {
           labels: allLabels,
@@ -487,9 +479,6 @@ export class BillingComponent implements OnInit, OnDestroy {
           ]
         },
         options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          animation: false,
           plugins: {
             legend: { position: 'top' },
             tooltip: { mode: 'index', intersect: false }
@@ -499,8 +488,8 @@ export class BillingComponent implements OnInit, OnDestroy {
             x: { grid: { display: false }, ticks: { maxRotation: 45 } }
           }
         }
-      });
-    }
+      }
+    );
   }
 
   private renderCharts(data: any) {
@@ -510,19 +499,13 @@ export class BillingComponent implements OnInit, OnDestroy {
   }
 
   private renderRevenueByMonth(data: any[]) {
-    const canvas = this.revenueByMonthChart();
-    if (!canvas) return;
-
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const map = new Map(data.map((d: any) => [d.month_num, d.total]));
     const values = months.map((_, i) => map.get(String(i + 1).padStart(2, '0')) || 0);
 
-    if (this.revenueByMonthInstance) {
-      this.revenueByMonthInstance.data.labels = months;
-      this.revenueByMonthInstance.data.datasets[0].data = values;
-      this.revenueByMonthInstance.update('none');
-    } else {
-      this.revenueByMonthInstance = new Chart(canvas.nativeElement, {
+    this.revenueByMonthInstance = updateOrCreateChart(
+      this.revenueByMonthChart(), this.revenueByMonthInstance,
+      {
         type: 'line',
         data: {
           labels: months,
@@ -535,30 +518,18 @@ export class BillingComponent implements OnInit, OnDestroy {
             tension: 0.4
           }]
         },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          animation: false,
-          plugins: { legend: { display: false } },
-          scales: { y: { beginAtZero: true, grid: { display: false } }, x: { grid: { display: false } } }
-        }
-      });
-    }
+        options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { display: false } }, x: { grid: { display: false } } } }
+      }
+    );
   }
 
   private renderRevenueByAccount(data: any[]) {
-    const canvas = this.revenueByAccountChart();
-    if (!canvas) return;
-
     const labels = data.map((d: any) => d.accountName || `#${d.accountId}`);
     const values = data.map((d: any) => d.total);
 
-    if (this.revenueByAccountInstance) {
-      this.revenueByAccountInstance.data.labels = labels;
-      this.revenueByAccountInstance.data.datasets[0].data = values;
-      this.revenueByAccountInstance.update('none');
-    } else {
-      this.revenueByAccountInstance = new Chart(canvas.nativeElement, {
+    this.revenueByAccountInstance = updateOrCreateChart(
+      this.revenueByAccountChart(), this.revenueByAccountInstance,
+      {
         type: 'bar',
         data: {
           labels,
@@ -569,45 +540,27 @@ export class BillingComponent implements OnInit, OnDestroy {
             borderRadius: 8
           }]
         },
-        options: {
-          indexAxis: 'y',
-          responsive: true,
-          maintainAspectRatio: false,
-          animation: false,
-          plugins: { legend: { display: false } },
-          scales: { x: { beginAtZero: true, grid: { display: false } }, y: { grid: { display: false } } }
-        }
-      });
-    }
+        options: { indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, grid: { display: false } }, y: { grid: { display: false } } } }
+      }
+    );
   }
 
   private renderStatusBreakdown(data: any[]) {
-    const canvas = this.statusChart();
-    if (!canvas) return;
-
     const labels = data.map((d: any) => d.status);
     const values = data.map((d: any) => d.count);
     const colors = ['#f59e0b', '#10b981', '#ef4444'];
 
-    if (this.statusInstance) {
-      this.statusInstance.data.labels = labels;
-      this.statusInstance.data.datasets[0].data = values;
-      this.statusInstance.update('none');
-    } else {
-      this.statusInstance = new Chart(canvas.nativeElement, {
+    this.statusInstance = updateOrCreateChart(
+      this.statusChart(), this.statusInstance,
+      {
         type: 'doughnut',
         data: {
           labels,
           datasets: [{ data: values, backgroundColor: colors, hoverOffset: 4 }]
         },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          animation: false,
-          plugins: { legend: { position: 'bottom' } }
-        }
-      });
-    }
+        options: { plugins: { legend: { position: 'bottom' } } }
+      }
+    );
   }
 
   formatCurrency(amount: number): string {

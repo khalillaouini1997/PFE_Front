@@ -4,6 +4,7 @@ import { RealTime, DeviceInstallationEvolution } from '../../../../data/data';
 import { CHART_CONSTANTS, SPEED_BANDS, SIM_CARD_PREFIXES, STATUS_TYPES } from '../../../../shared/constants/app.constants';
 import { TranslateService } from '@ngx-translate/core';
 import { Chart, registerables } from 'chart.js';
+import { updateOrCreateChart } from '../../../../shared/utils/chart.utils';
 import { DashboardStore } from '../../../../shared/stores';
 
 Chart.register(...registerables);
@@ -81,9 +82,6 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
   }
 
   private updateStateChart() {
-    const canvas = this.statusChart();
-    if (!canvas?.nativeElement) return;
-
     const stats = this.stats();
     const data = {
       labels: [
@@ -106,29 +104,17 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
       }]
     };
 
-    try {
-      if (this.stateChart) {
-        this.stateChart.data = data;
-        this.stateChart.update('none');
-      } else {
-        this.stateChart = new Chart(canvas.nativeElement, {
-          type: 'doughnut',
-          data,
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            animation: false,
-            plugins: { legend: { position: 'bottom' } }
-          }
-        });
+    this.stateChart = updateOrCreateChart(
+      this.statusChart(), this.stateChart,
+      {
+        type: 'doughnut',
+        data,
+        options: { plugins: { legend: { position: 'bottom' } } }
       }
-    } catch (_) { console.warn('Chart.js not available:', _); }
+    );
   }
 
   private updateSpeedChart() {
-    const canvas = this.speedChart();
-    if (!canvas?.nativeElement) return;
-
     const r = this.realtimes();
     const bands = {
       [SPEED_BANDS.STOPPED]: r.filter(t => t.speed === 0).length,
@@ -147,33 +133,17 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
       }]
     };
 
-    try {
-      if (this.speedChartInstance) {
-        this.speedChartInstance.data = data;
-        this.speedChartInstance.update('none');
-      } else {
-        this.speedChartInstance = new Chart(canvas.nativeElement, {
-          type: 'bar',
-          data,
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            animation: false,
-            plugins: { legend: { display: false } },
-            scales: {
-              y: { beginAtZero: true, grid: { display: false } },
-              x: { grid: { display: false } }
-            }
-          }
-        });
+    this.speedChartInstance = updateOrCreateChart(
+      this.speedChart(), this.speedChartInstance,
+      {
+        type: 'bar',
+        data,
+        options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { display: false } }, x: { grid: { display: false } } } }
       }
-    } catch (_) { console.warn('Chart.js not available:', _); }
+    );
   }
 
   private updatePuceChart() {
-    const canvas = this.puceChart();
-    if (!canvas?.nativeElement) return;
-
     const r = this.realtimes();
     const counts = {
       'Orange Tunisie': r.filter(t => t.numPuce?.startsWith(SIM_CARD_PREFIXES.ORANGE_TUNISIE)).length,
@@ -199,30 +169,17 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
       }]
     };
 
-    try {
-      if (this.puceChartInstance) {
-        this.puceChartInstance.data = data;
-        this.puceChartInstance.update('none');
-      } else {
-        this.puceChartInstance = new Chart(canvas.nativeElement, {
-          type: 'pie',
-          data,
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            animation: false,
-            plugins: { legend: { position: 'bottom' } }
-          }
-        });
+    this.puceChartInstance = updateOrCreateChart(
+      this.puceChart(), this.puceChartInstance,
+      {
+        type: 'pie',
+        data,
+        options: { plugins: { legend: { position: 'bottom' } } }
       }
-    } catch (_) { console.warn('Chart.js not available:', _); }
+    );
   }
 
-
   private updateSignalChart() {
-    const canvas = this.signalChart();
-    if (!canvas?.nativeElement) return;
-
     const r = this.realtimes() as any[];
     const signalDistribution = {
       'Excellent': r.filter(t => t.signal >= 20).length,
@@ -246,33 +203,17 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
       }]
     };
 
-    try {
-      if (this.signalChartInstance) {
-        this.signalChartInstance.data = data;
-        this.signalChartInstance.update('none');
-      } else {
-        this.signalChartInstance = new Chart(canvas.nativeElement, {
-          type: 'bar',
-          data,
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            animation: false,
-            plugins: { legend: { display: false } },
-            scales: {
-              y: { beginAtZero: true, grid: { display: false } },
-              x: { grid: { display: false } }
-            }
-          }
-        });
+    this.signalChartInstance = updateOrCreateChart(
+      this.signalChart(), this.signalChartInstance,
+      {
+        type: 'bar',
+        data,
+        options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { display: false } }, x: { grid: { display: false } } } }
       }
-    } catch (_) { console.warn('Chart.js not available:', _); }
+    );
   }
 
   private updateEvolutionChart() {
-    const canvas = this.evolutionChart();
-    if (!canvas?.nativeElement) return;
-
     const evolutionData = this.installationEvolution();
     const labels = evolutionData.map(d => d.periodLabel);
     const cumulativeData = evolutionData.map(d => d.cumulativeCount);
@@ -289,34 +230,14 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
       }]
     };
 
-    try {
-      if (this.evolutionChartInstance) {
-        this.evolutionChartInstance.data = data;
-        this.evolutionChartInstance.update('none');
-      } else {
-        this.evolutionChartInstance = new Chart(canvas.nativeElement, {
-          type: 'line',
-          data,
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            animation: false,
-            plugins: {
-              legend: { display: false }
-            },
-            scales: {
-              y: {
-                beginAtZero: true,
-                grid: { display: false }
-              },
-              x: {
-                grid: { display: false }
-              }
-            }
-        }
-      });
-    }
-    } catch (_) { console.warn('Chart.js not available:', _); }
+    this.evolutionChartInstance = updateOrCreateChart(
+      this.evolutionChart(), this.evolutionChartInstance,
+      {
+        type: 'line',
+        data,
+        options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { display: false } }, x: { grid: { display: false } } } }
+      }
+    );
   }
 
   onGranularityChange(event: Event) {
