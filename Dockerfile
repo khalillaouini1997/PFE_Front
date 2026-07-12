@@ -6,7 +6,8 @@ COPY . .
 RUN npm run build -- --configuration production
 
 FROM nginx:alpine
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+RUN apk upgrade --no-cache && \
+    addgroup -S appgroup && adduser -S appuser -G appgroup
 COPY --from=build /app/dist/web_admin/browser /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/nginx.conf
 RUN rm -f /etc/nginx/conf.d/default.conf && \
