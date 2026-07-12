@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Routes } from '@angular/router';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { signal } from '@angular/core';
 import { of } from 'rxjs';
@@ -67,7 +67,7 @@ describe('GlobalDashboardComponent', () => {
     await TestBed.configureTestingModule({
       imports: [GlobalDashboardComponent, TranslateModule.forRoot()],
       providers: [
-        provideRouter([]),
+        provideRouter([{ path: 'error', component: class {} }]),
         { provide: GlobalDashboardStore, useValue: mockStore },
         { provide: AuthService, useValue: mockAuthService },
         { provide: WebAccountService, useValue: mockWebAccountService }
