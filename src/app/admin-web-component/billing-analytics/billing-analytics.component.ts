@@ -1,10 +1,10 @@
-import { Component, OnInit, OnDestroy, inject, viewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
-import { Chart, registerables } from 'chart.js';
-import { updateOrCreateChart } from 'src/app/shared/utils/chart.utils';
-import { BillingAnalyticsService } from 'src/app/service/billing-analytics.service';
+import {ChangeDetectorRef, Component, ElementRef, inject, OnDestroy, OnInit, viewChild} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+import {TranslateModule} from '@ngx-translate/core';
+import {Chart, registerables} from 'chart.js';
+import {updateOrCreateChart} from 'src/app/shared/utils/chart.utils';
+import {BillingAnalyticsService} from 'src/app/service/billing-analytics.service';
 
 Chart.register(...registerables);
 
@@ -64,6 +64,14 @@ export class BillingAnalyticsComponent implements OnInit, OnDestroy {
     });
   }
 
+  formatCurrency(amount: number): string {
+    return new Intl.NumberFormat('fr-TN', {
+      style: 'currency',
+      currency: 'TND',
+      minimumFractionDigits: 3
+    }).format(amount);
+  }
+
   private renderCharts(data: any) {
     this.renderRevenueByMonth(data.revenueByMonth || []);
     this.renderRevenueByAccount(data.revenueByAccount || []);
@@ -72,7 +80,7 @@ export class BillingAnalyticsComponent implements OnInit, OnDestroy {
 
   private renderRevenueByMonth(data: any[]) {
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const map = new Map(data.map((d: any) => [d.month_num, d.total]));
+    const map = new Map(data.map((d: any) => [d.monthNum, d.total]));
     const values = months.map((_, i) => map.get(String(i + 1).padStart(2, '0')) || 0);
 
     this.revenueByMonthInstance = updateOrCreateChart(
@@ -81,9 +89,19 @@ export class BillingAnalyticsComponent implements OnInit, OnDestroy {
         type: 'line',
         data: {
           labels: months,
-          datasets: [{ label: 'Revenue (TND)', data: values, borderColor: '#14b8a6', backgroundColor: 'rgba(20, 184, 166, 0.1)', fill: true, tension: 0.4 }]
+          datasets: [{
+            label: 'Revenue (TND)',
+            data: values,
+            borderColor: '#14b8a6',
+            backgroundColor: 'rgba(20, 184, 166, 0.1)',
+            fill: true,
+            tension: 0.4
+          }]
         },
-        options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { display: false } }, x: { grid: { display: false } } } }
+        options: {
+          plugins: {legend: {display: false}},
+          scales: {y: {beginAtZero: true, grid: {display: false}}, x: {grid: {display: false}}}
+        }
       }
     );
   }
@@ -96,8 +114,12 @@ export class BillingAnalyticsComponent implements OnInit, OnDestroy {
       this.revenueByAccountChart(), this.revenueByAccountInstance,
       {
         type: 'bar',
-        data: { labels, datasets: [{ label: 'Revenue (TND)', data: values, backgroundColor: '#14b8a6', borderRadius: 8 }] },
-        options: { indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, grid: { display: false } }, y: { grid: { display: false } } } }
+        data: {labels, datasets: [{label: 'Revenue (TND)', data: values, backgroundColor: '#14b8a6', borderRadius: 8}]},
+        options: {
+          indexAxis: 'y',
+          plugins: {legend: {display: false}},
+          scales: {x: {beginAtZero: true, grid: {display: false}}, y: {grid: {display: false}}}
+        }
       }
     );
   }
@@ -111,13 +133,9 @@ export class BillingAnalyticsComponent implements OnInit, OnDestroy {
       this.statusChart(), this.statusInstance,
       {
         type: 'doughnut',
-        data: { labels, datasets: [{ data: values, backgroundColor: colors, hoverOffset: 4 }] },
-        options: { plugins: { legend: { position: 'bottom' } } }
+        data: {labels, datasets: [{data: values, backgroundColor: colors, hoverOffset: 4}]},
+        options: {plugins: {legend: {position: 'bottom'}}}
       }
     );
-  }
-
-  formatCurrency(amount: number): string {
-    return new Intl.NumberFormat('fr-TN', { style: 'currency', currency: 'TND', minimumFractionDigits: 3 }).format(amount);
   }
 }

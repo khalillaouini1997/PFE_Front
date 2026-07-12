@@ -1,16 +1,16 @@
-import { Component, OnInit, OnDestroy, inject, viewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ToastrService } from 'ngx-toastr';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { finalize, tap } from 'rxjs';
-import { Chart, registerables } from 'chart.js';
-import { updateOrCreateChart } from 'src/app/shared/utils/chart.utils';
-import { BillingService } from 'src/app/service/billing.service';
-import { BillingAnalyticsService } from 'src/app/service/billing-analytics.service';
-import { WebAccountService } from 'src/app/service/web-account.service';
-import { TableModule } from 'primeng/table';
-import { PaginatorModule } from 'primeng/paginator';
+import {ChangeDetectorRef, Component, ElementRef, inject, OnDestroy, OnInit, viewChild} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {ToastrService} from 'ngx-toastr';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
+import {finalize, tap} from 'rxjs';
+import {Chart, registerables} from 'chart.js';
+import {updateOrCreateChart} from 'src/app/shared/utils/chart.utils';
+import {BillingService} from 'src/app/service/billing.service';
+import {BillingAnalyticsService} from 'src/app/service/billing-analytics.service';
+import {WebAccountService} from 'src/app/service/web-account.service';
+import {TableModule} from 'primeng/table';
+import {PaginatorModule} from 'primeng/paginator';
 
 Chart.register(...registerables);
 
@@ -46,12 +46,11 @@ export class BillingComponent implements OnInit, OnDestroy {
   revenueByAccountChart = viewChild<ElementRef>('revenueByAccountChart');
   statusChart = viewChild<ElementRef>('statusChart');
   revenueForecastChart = viewChild<ElementRef>('revenueForecastChart');
-
+  downloadingPdf = false;
   private revenueByMonthInstance?: Chart;
   private revenueByAccountInstance?: Chart;
   private statusInstance?: Chart;
   private revenueForecastInstance?: Chart;
-
   private readonly billingService = inject(BillingService);
   private readonly analyticsService = inject(BillingAnalyticsService);
   private readonly webAccountService = inject(WebAccountService);
@@ -215,7 +214,10 @@ export class BillingComponent implements OnInit, OnDestroy {
     this.billingService.generateBatchBilling(accountId, year, month)
       .pipe(
         tap(() => this.toastr.success(this.translate.instant('BILLING.BATCH_SUCCESS'), this.translate.instant('COMMON.SUCCESS'))),
-        finalize(() => { this.loading = false; this.cdr.detectChanges(); })
+        finalize(() => {
+          this.loading = false;
+          this.cdr.detectChanges();
+        })
       )
       .subscribe({
         next: (res: any) => {
@@ -235,7 +237,10 @@ export class BillingComponent implements OnInit, OnDestroy {
     this.billingService.triggerAllAccountsBilling()
       .pipe(
         tap(() => this.toastr.success(this.translate.instant('BILLING.ALL_ACCOUNTS_SUCCESS'), this.translate.instant('COMMON.SUCCESS'))),
-        finalize(() => { this.loading = false; this.cdr.detectChanges(); })
+        finalize(() => {
+          this.loading = false;
+          this.cdr.detectChanges();
+        })
       )
       .subscribe({
         next: () => {
@@ -259,7 +264,10 @@ export class BillingComponent implements OnInit, OnDestroy {
     this.billingService.triggerAccountBilling(accountId)
       .pipe(
         tap(() => this.toastr.success(this.translate.instant('BILLING.ACCOUNT_SUCCESS'), this.translate.instant('COMMON.SUCCESS'))),
-        finalize(() => { this.loading = false; this.cdr.detectChanges(); })
+        finalize(() => {
+          this.loading = false;
+          this.cdr.detectChanges();
+        })
       )
       .subscribe({
         next: (res: any) => {
@@ -287,7 +295,9 @@ export class BillingComponent implements OnInit, OnDestroy {
     this.billingService.refreshMonthlyBilling(accountId, year, month)
       .pipe(
         tap(() => this.toastr.success(this.translate.instant('BILLING.REFRESH_SUCCESS'), this.translate.instant('COMMON.SUCCESS'))),
-        finalize(() => { this.loading = false; })
+        finalize(() => {
+          this.loading = false;
+        })
       )
       .subscribe({
         next: (res: any) => {
@@ -299,8 +309,6 @@ export class BillingComponent implements OnInit, OnDestroy {
         }
       });
   }
-
-  downloadingPdf = false;
 
   downloadPdf() {
     const accountId = this.billingForm.get('accountId')?.value;
@@ -314,7 +322,9 @@ export class BillingComponent implements OnInit, OnDestroy {
 
     this.downloadingPdf = true;
     this.billingService.downloadPdfReport(accountId, year, month)
-      .pipe(finalize(() => { this.downloadingPdf = false; }))
+      .pipe(finalize(() => {
+        this.downloadingPdf = false;
+      }))
       .subscribe({
         next: (blob: Blob) => {
           if (blob && blob.size > 0 && blob.type !== 'application/json') {
@@ -383,7 +393,7 @@ export class BillingComponent implements OnInit, OnDestroy {
         if (!Array.isArray(history) || history.length < 2) return;
 
         const monthlyRevenue = history.map((h: any) => h.total || 0);
-        const labels = history.map((h: any) => h.billing_period);
+        const labels = history.map((h: any) => h.billingPeriod);
 
         this.analyticsService.getRevenueForecast(monthlyRevenue, 6).subscribe({
           next: (forecast: any) => {
@@ -394,6 +404,14 @@ export class BillingComponent implements OnInit, OnDestroy {
       },
       error: (e: any) => console.error('Revenue history error:', e)
     });
+  }
+
+  formatCurrency(amount: number): string {
+    return new Intl.NumberFormat('fr-TN', {
+      style: 'currency',
+      currency: 'TND',
+      minimumFractionDigits: 3
+    }).format(amount);
   }
 
   private renderForecastChart(actualLabels: string[], actualData: number[], forecast: any) {
@@ -480,12 +498,12 @@ export class BillingComponent implements OnInit, OnDestroy {
         },
         options: {
           plugins: {
-            legend: { position: 'top' },
-            tooltip: { mode: 'index', intersect: false }
+            legend: {position: 'top'},
+            tooltip: {mode: 'index', intersect: false}
           },
           scales: {
-            y: { beginAtZero: true, grid: { display: false } },
-            x: { grid: { display: false }, ticks: { maxRotation: 45 } }
+            y: {beginAtZero: true, grid: {display: false}},
+            x: {grid: {display: false}, ticks: {maxRotation: 45}}
           }
         }
       }
@@ -500,7 +518,7 @@ export class BillingComponent implements OnInit, OnDestroy {
 
   private renderRevenueByMonth(data: any[]) {
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const map = new Map(data.map((d: any) => [d.month_num, d.total]));
+    const map = new Map(data.map((d: any) => [d.monthNum, d.total]));
     const values = months.map((_, i) => map.get(String(i + 1).padStart(2, '0')) || 0);
 
     this.revenueByMonthInstance = updateOrCreateChart(
@@ -518,7 +536,10 @@ export class BillingComponent implements OnInit, OnDestroy {
             tension: 0.4
           }]
         },
-        options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { display: false } }, x: { grid: { display: false } } } }
+        options: {
+          plugins: {legend: {display: false}},
+          scales: {y: {beginAtZero: true, grid: {display: false}}, x: {grid: {display: false}}}
+        }
       }
     );
   }
@@ -540,7 +561,11 @@ export class BillingComponent implements OnInit, OnDestroy {
             borderRadius: 8
           }]
         },
-        options: { indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, grid: { display: false } }, y: { grid: { display: false } } } }
+        options: {
+          indexAxis: 'y',
+          plugins: {legend: {display: false}},
+          scales: {x: {beginAtZero: true, grid: {display: false}}, y: {grid: {display: false}}}
+        }
       }
     );
   }
@@ -556,18 +581,10 @@ export class BillingComponent implements OnInit, OnDestroy {
         type: 'doughnut',
         data: {
           labels,
-          datasets: [{ data: values, backgroundColor: colors, hoverOffset: 4 }]
+          datasets: [{data: values, backgroundColor: colors, hoverOffset: 4}]
         },
-        options: { plugins: { legend: { position: 'bottom' } } }
+        options: {plugins: {legend: {position: 'bottom'}}}
       }
     );
-  }
-
-  formatCurrency(amount: number): string {
-    return new Intl.NumberFormat('fr-TN', {
-      style: 'currency',
-      currency: 'TND',
-      minimumFractionDigits: 3
-    }).format(amount);
   }
 }
