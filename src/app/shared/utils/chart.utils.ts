@@ -18,10 +18,6 @@ export function updateOrCreateChart(
     instance.update('none');
     return instance;
   }
-  const existingChart = Chart.getChart(canvasRef.nativeElement);
-  if (existingChart) {
-    existingChart.destroy();
-  }
   return new Chart(canvasRef.nativeElement, {
     type: config.type,
     data: config.data,
