@@ -14,18 +14,26 @@ export function updateOrCreateChart(
 ): Chart | undefined {
   if (!canvasRef) return instance;
   if (instance) {
-    instance.data = config.data;
-    instance.update('none');
+    try {
+      instance.data = config.data;
+      instance.update('none');
+    } catch {
+      return instance;
+    }
     return instance;
   }
-  return new Chart(canvasRef.nativeElement, {
-    type: config.type,
-    data: config.data,
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      animation: false,
-      ...config.options
-    }
-  });
+  try {
+    return new Chart(canvasRef.nativeElement, {
+      type: config.type,
+      data: config.data,
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: false,
+        ...config.options
+      }
+    });
+  } catch {
+    return undefined;
+  }
 }
