@@ -1,24 +1,24 @@
-import { Component, inject, ViewChild, ElementRef } from '@angular/core';
-import { CompteServer } from 'src/app/data/data';
-import { CompteServerService } from "../../service/compte-server.service";
+import {Component, ElementRef, inject, ViewChild} from '@angular/core';
+import {CompteServer} from 'src/app/data/data';
+import {CompteServerService} from "../../service/compte-server.service";
 
-import { DatePickerModule } from 'primeng/datepicker';
-import { ToastrService } from 'ngx-toastr';
-import { catchError } from "rxjs/operators";
-import { Router } from "@angular/router";
-import { withToast } from '../../utils/toast.helpers';
-import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
+import {DatePickerModule} from 'primeng/datepicker';
+import {ToastrService} from 'ngx-toastr';
+import {catchError} from "rxjs/operators";
+import {Router} from "@angular/router";
+import {withToast} from '../../utils/toast.helpers';
+import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
+import {PageHeaderComponent} from '../../shared/components/page-header/page-header.component';
 
 
 // PrimeNG DatePicker replaces bsDatepicker
 
 @Component({
-    selector: 'app-add-compte-server',
-    standalone: true,
-    templateUrl: './add-compte-server.component.html',
-    imports: [ReactiveFormsModule, DatePickerModule, TranslateModule, PageHeaderComponent]
+  selector: 'app-add-compte-server',
+  standalone: true,
+  templateUrl: './add-compte-server.component.html',
+  imports: [ReactiveFormsModule, DatePickerModule, TranslateModule, PageHeaderComponent]
 })
 export class AddCompteServerComponent {
 
@@ -31,13 +31,7 @@ export class AddCompteServerComponent {
   isExistLogin: boolean = false;
   public date: Date = new Date();
   notifications: number = 0;
-
-  get numberBoitier(): number {
-    return this.serverForm.get('numberBoitier')?.value || 0;
-  }
-
   private readonly compteServerService = inject(CompteServerService);
-
   // Removed BsLocaleService as PrimeNG handles its own localization
   private readonly toastr = inject(ToastrService);
   private readonly router = inject(Router);
@@ -48,6 +42,10 @@ export class AddCompteServerComponent {
     this.initForm();
   }
 
+  get numberBoitier(): number {
+    return this.serverForm.get('numberBoitier')?.value || 0;
+  }
+
   initForm() {
     this.serverForm = this.fb.group({
       pseudo: ['', Validators.required],
@@ -56,20 +54,19 @@ export class AddCompteServerComponent {
       confirmationPassword: ['', Validators.required],
       date_Expiration: [new Date(), Validators.required],
       numberBoitier: [0, [Validators.required, Validators.min(0)]]
-    }, { validators: this.passwordMatchValidator });
+    }, {validators: this.passwordMatchValidator});
   }
 
   passwordMatchValidator(g: { get: (key: string) => { value: any } | null }) {
     return g.get('password')?.value === g.get('confirmationPassword')?.value
-      ? null : { 'mismatch': true };
+      ? null : {'mismatch': true};
   }
-
 
 
   addCompteServer() {
     if (this.serverForm.invalid) {
       this.toastr.warning(
-        this.translate.instant('WEB_ACCOUNTS.FILL_REQUIRED'), 
+        this.translate.instant('WEB_ACCOUNTS.FILL_REQUIRED'),
         this.translate.instant('COMMON.WARNING')
       );
       return;
@@ -102,7 +99,8 @@ export class AddCompteServerComponent {
           this.loading = false;
           this.router.navigate(['/adminWeb/listWebs']);
         },
-        error: () => {}
+        error: () => {
+        }
       });
   }
 
@@ -123,7 +121,7 @@ export class AddCompteServerComponent {
   }
 
   reinitialisation() {
-    this.serverForm.patchValue({ numberBoitier: 0 });
+    this.serverForm.patchValue({numberBoitier: 0});
     if (this.progressModal) {
       this.progressModal.nativeElement.close();
     }

@@ -1,7 +1,7 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { vi, describe, it, expect, beforeEach } from 'vitest';
-import { TranslateModule } from '@ngx-translate/core';
-import { GlobalChartsComponent } from './global-charts.component';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {beforeEach, describe, expect, it} from 'vitest';
+import {TranslateModule} from '@ngx-translate/core';
+import {GlobalChartsComponent} from './global-charts.component';
 
 describe('GlobalChartsComponent', () => {
   let component: GlobalChartsComponent;
@@ -34,8 +34,8 @@ describe('GlobalChartsComponent', () => {
 
   it('should accept realtimes input via setInput', () => {
     const mockData = [
-      { speed: 0, numPuce: '8921601234', signal: 20 },
-      { speed: 45, numPuce: '8921605678', signal: 15 }
+      {speed: 0, numPuce: '8921601234', signal: 20},
+      {speed: 45, numPuce: '8921605678', signal: 15}
     ];
     fixture.componentRef.setInput('realtimes', mockData);
     expect(component.realtimes().length).toBe(2);

@@ -6,8 +6,9 @@
     </div>
     <div class="year-selector">
       <label for="billingYear">Year:</label>
-      <select id="billingYear" [(ngModel)]="selectedYear" (change)="loadAnalytics()" class="form-control">
-        <option *ngFor="let y of [selectedYear-2, selectedYear-1, selectedYear, selectedYear+1]" [value]="y">{{ y }}</option>
+      <select (change)="loadAnalytics()" [(ngModel)]="selectedYear" class="form-control" id="billingYear">
+        <option *ngFor="let y of [selectedYear-2, selectedYear-1, selectedYear, selectedYear+1]" [value]="y">{{ y }}
+        </option>
       </select>
     </div>
   </div>
@@ -23,11 +24,15 @@
   <div class="charts-row">
     <div class="chart-card">
       <h3>Revenue by Month</h3>
-      <div class="chart-wrapper"><canvas #revenueByMonthChart></canvas></div>
+      <div class="chart-wrapper">
+        <canvas #revenueByMonthChart></canvas>
+      </div>
     </div>
     <div class="chart-card">
       <h3>Revenue by Account</h3>
-      <div class="chart-wrapper"><canvas #revenueByAccountChart></canvas></div>
+      <div class="chart-wrapper">
+        <canvas #revenueByAccountChart></canvas>
+      </div>
     </div>
   </div>
 
@@ -35,27 +40,29 @@
   <div class="charts-row">
     <div class="chart-card chart-small">
       <h3>Invoice Status</h3>
-      <div class="chart-wrapper"><canvas #statusChart></canvas></div>
+      <div class="chart-wrapper">
+        <canvas #statusChart></canvas>
+      </div>
     </div>
     <div class="chart-card">
       <h3>Top Devices by Billing</h3>
       <div class="table-wrapper">
-        <table class="analytics-table" *ngIf="topDevices.length > 0">
+        <table *ngIf="topDevices.length > 0" class="analytics-table">
           <thead>
-            <tr>
-              <th>Device</th>
-              <th>Label</th>
-              <th>Working Days</th>
-              <th>Total (HT)</th>
-            </tr>
+          <tr>
+            <th>Device</th>
+            <th>Label</th>
+            <th>Working Days</th>
+            <th>Total (HT)</th>
+          </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let device of topDevices">
-              <td><span class="device-badge">#{{ device.numBoitier }}</span></td>
-              <td>{{ device.deviceLabel }}</td>
-              <td>{{ device.totalWorkingDays }} days</td>
-              <td class="fw-bold">{{ formatCurrency(device.totalSubtotal) }}</td>
-            </tr>
+          <tr *ngFor="let device of topDevices">
+            <td><span class="device-badge">#{{ device.numBoitier }}</span></td>
+            <td>{{ device.deviceLabel }}</td>
+            <td>{{ device.totalWorkingDays }} days</td>
+            <td class="fw-bold">{{ formatCurrency(device.totalSubtotal) }}</td>
+          </tr>
           </tbody>
         </table>
         <p *ngIf="topDevices.length === 0" class="no-data">No billing data available for this year.</p>

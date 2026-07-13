@@ -8,11 +8,15 @@
 }
 
 @media (max-width: 1400px) {
-  .charts-container { grid-template-columns: repeat(2, 1fr); }
+  .charts-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 768px) {
-  .charts-container { grid-template-columns: 1fr; }
+  .charts-container {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ── Full-width evolution chart ── */

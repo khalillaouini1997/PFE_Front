@@ -1,5 +1,5 @@
-import { ElementRef } from '@angular/core';
-import { Chart, ChartType } from 'chart.js';
+import {ElementRef} from '@angular/core';
+import {Chart, ChartType} from 'chart.js';
 
 export interface ChartConfig {
   type: ChartType;

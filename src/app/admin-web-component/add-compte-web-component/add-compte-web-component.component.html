@@ -1,181 +1,201 @@
 <div class="main-panel p-4">
-    <app-page-header titleKey="WEB_ACCOUNTS.ADD" subtitleKey="WEB_ACCOUNTS.ADD_SUBTITLE">
-        <button class="btn btn-glass btn-sm rounded-circle" routerLink="/adminWeb/listWebs" title="{{ 'COMMON.BACK_TO_LIST' | translate }}">
-            <i class="fa fa-arrow-left text-white"></i>
-        </button>
-    </app-page-header>
+  <app-page-header subtitleKey="WEB_ACCOUNTS.ADD_SUBTITLE" titleKey="WEB_ACCOUNTS.ADD">
+    <button class="btn btn-glass btn-sm rounded-circle" routerLink="/adminWeb/listWebs"
+            title="{{ 'COMMON.BACK_TO_LIST' | translate }}">
+      <i class="fa fa-arrow-left text-white"></i>
+    </button>
+  </app-page-header>
 
-    <div class="row justify-content-center">
-        <div class="col-lg-12">
-            <div class="premium-card shadow-sm p-4 border-0">
-                <form [formGroup]="webForm">
-                    <!-- Section 1: Authentification -->
-                    <h5 class="fw-bold mb-4 border-bottom pb-2 d-flex align-items-center">
-                        <i class="material-icons me-2 text-primary">vpn_key</i>
-                        {{ 'AUTH.TITLE' | translate }}
-                    </h5>
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <div class="form-group mb-3 custom-form-group">
-                                <label for="login" class="premium-label">{{ 'AUTH.USERNAME' | translate }}</label>
-                                <input type="text" class="form-control premium-input" formControlName="login" id="login" placeholder="{{ 'AUTH.USERNAME' | translate }}">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group mb-3 custom-form-group">
-                                <label for="password" class="premium-label">{{ 'AUTH.PASSWORD' | translate }}</label>
-                                <input type="text" class="form-control premium-input" formControlName="password" id="password" placeholder="{{ 'AUTH.PASSWORD' | translate }}">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Section 2: Infrastructure -->
-                    <h5 class="fw-bold mt-4 mb-4 border-bottom pb-2 d-flex align-items-center">
-                        <i class="material-icons me-2 text-primary">dns</i>
-                        {{ 'WEB_ACCOUNTS.INFRASTRUCTURE' | translate }}
-                    </h5>
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <div class="form-group mb-3 custom-form-group">
-                                <label for="idCompte" class="premium-label">{{ 'WEB_ACCOUNTS.SERVER_ACCOUNT' | translate }}</label>
-                                <select formControlName="idCompte" class="form-select premium-input" id="idCompte" title="{{ 'WEB_ACCOUNTS.SERVER_ACCOUNT' | translate }}">
-                                    @for (server of serverAccounts(); track server.idCompteClientServer) {
-                                        <option [value]="server.idCompteClientServer">{{server.login}}</option>
-                                    }
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group mb-3 custom-form-group">
-                                <label for="ipAdresse" class="premium-label">{{ 'IP_ADDRESS.IP_VALUE' | translate }}</label>
-                                <select formControlName="ipAdresse" class="form-select premium-input" id="ipAdresse" title="{{ 'IP_ADDRESS.IP_VALUE' | translate }}">
-                                    @for (ip of ipAddresses(); track ip.idIpAdresse) {
-                                        <option [value]="ip.value">{{ ip.label }}</option>
-                                    }
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group mb-3 custom-form-group">
-                                <label for="code_pays" class="premium-label">{{ 'WEB_ACCOUNTS.COUNTRY_CODE' | translate }}</label>
-                                <select formControlName="code_pays" class="form-select premium-input" id="code_pays" title="{{ 'WEB_ACCOUNTS.COUNTRY_CODE' | translate }}">
-                                    @for (codePays of codesPays(); track codePays.value) {
-                                        <option [value]="codePays.value">{{codePays.key}} (+{{codePays.value}})</option>
-                                    }
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group mb-3 custom-datepicker-container">
-                                <label for="expDate" class="p-datepicker-label">{{ 'WEB_ACCOUNTS.EXPIRES_AT' | translate }}</label>
-                                <p-datepicker formControlName="date_expiration" id="expDate" 
-                                    dateFormat="dd-mm-yy" [showIcon]="true" appendTo="body"
-                                    styleClass="w-100" inputStyleClass="form-control premium-datepicker-input">
-                                </p-datepicker>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Section 3: Profil & Contact -->
-                    <h5 class="fw-bold mt-4 mb-4 border-bottom pb-2 d-flex align-items-center">
-                        <i class="material-icons me-2 text-primary">account_circle</i>
-                        {{ 'WEB_ACCOUNTS.PROFILE_CONTACT' | translate }}
-                    </h5>
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <div class="form-group mb-3 custom-form-group">
-                                <label for="firstname" class="premium-label">{{ 'COMMON.LASTNAME' | translate }}</label>
-                                <input type="text" class="form-control premium-input" formControlName="firstname" id="firstname" placeholder="{{ 'COMMON.LASTNAME' | translate }}">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group mb-3 custom-form-group">
-                                <label for="lastname" class="premium-label">{{ 'COMMON.FIRSTNAME' | translate }}</label>
-                                <input type="text" class="form-control premium-input" formControlName="lastname" id="lastname" placeholder="{{ 'COMMON.FIRSTNAME' | translate }}">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group mb-3 custom-form-group">
-                                <label for="email" class="premium-label">{{ 'COMMON.EMAIL' | translate }}</label>
-                                <input type="email" class="form-control premium-input" formControlName="email" id="email" placeholder="{{ 'COMMON.EMAIL' | translate }}">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group mb-3 custom-form-group">
-                                <label for="telephone" class="premium-label">{{ 'WEB_ACCOUNTS.PHONE' | translate }}</label>
-                                <input type="tel" class="form-control premium-input" formControlName="telephone" id="telephone" placeholder="{{ 'WEB_ACCOUNTS.PHONE' | translate }}">
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group mb-3 custom-form-group">
-                                <label for="area" class="premium-label">{{ 'WEB_ACCOUNTS.REGION' | translate }}</label>
-                                <select formControlName="area" class="form-select premium-input" id="area" title="{{ 'WEB_ACCOUNTS.REGION' | translate }}">
-                                    @for (t of regions; track t) {
-                                        <option [value]="t">{{ t }}</option>
-                                    }
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group mb-3 custom-form-group">
-                                <label for="notif" class="premium-label">{{ 'WEB_ACCOUNTS.NOTIFICATION_TYPE' | translate }}</label>
-                                <select formControlName="notificationSubquery" class="form-select premium-input" id="notif" title="{{ 'WEB_ACCOUNTS.NOTIFICATION_TYPE' | translate }}">
-                                    @for (notifSub of notifSubs; track notifSub) {
-                                        <option [value]="notifSub">{{ notifSub }}</option>
-                                    }
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group mb-3 custom-form-group d-flex flex-column align-items-center">
-                                <label for="mobileNotif" class="premium-label">{{ 'WEB_ACCOUNTS.MOBILE' | translate }}</label>
-                                <div class="form-check form-switch p-0 d-flex align-items-center mobile-toggle-container">
-                                    <input class="form-check-input ms-0 mobile-toggle" type="checkbox" formControlName="mobileNotif" id="mobileNotif" title="{{ 'WEB_ACCOUNTS.ENABLE_MOBILE_NOTIF' | translate }}">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Section 4: Facturation -->
-                    <h5 class="fw-bold mt-4 mb-4 border-bottom pb-2 d-flex align-items-center">
-                        <i class="material-icons me-2 text-primary">receipt_long</i>
-                        {{ 'WEB_ACCOUNTS.BILLING_SETTINGS' | translate }}
-                    </h5>
-                    <div class="row g-3">
-                        <div class="col-md-3">
-                            <div class="form-group mb-3 custom-form-group">
-                                <label for="feeDay" class="premium-label">{{ 'WEB_ACCOUNTS.DEVICE_FEE_DAY' | translate }}</label>
-                                <input type="number" class="form-control premium-input" formControlName="deviceFeeByDay" id="feeDay" placeholder="0">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group mb-3 custom-form-group">
-                                <label for="accMonth" class="premium-label">{{ 'WEB_ACCOUNTS.ACCOUNT_FEE_MONTH' | translate }}</label>
-                                <input type="number" class="form-control premium-input" formControlName="accountFeeByMonth" id="accMonth" placeholder="0">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group mb-3 custom-form-group">
-                                <label for="devMonth" class="premium-label">{{ 'WEB_ACCOUNTS.DEVICE_FEE_MONTH' | translate }}</label>
-                                <input type="number" class="form-control premium-input" formControlName="deviceFeePerMonth" id="devMonth" placeholder="0">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group mb-3 custom-form-group">
-                                <label for="simMonth" class="premium-label">{{ 'WEB_ACCOUNTS.SIM_FEE_MONTH' | translate }}</label>
-                                <input type="number" class="form-control premium-input" formControlName="simCardFeePerMonth" id="simMonth" placeholder="0">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mt-4 pt-3 d-flex justify-content-end gap-3">
-                        <button type="button" class="btn btn-light px-4 btn-cancel-premium" routerLink="/adminWeb/listWebs">{{ 'COMMON.CANCEL' | translate }}</button>
-                        <button type="button" class="btn btn-primary px-5 fw-bold shadow-sm btn-save-premium" [disabled]="webForm.invalid" (click)="addCompteWeb()">
-                           <i class="fa fa-save me-2"></i> {{ 'WEB_ACCOUNTS.SAVE_ACCOUNT' | translate }}
-                        </button>
-                    </div>
-                </form>
+  <div class="row justify-content-center">
+    <div class="col-lg-12">
+      <div class="premium-card shadow-sm p-4 border-0">
+        <form [formGroup]="webForm">
+          <!-- Section 1: Authentification -->
+          <h5 class="fw-bold mb-4 border-bottom pb-2 d-flex align-items-center">
+            <i class="material-icons me-2 text-primary">vpn_key</i>
+            {{ 'AUTH.TITLE' | translate }}
+          </h5>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="form-group mb-3 custom-form-group">
+                <label class="premium-label" for="login">{{ 'AUTH.USERNAME' | translate }}</label>
+                <input class="form-control premium-input" formControlName="login" id="login" placeholder="{{ 'AUTH.USERNAME' | translate }}"
+                       type="text">
+              </div>
             </div>
-        </div>
+            <div class="col-md-6">
+              <div class="form-group mb-3 custom-form-group">
+                <label class="premium-label" for="password">{{ 'AUTH.PASSWORD' | translate }}</label>
+                <input class="form-control premium-input" formControlName="password" id="password" placeholder="{{ 'AUTH.PASSWORD' | translate }}"
+                       type="text">
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 2: Infrastructure -->
+          <h5 class="fw-bold mt-4 mb-4 border-bottom pb-2 d-flex align-items-center">
+            <i class="material-icons me-2 text-primary">dns</i>
+            {{ 'WEB_ACCOUNTS.INFRASTRUCTURE' | translate }}
+          </h5>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="form-group mb-3 custom-form-group">
+                <label class="premium-label" for="idCompte">{{ 'WEB_ACCOUNTS.SERVER_ACCOUNT' | translate }}</label>
+                <select class="form-select premium-input" formControlName="idCompte" id="idCompte"
+                        title="{{ 'WEB_ACCOUNTS.SERVER_ACCOUNT' | translate }}">
+                  @for (server of serverAccounts(); track server.idCompteClientServer) {
+                    <option [value]="server.idCompteClientServer">{{ server.login }}</option>
+                  }
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group mb-3 custom-form-group">
+                <label class="premium-label" for="ipAdresse">{{ 'IP_ADDRESS.IP_VALUE' | translate }}</label>
+                <select class="form-select premium-input" formControlName="ipAdresse" id="ipAdresse"
+                        title="{{ 'IP_ADDRESS.IP_VALUE' | translate }}">
+                  @for (ip of ipAddresses(); track ip.idIpAdresse) {
+                    <option [value]="ip.value">{{ ip.label }}</option>
+                  }
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group mb-3 custom-form-group">
+                <label class="premium-label" for="code_pays">{{ 'WEB_ACCOUNTS.COUNTRY_CODE' | translate }}</label>
+                <select class="form-select premium-input" formControlName="code_pays" id="code_pays"
+                        title="{{ 'WEB_ACCOUNTS.COUNTRY_CODE' | translate }}">
+                  @for (codePays of codesPays(); track codePays.value) {
+                    <option [value]="codePays.value">{{ codePays.key }} (+{{ codePays.value }})</option>
+                  }
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group mb-3 custom-datepicker-container">
+                <label class="p-datepicker-label" for="expDate">{{ 'WEB_ACCOUNTS.EXPIRES_AT' | translate }}</label>
+                <p-datepicker [showIcon]="true" appendTo="body"
+                              dateFormat="dd-mm-yy" formControlName="date_expiration" id="expDate"
+                              inputStyleClass="form-control premium-datepicker-input" styleClass="w-100">
+                </p-datepicker>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 3: Profil & Contact -->
+          <h5 class="fw-bold mt-4 mb-4 border-bottom pb-2 d-flex align-items-center">
+            <i class="material-icons me-2 text-primary">account_circle</i>
+            {{ 'WEB_ACCOUNTS.PROFILE_CONTACT' | translate }}
+          </h5>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="form-group mb-3 custom-form-group">
+                <label class="premium-label" for="firstname">{{ 'COMMON.LASTNAME' | translate }}</label>
+                <input class="form-control premium-input" formControlName="firstname" id="firstname" placeholder="{{ 'COMMON.LASTNAME' | translate }}"
+                       type="text">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group mb-3 custom-form-group">
+                <label class="premium-label" for="lastname">{{ 'COMMON.FIRSTNAME' | translate }}</label>
+                <input class="form-control premium-input" formControlName="lastname" id="lastname" placeholder="{{ 'COMMON.FIRSTNAME' | translate }}"
+                       type="text">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group mb-3 custom-form-group">
+                <label class="premium-label" for="email">{{ 'COMMON.EMAIL' | translate }}</label>
+                <input class="form-control premium-input" formControlName="email" id="email" placeholder="{{ 'COMMON.EMAIL' | translate }}"
+                       type="email">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group mb-3 custom-form-group">
+                <label class="premium-label" for="telephone">{{ 'WEB_ACCOUNTS.PHONE' | translate }}</label>
+                <input class="form-control premium-input" formControlName="telephone" id="telephone" placeholder="{{ 'WEB_ACCOUNTS.PHONE' | translate }}"
+                       type="tel">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group mb-3 custom-form-group">
+                <label class="premium-label" for="area">{{ 'WEB_ACCOUNTS.REGION' | translate }}</label>
+                <select class="form-select premium-input" formControlName="area" id="area"
+                        title="{{ 'WEB_ACCOUNTS.REGION' | translate }}">
+                  @for (t of regions; track t) {
+                    <option [value]="t">{{ t }}</option>
+                  }
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group mb-3 custom-form-group">
+                <label class="premium-label" for="notif">{{ 'WEB_ACCOUNTS.NOTIFICATION_TYPE' | translate }}</label>
+                <select class="form-select premium-input" formControlName="notificationSubquery" id="notif"
+                        title="{{ 'WEB_ACCOUNTS.NOTIFICATION_TYPE' | translate }}">
+                  @for (notifSub of notifSubs; track notifSub) {
+                    <option [value]="notifSub">{{ notifSub }}</option>
+                  }
+                </select>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group mb-3 custom-form-group d-flex flex-column align-items-center">
+                <label class="premium-label" for="mobileNotif">{{ 'WEB_ACCOUNTS.MOBILE' | translate }}</label>
+                <div class="form-check form-switch p-0 d-flex align-items-center mobile-toggle-container">
+                  <input class="form-check-input ms-0 mobile-toggle" formControlName="mobileNotif" id="mobileNotif"
+                         title="{{ 'WEB_ACCOUNTS.ENABLE_MOBILE_NOTIF' | translate }}" type="checkbox">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 4: Facturation -->
+          <h5 class="fw-bold mt-4 mb-4 border-bottom pb-2 d-flex align-items-center">
+            <i class="material-icons me-2 text-primary">receipt_long</i>
+            {{ 'WEB_ACCOUNTS.BILLING_SETTINGS' | translate }}
+          </h5>
+          <div class="row g-3">
+            <div class="col-md-3">
+              <div class="form-group mb-3 custom-form-group">
+                <label class="premium-label" for="feeDay">{{ 'WEB_ACCOUNTS.DEVICE_FEE_DAY' | translate }}</label>
+                <input class="form-control premium-input" formControlName="deviceFeeByDay" id="feeDay" placeholder="0"
+                       type="number">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group mb-3 custom-form-group">
+                <label class="premium-label" for="accMonth">{{ 'WEB_ACCOUNTS.ACCOUNT_FEE_MONTH' | translate }}</label>
+                <input class="form-control premium-input" formControlName="accountFeeByMonth" id="accMonth"
+                       placeholder="0" type="number">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group mb-3 custom-form-group">
+                <label class="premium-label" for="devMonth">{{ 'WEB_ACCOUNTS.DEVICE_FEE_MONTH' | translate }}</label>
+                <input class="form-control premium-input" formControlName="deviceFeePerMonth" id="devMonth"
+                       placeholder="0" type="number">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group mb-3 custom-form-group">
+                <label class="premium-label" for="simMonth">{{ 'WEB_ACCOUNTS.SIM_FEE_MONTH' | translate }}</label>
+                <input class="form-control premium-input" formControlName="simCardFeePerMonth" id="simMonth"
+                       placeholder="0" type="number">
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 pt-3 d-flex justify-content-end gap-3">
+            <button class="btn btn-light px-4 btn-cancel-premium" routerLink="/adminWeb/listWebs"
+                    type="button">{{ 'COMMON.CANCEL' | translate }}
+            </button>
+            <button (click)="addCompteWeb()" [disabled]="webForm.invalid"
+                    class="btn btn-primary px-5 fw-bold shadow-sm btn-save-premium" type="button">
+              <i class="fa fa-save me-2"></i> {{ 'WEB_ACCOUNTS.SAVE_ACCOUNT' | translate }}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
+  </div>
 </div>

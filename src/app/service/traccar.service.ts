@@ -1,12 +1,12 @@
-import { Injectable, inject } from '@angular/core';
-import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
-import { HttpClient } from '@angular/common/http';
-import { AuthService } from './auth.service';
-import { TraccarDto } from '../data/data';
+import {inject, Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
+import {environment} from '../../environments/environment';
+import {HttpClient} from '@angular/common/http';
+import {AuthService} from './auth.service';
+import {TraccarDto} from '../data/data';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class TraccarService {
   private readonly authService = inject(AuthService);

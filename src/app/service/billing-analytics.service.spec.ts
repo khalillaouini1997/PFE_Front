@@ -1,8 +1,8 @@
-import { TestBed } from '@angular/core/testing';
-import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
-import { BillingAnalyticsService } from './billing-analytics.service';
-import { environment } from '../../environments/environment';
+import {TestBed} from '@angular/core/testing';
+import {provideHttpClient} from '@angular/common/http';
+import {HttpTestingController, provideHttpClientTesting} from '@angular/common/http/testing';
+import {BillingAnalyticsService} from './billing-analytics.service';
+import {environment} from '../../environments/environment';
 
 describe('BillingAnalyticsService', () => {
   let service: BillingAnalyticsService;
@@ -31,7 +31,7 @@ describe('BillingAnalyticsService', () => {
   describe('getBillingAnalytics', () => {
     it('should GET analytics for the given year', () => {
       const year = 2024;
-      const mockResponse = { revenue: 100000, expenses: 50000 };
+      const mockResponse = {revenue: 100000, expenses: 50000};
 
       service.getBillingAnalytics(year).subscribe((data) => {
         expect(data).toEqual(mockResponse);
@@ -47,7 +47,7 @@ describe('BillingAnalyticsService', () => {
 
   describe('getRevenueHistory', () => {
     it('should GET revenue history', () => {
-      const mockResponse = [{ month: 'Jan', revenue: 10000 }];
+      const mockResponse = [{month: 'Jan', revenue: 10000}];
 
       service.getRevenueHistory().subscribe((data) => {
         expect(data).toEqual(mockResponse);
@@ -64,7 +64,7 @@ describe('BillingAnalyticsService', () => {
   describe('getRevenueForecast', () => {
     it('should POST revenue forecast with default 6 months', () => {
       const monthlyRevenue = [1000, 2000, 3000];
-      const mockResponse = { forecast: [4000, 5000, 6000] };
+      const mockResponse = {forecast: [4000, 5000, 6000]};
 
       service.getRevenueForecast(monthlyRevenue).subscribe((data) => {
         expect(data).toEqual(mockResponse);
@@ -82,7 +82,7 @@ describe('BillingAnalyticsService', () => {
     it('should POST revenue forecast with custom months', () => {
       const monthlyRevenue = [1000, 2000, 3000];
       const forecastMonths = 12;
-      const mockResponse = { forecast: [4000, 5000] };
+      const mockResponse = {forecast: [4000, 5000]};
 
       service.getRevenueForecast(monthlyRevenue, forecastMonths).subscribe((data) => {
         expect(data).toEqual(mockResponse);

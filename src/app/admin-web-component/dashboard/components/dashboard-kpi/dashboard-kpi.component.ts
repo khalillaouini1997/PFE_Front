@@ -1,6 +1,6 @@
-import { Component, input } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { KpiCardComponent } from '../../../../shared/components/kpi-card/kpi-card.component';
+import {Component, input} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {KpiCardComponent} from '../../../../shared/components/kpi-card/kpi-card.component';
 
 @Component({
   selector: 'app-dashboard-kpi',

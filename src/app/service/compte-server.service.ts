@@ -1,8 +1,8 @@
-import { Injectable, inject } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
-import { CompteServer } from "../data/data";
-import { Observable } from "rxjs";
-import { environment } from '../../environments/environment';
+import {inject, Injectable} from '@angular/core';
+import {HttpClient} from "@angular/common/http";
+import {CompteServer} from "../data/data";
+import {Observable} from "rxjs";
+import {environment} from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -59,6 +59,6 @@ export class CompteServerService {
   }
 
   ExportListComptesServer(comptesServer: CompteServer[]): Observable<Blob> {
-    return this.http.post(`${environment.apiBaseUrl}compteServer/export`, comptesServer, { responseType: 'blob' });
+    return this.http.post(`${environment.apiBaseUrl}compteServer/export`, comptesServer, {responseType: 'blob'});
   }
 }

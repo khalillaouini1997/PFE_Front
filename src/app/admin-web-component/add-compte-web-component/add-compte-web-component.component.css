@@ -3,128 +3,128 @@
 }
 
 .premium-card {
-    border-radius: 20px;
-    transition: transform 0.3s ease;
+  border-radius: 20px;
+  transition: transform 0.3s ease;
 }
 
 h5.fw-bold {
-    margin-bottom: 2rem !important;
-    color: var(--text-primary);
-    letter-spacing: -0.02em;
+  margin-bottom: 2rem !important;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
 }
 
 h5.mt-4 {
-    margin-top: 3rem !important;
+  margin-top: 3rem !important;
 }
 
 .form-floating > label {
-    padding: 1rem 0.75rem;
-    transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
+  padding: 1rem 0.75rem;
+  transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
 }
 
 /* Simple column layout — no flex tricks */
 .custom-datepicker-container, .custom-form-group {
-    display: block;
+  display: block;
 }
 
 /* Normalize PrimeNG host element to remove extra spacing */
 :host ::ng-deep p-datepicker {
-    display: block !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    line-height: normal !important;
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: normal !important;
 }
 
 .p-datepicker-label, .premium-label {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--accent-primary);
-    margin-bottom: 8px;
-    margin-left: 4px;
-    display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  margin-left: 4px;
+  display: block;
 }
 
 /* Shared outer box styling for PrimeNG datepicker */
 :host ::ng-deep .p-datepicker {
-    height: 55px !important;
-    width: 100% !important;
-    border-radius: 12px !important;
-    border: 1.5px solid var(--surface-border) !important;
-    background-color: var(--surface-card) !important;
-    display: flex !important;
-    align-items: center;
-    overflow: hidden;
+  height: 55px !important;
+  width: 100% !important;
+  border-radius: 12px !important;
+  border: 1.5px solid var(--surface-border) !important;
+  background-color: var(--surface-card) !important;
+  display: flex !important;
+  align-items: center;
+  overflow: hidden;
 }
 
 /* Standard input styling — separate from PrimeNG inner input */
 .premium-input {
-    height: 55px !important;
-    width: 100% !important;
-    border-radius: 12px !important;
-    border: 1.5px solid var(--surface-border) !important;
-    background-color: var(--surface-card) !important;
-    padding: 0 1rem !important;
-    font-size: 1.1rem !important;
-    box-shadow: none !important;
-    outline: none !important;
-    color: var(--text-primary) !important;
+  height: 55px !important;
+  width: 100% !important;
+  border-radius: 12px !important;
+  border: 1.5px solid var(--surface-border) !important;
+  background-color: var(--surface-card) !important;
+  padding: 0 1rem !important;
+  font-size: 1.1rem !important;
+  box-shadow: none !important;
+  outline: none !important;
+  color: var(--text-primary) !important;
 }
 
 /* PrimeNG datepicker inner input only */
 :host ::ng-deep .p-datepicker > input {
-    height: 100% !important;
-    width: 100% !important;
-    border: none !important;
-    padding: 0 1rem !important;
-    font-size: 1.1rem !important;
-    background-color: transparent !important;
-    box-shadow: none !important;
-    outline: none !important;
-    color: var(--text-primary) !important;
+  height: 100% !important;
+  width: 100% !important;
+  border: none !important;
+  padding: 0 1rem !important;
+  font-size: 1.1rem !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+  color: var(--text-primary) !important;
 }
 
 /* PrimeNG calendar icon button */
 :host ::ng-deep .p-datepicker .p-datepicker-trigger {
-    background: var(--surface-elevated) !important;
-    border: none !important;
-    border-left: 1.5px solid var(--surface-border) !important;
-    color: var(--accent-primary) !important;
-    height: 100% !important;
-    width: 45px !important;
-    border-radius: 0 !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  background: var(--surface-elevated) !important;
+  border: none !important;
+  border-left: 1.5px solid var(--surface-border) !important;
+  color: var(--accent-primary) !important;
+  height: 100% !important;
+  width: 45px !important;
+  border-radius: 0 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Focus states */
 :host ::ng-deep .p-datepicker:focus-within,
 .premium-input:focus {
-    border-color: var(--accent-primary) !important;
-    box-shadow: 0 4px 20px -5px var(--accent-primary-dim) !important;
+  border-color: var(--accent-primary) !important;
+  box-shadow: 0 4px 20px -5px var(--accent-primary-dim) !important;
 }
 
 .btn-save-premium {
-    background: var(--primary-600);
-    border: none;
-    border-radius: 12px;
-    padding: 12px 30px;
-    transition: all var(--transition-fast) var(--ease-default);
+  background: var(--primary-600);
+  border: none;
+  border-radius: 12px;
+  padding: 12px 30px;
+  transition: all var(--transition-fast) var(--ease-default);
 }
 
 .btn-save-premium:hover:not(:disabled) {
-    background: var(--primary-700);
+  background: var(--primary-700);
 }
 
 .btn-cancel-premium {
-    border-radius: 12px;
-    padding: 12px 30px;
+  border-radius: 12px;
+  padding: 12px 30px;
 }
 
 .mobile-toggle-container {
-    height: 55px;
+  height: 55px;
 }
 
 .mobile-toggle {
-    transform: scale(1.4);
+  transform: scale(1.4);
 }

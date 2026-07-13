@@ -9,10 +9,14 @@ if (!window.matchMedia) {
       matches: false,
       media: query,
       onchange: null,
-      addListener: () => {},
-      removeListener: () => {},
-      addEventListener: () => {},
-      removeEventListener: () => {},
+      addListener: () => {
+      },
+      removeListener: () => {
+      },
+      addEventListener: () => {
+      },
+      removeEventListener: () => {
+      },
       dispatchEvent: () => false,
     }),
   });
@@ -21,9 +25,12 @@ if (!window.matchMedia) {
 // Mock ResizeObserver for PrimeNG (empty methods are intentional for jsdom)
 if (!window.ResizeObserver) {
   (window as any).ResizeObserver = class {
-    observe() {} // NOSONAR
-    unobserve() {} // NOSONAR
-    disconnect() {} // NOSONAR
+    observe() {
+    } // NOSONAR
+    unobserve() {
+    } // NOSONAR
+    disconnect() {
+    } // NOSONAR
   };
 }
 
@@ -32,12 +39,12 @@ if (typeof window !== 'undefined') {
   const mockMethods = (proto: any) => {
     if (proto) {
       if (!proto.showModal) {
-        proto.showModal = function(this: any) {
+        proto.showModal = function (this: any) {
           this.setAttribute('open', '');
         };
       }
       if (!proto.close) {
-        proto.close = function(this: any) {
+        proto.close = function (this: any) {
           this.removeAttribute('open');
         };
       }
@@ -74,11 +81,13 @@ const mockComputedStyle = {
 
   // Provide parentElement on the prototype so it's available before getContext is called
   const mockParent = {
-    ownerDocument: { defaultView: window },
+    ownerDocument: {defaultView: window},
     style: {},
-    getBoundingClientRect: () => ({ width: 300, height: 150, top: 0, left: 0, right: 300, bottom: 150 }),
-    addEventListener: () => {},
-    removeEventListener: () => {},
+    getBoundingClientRect: () => ({width: 300, height: 150, top: 0, left: 0, right: 300, bottom: 150}),
+    addEventListener: () => {
+    },
+    removeEventListener: () => {
+    },
     parentNode: null as any,
     parentElement: null as any,
   };
@@ -86,15 +95,19 @@ const mockComputedStyle = {
   mockParent.parentElement = mockParent;
 
   Object.defineProperty(HTMLCanvasElement.prototype, 'parentElement', {
-    get() { return mockParent; },
+    get() {
+      return mockParent;
+    },
     configurable: true,
   });
   Object.defineProperty(HTMLCanvasElement.prototype, 'parentNode', {
-    get() { return mockParent; },
+    get() {
+      return mockParent;
+    },
     configurable: true,
   });
   Object.defineProperty(HTMLCanvasElement.prototype, 'ownerDocument', {
-    value: { defaultView: window },
+    value: {defaultView: window},
     configurable: true,
   });
 
@@ -103,20 +116,49 @@ const mockComputedStyle = {
     if (ctx) return ctx;
 
     return {
-      fillRect: () => {}, clearRect: () => {}, strokeRect: () => {},
-      fillText: () => {}, strokeText: () => {},
-      measureText: () => ({ width: 0 }),
-      beginPath: () => {}, closePath: () => {},
-      moveTo: () => {}, lineTo: () => {},
-      stroke: () => {}, fill: () => {}, arc: () => {}, rect: () => {},
-      createLinearGradient: () => ({ addColorStop: () => {} }),
-      createRadialGradient: () => ({ addColorStop: () => {} }),
+      fillRect: () => {
+      }, clearRect: () => {
+      }, strokeRect: () => {
+      },
+      fillText: () => {
+      }, strokeText: () => {
+      },
+      measureText: () => ({width: 0}),
+      beginPath: () => {
+      }, closePath: () => {
+      },
+      moveTo: () => {
+      }, lineTo: () => {
+      },
+      stroke: () => {
+      }, fill: () => {
+      }, arc: () => {
+      }, rect: () => {
+      },
+      createLinearGradient: () => ({
+        addColorStop: () => {
+        }
+      }),
+      createRadialGradient: () => ({
+        addColorStop: () => {
+        }
+      }),
       canvas: this,
-      save: () => {}, restore: () => {},
-      scale: () => {}, translate: () => {}, rotate: () => {},
-      setTransform: () => {}, transform: () => {}, resetTransform: () => {},
-      drawImage: () => {},
-      setLineDash: () => {},
+      save: () => {
+      }, restore: () => {
+      },
+      scale: () => {
+      }, translate: () => {
+      }, rotate: () => {
+      },
+      setTransform: () => {
+      }, transform: () => {
+      }, resetTransform: () => {
+      },
+      drawImage: () => {
+      },
+      setLineDash: () => {
+      },
       lineDashOffset: 0, shadowBlur: 0,
       globalAlpha: 1, strokeStyle: '#000', fillStyle: '#000',
       lineWidth: 1, font: '10px sans-serif',

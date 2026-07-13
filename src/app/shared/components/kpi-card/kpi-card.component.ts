@@ -1,6 +1,6 @@
-import { Component, input, viewChild, AfterViewInit, OnDestroy, ElementRef, effect, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Chart, registerables } from 'chart.js';
+import {AfterViewInit, Component, effect, ElementRef, input, OnDestroy, signal, viewChild} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {Chart, registerables} from 'chart.js';
 
 Chart.register(...registerables);
 
@@ -20,11 +20,10 @@ export class KpiCardComponent implements AfterViewInit, OnDestroy {
   showSparkline = input(false);
 
   sparkline = viewChild<ElementRef>('sparkline');
+  displayValue = signal<string | number>('');
   private sparklineChart?: Chart;
   private sparklineData: number[] = [];
   private lastValue: number | string = '';
-
-  displayValue = signal<string | number>('');
   private animationId?: number;
 
   constructor() {
@@ -92,7 +91,7 @@ export class KpiCardComponent implements AfterViewInit, OnDestroy {
   private generateSparklineData(): number[] {
     const trend = this.trend() === 'up' ? 1 : -1;
     const baseValue = typeof this.value() === 'number' ? this.value() as number : 10;
-    return Array.from({ length: 7 }, (_, i) => {
+    return Array.from({length: 7}, (_, i) => {
       // Deterministic variation using index and baseValue
       const variation = ((i * 3 + baseValue) % 5) + 1;
       return Math.max(0, baseValue + (trend * variation * i / 7));
@@ -113,9 +112,14 @@ export class KpiCardComponent implements AfterViewInit, OnDestroy {
 
     let color: string;
     switch (this.trend()) {
-      case 'up': color = '#10b981'; break;
-      case 'down': color = '#f43f5e'; break;
-      default: color = '#4f46e5';
+      case 'up':
+        color = '#10b981';
+        break;
+      case 'down':
+        color = '#f43f5e';
+        break;
+      default:
+        color = '#4f46e5';
     }
 
     this.sparklineChart = new Chart(canvas, {
@@ -137,12 +141,12 @@ export class KpiCardComponent implements AfterViewInit, OnDestroy {
         maintainAspectRatio: false,
         animation: false,
         plugins: {
-          legend: { display: false },
-          tooltip: { enabled: false }
+          legend: {display: false},
+          tooltip: {enabled: false}
         },
         scales: {
-          x: { display: false },
-          y: { display: false }
+          x: {display: false},
+          y: {display: false}
         }
       }
     });

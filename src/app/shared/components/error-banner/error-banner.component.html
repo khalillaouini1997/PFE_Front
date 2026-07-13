@@ -1,13 +1,13 @@
 @if (isVisible()) {
-  <div 
-    class="error-banner" 
-    [class.severity-error]="getSeverity() === 'error'"
-    [class.severity-warning]="getSeverity() === 'warning'"
-    [class.severity-info]="getSeverity() === 'info'"
-    role="alert"
-    aria-live="assertive"
-    tabindex="-1"
+  <div
     (keydown)="onKeydown($event)"
+    [class.severity-error]="getSeverity() === 'error'"
+    [class.severity-info]="getSeverity() === 'info'"
+    [class.severity-warning]="getSeverity() === 'warning'"
+    aria-live="assertive"
+    class="error-banner"
+    role="alert"
+    tabindex="-1"
   >
     <div class="error-banner-content">
       <div class="error-banner-icon">
@@ -18,22 +18,22 @@
       </div>
       <div class="error-banner-actions">
         @if (error()?.retryAction) {
-          <button 
-            class="error-banner-btn retry-btn" 
+          <button
             (click)="onRetry()"
-            type="button"
             aria-label="Retry"
+            class="error-banner-btn retry-btn"
+            type="button"
           >
             <i class="material-icons">refresh</i>
             <span>Retry</span>
           </button>
         }
         @if (error()?.dismissible !== false) {
-          <button 
-            class="error-banner-btn dismiss-btn" 
+          <button
             (click)="dismiss()"
-            type="button"
             aria-label="Dismiss"
+            class="error-banner-btn dismiss-btn"
+            type="button"
           >
             <i class="material-icons">close</i>
           </button>

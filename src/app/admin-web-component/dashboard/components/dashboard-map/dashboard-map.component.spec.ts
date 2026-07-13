@@ -1,7 +1,7 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { vi, describe, it, expect, beforeEach, afterEach, beforeAll } from 'vitest';
-import { DashboardMapComponent } from './dashboard-map.component';
-import { RealTime } from '../../../../data/data';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {afterEach, beforeAll, beforeEach, describe, expect, it, vi} from 'vitest';
+import {DashboardMapComponent} from './dashboard-map.component';
+import {RealTime} from '../../../../data/data';
 
 const mockMap = {
   setView: vi.fn().mockReturnThis(),
@@ -44,7 +44,7 @@ describe('DashboardMapComponent', () => {
         setLatLng: vi.fn(),
       })),
       icon: vi.fn(() => ({})),
-      latLng: vi.fn((lat, lng) => ({ lat, lng })),
+      latLng: vi.fn((lat, lng) => ({lat, lng})),
       latLngBounds: vi.fn(() => ({})),
       markerClusterGroup: vi.fn(() => mockMarkerClusterGroup),
     };
@@ -152,14 +152,14 @@ describe('DashboardMapComponent', () => {
 
   it('should handle getCarIcon with different device ids', () => {
     const getCarIcon = (component as any).getCarIcon.bind(component);
-    const tram = createTram({ deviceid: 42, rotation_angle: 45 } as any);
+    const tram = createTram({deviceid: 42, rotation_angle: 45} as any);
     const icon = getCarIcon(tram);
     expect(icon).toBeTruthy();
   });
 
   it('should cache car icons in deviceIconMap', () => {
     const getCarIcon = (component as any).getCarIcon.bind(component);
-    const tram = createTram({ deviceid: 99, rotation_angle: 0 } as any);
+    const tram = createTram({deviceid: 99, rotation_angle: 0} as any);
     getCarIcon(tram);
     getCarIcon(tram);
     expect((component as any).deviceIconMap.size).toBe(1);
@@ -181,7 +181,7 @@ describe('DashboardMapComponent', () => {
 
   it('getCarIcon should default rotation_angle to 0 when undefined', () => {
     const getCarIcon = (component as any).getCarIcon.bind(component);
-    const tram = createTram({ deviceid: 100 } as any);
+    const tram = createTram({deviceid: 100} as any);
     delete (tram as any).rotation_angle;
     const icon = getCarIcon(tram);
     expect(icon).toBeTruthy();
@@ -189,7 +189,7 @@ describe('DashboardMapComponent', () => {
 
   it('getCarIcon should snap angle to nearest valid angle', () => {
     const getCarIcon = (component as any).getCarIcon.bind(component);
-    const tram = createTram({ rotation_angle: 37 } as any);
+    const tram = createTram({rotation_angle: 37} as any);
     const icon = getCarIcon(tram);
     expect(icon).toBeTruthy();
   });
@@ -199,7 +199,8 @@ describe('DashboardMapComponent', () => {
       if (event === 'tileerror') cb({});
       return mockTileLayer;
     });
-    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {
+    });
     (window as any).L.map = vi.fn(() => {
       mockTileLayer.on.mock.calls.length = 0;
       return {
@@ -213,9 +214,9 @@ describe('DashboardMapComponent', () => {
   });
 
   it('updateMarkers should remove markers for removed devices', () => {
-    const marker = { remove: vi.fn() };
+    const marker = {remove: vi.fn()};
     (component as any).markerMap.set(1, marker);
-    (component as any).previousPositions.set(1, { lat: 33, lng: 9 });
+    (component as any).previousPositions.set(1, {lat: 33, lng: 9});
 
     fixture.componentRef.setInput('realtimes', []);
     (component as any).currentFleetHash = '1';
@@ -227,7 +228,7 @@ describe('DashboardMapComponent', () => {
 
   it('updateMarkers should animate existing markers', () => {
     const tram = createTram();
-    (component as any).previousPositions.set(1, { lat: 33.87, lng: 9.52 });
+    (component as any).previousPositions.set(1, {lat: 33.87, lng: 9.52});
 
     const markerInstance = {
       bindPopup: vi.fn().mockReturnThis(),
@@ -239,7 +240,7 @@ describe('DashboardMapComponent', () => {
     fixture.componentRef.setInput('realtimes', [tram]);
     (component as any).currentFleetHash = '';
     (component as any).updateMarkers();
-    expect((component as any).previousPositions.get(1)).toEqual({ lat: 33.88, lng: 9.53 });
+    expect((component as any).previousPositions.get(1)).toEqual({lat: 33.88, lng: 9.53});
   });
 
   it('updateMarkers with fleet change should call fitBounds', () => {

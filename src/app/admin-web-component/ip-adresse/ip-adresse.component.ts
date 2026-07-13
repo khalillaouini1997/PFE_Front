@@ -1,18 +1,18 @@
-import { Component, OnInit, inject, ViewChild, ElementRef } from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
-import { IpAddress, createIpAddress } from 'src/app/data/data';
-import { IpAddressService } from 'src/app/service/ip-address.service';
-import { createPaginationState, pageChanged } from '../../shared/components/pagination-base';
-import { catchError } from "rxjs/operators";
-import { of } from "rxjs";
-import { withToast } from '../../utils/toast.helpers';
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { TableModule } from 'primeng/table';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
-import { SearchInputComponent } from '../../shared/components/search-input/search-input.component';
-import { EmptyTableComponent } from '../../shared/components/empty-table/empty-table.component';
+import {Component, ElementRef, inject, OnInit, ViewChild} from '@angular/core';
+import {ToastrService} from 'ngx-toastr';
+import {createIpAddress, IpAddress} from 'src/app/data/data';
+import {IpAddressService} from 'src/app/service/ip-address.service';
+import {createPaginationState, pageChanged} from '../../shared/components/pagination-base';
+import {catchError} from "rxjs/operators";
+import {of} from "rxjs";
+import {withToast} from '../../utils/toast.helpers';
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {CommonModule} from '@angular/common';
+import {TableModule} from 'primeng/table';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
+import {PageHeaderComponent} from '../../shared/components/page-header/page-header.component';
+import {SearchInputComponent} from '../../shared/components/search-input/search-input.component';
+import {EmptyTableComponent} from '../../shared/components/empty-table/empty-table.component';
 
 @Component({
   selector: 'app-ip-adresse',
@@ -25,13 +25,11 @@ export class IpAdresseComponent implements OnInit {
 
   ipAddressSelected: IpAddress = createIpAddress();
   ips: IpAddress[] = [];
-  pagination = createPaginationState({ itemsPerPage: 15 });
+  pagination = createPaginationState({itemsPerPage: 15});
   typeConnection: { type: string; }[] = [];
-  private currentKeyWord: string = '';
-
   updateIpForm!: FormGroup;
   @ViewChild('updateModal') updateModal!: ElementRef<HTMLDialogElement>;
-
+  private currentKeyWord: string = '';
   private readonly ipAddressService = inject(IpAddressService);
   private readonly toastr = inject(ToastrService);
   private readonly fb = inject(FormBuilder);

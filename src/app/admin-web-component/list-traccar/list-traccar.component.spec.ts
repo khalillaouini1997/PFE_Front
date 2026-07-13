@@ -1,12 +1,12 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { of, throwError } from 'rxjs';
-import { vi } from 'vitest';
-import { ListTraccarComponent } from './list-traccar.component';
-import { TraccarService } from 'src/app/service/traccar.service';
-import { ToastrService } from 'ngx-toastr';
-import { ConfirmationService } from 'primeng/api';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {NO_ERRORS_SCHEMA} from '@angular/core';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
+import {of, throwError} from 'rxjs';
+import {vi} from 'vitest';
+import {ListTraccarComponent} from './list-traccar.component';
+import {TraccarService} from 'src/app/service/traccar.service';
+import {ToastrService} from 'ngx-toastr';
+import {ConfirmationService} from 'primeng/api';
 
 describe('ListTraccarComponent', () => {
   let component: ListTraccarComponent;
@@ -17,21 +17,21 @@ describe('ListTraccarComponent', () => {
 
   beforeEach(async () => {
     traccarService = {
-      getLisTraccar: vi.fn().mockReturnValue(of({ data: [] })),
-      createDevice: vi.fn().mockReturnValue(of({ data: { id: 1 } })),
-      updateDevice: vi.fn().mockReturnValue(of({ data: { id: 1 } })),
-      deleteDevice: vi.fn().mockReturnValue(of({ data: null })),
+      getLisTraccar: vi.fn().mockReturnValue(of({data: []})),
+      createDevice: vi.fn().mockReturnValue(of({data: {id: 1}})),
+      updateDevice: vi.fn().mockReturnValue(of({data: {id: 1}})),
+      deleteDevice: vi.fn().mockReturnValue(of({data: null})),
     };
-    toastr = { warning: vi.fn(), error: vi.fn(), success: vi.fn() };
-    translate = { instant: vi.fn((key: string) => key) };
+    toastr = {warning: vi.fn(), error: vi.fn(), success: vi.fn()};
+    translate = {instant: vi.fn((key: string) => key)};
 
     await TestBed.configureTestingModule({
       imports: [ListTraccarComponent, TranslateModule.forRoot()],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [
-        { provide: TraccarService, useValue: traccarService },
-        { provide: ToastrService, useValue: toastr },
-        { provide: TranslateService, useValue: translate },
+        {provide: TraccarService, useValue: traccarService},
+        {provide: ToastrService, useValue: toastr},
+        {provide: TranslateService, useValue: translate},
         ConfirmationService,
       ],
     }).compileComponents();
@@ -56,8 +56,8 @@ describe('ListTraccarComponent', () => {
   });
 
   it('should load traccar data on getLisTraccar', () => {
-    const mockData = [{ id: 1, name: 'device1' }, { id: 2, name: 'device2' }];
-    traccarService.getLisTraccar.mockReturnValue(of({ data: mockData }));
+    const mockData = [{id: 1, name: 'device1'}, {id: 2, name: 'device2'}];
+    traccarService.getLisTraccar.mockReturnValue(of({data: mockData}));
     component.getLisTraccar();
     expect(component.traccarDtos).toEqual(mockData);
     expect(component.totalRecords).toBe(2);
@@ -65,7 +65,7 @@ describe('ListTraccarComponent', () => {
   });
 
   it('should handle empty data', () => {
-    traccarService.getLisTraccar.mockReturnValue(of({ data: [] }));
+    traccarService.getLisTraccar.mockReturnValue(of({data: []}));
     component.getLisTraccar();
     expect(component.traccarDtos).toEqual([]);
     expect(component.totalRecords).toBe(0);
@@ -73,15 +73,15 @@ describe('ListTraccarComponent', () => {
   });
 
   it('should handle data with content wrapper', () => {
-    const mockData = [{ id: 1 }];
-    traccarService.getLisTraccar.mockReturnValue(of({ data: { content: mockData } }));
+    const mockData = [{id: 1}];
+    traccarService.getLisTraccar.mockReturnValue(of({data: {content: mockData}}));
     component.getLisTraccar();
     expect(component.traccarDtos).toEqual(mockData);
     expect(component.totalRecords).toBe(1);
   });
 
   it('should handle direct array response', () => {
-    const mockData = [{ id: 1 }];
+    const mockData = [{id: 1}];
     traccarService.getLisTraccar.mockReturnValue(of(mockData));
     component.getLisTraccar();
     expect(component.traccarDtos).toEqual(mockData);
@@ -108,7 +108,7 @@ describe('ListTraccarComponent', () => {
   });
 
   it('should clear data on destroy', () => {
-    component.traccarDtos = [{ id: 1 }] as any;
+    component.traccarDtos = [{id: 1}] as any;
     component.totalRecords = 1;
     component.ngOnDestroy();
     expect(component.traccarDtos).toEqual([]);
@@ -131,7 +131,15 @@ describe('ListTraccarComponent', () => {
   });
 
   it('openEditDialog should set editMode true and patch form', () => {
-    const device = { id: 1, name: 'Test', imei: 'IMEI123', category: 'Car', phone: null, model: null, contact: null } as any;
+    const device = {
+      id: 1,
+      name: 'Test',
+      imei: 'IMEI123',
+      category: 'Car',
+      phone: null,
+      model: null,
+      contact: null
+    } as any;
     component.openEditDialog(device);
     expect(component.editMode).toBe(true);
     expect(component.selectedDevice).toBe(device);
@@ -150,18 +158,18 @@ describe('ListTraccarComponent', () => {
   });
 
   it('saveDevice in add mode should call createDevice', () => {
-    traccarService.createDevice.mockReturnValue(of({ data: { id: 1 } }));
+    traccarService.createDevice.mockReturnValue(of({data: {id: 1}}));
     component.openAddDialog();
-    component.deviceForm.patchValue({ name: 'New', imei: 'IMEI1' });
+    component.deviceForm.patchValue({name: 'New', imei: 'IMEI1'});
     component.saveDevice();
     expect(traccarService.createDevice).toHaveBeenCalled();
   });
 
   it('saveDevice in edit mode should call updateDevice', () => {
-    traccarService.updateDevice.mockReturnValue(of({ data: { id: 1 } }));
-    const device = { id: 5, name: 'Old', imei: 'IMEI5' } as any;
+    traccarService.updateDevice.mockReturnValue(of({data: {id: 1}}));
+    const device = {id: 5, name: 'Old', imei: 'IMEI5'} as any;
     component.openEditDialog(device);
-    component.deviceForm.patchValue({ name: 'Updated', imei: 'IMEI5' });
+    component.deviceForm.patchValue({name: 'Updated', imei: 'IMEI5'});
     component.saveDevice();
     expect(traccarService.updateDevice).toHaveBeenCalledWith(5, expect.any(Object));
   });
@@ -169,7 +177,7 @@ describe('ListTraccarComponent', () => {
   it('saveDevice error should reset saving', () => {
     traccarService.createDevice.mockReturnValue(throwError(() => new Error('fail')));
     component.openAddDialog();
-    component.deviceForm.patchValue({ name: 'X', imei: 'Y' });
+    component.deviceForm.patchValue({name: 'X', imei: 'Y'});
     component.saveDevice();
     expect(component.saving).toBe(false);
   });
@@ -177,25 +185,28 @@ describe('ListTraccarComponent', () => {
   it('confirmDelete should invoke confirmationService.confirm', () => {
     const svc = (component as any).confirmationService;
     const confirmSpy = vi.spyOn(svc, 'confirm');
-    const device = { id: 3 } as any;
+    const device = {id: 3} as any;
     component.confirmDelete(device);
     expect(confirmSpy).toHaveBeenCalled();
   });
 
   it('confirmDelete accept callback should call deleteDevice', () => {
-    traccarService.deleteDevice.mockReturnValue(of({ data: null }));
+    traccarService.deleteDevice.mockReturnValue(of({data: null}));
     const svc = (component as any).confirmationService;
     let capturedConfig: any;
-    vi.spyOn(svc, 'confirm').mockImplementation((config: any) => { capturedConfig = config; return svc; });
+    vi.spyOn(svc, 'confirm').mockImplementation((config: any) => {
+      capturedConfig = config;
+      return svc;
+    });
 
-    const device = { id: 7 } as any;
+    const device = {id: 7} as any;
     component.confirmDelete(device);
     capturedConfig.accept();
     expect(traccarService.deleteDevice).toHaveBeenCalledWith(7);
   });
 
   it('deleteDevice success should refresh list', () => {
-    traccarService.deleteDevice.mockReturnValue(of({ data: null }));
+    traccarService.deleteDevice.mockReturnValue(of({data: null}));
     const spy = vi.spyOn(component, 'getLisTraccar');
     component.deleteDevice(1);
     expect(spy).toHaveBeenCalled();

@@ -1,10 +1,20 @@
-import { Component, input, viewChild, inject, AfterViewInit, OnDestroy, ElementRef, effect, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { GlobalDashboardStats } from '../../../../shared/stores';
-import { CHART_CONSTANTS, SPEED_BANDS, SIM_CARD_PREFIXES } from '../../../../shared/constants/app.constants';
-import { Chart, registerables } from 'chart.js';
-import { updateOrCreateChart } from '../../../../shared/utils/chart.utils';
+import {
+  AfterViewInit,
+  Component,
+  computed,
+  effect,
+  ElementRef,
+  inject,
+  input,
+  OnDestroy,
+  viewChild
+} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
+import {GlobalDashboardStats} from '../../../../shared/stores';
+import {CHART_CONSTANTS, SIM_CARD_PREFIXES, SPEED_BANDS} from '../../../../shared/constants/app.constants';
+import {Chart, registerables} from 'chart.js';
+import {updateOrCreateChart} from '../../../../shared/utils/chart.utils';
 
 Chart.register(...registerables);
 
@@ -34,20 +44,17 @@ export class GlobalChartsComponent implements AfterViewInit, OnDestroy {
   puceChart = viewChild<ElementRef>('puceChart');
   signalChart = viewChild<ElementRef>('signalChart');
   healthChart = viewChild<ElementRef>('healthChart');
-
-  private stateChart?: Chart;
-  private speedChartInstance?: Chart;
-  private puceChartInstance?: Chart;
-  private signalChartInstance?: Chart;
-  private healthChartInstance?: Chart;
-
-  private readonly translate = inject(TranslateService);
-
   healthScore = computed(() => {
     const s = this.stats();
     const total = s.totalVehicles || (s.valid + s.technicalIssue + s.nonValid);
     return total > 0 ? Math.round((s.valid / total) * 100) : 0;
   });
+  private stateChart?: Chart;
+  private speedChartInstance?: Chart;
+  private puceChartInstance?: Chart;
+  private signalChartInstance?: Chart;
+  private healthChartInstance?: Chart;
+  private readonly translate = inject(TranslateService);
 
   constructor() {
     effect(() => {
@@ -98,7 +105,7 @@ export class GlobalChartsComponent implements AfterViewInit, OnDestroy {
       {
         type: 'doughnut',
         data,
-        options: { plugins: { legend: { position: 'bottom' } } }
+        options: {plugins: {legend: {position: 'bottom'}}}
       }
     );
   }
@@ -127,7 +134,10 @@ export class GlobalChartsComponent implements AfterViewInit, OnDestroy {
       {
         type: 'bar',
         data,
-        options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { display: false } }, x: { grid: { display: false } } } }
+        options: {
+          plugins: {legend: {display: false}},
+          scales: {y: {beginAtZero: true, grid: {display: false}}, x: {grid: {display: false}}}
+        }
       }
     );
   }
@@ -160,7 +170,7 @@ export class GlobalChartsComponent implements AfterViewInit, OnDestroy {
       {
         type: 'pie',
         data,
-        options: { plugins: { legend: { position: 'bottom' } } }
+        options: {plugins: {legend: {position: 'bottom'}}}
       }
     );
   }
@@ -189,7 +199,10 @@ export class GlobalChartsComponent implements AfterViewInit, OnDestroy {
       {
         type: 'bar',
         data,
-        options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { display: false } }, x: { grid: { display: false } } } }
+        options: {
+          plugins: {legend: {display: false}},
+          scales: {y: {beginAtZero: true, grid: {display: false}}, x: {grid: {display: false}}}
+        }
       }
     );
   }
@@ -218,7 +231,7 @@ export class GlobalChartsComponent implements AfterViewInit, OnDestroy {
       {
         type: 'doughnut',
         data,
-        options: { plugins: { legend: { display: false }, tooltip: { enabled: false } }, cutout: '75%' }
+        options: {plugins: {legend: {display: false}, tooltip: {enabled: false}}, cutout: '75%'}
       }
     );
   }

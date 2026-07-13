@@ -1,11 +1,16 @@
-import { Component, input, viewChild, inject, AfterViewInit, OnDestroy, ElementRef, effect } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RealTime, DeviceInstallationEvolution } from '../../../../data/data';
-import { CHART_CONSTANTS, SPEED_BANDS, SIM_CARD_PREFIXES, STATUS_TYPES } from '../../../../shared/constants/app.constants';
-import { TranslateService } from '@ngx-translate/core';
-import { Chart, registerables } from 'chart.js';
-import { updateOrCreateChart } from '../../../../shared/utils/chart.utils';
-import { DashboardStore } from '../../../../shared/stores';
+import {AfterViewInit, Component, effect, ElementRef, inject, input, OnDestroy, viewChild} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {DeviceInstallationEvolution, RealTime} from '../../../../data/data';
+import {
+  CHART_CONSTANTS,
+  SIM_CARD_PREFIXES,
+  SPEED_BANDS,
+  STATUS_TYPES
+} from '../../../../shared/constants/app.constants';
+import {TranslateService} from '@ngx-translate/core';
+import {Chart, registerables} from 'chart.js';
+import {updateOrCreateChart} from '../../../../shared/utils/chart.utils';
+import {DashboardStore} from '../../../../shared/stores';
 
 Chart.register(...registerables);
 
@@ -73,12 +78,17 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
 
   updateCharts() {
     if (!this.statusChart() || !this.speedChart() || !this.puceChart() || !this.signalChart()) {
-        return;
+      return;
     }
     this.updateStateChart();
     this.updateSpeedChart();
     this.updatePuceChart();
     this.updateSignalChart();
+  }
+
+  onGranularityChange(event: Event) {
+    const select = event.target as HTMLSelectElement;
+    this.store.setGranularity(select.value);
   }
 
   private updateStateChart() {
@@ -109,7 +119,7 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
       {
         type: 'doughnut',
         data,
-        options: { plugins: { legend: { position: 'bottom' } } }
+        options: {plugins: {legend: {position: 'bottom'}}}
       }
     );
   }
@@ -138,7 +148,10 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
       {
         type: 'bar',
         data,
-        options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { display: false } }, x: { grid: { display: false } } } }
+        options: {
+          plugins: {legend: {display: false}},
+          scales: {y: {beginAtZero: true, grid: {display: false}}, x: {grid: {display: false}}}
+        }
       }
     );
   }
@@ -174,7 +187,7 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
       {
         type: 'pie',
         data,
-        options: { plugins: { legend: { position: 'bottom' } } }
+        options: {plugins: {legend: {position: 'bottom'}}}
       }
     );
   }
@@ -208,7 +221,10 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
       {
         type: 'bar',
         data,
-        options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { display: false } }, x: { grid: { display: false } } } }
+        options: {
+          plugins: {legend: {display: false}},
+          scales: {y: {beginAtZero: true, grid: {display: false}}, x: {grid: {display: false}}}
+        }
       }
     );
   }
@@ -235,13 +251,11 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
       {
         type: 'line',
         data,
-        options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { display: false } }, x: { grid: { display: false } } } }
+        options: {
+          plugins: {legend: {display: false}},
+          scales: {y: {beginAtZero: true, grid: {display: false}}, x: {grid: {display: false}}}
+        }
       }
     );
-  }
-
-  onGranularityChange(event: Event) {
-    const select = event.target as HTMLSelectElement;
-    this.store.setGranularity(select.value);
   }
 }

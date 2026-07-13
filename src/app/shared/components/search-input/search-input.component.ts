@@ -1,7 +1,7 @@
-import { Component, input, output, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
+import {Component, inject, input, output} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormBuilder, FormGroup, ReactiveFormsModule} from '@angular/forms';
+import {TranslateModule} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-search-input',
@@ -29,7 +29,7 @@ export class SearchInputComponent {
 
   constructor() {
     const fb = inject(FormBuilder);
-    this.form = fb.group({ keyWord: [''] });
+    this.form = fb.group({keyWord: ['']});
   }
 
   onSearch() {

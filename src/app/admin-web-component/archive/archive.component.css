@@ -4,27 +4,28 @@
 }
 
 .limit-input-group {
-    width: 150px;
+  width: 150px;
 }
 
 .btn-refresh-archive {
-    border-radius: 10px;
-    background: var(--surface-card);
-    color: var(--accent-primary);
-    border: 1px solid var(--surface-border);
+  border-radius: 10px;
+  background: var(--surface-card);
+  color: var(--accent-primary);
+  border: 1px solid var(--surface-border);
 }
 
 .table-container-70vh {
-    max-height: 70vh;
+  max-height: 70vh;
 }
 
 .col-id-small {
-    width: 100px;
+  width: 100px;
 }
 
 table tbody {
   background-color: var(--surface-card);
 }
+
 table thead {
   background-color: var(--color-error);
   color: var(--sidebar-text);
@@ -37,9 +38,11 @@ th {
 .sidebar {
   display: none !important;
 }
+
 .main-panel {
   width: 100% !important;
 }
+
 .ecriture {
   font-size: 12px;
 }
@@ -66,73 +69,73 @@ th {
 
 /* Premium Badge for Terminal ID */
 .premium-terminal-badge {
-    background: var(--surface-elevated) !important;
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
-    border: 1px solid var(--surface-border);
-    padding: 0.5rem 1.25rem !important;
-    font-size: 0.85rem !important;
-    font-weight: 500 !important;
-    letter-spacing: 0.025em;
-    border-radius: 50rem !important;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
-    display: inline-flex;
-    align-items: center;
-    color: var(--text-primary);
+  background: var(--surface-elevated) !important;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  border: 1px solid var(--surface-border);
+  padding: 0.5rem 1.25rem !important;
+  font-size: 0.85rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.025em;
+  border-radius: 50rem !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+  display: inline-flex;
+  align-items: center;
+  color: var(--text-primary);
 }
 
 .terminal-number {
-    font-size: 1.1rem !important;
-    font-weight: 800 !important;
-    margin-left: 2px;
-    color: var(--text-primary);
-    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  font-size: 1.1rem !important;
+  font-weight: 800 !important;
+  margin-left: 2px;
+  color: var(--text-primary);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 /* AI Telemetry Panel Styles */
 .ai-panel {
-    border-radius: 12px;
+  border-radius: 12px;
 }
 
 .health-score-container {
-    width: 160px;
-    height: 160px;
+  width: 160px;
+  height: 160px;
 }
 
 .health-ring {
-    transform: rotate(-90deg);
+  transform: rotate(-90deg);
 }
 
 .ring-bar {
-    transition: stroke-dashoffset 0.8s ease-in-out;
+  transition: stroke-dashoffset 0.8s ease-in-out;
 }
 
 .prediction-glow-card {
-    transition: all 0.3s ease;
-    border-radius: 12px;
+  transition: all 0.3s ease;
+  border-radius: 12px;
 }
 
 .prediction-glow-card:hover {
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08) !important;
-    transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08) !important;
+  transform: translateY(-2px);
 }
 
 .table-responsive::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+  width: 6px;
+  height: 6px;
 }
 
 .table-responsive::-webkit-scrollbar-track {
-    background: var(--surface-elevated);
-    border-radius: 4px;
+  background: var(--surface-elevated);
+  border-radius: 4px;
 }
 
 .table-responsive::-webkit-scrollbar-thumb {
-    background: var(--slate-400);
-    border-radius: 4px;
+  background: var(--slate-400);
+  border-radius: 4px;
 }
 
 .table-responsive::-webkit-scrollbar-thumb:hover {
-    background: var(--slate-500);
+  background: var(--slate-500);
 }
 

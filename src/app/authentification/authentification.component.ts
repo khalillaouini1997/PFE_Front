@@ -1,19 +1,19 @@
-import { Component, inject, AfterViewInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { AuthService } from '../service/auth.service';
-import { WebSocketService } from '../service/web-socket.service';
-import { ToastrService } from 'ngx-toastr';
-import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { TranslateModule } from '@ngx-translate/core';
+import {AfterViewInit, Component, inject} from '@angular/core';
+import {Router} from '@angular/router';
+import {AuthService} from '../service/auth.service';
+import {WebSocketService} from '../service/web-socket.service';
+import {ToastrService} from 'ngx-toastr';
+import {FormsModule} from '@angular/forms';
+import {CommonModule} from '@angular/common';
+import {TranslateModule} from '@ngx-translate/core';
 
 
 @Component({
-    selector: 'app-authentification',
-    templateUrl: './authentification.component.html',
-    styleUrls: ['./authentification.component.scss'],
-    standalone: true,
-    imports: [CommonModule, FormsModule, TranslateModule]
+  selector: 'app-authentification',
+  templateUrl: './authentification.component.html',
+  styleUrls: ['./authentification.component.scss'],
+  standalone: true,
+  imports: [CommonModule, FormsModule, TranslateModule]
 })
 export class AuthentificationComponent implements AfterViewInit {
 
@@ -50,7 +50,7 @@ export class AuthentificationComponent implements AfterViewInit {
         this.authService.saveSession(_admin);
         this.webSocketService.connect();
         localStorage.setItem("isReloading", "true");
-        if (_admin.user.role === 'AGENT') {
+        if (_admin.user?.role === 'AGENT') {
           this.router.navigate(['/adminWeb/listWebs']);
         } else {
           this.router.navigate(['/adminWeb/dashboard']);

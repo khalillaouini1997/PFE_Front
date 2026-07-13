@@ -2,11 +2,12 @@
   <div class="container-fluid dashboard-container">
 
     <!-- ── Header ── -->
-    <div class="premium-card mb-4 header-gradient" *ngIf="!fullscreenMap()">
+    <div *ngIf="!fullscreenMap()" class="premium-card mb-4 header-gradient">
       <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
         <div class="title-section">
           <h2 class="m-0">{{ 'DASHBOARD.TITLE' | translate }}</h2>
-          <p class="m-0" style="font-size:.85rem; color: var(--text-secondary)">{{ 'DASHBOARD.SUBTITLE' | translate }}</p>
+          <p class="m-0"
+             style="font-size:.85rem; color: var(--text-secondary)">{{ 'DASHBOARD.SUBTITLE' | translate }}</p>
         </div>
         <div class="controls-section d-flex align-items-center gap-2 flex-wrap">
           <!-- Notification bell -->
@@ -17,26 +18,26 @@
 
           <!-- Account selector -->
           <form [formGroup]="dashboardForm" class="d-flex align-items-center gap-2 m-0">
-            <label for="compteWebSelect" class="visually-hidden">{{ 'DASHBOARD.CHOOSE_ACCOUNT' | translate }}</label>
-            <select formControlName="compteWeb" id="compteWebSelect" class="dashboard-select"
-              (change)="getAllLastTramByCompteWeb()" title="{{ 'DASHBOARD.CHOOSE_ACCOUNT' | translate }}">
+            <label class="visually-hidden" for="compteWebSelect">{{ 'DASHBOARD.CHOOSE_ACCOUNT' | translate }}</label>
+            <select (change)="getAllLastTramByCompteWeb()" class="dashboard-select" formControlName="compteWeb"
+                    id="compteWebSelect" title="{{ 'DASHBOARD.CHOOSE_ACCOUNT' | translate }}">
               <option [ngValue]="null" disabled selected>
                 {{ 'DASHBOARD.CHOOSE_ACCOUNT' | translate }}
               </option>
               @for (compte of comptesWeb(); track compte.idCompteClientWeb) {
-              <option [ngValue]="compte">{{compte.login}}</option>
+                <option [ngValue]="compte">{{ compte.login }}</option>
               }
             </select>
           </form>
 
           <!-- Action buttons -->
-          <button class="btn-action-dash" (click)="onExport()" [disabled]="realtimes().length === 0"
-            title="{{ 'COMMON.EXPORT' | translate }}">
+          <button (click)="onExport()" [disabled]="realtimes().length === 0" class="btn-action-dash"
+                  title="{{ 'COMMON.EXPORT' | translate }}">
             <i class="fa fa-download"></i>
             <span class="d-none d-md-inline">{{ 'COMMON.EXPORT' | translate }}</span>
           </button>
-          <button class="btn-refresh-dash" (click)="getAllLastTramByCompteWeb()"
-            title="{{ 'COMMON.REFRESH' | translate }}">
+          <button (click)="getAllLastTramByCompteWeb()" class="btn-refresh-dash"
+                  title="{{ 'COMMON.REFRESH' | translate }}">
             <i class="fa fa-refresh"></i>
             <span class="d-none d-md-inline">{{ 'COMMON.REFRESH' | translate }}</span>
           </button>
@@ -52,38 +53,39 @@
 
     <!-- ── Global loading ── -->
     @if (loading()) {
-    <div
-      class="global-spinner premium-card d-flex flex-column align-items-center justify-content-center text-center">
-      <output class="spinner-border" style="width:3rem;height:3rem;border-width:.3em;color:var(--accent-primary)">
-        <span class="visually-hidden">Loading…</span>
-      </output>
-      <h4 class="mt-4 fw-bold" style="color:var(--text-primary)">{{ 'DASHBOARD.UPDATING_DATA' | translate }}</h4>
-      <p class="m-0" style="color:var(--text-muted)">Loading your fleet insights…</p>
-    </div>
+      <div
+        class="global-spinner premium-card d-flex flex-column align-items-center justify-content-center text-center">
+        <output class="spinner-border" style="width:3rem;height:3rem;border-width:.3em;color:var(--accent-primary)">
+          <span class="visually-hidden">Loading…</span>
+        </output>
+        <h4 class="mt-4 fw-bold" style="color:var(--text-primary)">{{ 'DASHBOARD.UPDATING_DATA' | translate }}</h4>
+        <p class="m-0" style="color:var(--text-muted)">Loading your fleet insights…</p>
+      </div>
     }
 
     <!-- ── Empty state ── -->
     @if (!dashboardForm.get('compteWeb')?.value && !loading()) {
-    <div class="premium-card p-5 text-center mt-4">
-      <i class="fa fa-crosshairs fa-4x mb-4" style="color:var(--accent-primary);opacity:0.2"></i>
-      <h3 class="fw-bold mb-2" style="color:var(--text-primary)">{{ 'DASHBOARD.PLEASE_SELECT_ACCOUNT' | translate }}</h3>
-      <p style="color:var(--text-muted);font-size:1.1rem">{{ 'DASHBOARD.SELECT_ACCOUNT_DESC' | translate }}</p>
-    </div>
+      <div class="premium-card p-5 text-center mt-4">
+        <i class="fa fa-crosshairs fa-4x mb-4" style="color:var(--accent-primary);opacity:0.2"></i>
+        <h3 class="fw-bold mb-2"
+            style="color:var(--text-primary)">{{ 'DASHBOARD.PLEASE_SELECT_ACCOUNT' | translate }}</h3>
+        <p style="color:var(--text-muted);font-size:1.1rem">{{ 'DASHBOARD.SELECT_ACCOUNT_DESC' | translate }}</p>
+      </div>
     }
 
     <!-- ══ Main content ══ -->
-    <div class="dashboard-content-wrapper" [class.content-loading]="loading()"
-      [class.v-hidden]="(realtimes().length === 0 || !dashboardForm.get('compteWeb')?.value)">
+    <div [class.content-loading]="loading()" [class.v-hidden]="(realtimes().length === 0 || !dashboardForm.get('compteWeb')?.value)"
+         class="dashboard-content-wrapper">
 
       <!-- ── KPI Row ── -->
-      <div class="row g-3" *ngIf="!fullscreenMap()">
+      <div *ngIf="!fullscreenMap()" class="row g-3">
         <div class="col-12">
           <app-dashboard-kpi [stats]="stats()"></app-dashboard-kpi>
         </div>
       </div>
 
       <!-- ── Map (full-width) ── -->
-      <div class="row g-3 mt-1" *ngIf="!fullscreenMap()">
+      <div *ngIf="!fullscreenMap()" class="row g-3 mt-1">
         <div class="col-12">
           <div class="premium-card overflow-hidden">
             <div class="widget-header">
@@ -98,54 +100,74 @@
       </div>
 
       <!-- Map fullscreen mode -->
-      <div [class.col-12]="fullscreenMap()" [class.fullscreen-card]="fullscreenMap()" *ngIf="fullscreenMap()">
-        <div class="premium-card overflow-hidden h-100" [class.fullscreen-map]="fullscreenMap()">
+      <div *ngIf="fullscreenMap()" [class.col-12]="fullscreenMap()" [class.fullscreen-card]="fullscreenMap()">
+        <div [class.fullscreen-map]="fullscreenMap()" class="premium-card overflow-hidden h-100">
           <app-dashboard-map [realtimes]="realtimes()"></app-dashboard-map>
         </div>
       </div>
 
       <!-- ── Charts Row ── -->
-      <div class="row mt-3" *ngIf="!fullscreenMap()">
+      <div *ngIf="!fullscreenMap()" class="row mt-3">
         <div class="col-12">
-          <app-dashboard-charts [realtimes]="realtimes()" [stats]="stats()" [installationEvolution]="store.installationEvolution()" [granularity]="store.granularity()"></app-dashboard-charts>
+          <app-dashboard-charts [granularity]="store.granularity()" [installationEvolution]="store.installationEvolution()"
+                                [realtimes]="realtimes()"
+                                [stats]="stats()"></app-dashboard-charts>
         </div>
       </div>
 
       <!-- ── Table ── -->
-      <div class="row mt-4" *ngIf="!fullscreenMap()">
+      <div *ngIf="!fullscreenMap()" class="row mt-4">
         <div class="col-12">
           <div class="premium-card overflow-hidden">
             <div class="widget-header">
-              <h5><i class="fa fa-terminal me-2" style="color:var(--accent-cool)"></i> {{ 'DASHBOARD.TERMINAL_DETAILS' | translate }}</h5>
+              <h5><i class="fa fa-terminal me-2"
+                     style="color:var(--accent-cool)"></i> {{ 'DASHBOARD.TERMINAL_DETAILS' | translate }}</h5>
             </div>
             <div class="table-body">
-              <p-table #dt [value]="realtimes()" [paginator]="true" [rows]="10"
-                [globalFilterFields]="['deviceid', 'matricule', 'status']" [scrollable]="true" scrollHeight="400px"
-                [virtualScroll]="true" [virtualScrollItemSize]="50" responsiveLayout="scroll"
-                [rowsPerPageOptions]="[10,20,50]" styleClass="p-datatable-sm p-datatable-gridlines console-table">
+              <p-table #dt [globalFilterFields]="['deviceid', 'matricule', 'status']" [paginator]="true" [rowsPerPageOptions]="[10,20,50]"
+                       [rows]="10" [scrollable]="true"
+                       [value]="realtimes()"
+                       [virtualScrollItemSize]="50" [virtualScroll]="true" responsiveLayout="scroll"
+                       scrollHeight="400px"
+                       styleClass="p-datatable-sm p-datatable-gridlines console-table">
 
                 <ng-template pTemplate="header">
                   <tr>
-                    <th scope="col" pSortableColumn="deviceid" style="width:100px">{{ 'COMMON.ID' | translate }}
-                      <p-sortIcon field="deviceid"></p-sortIcon></th>
-                    <th scope="col" pSortableColumn="matricule">{{ 'DASHBOARD.MATRICULE' | translate }} <p-sortIcon
-                        field="matricule"></p-sortIcon></th>
-                    <th scope="col" pSortableColumn="status">{{ 'DASHBOARD.STATE' | translate }} <p-sortIcon
-                        field="status"></p-sortIcon></th>
+                    <th pSortableColumn="deviceid" scope="col" style="width:100px">{{ 'COMMON.ID' | translate }}
+                      <p-sortIcon field="deviceid"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="matricule" scope="col">{{ 'DASHBOARD.MATRICULE' | translate }}
+                      <p-sortIcon
+                        field="matricule"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="status" scope="col">{{ 'DASHBOARD.STATE' | translate }}
+                      <p-sortIcon
+                        field="status"></p-sortIcon>
+                    </th>
                     <th scope="col">{{ 'SERVER_DETAILS.COORDINATES' | translate }}</th>
-                    <th scope="col" pSortableColumn="speed">{{ 'SERVER_DETAILS.SPEED' | translate }} <p-sortIcon
-                        field="speed"></p-sortIcon></th>
-                    <th scope="col" pSortableColumn="ignition">{{ 'DASHBOARD.IGNITION' | translate }} <p-sortIcon
-                        field="ignition"></p-sortIcon></th>
+                    <th pSortableColumn="speed" scope="col">{{ 'SERVER_DETAILS.SPEED' | translate }}
+                      <p-sortIcon
+                        field="speed"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="ignition" scope="col">{{ 'DASHBOARD.IGNITION' | translate }}
+                      <p-sortIcon
+                        field="ignition"></p-sortIcon>
+                    </th>
                     <th scope="col">GPS/GSM</th>
-                    <th scope="col" pSortableColumn="record_time">{{ 'DASHBOARD.TRAME' | translate }} <p-sortIcon
-                        field="record_time"></p-sortIcon></th>
+                    <th pSortableColumn="record_time" scope="col">{{ 'DASHBOARD.TRAME' | translate }}
+                      <p-sortIcon
+                        field="record_time"></p-sortIcon>
+                    </th>
                     <th scope="col">{{ 'COMMON.DETAILS' | translate }}</th>
                   </tr>
                   <tr>
                     <th scope="col"></th>
-                    <th scope="col"><p-columnFilter type="text" field="matricule" display="menu"></p-columnFilter></th>
-                    <th scope="col"><p-columnFilter type="text" field="status" display="menu"></p-columnFilter></th>
+                    <th scope="col">
+                      <p-columnFilter display="menu" field="matricule" type="text"></p-columnFilter>
+                    </th>
+                    <th scope="col">
+                      <p-columnFilter display="menu" field="status" type="text"></p-columnFilter>
+                    </th>
                     <th scope="col"></th>
                     <th scope="col"></th>
                     <th scope="col"></th>
@@ -155,60 +177,65 @@
                   </tr>
                 </ng-template>
 
-                <ng-template pTemplate="body" let-data>
+                <ng-template let-data pTemplate="body">
                   <tr class="align-middle">
                     <td>
-                      <span class="badge-id">{{data.deviceid}}</span>
+                      <span class="badge-id">{{ data.deviceid }}</span>
                     </td>
-                    <td class="fw-bold" style="color:var(--accent-primary);font-family:var(--font-family-mono)">{{data.matricule}}</td>
+                    <td class="fw-bold"
+                        style="color:var(--accent-primary);font-family:var(--font-family-mono)">{{ data.matricule }}
+                    </td>
                     <td>
-                      <span class="status-badge" [ngClass]="{
+                      <span [ngClass]="{
                         'status-valid': data.status === 'VALID',
                         'status-error': data.status === 'TECHNICAL_ISSUE',
                         'status-warning': data.status === 'NON_VALID'
-                      }">
-                        <i class="fa" [ngClass]="{
+                      }" class="status-badge">
+                        <i [ngClass]="{
                           'fa-check-circle': data.status === 'VALID',
                           'fa-warning': data.status === 'TECHNICAL_ISSUE',
                           'fa-clock-o': data.status === 'NON_VALID'
-                        }"></i>
-                        {{data.status}}
+                        }" class="fa"></i>
+                        {{ data.status }}
                       </span>
                     </td>
                     <td>
-                      <div class="mono-text">{{data.latitude | number: '.4-4'}}</div>
-                      <div class="mono-text">{{data.longitude | number: '.4-4'}}</div>
+                      <div class="mono-text">{{ data.latitude | number: '.4-4' }}</div>
+                      <div class="mono-text">{{ data.longitude | number: '.4-4' }}</div>
                     </td>
                     <td>
-                      <span class="speed-badge" [ngClass]="data.speed > 0 ? 'speed-active' : 'speed-stopped'">
-                        {{data.speed}} km/h
+                      <span [ngClass]="data.speed > 0 ? 'speed-active' : 'speed-stopped'" class="speed-badge">
+                        {{ data.speed }} km/h
                       </span>
                     </td>
                     <td>
                       @if (data.ignition) {
-                      <span style="color:var(--accent-warm);font-weight:600"><i class="fa fa-bolt me-1"></i>On</span>
+                        <span style="color:var(--accent-warm);font-weight:600"><i class="fa fa-bolt me-1"></i>On</span>
                       } @else {
-                      <span style="color:var(--text-muted)"><i class="fa fa-power-off me-1"></i>Off</span>
+                        <span style="color:var(--text-muted)"><i class="fa fa-power-off me-1"></i>Off</span>
                       }
                     </td>
                     <td>
                       <div class="d-flex flex-column gap-1 small">
                         <span style="color:var(--accent-primary)"><i class="fa fa-satellite me-1"></i>
-                          <b>{{data.sat_in_view}}</b></span>
-                        <span style="color:var(--accent-cool)"><i class="fa fa-signal me-1"></i> <b>{{data.signal}}</b></span>
+                          <b>{{ data.sat_in_view }}</b></span>
+                        <span style="color:var(--accent-cool)"><i
+                          class="fa fa-signal me-1"></i> <b>{{ data.signal }}</b></span>
                       </div>
                     </td>
                     <td>
                       <div
                         [ngClass]="{'text-danger fw-bold': diffHours(data.record_time) >= 24}"
                         class="small" style="color:var(--text-secondary)">
-                        {{data.record_time | date:'dd/MM HH:mm'}}
+                        {{ data.record_time | date:'dd/MM HH:mm' }}
                       </div>
                     </td>
                     <td>
                       <div class="small">
-                        <div><b style="color:var(--text-primary)">IMEI:</b> <span class="mono-text">{{data.imei}}</span></div>
-                        <div><b style="color:var(--text-primary)">SIM:</b> <span class="mono-text">{{data.numPuce}}</span></div>
+                        <div><b style="color:var(--text-primary)">IMEI:</b> <span
+                          class="mono-text">{{ data.imei }}</span></div>
+                        <div><b style="color:var(--text-primary)">SIM:</b> <span
+                          class="mono-text">{{ data.numPuce }}</span></div>
                       </div>
                     </td>
                   </tr>
@@ -221,10 +248,10 @@
 
       <!-- ── No data ── -->
       @if (realtimes().length === 0 && !loading()) {
-      <div class="premium-card text-center p-5 mt-4">
-        <i class="fa fa-folder-open-o fa-4x mb-4" style="color:var(--text-muted);opacity:0.3"></i>
-        <h4 class="fw-bold" style="color:var(--text-primary)">{{ 'DASHBOARD.NO_DATA_DESC' | translate }}</h4>
-      </div>
+        <div class="premium-card text-center p-5 mt-4">
+          <i class="fa fa-folder-open-o fa-4x mb-4" style="color:var(--text-muted);opacity:0.3"></i>
+          <h4 class="fw-bold" style="color:var(--text-primary)">{{ 'DASHBOARD.NO_DATA_DESC' | translate }}</h4>
+        </div>
       }
     </div>
   </div>

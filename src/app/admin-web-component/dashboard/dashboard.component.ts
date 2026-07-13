@@ -1,18 +1,18 @@
-import { Component, OnInit, OnDestroy, inject, signal, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
-import { Router, RouterModule, ActivatedRoute } from "@angular/router";
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
-import { AuthService } from 'src/app/service/auth.service';
-import { WebAccountService } from "src/app/service/web-account.service";
-import { saveAs as importedSaveAs } from 'file-saver';
-import { TableModule } from 'primeng/table';
-import { TranslateModule } from '@ngx-translate/core';
-import { DashboardMapComponent } from './components/dashboard-map/dashboard-map.component';
-import { DashboardChartsComponent } from './components/dashboard-charts/dashboard-charts.component';
-import { DashboardKpiComponent } from './components/dashboard-kpi/dashboard-kpi.component';
+import {ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit, signal} from '@angular/core';
+import {CommonModule, DatePipe, DecimalPipe} from '@angular/common';
+import {ActivatedRoute, Router, RouterModule} from "@angular/router";
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {AuthService} from 'src/app/service/auth.service';
+import {WebAccountService} from "src/app/service/web-account.service";
+import {saveAs as importedSaveAs} from 'file-saver';
+import {TableModule} from 'primeng/table';
+import {TranslateModule} from '@ngx-translate/core';
+import {DashboardMapComponent} from './components/dashboard-map/dashboard-map.component';
+import {DashboardChartsComponent} from './components/dashboard-charts/dashboard-charts.component';
+import {DashboardKpiComponent} from './components/dashboard-kpi/dashboard-kpi.component';
 
-import { STORAGE_KEYS } from 'src/app/shared/constants';
-import { DashboardStore } from 'src/app/shared/stores';
+import {STORAGE_KEYS} from 'src/app/shared/constants';
+import {DashboardStore} from 'src/app/shared/stores';
 
 @Component({
   selector: 'app-dashboard',
@@ -35,28 +35,23 @@ import { DashboardStore } from 'src/app/shared/stores';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardComponent implements OnInit, OnDestroy {
-  protected readonly Math = Math;
-
   // ── Store ────────────────────────────────────────────────────────────────
   readonly store = inject(DashboardStore);
-
   // ── Form & UI state ───────────────────────────────────────────────────────
   dashboardForm!: FormGroup;
   fullscreenMap = signal<boolean>(false);
-
-
-  // ── DI ───────────────────────────────────────────────────────────────────
-  private readonly authService      = inject(AuthService);
-  private readonly webAccountService = inject(WebAccountService);
-  private readonly router           = inject(Router);
-  private readonly fb               = inject(FormBuilder);
-  private readonly route            = inject(ActivatedRoute);
-
   // ── Computed signals from store ─────────────────────────────────────────────
   readonly comptesWeb = this.store.comptesWeb;
   readonly realtimes = this.store.realtimes;
   readonly stats = this.store.stats;
   readonly loading = this.store.loading;
+  protected readonly Math = Math;
+  // ── DI ───────────────────────────────────────────────────────────────────
+  private readonly authService = inject(AuthService);
+  private readonly webAccountService = inject(WebAccountService);
+  private readonly router = inject(Router);
+  private readonly fb = inject(FormBuilder);
+  private readonly route = inject(ActivatedRoute);
 
   // ── Lifecycle ─────────────────────────────────────────────────────────────
   ngOnInit() {
@@ -85,7 +80,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   // ── Forms ─────────────────────────────────────────────────────────────────
   initForms() {
-    this.dashboardForm = this.fb.group({ compteWeb: [null] });
+    this.dashboardForm = this.fb.group({compteWeb: [null]});
   }
 
   // ── Utilities ─────────────────────────────────────────────────────────────

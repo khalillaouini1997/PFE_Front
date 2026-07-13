@@ -1,21 +1,22 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter, Routes } from '@angular/router';
-import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { signal } from '@angular/core';
-import { of } from 'rxjs';
-import { TranslateModule } from '@ngx-translate/core';
-import { GlobalDashboardComponent } from './global-dashboard.component';
-import { GlobalDashboardStore } from 'src/app/shared/stores';
-import { AuthService } from 'src/app/service/auth.service';
-import { WebAccountService } from 'src/app/service/web-account.service';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {provideRouter} from '@angular/router';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
+import {signal} from '@angular/core';
+import {of} from 'rxjs';
+import {TranslateModule} from '@ngx-translate/core';
+import {GlobalDashboardComponent} from './global-dashboard.component';
+import {GlobalDashboardStore} from 'src/app/shared/stores';
+import {AuthService} from 'src/app/service/auth.service';
+import {WebAccountService} from 'src/app/service/web-account.service';
 
 vi.mock('chart.js', () => {
   class MockChart {
-    data = { labels: [], datasets: [] };
+    static register = vi.fn();
+    data = {labels: [], datasets: []};
     update = vi.fn();
     destroy = vi.fn();
-    static register = vi.fn();
   }
+
   return {
     Chart: MockChart,
     registerables: []
@@ -67,10 +68,13 @@ describe('GlobalDashboardComponent', () => {
     await TestBed.configureTestingModule({
       imports: [GlobalDashboardComponent, TranslateModule.forRoot()],
       providers: [
-        provideRouter([{ path: 'error', component: class {} }]),
-        { provide: GlobalDashboardStore, useValue: mockStore },
-        { provide: AuthService, useValue: mockAuthService },
-        { provide: WebAccountService, useValue: mockWebAccountService }
+        provideRouter([{
+          path: 'error', component: class {
+          }
+        }]),
+        {provide: GlobalDashboardStore, useValue: mockStore},
+        {provide: AuthService, useValue: mockAuthService},
+        {provide: WebAccountService, useValue: mockWebAccountService}
       ]
     }).compileComponents();
 
@@ -129,7 +133,7 @@ describe('GlobalDashboardComponent', () => {
 
   it('onExport should export when realtimes present', () => {
     fixture.detectChanges();
-    mockStore.summaries.set([{ id: 1 }] as any[]);
+    mockStore.summaries.set([{id: 1}] as any[]);
     component.onExport();
     expect(mockWebAccountService.exportLastTram).toHaveBeenCalled();
   });

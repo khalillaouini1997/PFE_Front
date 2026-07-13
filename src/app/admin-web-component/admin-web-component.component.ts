@@ -1,8 +1,8 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { SidebarComponent } from '../shared/components/sidebar/sidebar.component';
-import { NavbarComponent } from '../shared/components/navbar/navbar.component';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {RouterModule} from '@angular/router';
+import {SidebarComponent} from '../shared/components/sidebar/sidebar.component';
+import {NavbarComponent} from '../shared/components/navbar/navbar.component';
 
 @Component({
   selector: 'app-admin-web-component',

@@ -1,56 +1,54 @@
-import { Component, OnInit, OnDestroy, inject, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { TraccarDto } from 'src/app/data/data';
-import { TraccarService } from 'src/app/service/traccar.service';
-import { TableModule } from 'primeng/table';
-import { DialogModule } from 'primeng/dialog';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ConfirmationService } from 'primeng/api';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ToastrService } from 'ngx-toastr';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { PageHeaderComponent, SearchInputComponent, EmptyTableComponent } from '../../shared/components';
-import { catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
-import { withToast } from '../../utils/toast.helpers';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {TraccarDto} from 'src/app/data/data';
+import {TraccarService} from 'src/app/service/traccar.service';
+import {TableModule} from 'primeng/table';
+import {DialogModule} from 'primeng/dialog';
+import {ConfirmDialogModule} from 'primeng/confirmdialog';
+import {ConfirmationService} from 'primeng/api';
+import {CommonModule} from '@angular/common';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {ToastrService} from 'ngx-toastr';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
+import {EmptyTableComponent, PageHeaderComponent, SearchInputComponent} from '../../shared/components';
+import {catchError} from 'rxjs/operators';
+import {of} from 'rxjs';
+import {withToast} from '../../utils/toast.helpers';
 
 @Component({
-    selector: 'app-list-traccar',
-    standalone: true,
-    templateUrl: './list-traccar.component.html',
-    styleUrls: ['./list-traccar.component.css'],
-    imports: [
-        CommonModule,
-        TableModule,
-        DialogModule,
-        ConfirmDialogModule,
-        ReactiveFormsModule,
-        TranslateModule,
-        PageHeaderComponent,
-        SearchInputComponent,
-        EmptyTableComponent
-    ],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [ConfirmationService]
+  selector: 'app-list-traccar',
+  standalone: true,
+  templateUrl: './list-traccar.component.html',
+  styleUrls: ['./list-traccar.component.css'],
+  imports: [
+    CommonModule,
+    TableModule,
+    DialogModule,
+    ConfirmDialogModule,
+    ReactiveFormsModule,
+    TranslateModule,
+    PageHeaderComponent,
+    SearchInputComponent,
+    EmptyTableComponent
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [ConfirmationService]
 })
 export class ListTraccarComponent implements OnInit, OnDestroy {
 
+  traccarDtos: TraccarDto[] = [];
+  loading: boolean = false;
+  totalRecords: number = 0;
+  showDialog: boolean = false;
+  editMode: boolean = false;
+  selectedDevice: TraccarDto | null = null;
+  deviceForm!: FormGroup;
+  saving: boolean = false;
   private readonly traccarService = inject(TraccarService);
   private readonly toastr = inject(ToastrService);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly translate = inject(TranslateService);
   private readonly confirmationService = inject(ConfirmationService);
   private readonly fb = inject(FormBuilder);
-
-  traccarDtos: TraccarDto[] = [];
-  loading: boolean = false;
-  totalRecords: number = 0;
-
-  showDialog: boolean = false;
-  editMode: boolean = false;
-  selectedDevice: TraccarDto | null = null;
-  deviceForm!: FormGroup;
-  saving: boolean = false;
 
   ngOnInit() {
     this.initForm();
@@ -100,7 +98,7 @@ export class ListTraccarComponent implements OnInit, OnDestroy {
   openAddDialog() {
     this.editMode = false;
     this.selectedDevice = null;
-    this.deviceForm.reset({ name: '', imei: '', category: '', phone: '', model: '', contact: '' });
+    this.deviceForm.reset({name: '', imei: '', category: '', phone: '', model: '', contact: ''});
     this.showDialog = true;
     this.cdr.markForCheck();
   }
@@ -136,7 +134,11 @@ export class ListTraccarComponent implements OnInit, OnDestroy {
     const successKey = this.editMode ? 'TRACCAR.UPDATE_SUCCESS' : 'TRACCAR.CREATE_SUCCESS';
 
     withToast(operation, this.toastr, this.translate, successKey)
-      .pipe(catchError(() => { this.saving = false; this.cdr.markForCheck(); return of(null); }))
+      .pipe(catchError(() => {
+        this.saving = false;
+        this.cdr.markForCheck();
+        return of(null);
+      }))
       .subscribe({
         next: (res) => {
           if (res !== null) {

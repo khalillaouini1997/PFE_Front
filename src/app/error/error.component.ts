@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {CommonModule} from '@angular/common';
 
 @Component({
   selector: 'app-error',
@@ -17,18 +17,27 @@ export class ErrorComponent implements OnInit {
   constructor(
     private readonly route: ActivatedRoute,
     private readonly router: Router
-  ) {}
+  ) {
+  }
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       this.errorCode = params['code'] ? +params['code'] : null;
       this.errorMessage = params['message'] || '';
       this.component = params['component'] || '';
-      
+
       if (!this.errorMessage && this.errorCode) {
         this.errorMessage = this.getDefaultErrorMessage(this.errorCode);
       }
     });
+  }
+
+  goHome() {
+    this.router.navigate(['/adminWeb/dashboard']);
+  }
+
+  goBack() {
+    this.router.navigate(['/authentification']);
   }
 
   private getDefaultErrorMessage(code: number): string {
@@ -44,13 +53,5 @@ export class ErrorComponent implements OnInit {
       default:
         return 'An unexpected error occurred.';
     }
-  }
-
-  goHome() {
-    this.router.navigate(['/adminWeb/dashboard']);
-  }
-
-  goBack() {
-    this.router.navigate(['/authentification']);
   }
 }

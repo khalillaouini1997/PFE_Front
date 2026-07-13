@@ -1,9 +1,8 @@
-import { TestBed } from '@angular/core/testing';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideHttpClient } from '@angular/common/http';
-import { vi } from 'vitest';
-import { BillingService } from './billing.service';
-import { environment } from '../../environments/environment';
+import {TestBed} from '@angular/core/testing';
+import {HttpTestingController, provideHttpClientTesting} from '@angular/common/http/testing';
+import {provideHttpClient} from '@angular/common/http';
+import {BillingService} from './billing.service';
+import {environment} from '../../environments/environment';
 
 describe('BillingService', () => {
   let service: BillingService;
@@ -44,7 +43,7 @@ describe('BillingService', () => {
         `${baseUrl}/account/${accountId}/${year}/${month}`
       );
       expect(req.request.method).toBe('GET');
-      req.flush({ total: 150.5 });
+      req.flush({total: 150.5});
     });
   });
 
@@ -55,7 +54,7 @@ describe('BillingService', () => {
       const req = httpMock.expectOne(`${baseUrl}/schedule/trigger`);
       expect(req.request.method).toBe('POST');
       expect(req.request.body).toBeNull();
-      req.flush({ triggered: true });
+      req.flush({triggered: true});
     });
   });
 
@@ -70,7 +69,7 @@ describe('BillingService', () => {
       );
       expect(req.request.method).toBe('POST');
       expect(req.request.body).toBeNull();
-      req.flush({ triggered: true });
+      req.flush({triggered: true});
     });
   });
 
@@ -87,7 +86,7 @@ describe('BillingService', () => {
       );
       expect(req.request.method).toBe('POST');
       expect(req.request.body).toBeNull();
-      req.flush({ refreshed: true });
+      req.flush({refreshed: true});
     });
   });
 
@@ -120,7 +119,7 @@ describe('BillingService', () => {
         `${baseUrl}/account/${accountId}/${year}/${month}/check`
       );
       expect(req.request.method).toBe('GET');
-      req.flush({ exists: true });
+      req.flush({exists: true});
     });
   });
 
@@ -150,9 +149,9 @@ describe('BillingService', () => {
         `${baseUrl}/account/${accountId}/batch`
       );
       expect(req.request.method).toBe('POST');
-      expect(req.request.body).toEqual({ startYear, startMonth });
+      expect(req.request.body).toEqual({startYear, startMonth});
       expect(req.request.headers.get('Content-Type')).toBe('application/json');
-      req.flush({ generated: 12 });
+      req.flush({generated: 12});
     });
   });
 
@@ -169,9 +168,9 @@ describe('BillingService', () => {
         `${baseUrl}/account/${accountId}/${year}/${month}/status`
       );
       expect(req.request.method).toBe('PUT');
-      expect(req.request.body).toEqual({ status });
+      expect(req.request.body).toEqual({status});
       expect(req.request.headers.get('Content-Type')).toBe('application/json');
-      req.flush({ updated: true });
+      req.flush({updated: true});
     });
   });
 });

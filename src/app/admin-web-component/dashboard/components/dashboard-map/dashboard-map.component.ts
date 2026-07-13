@@ -1,7 +1,26 @@
-import { Component, input, output, viewChild, inject, AfterViewInit, OnDestroy, ElementRef, effect, signal, computed, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RealTime } from '../../../../data/data';
-import { MAP_CONSTANTS, CAR_STYLES, VALID_ANGLES, TIMEOUTS, REALTIME_CONSTANTS } from '../../../../shared/constants/app.constants';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  computed,
+  effect,
+  ElementRef,
+  inject,
+  input,
+  OnDestroy,
+  output,
+  signal,
+  viewChild
+} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {RealTime} from '../../../../data/data';
+import {
+  CAR_STYLES,
+  MAP_CONSTANTS,
+  REALTIME_CONSTANTS,
+  TIMEOUTS,
+  VALID_ANGLES
+} from '../../../../shared/constants/app.constants';
 
 declare const L: any;
 
@@ -18,17 +37,17 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
   locateDevice = output<RealTime>();
 
   map?: any;
+  // Map error state
+  mapError = signal<string | null>(null);
+  isMapLoading = signal<boolean>(true);
+  hasMapError = computed(() => this.mapError() !== null);
   private markerClusterGroup?: any;
   private readonly deviceIconMap = new Map<number, string>();
   private readonly markerMap = new Map<number, any>();
   private readonly previousPositions = new Map<number, { lat: number; lng: number }>();
   private readonly cdr = inject(ChangeDetectorRef);
   private animationFrameId?: number;
-  
-  // Map error state
-  mapError = signal<string | null>(null);
-  isMapLoading = signal<boolean>(true);
-  hasMapError = computed(() => this.mapError() !== null);
+  private currentFleetHash = '';
 
   constructor() {
     effect(() => {
@@ -49,6 +68,34 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
     this.markerClusterGroup?.clearLayers();
     this.markerMap.clear();
     this.previousPositions.clear();
+  }
+
+  retryMapLoad() {
+    this.mapError.set(null);
+    this.isMapLoading.set(true);
+
+    if (this.map) {
+      this.map.remove();
+    }
+
+    setTimeout(() => {
+      this.initMap();
+    }, 100);
+  }
+
+  zoomIn() {
+    this.map?.zoomIn();
+  }
+
+  zoomOut() {
+    this.map?.zoomOut();
+  }
+
+  invalidateSize() {
+    setTimeout(() => {
+      this.map?.invalidateSize();
+      this.updateMarkers();
+    }, TIMEOUTS.MAP_INITIALIZE);
   }
 
   private initMap() {
@@ -89,14 +136,14 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
       this.map.addLayer(this.markerClusterGroup);
 
       this.updateMarkers();
-      
+
       // Set loading to false after a timeout even if tiles don't load
       setTimeout(() => {
         if (this.isMapLoading()) {
           this.isMapLoading.set(false);
         }
       }, 10000);
-      
+
     } catch (error) {
       console.warn('Map init error:', error);
       this.mapError.set('Failed to initialize map. Please refresh the page.');
@@ -104,26 +151,11 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  retryMapLoad() {
-    this.mapError.set(null);
-    this.isMapLoading.set(true);
-    
-    if (this.map) {
-      this.map.remove();
-    }
-    
-    setTimeout(() => {
-      this.initMap();
-    }, 100);
-  }
-
-  private currentFleetHash = '';
-
   private updateMarkers() {
     if (!this.map || !this.markerClusterGroup) return;
 
     const bounds: any[] = [];
-    
+
     const newFleetHash = this.realtimes().map(t => t.deviceid).sort((a, b) => a - b).join(',');
     const fleetChanged = newFleetHash !== this.currentFleetHash;
 
@@ -131,7 +163,7 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
       if (tram.latitude && tram.longitude) {
         const deviceId = tram.deviceid;
         const prevPos = this.previousPositions.get(deviceId);
-        
+
         if (prevPos) {
           // Animate existing marker to new position
           this.animateMarkerPosition(deviceId, tram.latitude, tram.longitude);
@@ -139,8 +171,8 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
           // Create new marker
           this.createMarker(tram);
         }
-        
-        this.previousPositions.set(deviceId, { lat: tram.latitude, lng: tram.longitude });
+
+        this.previousPositions.set(deviceId, {lat: tram.latitude, lng: tram.longitude});
         bounds.push([tram.latitude, tram.longitude]);
       }
     });
@@ -160,7 +192,7 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
       setTimeout(() => {
         if (this.map) {
           this.map.invalidateSize();
-          this.map.fitBounds(L.latLngBounds(bounds), { padding: MAP_CONSTANTS.PADDING });
+          this.map.fitBounds(L.latLngBounds(bounds), {padding: MAP_CONSTANTS.PADDING});
         }
       }, 100);
     } else {
@@ -173,7 +205,7 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
   }
 
   private createMarker(tram: RealTime) {
-    const marker = L.marker([tram.latitude, tram.longitude], { 
+    const marker = L.marker([tram.latitude, tram.longitude], {
       icon: this.getCarIcon(tram),
       animate: true
     })
@@ -186,7 +218,7 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
         </div>
       `)
       .on('click', () => this.locateDevice.emit(tram));
-    
+
     this.markerClusterGroup.addLayer(marker);
     this.markerMap.set(tram.deviceid, marker);
   }
@@ -206,7 +238,7 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
     const animate = (currentTime: number) => {
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      
+
       // Ease-in-out function for smooth animation
       const easeProgress = progress < 0.5
         ? 2 * progress * progress
@@ -235,7 +267,7 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
         CAR_STYLES[tram.deviceid % CAR_STYLES.length]
       );
     }
-    
+
     const carStyle = this.deviceIconMap.get(tram.deviceid)!;
     const rawAngle = (tram as any).rotation_angle || 0;
     const snapped = VALID_ANGLES.reduce((prev, curr) =>
@@ -248,20 +280,5 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
       iconAnchor: MAP_CONSTANTS.ICON_ANCHOR,
       popupAnchor: MAP_CONSTANTS.POPUP_ANCHOR
     });
-  }
-
-  zoomIn() {
-    this.map?.zoomIn();
-  }
-
-  zoomOut() {
-    this.map?.zoomOut();
-  }
-
-  invalidateSize() {
-    setTimeout(() => {
-      this.map?.invalidateSize();
-      this.updateMarkers();
-    }, TIMEOUTS.MAP_INITIALIZE);
   }
 }

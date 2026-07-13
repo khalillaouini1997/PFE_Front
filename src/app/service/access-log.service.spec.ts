@@ -1,9 +1,9 @@
-import { TestBed } from '@angular/core/testing';
-import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
-import { AccessLogService } from './access-log.service';
-import { environment } from '../../environments/environment';
-import { AccessLog, PageResponse } from '../data/data';
+import {TestBed} from '@angular/core/testing';
+import {provideHttpClient} from '@angular/common/http';
+import {HttpTestingController, provideHttpClientTesting} from '@angular/common/http/testing';
+import {AccessLogService} from './access-log.service';
+import {environment} from '../../environments/environment';
+import {AccessLog, PageResponse} from '../data/data';
 
 describe('AccessLogService', () => {
   let service: AccessLogService;
@@ -58,7 +58,7 @@ describe('AccessLogService', () => {
       const page = 2;
       const size = 5;
       const mockResponse: PageResponse<AccessLog> = {
-        content: [{ id: 1 } as AccessLog],
+        content: [{id: 1} as AccessLog],
         totalElements: 15,
         totalPages: 3,
         size: 5,

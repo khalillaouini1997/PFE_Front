@@ -15,8 +15,8 @@ export interface ProblemDetail {
  * Helper function to check if an error response is a ProblemDetail
  */
 export function isProblemDetail(error: any): error is ProblemDetail {
-  return error && 
-         typeof error === 'object' &&
-         typeof error.status === 'number' &&
-         typeof error.detail === 'string';
+  return error &&
+    typeof error === 'object' &&
+    typeof error.status === 'number' &&
+    typeof error.detail === 'string';
 }

@@ -3,10 +3,11 @@
   <div class="chart-card chart-card-full">
     <div class="d-flex justify-content-between align-items-center mb-3">
       <h3 class="m-0">Device Installation Evolution</h3>
-      <select id="granularitySelect" class="form-select form-select-sm" style="width: auto;" (change)="onGranularityChange($event)" aria-label="Chart granularity">
-        <option value="month" [selected]="granularity() === 'month'">Month</option>
-        <option value="trimester" [selected]="granularity() === 'trimester'">Trimester</option>
-        <option value="year" [selected]="granularity() === 'year'">Year</option>
+      <select (change)="onGranularityChange($event)" aria-label="Chart granularity" class="form-select form-select-sm"
+              id="granularitySelect" style="width: auto;">
+        <option [selected]="granularity() === 'month'" value="month">Month</option>
+        <option [selected]="granularity() === 'trimester'" value="trimester">Trimester</option>
+        <option [selected]="granularity() === 'year'" value="year">Year</option>
       </select>
     </div>
     <div class="chart-wrapper">

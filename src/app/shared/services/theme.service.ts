@@ -1,10 +1,10 @@
-import { Injectable, inject, PLATFORM_ID, DOCUMENT } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import {DOCUMENT, inject, Injectable, PLATFORM_ID} from '@angular/core';
+import {isPlatformBrowser} from '@angular/common';
 
 export type Theme = 'light' | 'dark';
 const STORAGE_KEY = 'theme';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class ThemeService {
   private readonly document = inject(DOCUMENT);
   private readonly platformId = inject(PLATFORM_ID);

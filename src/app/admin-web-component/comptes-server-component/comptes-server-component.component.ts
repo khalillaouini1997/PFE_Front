@@ -1,24 +1,24 @@
-import { ChangeDetectorRef, Component, OnInit, inject, ViewChild, ElementRef } from '@angular/core';
-import { saveAs as importedSaveAs } from 'file-saver';
-import { ToastrService } from 'ngx-toastr';
-import { CompteServer, IpAddress } from 'src/app/data/data';
-import { CompteServerService } from "../../service/compte-server.service";
-import { IpAddressService } from "../../service/ip-address.service";
-import { AuthService } from '../../service/auth.service';
-import { createPaginationState, pageChanged } from '../../shared/components/pagination-base';
-import { withToast } from '../../utils/toast.helpers';
+import {ChangeDetectorRef, Component, ElementRef, inject, OnInit, ViewChild} from '@angular/core';
+import {saveAs as importedSaveAs} from 'file-saver';
+import {ToastrService} from 'ngx-toastr';
+import {CompteServer, IpAddress} from 'src/app/data/data';
+import {CompteServerService} from "../../service/compte-server.service";
+import {IpAddressService} from "../../service/ip-address.service";
+import {AuthService} from '../../service/auth.service';
+import {createPaginationState, pageChanged} from '../../shared/components/pagination-base';
+import {withToast} from '../../utils/toast.helpers';
 
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterLink } from '@angular/router';
-import { DatePickerModule } from 'primeng/datepicker';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {CommonModule} from '@angular/common';
+import {ActivatedRoute, RouterLink} from '@angular/router';
+import {DatePickerModule} from 'primeng/datepicker';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
 
-import { TableModule } from 'primeng/table';
-import { PaginatorModule } from 'primeng/paginator';
-import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
-import { SearchInputComponent } from '../../shared/components/search-input/search-input.component';
-import { EmptyTableComponent } from '../../shared/components/empty-table/empty-table.component';
+import {TableModule} from 'primeng/table';
+import {PaginatorModule} from 'primeng/paginator';
+import {PageHeaderComponent} from '../../shared/components/page-header/page-header.component';
+import {SearchInputComponent} from '../../shared/components/search-input/search-input.component';
+import {EmptyTableComponent} from '../../shared/components/empty-table/empty-table.component';
 
 @Component({
   selector: 'app-comptes-server-component',
@@ -28,22 +28,19 @@ import { EmptyTableComponent } from '../../shared/components/empty-table/empty-t
   imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, TableModule, PaginatorModule, DatePickerModule, TranslateModule, PageHeaderComponent, SearchInputComponent, EmptyTableComponent]
 })
 export class ComptesServerComponentComponent implements OnInit {
-  private readonly cdr = inject(ChangeDetectorRef);
   @ViewChild('updateModal') updateModal!: ElementRef<HTMLDialogElement>;
-
   keyWord: string = "";
   pagination = createPaginationState();
   comptesServer: CompteServer[] = [];
   loading: boolean = false;
-  private loadingInProgress: boolean = false;
   dt: Date = new Date();
   mode: boolean = false;
   messageError: string = "";
   ips: IpAddress[] = [];
-
-  private currentKeyWord: string = '';
   updateServerForm!: FormGroup;
-
+  private readonly cdr = inject(ChangeDetectorRef);
+  private loadingInProgress: boolean = false;
+  private currentKeyWord: string = '';
   private readonly toastr = inject(ToastrService);
   private readonly route = inject(ActivatedRoute);
   private readonly compteServerService = inject(CompteServerService);
@@ -147,13 +144,14 @@ export class ComptesServerComponentComponent implements OnInit {
           next: () => {
             this.comptesServer = this.comptesServer.filter(x => x.idCompteClientServer !== selectedId);
           },
-          error: () => {}
+          error: () => {
+          }
         });
     }
   }
 
   updateCompteServer() {
-    const updatedCompte = { ...this.updateServerForm.value, date_Expiration: this.dt.getTime() };
+    const updatedCompte = {...this.updateServerForm.value, date_Expiration: this.dt.getTime()};
     withToast(this.compteServerService.updateServerCompte(updatedCompte.idCompteClientServer, updatedCompte), this.toastr, this.translate, 'SERVER_ACCOUNTS.UPDATE_SUCCESS')
       .subscribe({
         next: (_compteUp: any) => {

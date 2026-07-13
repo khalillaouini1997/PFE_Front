@@ -1,7 +1,7 @@
-import { TestBed } from '@angular/core/testing';
-import { vi } from 'vitest';
-import { Client } from '@stomp/stompjs';
-import { WebSocketService } from './web-socket.service';
+import {TestBed} from '@angular/core/testing';
+import {vi} from 'vitest';
+import {Client} from '@stomp/stompjs';
+import {WebSocketService} from './web-socket.service';
 
 describe('WebSocketService', () => {
   let service: WebSocketService;
@@ -12,10 +12,14 @@ describe('WebSocketService', () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    activateSpy = vi.spyOn(Client.prototype, 'activate').mockImplementation(() => {});
+    activateSpy = vi.spyOn(Client.prototype, 'activate').mockImplementation(() => {
+    });
     deactivateSpy = vi.spyOn(Client.prototype, 'deactivate').mockImplementation(() => Promise.resolve());
     subscribeSpy = vi.spyOn(Client.prototype, 'subscribe').mockImplementation(() => {
-      return { unsubscribe: () => {} } as any;
+      return {
+        unsubscribe: () => {
+        }
+      } as any;
     });
 
     TestBed.configureTestingModule({
@@ -56,19 +60,19 @@ describe('WebSocketService', () => {
   });
 
   it('connect should not call activate when already active', () => {
-    Object.defineProperty((service as any).client, 'active', { value: true, configurable: true });
+    Object.defineProperty((service as any).client, 'active', {value: true, configurable: true});
     service.connect();
     expect(activateSpy).not.toHaveBeenCalled();
   });
 
   it('disconnect should call deactivate when active', () => {
-    Object.defineProperty((service as any).client, 'active', { value: true, configurable: true });
+    Object.defineProperty((service as any).client, 'active', {value: true, configurable: true});
     service.disconnect();
     expect(deactivateSpy).toHaveBeenCalled();
   });
 
   it('disconnect should not call deactivate when not active', () => {
-    Object.defineProperty((service as any).client, 'active', { value: false, configurable: true });
+    Object.defineProperty((service as any).client, 'active', {value: false, configurable: true});
     service.disconnect();
     expect(deactivateSpy).not.toHaveBeenCalled();
   });
@@ -106,8 +110,8 @@ describe('WebSocketService', () => {
     let notification: any;
     service.getNotifications().subscribe((data) => (notification = data));
 
-    notifCallback({ body: '{"text":"hello"}' });
-    expect(notification).toEqual({ text: 'hello' });
+    notifCallback({body: '{"text":"hello"}'});
+    expect(notification).toEqual({text: 'hello'});
   });
 
   it('notification callback with empty body should not update subject', () => {
@@ -118,7 +122,7 @@ describe('WebSocketService', () => {
     let notification: any;
     service.getNotifications().subscribe((data) => (notification = data));
 
-    notifCallback({ body: '' });
+    notifCallback({body: ''});
     expect(notification).toBeNull();
   });
 
@@ -130,8 +134,8 @@ describe('WebSocketService', () => {
     let positions: any;
     service.getVehiclePositions().subscribe((data) => (positions = data));
 
-    posCallback({ body: '[{"deviceid":1}]' });
-    expect(positions).toEqual([{ deviceid: 1 }]);
+    posCallback({body: '[{"deviceid":1}]'});
+    expect(positions).toEqual([{deviceid: 1}]);
   });
 
   it('vehicle positions callback with invalid JSON should emit empty array', () => {
@@ -142,8 +146,9 @@ describe('WebSocketService', () => {
     let positions: any;
     service.getVehiclePositions().subscribe((data) => (positions = data));
 
-    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    posCallback({ body: 'invalid-json' });
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {
+    });
+    posCallback({body: 'invalid-json'});
     expect(positions).toEqual([]);
     expect(warnSpy).toHaveBeenCalled();
     warnSpy.mockRestore();
@@ -157,12 +162,12 @@ describe('WebSocketService', () => {
     let positions: any;
     service.getVehiclePositions().subscribe((data) => (positions = data));
 
-    posCallback({ body: '' });
+    posCallback({body: ''});
     expect(positions).toEqual([]);
   });
 
   it('isConnected should return client.connected', () => {
-    Object.defineProperty((service as any).client, 'connected', { value: true, configurable: true });
+    Object.defineProperty((service as any).client, 'connected', {value: true, configurable: true});
     expect(service.isConnected()).toBe(true);
   });
 

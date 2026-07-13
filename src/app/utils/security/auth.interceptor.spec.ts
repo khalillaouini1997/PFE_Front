@@ -1,8 +1,7 @@
-import { TestBed } from '@angular/core/testing';
-import { HttpClient, provideHttpClient } from '@angular/common/http';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { withInterceptors } from '@angular/common/http';
-import { authInterceptor } from './auth.interceptor';
+import {TestBed} from '@angular/core/testing';
+import {HttpClient, provideHttpClient, withInterceptors} from '@angular/common/http';
+import {HttpTestingController, provideHttpClientTesting} from '@angular/common/http/testing';
+import {authInterceptor} from './auth.interceptor';
 
 describe('authInterceptor', () => {
   let httpClient: HttpClient;
@@ -32,7 +31,7 @@ describe('authInterceptor', () => {
   });
 
   it('should add withCredentials: true to POST requests', () => {
-    httpClient.post('/api/test', { key: 'value' }).subscribe();
+    httpClient.post('/api/test', {key: 'value'}).subscribe();
 
     const req = httpMock.expectOne('/api/test');
     expect(req.request.withCredentials).toBe(true);
@@ -41,7 +40,7 @@ describe('authInterceptor', () => {
   });
 
   it('should add withCredentials: true to PUT requests', () => {
-    httpClient.put('/api/test', { key: 'value' }).subscribe();
+    httpClient.put('/api/test', {key: 'value'}).subscribe();
 
     const req = httpMock.expectOne('/api/test');
     expect(req.request.withCredentials).toBe(true);

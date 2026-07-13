@@ -48,7 +48,9 @@
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ── Error State ── */
@@ -137,8 +139,13 @@
   transition: all var(--transition-fast);
 }
 
-.map-btn:first-child { border-radius: var(--radius-md) var(--radius-md) 0 0; }
-.map-btn:last-child { border-radius: 0 0 var(--radius-md) var(--radius-md); }
+.map-btn:first-child {
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+
+.map-btn:last-child {
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+}
 
 .map-btn:hover {
   background: var(--surface-elevated);
@@ -147,5 +154,7 @@
 
 /* ── Reduced Motion ── */
 @media (prefers-reduced-motion: reduce) {
-  .map-loading-spinner { animation: none; }
+  .map-loading-spinner {
+    animation: none;
+  }
 }

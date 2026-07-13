@@ -1,10 +1,9 @@
-import { TestBed } from '@angular/core/testing';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideHttpClient } from '@angular/common/http';
-import { vi } from 'vitest';
-import { CompteServerService } from './compte-server.service';
-import { environment } from '../../environments/environment';
-import { CompteServer } from '../data/data';
+import {TestBed} from '@angular/core/testing';
+import {HttpTestingController, provideHttpClientTesting} from '@angular/common/http/testing';
+import {provideHttpClient} from '@angular/common/http';
+import {CompteServerService} from './compte-server.service';
+import {environment} from '../../environments/environment';
+import {CompteServer} from '../data/data';
 
 describe('CompteServerService', () => {
   let service: CompteServerService;
@@ -36,14 +35,14 @@ describe('CompteServerService', () => {
   describe('updateServerCompte', () => {
     it('should make PUT request with id and body', () => {
       const id = 1;
-      const compte: CompteServer = { login: 'admin', pseudo: 'Admin' } as CompteServer;
+      const compte: CompteServer = {login: 'admin', pseudo: 'Admin'} as CompteServer;
 
       service.updateServerCompte(id, compte).subscribe();
 
       const req = httpMock.expectOne(`${baseUrl}/${id}`);
       expect(req.request.method).toBe('PUT');
       expect(req.request.body).toEqual(compte);
-      req.flush({ id, ...compte });
+      req.flush({id, ...compte});
     });
   });
 
@@ -71,7 +70,7 @@ describe('CompteServerService', () => {
         `${baseUrl}?keyWord=${keyWord}&page=${page}&size=${size}`
       );
       expect(req.request.method).toBe('GET');
-      req.flush({ content: [], totalElements: 0 });
+      req.flush({content: [], totalElements: 0});
     });
   });
 
@@ -83,7 +82,7 @@ describe('CompteServerService', () => {
 
       const req = httpMock.expectOne(`${baseUrl}/${id}`);
       expect(req.request.method).toBe('GET');
-      req.flush({ id, login: 'user1' });
+      req.flush({id, login: 'user1'});
     });
   });
 
@@ -99,7 +98,7 @@ describe('CompteServerService', () => {
       );
       expect(req.request.method).toBe('POST');
       expect(req.request.body).toBeNull();
-      req.flush({ success: true });
+      req.flush({success: true});
     });
   });
 
@@ -115,7 +114,7 @@ describe('CompteServerService', () => {
         `${baseUrl}/${idCompteServer}/Boitiers?page=${page}&size=${size}`
       );
       expect(req.request.method).toBe('GET');
-      req.flush({ content: [] });
+      req.flush({content: []});
     });
 
     it('should use default pagination values', () => {
@@ -127,7 +126,7 @@ describe('CompteServerService', () => {
         `${baseUrl}/${idCompteServer}/Boitiers?page=0&size=10000`
       );
       expect(req.request.method).toBe('GET');
-      req.flush({ content: [] });
+      req.flush({content: []});
     });
   });
 
@@ -142,7 +141,7 @@ describe('CompteServerService', () => {
       );
       expect(req.request.method).toBe('POST');
       expect(req.request.body).toBeNull();
-      req.flush({ success: true });
+      req.flush({success: true});
     });
   });
 
@@ -158,7 +157,7 @@ describe('CompteServerService', () => {
 
   describe('createServerComptewithBoitier', () => {
     it('should make POST request with nombreBoitier and body', () => {
-      const compte: CompteServer = { login: 'new', pseudo: 'New' } as CompteServer;
+      const compte: CompteServer = {login: 'new', pseudo: 'New'} as CompteServer;
       const nbrBoitiers = 3;
 
       service.createServerComptewithBoitier(compte, nbrBoitiers).subscribe();
@@ -168,7 +167,7 @@ describe('CompteServerService', () => {
       );
       expect(req.request.method).toBe('POST');
       expect(req.request.body).toEqual(compte);
-      req.flush({ id: 1, ...compte });
+      req.flush({id: 1, ...compte});
     });
   });
 
@@ -182,7 +181,7 @@ describe('CompteServerService', () => {
         `${baseUrl}/pseudo?pseudo=${pseudo}`
       );
       expect(req.request.method).toBe('GET');
-      req.flush({ exists: true });
+      req.flush({exists: true});
     });
   });
 
@@ -196,15 +195,15 @@ describe('CompteServerService', () => {
         `${baseUrl}/login?login=${login}`
       );
       expect(req.request.method).toBe('GET');
-      req.flush({ exists: false });
+      req.flush({exists: false});
     });
   });
 
   describe('ExportListComptesServer', () => {
     it('should make POST request with blob response type', () => {
       const comptes: CompteServer[] = [
-        { id: 1, login: 'admin' },
-        { id: 2, login: 'user1' },
+        {id: 1, login: 'admin'},
+        {id: 2, login: 'user1'},
       ] as unknown as CompteServer[];
 
       service.ExportListComptesServer(comptes).subscribe();

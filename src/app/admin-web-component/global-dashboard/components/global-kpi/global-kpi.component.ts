@@ -1,8 +1,8 @@
-import { Component, input } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { TranslateModule } from '@ngx-translate/core';
-import { KpiCardComponent } from '../../../../shared/components/kpi-card/kpi-card.component';
-import { GlobalDashboardStats } from '../../../../shared/stores/global-dashboard.store';
+import {Component, input} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {TranslateModule} from '@ngx-translate/core';
+import {KpiCardComponent} from '../../../../shared/components/kpi-card/kpi-card.component';
+import {GlobalDashboardStats} from '../../../../shared/stores/global-dashboard.store';
 
 @Component({
   selector: 'app-global-kpi',

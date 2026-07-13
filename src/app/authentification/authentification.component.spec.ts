@@ -1,18 +1,22 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideHttpClient } from '@angular/common/http';
-import { provideRouter, Router } from '@angular/router';
-import { importProvidersFrom } from '@angular/core';
-import { ToastrModule, ToastrService } from 'ngx-toastr';
-import { of, throwError } from 'rxjs';
-import { vi } from 'vitest';
-import { AuthentificationComponent } from './authentification.component';
-import { AuthService } from '../service/auth.service';
-import { WebSocketService } from '../service/web-socket.service';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {provideHttpClient} from '@angular/common/http';
+import {provideRouter, Router} from '@angular/router';
+import {importProvidersFrom} from '@angular/core';
+import {ToastrModule, ToastrService} from 'ngx-toastr';
+import {of, throwError} from 'rxjs';
+import {vi} from 'vitest';
+import {AuthentificationComponent} from './authentification.component';
+import {AuthService} from '../service/auth.service';
+import {WebSocketService} from '../service/web-socket.service';
 
 describe('AuthentificationComponent', () => {
   let component: AuthentificationComponent;
   let fixture: ComponentFixture<AuthentificationComponent>;
-  let authService: { authentificate: ReturnType<typeof vi.fn>; saveSession: ReturnType<typeof vi.fn>; logout: ReturnType<typeof vi.fn> };
+  let authService: {
+    authentificate: ReturnType<typeof vi.fn>;
+    saveSession: ReturnType<typeof vi.fn>;
+    logout: ReturnType<typeof vi.fn>
+  };
   let webSocketService: { connect: ReturnType<typeof vi.fn> };
   let toastr: { error: ReturnType<typeof vi.fn> };
   let router: { navigate: ReturnType<typeof vi.fn> };
@@ -23,19 +27,19 @@ describe('AuthentificationComponent', () => {
       saveSession: vi.fn(),
       logout: vi.fn(),
     };
-    webSocketService = { connect: vi.fn() };
-    toastr = { error: vi.fn() };
-    router = { navigate: vi.fn() };
+    webSocketService = {connect: vi.fn()};
+    toastr = {error: vi.fn()};
+    router = {navigate: vi.fn()};
 
     await TestBed.configureTestingModule({
       providers: [
         provideHttpClient(),
         provideRouter([]),
         importProvidersFrom(ToastrModule.forRoot()),
-        { provide: AuthService, useValue: authService },
-        { provide: WebSocketService, useValue: webSocketService },
-        { provide: ToastrService, useValue: toastr },
-        { provide: Router, useValue: router },
+        {provide: AuthService, useValue: authService},
+        {provide: WebSocketService, useValue: webSocketService},
+        {provide: ToastrService, useValue: toastr},
+        {provide: Router, useValue: router},
       ],
       imports: [AuthentificationComponent],
     }).compileComponents();
@@ -61,7 +65,7 @@ describe('AuthentificationComponent', () => {
   });
 
   it('should call logout before authenticating on submit', () => {
-    authService.authentificate.mockReturnValue(of({ user: { role: 'WEBADMIN' } }));
+    authService.authentificate.mockReturnValue(of({user: {role: 'WEBADMIN'}}));
     component.login = 'admin';
     component.password = 'pass';
     component.onSubmit();
@@ -69,7 +73,7 @@ describe('AuthentificationComponent', () => {
   });
 
   it('should authenticate and navigate to dashboard on success', () => {
-    authService.authentificate.mockReturnValue(of({ user: { role: 'WEBADMIN' } }));
+    authService.authentificate.mockReturnValue(of({user: {role: 'WEBADMIN'}}));
     component.login = 'admin';
     component.password = 'pass';
     component.onSubmit();
@@ -80,7 +84,7 @@ describe('AuthentificationComponent', () => {
   });
 
   it('should navigate to listWebs for AGENT role', () => {
-    authService.authentificate.mockReturnValue(of({ user: { role: 'AGENT' } }));
+    authService.authentificate.mockReturnValue(of({user: {role: 'AGENT'}}));
     component.login = 'agent';
     component.password = 'pass';
     component.onSubmit();
@@ -99,7 +103,7 @@ describe('AuthentificationComponent', () => {
   });
 
   it('should set loading to true during auth', () => {
-    authService.authentificate.mockReturnValue(of({ user: { role: 'WEBADMIN' } }));
+    authService.authentificate.mockReturnValue(of({user: {role: 'WEBADMIN'}}));
     component.login = 'admin';
     component.password = 'pass';
     component.onSubmit();

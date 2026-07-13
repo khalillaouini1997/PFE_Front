@@ -1,49 +1,57 @@
-import { TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { CompteServerDetailsComponent } from './compte-server-details.component';
-import { CompteServerService } from '../../service/compte-server.service';
-import { BoitierService } from '../../service/boitier.service';
-import { ActivatedRoute } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
-import { TranslateModule } from '@ngx-translate/core';
-import { of, throwError } from 'rxjs';
+import {TestBed} from '@angular/core/testing';
+import {NO_ERRORS_SCHEMA} from '@angular/core';
+import {CompteServerDetailsComponent} from './compte-server-details.component';
+import {CompteServerService} from '../../service/compte-server.service';
+import {BoitierService} from '../../service/boitier.service';
+import {ActivatedRoute} from '@angular/router';
+import {ToastrService} from 'ngx-toastr';
+import {TranslateModule} from '@ngx-translate/core';
+import {of, throwError} from 'rxjs';
 
 describe('CompteServerDetailsComponent', () => {
   let component: CompteServerDetailsComponent;
-  let compteServerService: { getCompteServerById: ReturnType<typeof vi.fn>; addBoitiers: ReturnType<typeof vi.fn>; extendIntervalOfBoitiers: ReturnType<typeof vi.fn> };
-  let boitierService: { getBoitierOfAccount: ReturnType<typeof vi.fn>; updateBoitier: ReturnType<typeof vi.fn>; lastArchiveOfBoitier: ReturnType<typeof vi.fn> };
+  let compteServerService: {
+    getCompteServerById: ReturnType<typeof vi.fn>;
+    addBoitiers: ReturnType<typeof vi.fn>;
+    extendIntervalOfBoitiers: ReturnType<typeof vi.fn>
+  };
+  let boitierService: {
+    getBoitierOfAccount: ReturnType<typeof vi.fn>;
+    updateBoitier: ReturnType<typeof vi.fn>;
+    lastArchiveOfBoitier: ReturnType<typeof vi.fn>
+  };
   let toastr: { success: ReturnType<typeof vi.fn>; error: ReturnType<typeof vi.fn>; warning: ReturnType<typeof vi.fn> };
 
   beforeEach(async () => {
     compteServerService = {
       getCompteServerById: vi.fn().mockReturnValue(of({
-        data: { intervaleStart: 1, intervaleEnd: 10, availableSlotsCount: 5, installedBoitiersCount: 5 }
+        data: {intervaleStart: 1, intervaleEnd: 10, availableSlotsCount: 5, installedBoitiersCount: 5}
       })),
-      addBoitiers: vi.fn().mockReturnValue(of({ data: { compteServer: {} } })),
+      addBoitiers: vi.fn().mockReturnValue(of({data: {compteServer: {}}})),
       extendIntervalOfBoitiers: vi.fn().mockReturnValue(of({})),
     };
     boitierService = {
       getBoitierOfAccount: vi.fn().mockReturnValue(of({
         content: [
-          { idBoitier: 1, numBoitier: 100, label: 'Device 1', etatBoitier: 'INSTALLED', streamId: 1, stat: true }
+          {idBoitier: 1, numBoitier: 100, label: 'Device 1', etatBoitier: 'INSTALLED', streamId: 1, stat: true}
         ],
         totalElements: 1
       })),
-      updateBoitier: vi.fn().mockReturnValue(of({ label: 'Updated' })),
+      updateBoitier: vi.fn().mockReturnValue(of({label: 'Updated'})),
       lastArchiveOfBoitier: vi.fn().mockReturnValue(of({
-        data: { dateLastTrame: '01-01-2024 10:30:00', emplacement: 'Tunis', latitude: 33.8, longitude: 9.5, vitesse: 50 }
+        data: {dateLastTrame: '01-01-2024 10:30:00', emplacement: 'Tunis', latitude: 33.8, longitude: 9.5, vitesse: 50}
       })),
     };
-    toastr = { success: vi.fn(), error: vi.fn(), warning: vi.fn() };
+    toastr = {success: vi.fn(), error: vi.fn(), warning: vi.fn()};
 
     await TestBed.configureTestingModule({
       imports: [CompteServerDetailsComponent, TranslateModule.forRoot()],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [
-        { provide: CompteServerService, useValue: compteServerService },
-        { provide: BoitierService, useValue: boitierService },
-        { provide: ToastrService, useValue: toastr },
-        { provide: ActivatedRoute, useValue: { params: of({ idCompteClientServer: '42' }) } }
+        {provide: CompteServerService, useValue: compteServerService},
+        {provide: BoitierService, useValue: boitierService},
+        {provide: ToastrService, useValue: toastr},
+        {provide: ActivatedRoute, useValue: {params: of({idCompteClientServer: '42'})}}
       ]
     }).compileComponents();
 
@@ -89,7 +97,7 @@ describe('CompteServerDetailsComponent', () => {
 
   it('should change boitier status', () => {
     component.ngOnInit();
-    boitierService.updateBoitier.mockReturnValue(of({ label: 'Updated' }));
+    boitierService.updateBoitier.mockReturnValue(of({label: 'Updated'}));
     const boitier = component.boitiers[0];
     component.changeBoitierStatus(boitier);
     expect(boitierService.updateBoitier).toHaveBeenCalled();
@@ -97,9 +105,9 @@ describe('CompteServerDetailsComponent', () => {
 
   it('should add boitiers', () => {
     component.ngOnInit();
-    component.addForm.patchValue({ nbrBoitiers: 3 });
+    component.addForm.patchValue({nbrBoitiers: 3});
     compteServerService.addBoitiers.mockReturnValue(of({
-      data: { compteServer: { intervaleStart: 1, intervaleEnd: 13 } }
+      data: {compteServer: {intervaleStart: 1, intervaleEnd: 13}}
     }));
     vi.spyOn(window, 'confirm').mockReturnValue(true);
     component.addBoitiers();
@@ -109,7 +117,7 @@ describe('CompteServerDetailsComponent', () => {
   it('should not add boitiers if not confirmed', () => {
     component.ngOnInit();
     component.BOITIER_NOT_INSTALLED = 1;
-    component.addForm.patchValue({ nbrBoitiers: 3 });
+    component.addForm.patchValue({nbrBoitiers: 3});
     vi.spyOn(window, 'confirm').mockReturnValue(false);
     component.addBoitiers();
     expect(compteServerService.addBoitiers).not.toHaveBeenCalled();
@@ -136,7 +144,7 @@ describe('CompteServerDetailsComponent', () => {
   it('should handle boitier list with direct array response', () => {
     component.ngOnInit();
     boitierService.getBoitierOfAccount.mockReturnValue(of([
-      { idBoitier: 1, numBoitier: 100, label: 'D1', etatBoitier: 'INSTALLED', streamId: 1 }
+      {idBoitier: 1, numBoitier: 100, label: 'D1', etatBoitier: 'INSTALLED', streamId: 1}
     ]));
     component.loadBoitierList();
     expect(component.boitiers.length).toBe(1);
@@ -151,7 +159,7 @@ describe('CompteServerDetailsComponent', () => {
 
   it('should handle ISO date format in archive', () => {
     boitierService.lastArchiveOfBoitier.mockReturnValue(of({
-      data: { dateLastTrame: '2024-01-01T10:30:00', latitude: 33.8, longitude: 9.5 }
+      data: {dateLastTrame: '2024-01-01T10:30:00', latitude: 33.8, longitude: 9.5}
     }));
     component.ngOnInit();
     expect(component).toBeTruthy();
@@ -159,7 +167,7 @@ describe('CompteServerDetailsComponent', () => {
 
   it('should handle numeric timestamp in archive', () => {
     boitierService.lastArchiveOfBoitier.mockReturnValue(of({
-      data: { dateLastTrame: 1704110200000, latitude: 33.8, longitude: 9.5 }
+      data: {dateLastTrame: 1704110200000, latitude: 33.8, longitude: 9.5}
     }));
     component.ngOnInit();
     expect(component).toBeTruthy();
@@ -167,24 +175,24 @@ describe('CompteServerDetailsComponent', () => {
 
   it('should update boitier label', () => {
     component.ngOnInit();
-    component.selectedBoitier = { idBoitier: 1, numBoitier: 100, label: 'Old' } as any;
-    component.updateForm.patchValue({ label: 'New Label' });
-    boitierService.updateBoitier.mockReturnValue(of({ label: 'New Label' }));
+    component.selectedBoitier = {idBoitier: 1, numBoitier: 100, label: 'Old'} as any;
+    component.updateForm.patchValue({label: 'New Label'});
+    boitierService.updateBoitier.mockReturnValue(of({label: 'New Label'}));
     component.updateBoitier();
     expect(boitierService.updateBoitier).toHaveBeenCalled();
   });
 
   it('should handle update boitier error', () => {
     component.ngOnInit();
-    component.selectedBoitier = { idBoitier: 1, numBoitier: 100 } as any;
-    component.updateForm.patchValue({ label: 'New' });
+    component.selectedBoitier = {idBoitier: 1, numBoitier: 100} as any;
+    component.updateForm.patchValue({label: 'New'});
     boitierService.updateBoitier.mockReturnValue(throwError(() => new Error('fail')));
     component.updateBoitier();
   });
 
   it('should select boitier for update', () => {
     component.ngOnInit();
-    const boitier = { idBoitier: 1, label: 'Test', numBoitier: 100 } as any;
+    const boitier = {idBoitier: 1, label: 'Test', numBoitier: 100} as any;
     component.onSelect(boitier);
     expect(component.selectedBoitier.label).toBe('Test');
     expect(component.updateForm.get('label')?.value).toBe('Test');
@@ -199,7 +207,10 @@ describe('CompteServerDetailsComponent', () => {
   it('should handle boitier list with nested data', () => {
     component.ngOnInit();
     boitierService.getBoitierOfAccount.mockReturnValue(of({
-      data: { content: [{ idBoitier: 1, numBoitier: 100, label: 'D1', etatBoitier: 'INSTALLED', streamId: 1 }], page: { totalElements: 1 } }
+      data: {
+        content: [{idBoitier: 1, numBoitier: 100, label: 'D1', etatBoitier: 'INSTALLED', streamId: 1}],
+        page: {totalElements: 1}
+      }
     }));
     component.loadBoitierList();
     expect(component.boitiers.length).toBe(1);
@@ -207,7 +218,7 @@ describe('CompteServerDetailsComponent', () => {
 
   it('should handle non-array content', () => {
     component.ngOnInit();
-    boitierService.getBoitierOfAccount.mockReturnValue(of({ data: { content: null } }));
+    boitierService.getBoitierOfAccount.mockReturnValue(of({data: {content: null}}));
     component.loadBoitierList();
     expect(component.boitiers).toEqual([]);
   });
@@ -265,15 +276,15 @@ describe('CompteServerDetailsComponent', () => {
 
   it('should handle add boitiers error', () => {
     component.ngOnInit();
-    component.addForm.patchValue({ nbrBoitiers: 3 });
-    compteServerService.addBoitiers.mockReturnValue(throwError(() => ({ error: { message: 'Error occurred' } })));
+    component.addForm.patchValue({nbrBoitiers: 3});
+    compteServerService.addBoitiers.mockReturnValue(throwError(() => ({error: {message: 'Error occurred'}})));
     vi.spyOn(window, 'confirm').mockReturnValue(true);
     component.addBoitiers();
   });
 
   it('should handle archive with emplacement', () => {
     boitierService.lastArchiveOfBoitier.mockReturnValue(of({
-      data: { emplacement: 'Sfax', vitesse: 60, gpsLastTrame: 'gps', gsmLastTrame: 'gsm' }
+      data: {emplacement: 'Sfax', vitesse: 60, gpsLastTrame: 'gps', gsmLastTrame: 'gsm'}
     }));
     component.ngOnInit();
     expect(component).toBeTruthy();

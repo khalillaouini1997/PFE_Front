@@ -2,7 +2,7 @@ name: CI - Frontend
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
     paths-ignore:
       - '**.md'
       - 'LICENSE'
@@ -10,7 +10,7 @@ on:
       - '.vscode/**'
       - '.idea/**'
   pull_request:
-    branches: [main]
+    branches: [ main ]
     paths-ignore:
       - '**.md'
       - 'LICENSE'

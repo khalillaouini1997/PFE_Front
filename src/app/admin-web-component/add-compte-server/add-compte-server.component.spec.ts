@@ -1,15 +1,19 @@
-import { TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { AddCompteServerComponent } from './add-compte-server.component';
-import { CompteServerService } from '../../service/compte-server.service';
-import { ToastrService } from 'ngx-toastr';
-import { Router } from '@angular/router';
-import { TranslateService, TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { of, throwError } from 'rxjs';
+import {TestBed} from '@angular/core/testing';
+import {NO_ERRORS_SCHEMA} from '@angular/core';
+import {AddCompteServerComponent} from './add-compte-server.component';
+import {CompteServerService} from '../../service/compte-server.service';
+import {ToastrService} from 'ngx-toastr';
+import {Router} from '@angular/router';
+import {TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate/core';
+import {of, throwError} from 'rxjs';
 
 describe('AddCompteServerComponent', () => {
   let component: AddCompteServerComponent;
-  let compteServerService: { createServerComptewithBoitier: ReturnType<typeof vi.fn>; isExistPseudo: ReturnType<typeof vi.fn>; isExistLogin: ReturnType<typeof vi.fn> };
+  let compteServerService: {
+    createServerComptewithBoitier: ReturnType<typeof vi.fn>;
+    isExistPseudo: ReturnType<typeof vi.fn>;
+    isExistLogin: ReturnType<typeof vi.fn>
+  };
   let toastr: { success: ReturnType<typeof vi.fn>; error: ReturnType<typeof vi.fn>; warning: ReturnType<typeof vi.fn> };
   let router: { navigate: ReturnType<typeof vi.fn> };
   let translate: { instant: ReturnType<typeof vi.fn> };
@@ -17,21 +21,26 @@ describe('AddCompteServerComponent', () => {
   beforeEach(async () => {
     compteServerService = {
       createServerComptewithBoitier: vi.fn(),
-      isExistPseudo: vi.fn().mockReturnValue(of({ data: false })),
-      isExistLogin: vi.fn().mockReturnValue(of({ data: false })),
+      isExistPseudo: vi.fn().mockReturnValue(of({data: false})),
+      isExistLogin: vi.fn().mockReturnValue(of({data: false})),
     };
-    toastr = { success: vi.fn(), error: vi.fn(), warning: vi.fn() };
-    router = { navigate: vi.fn() };
-    translate = { instant: vi.fn().mockReturnValue('') };
+    toastr = {success: vi.fn(), error: vi.fn(), warning: vi.fn()};
+    router = {navigate: vi.fn()};
+    translate = {instant: vi.fn().mockReturnValue('')};
 
     await TestBed.configureTestingModule({
-      imports: [AddCompteServerComponent, TranslateModule.forRoot({ loader: { provide: TranslateLoader, useValue: { getTranslation: () => of({}) } } })],
+      imports: [AddCompteServerComponent, TranslateModule.forRoot({
+        loader: {
+          provide: TranslateLoader,
+          useValue: {getTranslation: () => of({})}
+        }
+      })],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [
-        { provide: CompteServerService, useValue: compteServerService },
-        { provide: ToastrService, useValue: toastr },
-        { provide: Router, useValue: router },
-        { provide: TranslateService, useValue: translate }
+        {provide: CompteServerService, useValue: compteServerService},
+        {provide: ToastrService, useValue: toastr},
+        {provide: Router, useValue: router},
+        {provide: TranslateService, useValue: translate}
       ]
     }).compileComponents();
 
@@ -70,7 +79,7 @@ describe('AddCompteServerComponent', () => {
   });
 
   it('should get numberBoitier', () => {
-    component.serverForm.patchValue({ numberBoitier: 5 });
+    component.serverForm.patchValue({numberBoitier: 5});
     expect(component.numberBoitier).toBe(5);
   });
 
@@ -102,7 +111,7 @@ describe('AddCompteServerComponent', () => {
       date_Expiration: new Date()
     });
     compteServerService.createServerComptewithBoitier.mockReturnValue(throwError(() => ({
-      error: { message: 'Duplicate' }
+      error: {message: 'Duplicate'}
     })));
     component.addCompteServer();
     expect(component.mode).toBe(true);
@@ -110,19 +119,19 @@ describe('AddCompteServerComponent', () => {
   });
 
   it('should check pseudo existence', () => {
-    component.serverForm.patchValue({ pseudo: 'test' });
+    component.serverForm.patchValue({pseudo: 'test'});
     component.onKeyPseudo();
     expect(compteServerService.isExistPseudo).toHaveBeenCalledWith('test');
   });
 
   it('should check login existence', () => {
-    component.serverForm.patchValue({ login: 'user' });
+    component.serverForm.patchValue({login: 'user'});
     component.onKeyLogin();
     expect(compteServerService.isExistLogin).toHaveBeenCalledWith('user');
   });
 
   it('should handle empty pseudo', () => {
-    component.serverForm.patchValue({ pseudo: '' });
+    component.serverForm.patchValue({pseudo: ''});
     component.onKeyPseudo();
     expect(compteServerService.isExistPseudo).not.toHaveBeenCalled();
   });

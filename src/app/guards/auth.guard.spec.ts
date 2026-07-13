@@ -1,24 +1,24 @@
-import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router, Route, UrlSegment, UrlTree } from '@angular/router';
-import { of, throwError, Observable } from 'rxjs';
-import { authGuard } from './auth.guard';
-import { AuthService } from '../service/auth.service';
+import {TestBed} from '@angular/core/testing';
+import {provideRouter, Route, Router, UrlSegment, UrlTree} from '@angular/router';
+import {Observable, of, throwError} from 'rxjs';
+import {authGuard} from './auth.guard';
+import {AuthService} from '../service/auth.service';
 
 describe('authGuard', () => {
   let authService: { checkAuth: ReturnType<typeof vi.fn> };
   let router: Router;
 
-  const dummyRoute: Route = { path: '' };
+  const dummyRoute: Route = {path: ''};
   const dummySegments: UrlSegment[] = [];
 
   beforeEach(() => {
-    authService = { checkAuth: vi.fn() };
+    authService = {checkAuth: vi.fn()};
     TestBed.configureTestingModule({
       providers: [
         [provideRouter([])],
       ],
     });
-    TestBed.overrideProvider(AuthService, { useValue: authService });
+    TestBed.overrideProvider(AuthService, {useValue: authService});
     router = TestBed.inject(Router);
   });
 

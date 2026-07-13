@@ -1,126 +1,146 @@
 <div class="main-panel p-4">
-    <app-page-header titleKey="IP_ADDRESS.TITLE" subtitleKey="IP_ADDRESS.SUBTITLE">
-        <app-search-input placeholder="IP_ADDRESS.SEARCH_PLACEHOLDER" (searchQuery)="searchIpAddress($event)" />
-        <button class="btn btn-glass btn-sm rounded-circle" routerLink="/adminWeb/addIp" title="{{ 'IP_ADDRESS.ADD' | translate }}">
-            <i class="fa fa-plus"></i>
-        </button>
-    </app-page-header>
+  <app-page-header subtitleKey="IP_ADDRESS.SUBTITLE" titleKey="IP_ADDRESS.TITLE">
+    <app-search-input (searchQuery)="searchIpAddress($event)" placeholder="IP_ADDRESS.SEARCH_PLACEHOLDER"/>
+    <button class="btn btn-glass btn-sm rounded-circle" routerLink="/adminWeb/addIp"
+            title="{{ 'IP_ADDRESS.ADD' | translate }}">
+      <i class="fa fa-plus"></i>
+    </button>
+  </app-page-header>
 
-    <!-- Table Section -->
-    <div class="premium-card p-0 overflow-hidden shadow-sm">
-        <p-table [value]="ips" [lazy]="true" (onLazyLoad)="onPageChanged($event)" 
-            [paginator]="true" [rows]="pagination.itemsPerPage" [totalRecords]="pagination.bigTotalItems" 
-            [rowsPerPageOptions]="[10,15,30,50]"
-            styleClass="p-datatable-sm p-datatable-gridlines premium-table-custom"
-            responsiveLayout="scroll">
-            
-            <ng-template pTemplate="header">
-                <tr>
-                    <th scope="col" style="width: 80px">{{ 'COMMON.ID' | translate }}</th>
-                    <th scope="col">{{ 'IP_ADDRESS.LABEL_USAGE' | translate }}</th>
-                    <th scope="col">{{ 'IP_ADDRESS.IP_VALUE' | translate }}</th>
-                    <th scope="col">{{ 'IP_ADDRESS.DB_CREDENTIALS' | translate }}</th>
-                    <th scope="col">{{ 'IP_ADDRESS.DB_NAME' | translate }}</th>
-                    <th scope="col">{{ 'IP_ADDRESS.CONN_TYPE' | translate }}</th>
-                    <th scope="col">{{ 'IP_ADDRESS.URL' | translate }}</th>
-                    <th scope="col" class="text-end" style="width: 100px">{{ 'COMMON.ACTIONS' | translate }}</th>
-                </tr>
-            </ng-template>
+  <!-- Table Section -->
+  <div class="premium-card p-0 overflow-hidden shadow-sm">
+    <p-table (onLazyLoad)="onPageChanged($event)" [lazy]="true" [paginator]="true"
+             [rowsPerPageOptions]="[10,15,30,50]" [rows]="pagination.itemsPerPage" [totalRecords]="pagination.bigTotalItems"
+             [value]="ips"
+             responsiveLayout="scroll"
+             styleClass="p-datatable-sm p-datatable-gridlines premium-table-custom">
 
-            <ng-template pTemplate="body" let-IpAddres>
-                <tr class="align-middle border-bottom border-light">
-                    <td><span class="badge small" style="background: var(--surface-elevated); color: var(--text-primary);">{{IpAddres.idIpAdresse}}</span></td>
-                    <td class="fw-bold">{{IpAddres.label}}</td>
-                    <td><code>{{IpAddres.value}}</code></td>
-                    <td>
-                        <div class="small fw-medium">{{IpAddres.jdbcUser}}</div>
-                        <div class="small text-secondary opacity-50">*******</div>
-                    </td>
-                    <td><span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-10">{{IpAddres.dbName}}</span></td>
-                    <td><span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-10">{{IpAddres.typeConnection}}</span></td>
-                    <td><div class="small text-truncate col-endpoint-url" title="{{IpAddres.url}}">{{IpAddres.url}}</div></td>
-                    <td class="text-end">
-                        <button class="btn btn-sm btn-outline-warning border-0 p-2" (click)="onSelect(IpAddres)" 
-                             title="{{ 'COMMON.EDIT' | translate }}">
-                            <i class="fa fa-edit fs-5"></i>
-                        </button>
-                    </td>
-                </tr>
-            </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th scope="col" style="width: 80px">{{ 'COMMON.ID' | translate }}</th>
+          <th scope="col">{{ 'IP_ADDRESS.LABEL_USAGE' | translate }}</th>
+          <th scope="col">{{ 'IP_ADDRESS.IP_VALUE' | translate }}</th>
+          <th scope="col">{{ 'IP_ADDRESS.DB_CREDENTIALS' | translate }}</th>
+          <th scope="col">{{ 'IP_ADDRESS.DB_NAME' | translate }}</th>
+          <th scope="col">{{ 'IP_ADDRESS.CONN_TYPE' | translate }}</th>
+          <th scope="col">{{ 'IP_ADDRESS.URL' | translate }}</th>
+          <th class="text-end" scope="col" style="width: 100px">{{ 'COMMON.ACTIONS' | translate }}</th>
+        </tr>
+      </ng-template>
 
-            <app-empty-table [colspan]="8" icon="fa-network-wired" messageKey="IP_ADDRESS.NO_DATA" />
-        </p-table>
-    </div>
+      <ng-template let-IpAddres pTemplate="body">
+        <tr class="align-middle border-bottom border-light">
+          <td><span class="badge small"
+                    style="background: var(--surface-elevated); color: var(--text-primary);">{{ IpAddres.idIpAdresse }}</span>
+          </td>
+          <td class="fw-bold">{{ IpAddres.label }}</td>
+          <td><code>{{ IpAddres.value }}</code></td>
+          <td>
+            <div class="small fw-medium">{{ IpAddres.jdbcUser }}</div>
+            <div class="small text-secondary opacity-50">*******</div>
+          </td>
+          <td><span
+            class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-10">{{ IpAddres.dbName }}</span>
+          </td>
+          <td><span
+            class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-10">{{ IpAddres.typeConnection }}</span>
+          </td>
+          <td>
+            <div class="small text-truncate col-endpoint-url" title="{{IpAddres.url}}">{{ IpAddres.url }}</div>
+          </td>
+          <td class="text-end">
+            <button (click)="onSelect(IpAddres)" class="btn btn-sm btn-outline-warning border-0 p-2"
+                    title="{{ 'COMMON.EDIT' | translate }}">
+              <i class="fa fa-edit fs-5"></i>
+            </button>
+          </td>
+        </tr>
+      </ng-template>
+
+      <app-empty-table [colspan]="8" icon="fa-network-wired" messageKey="IP_ADDRESS.NO_DATA"/>
+    </p-table>
+  </div>
 </div>
 
 <!-- Modernized Update IP Modal (Native Dialog) -->
-<dialog #updateModal id="Modalupdate" class="border-0 rounded-4 shadow-lg p-0 overflow-hidden">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content modal-content-premium w-100">
-            <div class="modal-header header-gradient text-white border-0 p-4">
-                <h5 class="modal-title fw-bold m-0"><i class="fa fa-network-wired me-2"></i> {{ 'IP_ADDRESS.UPDATE_TITLE' | translate }}</h5>
-                <button type="button" class="btn-close btn-close-white" (click)="closeUpdateModal()" aria-label="Close"></button>
+<dialog #updateModal class="border-0 rounded-4 shadow-lg p-0 overflow-hidden" id="Modalupdate">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content modal-content-premium w-100">
+      <div class="modal-header header-gradient text-white border-0 p-4">
+        <h5 class="modal-title fw-bold m-0"><i
+          class="fa fa-network-wired me-2"></i> {{ 'IP_ADDRESS.UPDATE_TITLE' | translate }}</h5>
+        <button (click)="closeUpdateModal()" aria-label="Close" class="btn-close btn-close-white"
+                type="button"></button>
+      </div>
+
+      <form (ngSubmit)="updateIpAdress()" [formGroup]="updateIpForm">
+        <div class="modal-body p-4">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="form-floating shadow-sm">
+                <input class="form-control border-0" formControlName="label" id="ipLabel"
+                       placeholder="{{ 'IP_ADDRESS.LABEL_NAME' | translate }}" type="text">
+                <label for="ipLabel">{{ 'IP_ADDRESS.LABEL_NAME' | translate }}</label>
+              </div>
             </div>
-            
-            <form [formGroup]="updateIpForm" (ngSubmit)="updateIpAdress()">
-                <div class="modal-body p-4">
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <div class="form-floating shadow-sm">
-                                <input type="text" formControlName="label" class="form-control border-0" placeholder="{{ 'IP_ADDRESS.LABEL_NAME' | translate }}" id="ipLabel">
-                                <label for="ipLabel">{{ 'IP_ADDRESS.LABEL_NAME' | translate }}</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-floating shadow-sm">
-                                <input type="text" formControlName="value" class="form-control border-0" placeholder="{{ 'IP_ADDRESS.IP_VALUE_INPUT' | translate }}" id="ipValue">
-                                <label for="ipValue">{{ 'IP_ADDRESS.IP_VALUE_INPUT' | translate }}</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-floating shadow-sm">
-                                <input type="text" formControlName="jdbcUser" class="form-control border-0" placeholder="{{ 'IP_ADDRESS.JDBC_USER' | translate }}" id="jdbcUser">
-                                <label for="jdbcUser">{{ 'IP_ADDRESS.JDBC_USER' | translate }}</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-floating shadow-sm">
-                                <input type="password" formControlName="jdbcPass" class="form-control border-0" placeholder="{{ 'IP_ADDRESS.JDBC_PASS' | translate }}" id="jdbcPass">
-                                <label for="jdbcPass">{{ 'IP_ADDRESS.JDBC_PASS' | translate }}</label>
-                            </div>
-                        </div>
-                        <div class="col-md-8">
-                            <div class="form-floating shadow-sm">
-                                <input type="text" formControlName="url" class="form-control border-0" placeholder="{{ 'IP_ADDRESS.CONN_URL' | translate }}" id="connUrl">
-                                <label for="connUrl">{{ 'IP_ADDRESS.CONN_URL' | translate }}</label>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-floating shadow-sm">
-                                <select formControlName="typeConnection" class="form-select border-0" title="{{ 'COMMON.TYPE' | translate }}" id="connType">
-                                    @for (type of typeConnection; track type.type) {
-                                        <option [value]="type.type">{{type.type}}</option>
-                                    }
-                                </select>
-                                <label for="connType">{{ 'COMMON.TYPE' | translate }}</label>
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="form-floating shadow-sm">
-                                <input type="text" formControlName="dbName" class="form-control border-0" placeholder="{{ 'IP_ADDRESS.DB_NAME_INPUT' | translate }}" id="dbName">
-                                <label for="dbName">{{ 'IP_ADDRESS.DB_NAME_INPUT' | translate }}</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="modal-footer p-3 border-0">
-                    <button type="button" class="btn btn-light px-4" (click)="closeUpdateModal()">{{ 'COMMON.CANCEL' | translate }}</button>
-                    <button type="submit" class="btn btn-warning px-5 fw-bold" [disabled]="updateIpForm.invalid">
-                        {{ 'COMMON.SAVE' | translate }}
-                    </button>
-                </div>
-            </form>
+            <div class="col-md-6">
+              <div class="form-floating shadow-sm">
+                <input class="form-control border-0" formControlName="value" id="ipValue"
+                       placeholder="{{ 'IP_ADDRESS.IP_VALUE_INPUT' | translate }}" type="text">
+                <label for="ipValue">{{ 'IP_ADDRESS.IP_VALUE_INPUT' | translate }}</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-floating shadow-sm">
+                <input class="form-control border-0" formControlName="jdbcUser" id="jdbcUser"
+                       placeholder="{{ 'IP_ADDRESS.JDBC_USER' | translate }}" type="text">
+                <label for="jdbcUser">{{ 'IP_ADDRESS.JDBC_USER' | translate }}</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-floating shadow-sm">
+                <input class="form-control border-0" formControlName="jdbcPass" id="jdbcPass"
+                       placeholder="{{ 'IP_ADDRESS.JDBC_PASS' | translate }}" type="password">
+                <label for="jdbcPass">{{ 'IP_ADDRESS.JDBC_PASS' | translate }}</label>
+              </div>
+            </div>
+            <div class="col-md-8">
+              <div class="form-floating shadow-sm">
+                <input class="form-control border-0" formControlName="url" id="connUrl"
+                       placeholder="{{ 'IP_ADDRESS.CONN_URL' | translate }}" type="text">
+                <label for="connUrl">{{ 'IP_ADDRESS.CONN_URL' | translate }}</label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-floating shadow-sm">
+                <select class="form-select border-0" formControlName="typeConnection"
+                        id="connType" title="{{ 'COMMON.TYPE' | translate }}">
+                  @for (type of typeConnection; track type.type) {
+                    <option [value]="type.type">{{ type.type }}</option>
+                  }
+                </select>
+                <label for="connType">{{ 'COMMON.TYPE' | translate }}</label>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-floating shadow-sm">
+                <input class="form-control border-0" formControlName="dbName" id="dbName"
+                       placeholder="{{ 'IP_ADDRESS.DB_NAME_INPUT' | translate }}" type="text">
+                <label for="dbName">{{ 'IP_ADDRESS.DB_NAME_INPUT' | translate }}</label>
+              </div>
+            </div>
+          </div>
         </div>
+
+        <div class="modal-footer p-3 border-0">
+          <button (click)="closeUpdateModal()" class="btn btn-light px-4"
+                  type="button">{{ 'COMMON.CANCEL' | translate }}
+          </button>
+          <button [disabled]="updateIpForm.invalid" class="btn btn-warning px-5 fw-bold" type="submit">
+            {{ 'COMMON.SAVE' | translate }}
+          </button>
+        </div>
+      </form>
     </div>
+  </div>
 </dialog>

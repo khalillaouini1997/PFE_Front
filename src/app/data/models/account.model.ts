@@ -1,4 +1,4 @@
-import { OptionInfoDTO } from './option.model';
+import {OptionInfoDTO} from './option.model';
 
 export interface CompteServer {
   idCompteClientServer: number;

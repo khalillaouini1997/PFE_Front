@@ -1,41 +1,49 @@
 <div class="main-panel p-4">
-    <app-page-header titleKey="ACCESS_LOG.TITLE" subtitleKey="ACCESS_LOG.SUBTITLE">
-        <app-search-input placeholder="ACCESS_LOG.SEARCH_PLACEHOLDER" (searchQuery)="searchAccess($event)" />
-    </app-page-header>
+  <app-page-header subtitleKey="ACCESS_LOG.SUBTITLE" titleKey="ACCESS_LOG.TITLE">
+    <app-search-input (searchQuery)="searchAccess($event)" placeholder="ACCESS_LOG.SEARCH_PLACEHOLDER"/>
+  </app-page-header>
 
-    <!-- Table Section -->
-    <div class="premium-card p-0 overflow-hidden shadow-sm">
-        <p-table [value]="accessLogs" [lazy]="true" (onLazyLoad)="onPageChanged($event)" 
-            [paginator]="true" [rows]="pagination.itemsPerPage" [totalRecords]="pagination.bigTotalItems" 
-            [rowsPerPageOptions]="[10,15,30,50]"
-            [loading]="loading"
-            stateStorage="session" stateKey="access-logs-state"
-            [reorderableColumns]="true" [resizableColumns]="true" columnResizeMode="expand"
-            styleClass="p-datatable-sm p-datatable-gridlines premium-table-custom"
-            responsiveLayout="scroll">
-            
-            <ng-template pTemplate="header">
-                <tr>
-                    <th scope="col" class="col-user" pReorderableColumn pResizableColumn>{{ 'ACCESS_LOG.USER' | translate }}</th>
-                    <th scope="col" class="col-date" pReorderableColumn pResizableColumn>{{ 'ACCESS_LOG.DATE_TIME' | translate }}</th>
-                    <th scope="col" class="col-ip" pReorderableColumn pResizableColumn>{{ 'ACCESS_LOG.IP_ADDRESS' | translate }}</th>
-                    <th scope="col" class="col-agent" pReorderableColumn pResizableColumn>{{ 'ACCESS_LOG.BROWSER_AGENT' | translate }}</th>
-                </tr>
-            </ng-template>
+  <!-- Table Section -->
+  <div class="premium-card p-0 overflow-hidden shadow-sm">
+    <p-table (onLazyLoad)="onPageChanged($event)" [lazy]="true" [loading]="loading"
+             [paginator]="true" [reorderableColumns]="true" [resizableColumns]="true"
+             [rowsPerPageOptions]="[10,15,30,50]"
+             [rows]="pagination.itemsPerPage"
+             [totalRecords]="pagination.bigTotalItems" [value]="accessLogs"
+             columnResizeMode="expand" responsiveLayout="scroll" stateKey="access-logs-state"
+             stateStorage="session"
+             styleClass="p-datatable-sm p-datatable-gridlines premium-table-custom">
 
-            <ng-template pTemplate="body" let-access>
-                <tr class="align-middle border-bottom border-light">
-                    <td class="fw-bold text-primary">{{access.login}}</td>
-                    <td>
-                        <div class="fw-bold" style="color: var(--text-primary);">{{access.date | date:'dd MMM yyyy'}}</div>
-                        <div class="small text-secondary">{{access.date | date:'HH:mm:ss'}}</div>
-                    </td>
-                    <td><span class="badge fw-bold border" style="background: var(--surface-elevated); color: var(--text-primary); border-color: var(--surface-border) !important;">{{access.ipAddress}}</span></td>
-                    <td><small class="text-secondary font-monospace d-block text-truncate agent-text-trunc" title="{{access.agent}}">{{access.agent}}</small></td>
-                </tr>
-            </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="col-user" pReorderableColumn pResizableColumn scope="col">{{ 'ACCESS_LOG.USER' | translate }}</th>
+          <th class="col-date" pReorderableColumn pResizableColumn
+              scope="col">{{ 'ACCESS_LOG.DATE_TIME' | translate }}
+          </th>
+          <th class="col-ip" pReorderableColumn pResizableColumn scope="col">{{ 'ACCESS_LOG.IP_ADDRESS' | translate }}
+          </th>
+          <th class="col-agent" pReorderableColumn pResizableColumn
+              scope="col">{{ 'ACCESS_LOG.BROWSER_AGENT' | translate }}
+          </th>
+        </tr>
+      </ng-template>
 
-            <app-empty-table [colspan]="4" icon="fa-history" messageKey="ACCESS_LOG.NO_DATA" />
-        </p-table>
-    </div>
+      <ng-template let-access pTemplate="body">
+        <tr class="align-middle border-bottom border-light">
+          <td class="fw-bold text-primary">{{ access.login }}</td>
+          <td>
+            <div class="fw-bold" style="color: var(--text-primary);">{{ access.date | date:'dd MMM yyyy' }}</div>
+            <div class="small text-secondary">{{ access.date | date:'HH:mm:ss' }}</div>
+          </td>
+          <td><span class="badge fw-bold border"
+                    style="background: var(--surface-elevated); color: var(--text-primary); border-color: var(--surface-border) !important;">{{ access.ipAddress }}</span>
+          </td>
+          <td><small class="text-secondary font-monospace d-block text-truncate agent-text-trunc"
+                     title="{{access.agent}}">{{ access.agent }}</small></td>
+        </tr>
+      </ng-template>
+
+      <app-empty-table [colspan]="4" icon="fa-history" messageKey="ACCESS_LOG.NO_DATA"/>
+    </p-table>
+  </div>
 </div>

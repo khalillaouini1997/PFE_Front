@@ -81,6 +81,7 @@ body {
   color: var(--text-primary) !important;
   border-color: var(--surface-border) !important;
 }
+
 .table > :not(caption) > * > *,
 .billing-table th,
 .billing-table td,
@@ -91,6 +92,7 @@ body {
   border: 1px solid var(--surface-border) !important;
   padding: 0.5rem 0.75rem !important;
 }
+
 .table > thead,
 .billing-table thead,
 .analytics-table thead,
@@ -101,6 +103,7 @@ body {
   font-weight: 600 !important;
   border-bottom: 2px solid var(--surface-border) !important;
 }
+
 .table > tbody tr:hover,
 .billing-table tbody tr:hover,
 .analytics-table tbody tr:hover,
@@ -126,6 +129,7 @@ select {
   padding: 0.5rem 0.75rem !important;
   font-size: 0.875rem !important;
 }
+
 .form-control:focus,
 .form-select:focus,
 input:focus,
@@ -142,19 +146,23 @@ select:focus {
   border-radius: 6px !important;
   background: var(--surface-card) !important;
 }
+
 .p-datepicker .p-datepicker-header {
   background: var(--surface-elevated) !important;
   border-bottom: 1px solid var(--surface-border) !important;
 }
+
 .p-datepicker .p-datepicker-day,
 .p-datepicker .p-datepicker-month,
 .p-datepicker .p-datepicker-year {
   color: var(--text-primary) !important;
   border-radius: 4px !important;
 }
+
 .p-datepicker .p-datepicker-day:hover {
   background: var(--surface-hover) !important;
 }
+
 .p-datepicker .p-datepicker-day.p-highlight {
   background: var(--primary) !important;
   color: #ffffff !important;
@@ -181,6 +189,7 @@ select:focus {
   border: 1px solid var(--surface-border) !important;
   color: var(--text-primary) !important;
 }
+
 .dropdown-item:hover,
 .dropdown-item:focus {
   background-color: var(--surface-hover) !important;
@@ -192,16 +201,19 @@ select:focus {
   color: var(--primary) !important;
   border: 1px solid var(--surface-border) !important;
 }
+
 .page-item.active .page-link {
   background-color: var(--primary) !important;
   border-color: var(--primary) !important;
   color: #ffffff !important;
 }
+
 .p-paginator {
   background: var(--surface-card) !important;
   border-top: 1px solid var(--surface-border) !important;
   color: var(--text-primary) !important;
 }
+
 .p-paginator .p-highlight {
   background: var(--primary) !important;
   color: #ffffff !important;
@@ -227,27 +239,47 @@ select:focus {
   animation: radar-pulse 3s ease-out infinite;
 }
 
-.radar-ring:nth-child(2) { animation-delay: 1s; }
-.radar-ring:nth-child(3) { animation-delay: 2s; }
+.radar-ring:nth-child(2) {
+  animation-delay: 1s;
+}
+
+.radar-ring:nth-child(3) {
+  animation-delay: 2s;
+}
 
 @keyframes radar-pulse {
-  0% { transform: scale(0.3); opacity: 0.6; }
-  100% { transform: scale(2.2); opacity: 0; }
+  0% {
+    transform: scale(0.3);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
 }
 
 /* ── Utility Animations ── */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.fade-in { animation: fadeIn 0.3s ease-out; }
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
 
 /* ── Page Header ── */
 .page-header h1, .page-header h2, .page-header h3 {
   font-size: 1.1rem !important;
   font-family: var(--font-family-display);
 }
+
 .page-header p {
   font-size: 0.8rem !important;
 }
@@ -256,9 +288,11 @@ select:focus {
   background: linear-gradient(135deg, var(--primary-700), var(--primary-500));
   border: none;
 }
+
 .header-gradient h2 {
   color: #ffffff !important;
 }
+
 .header-gradient .subtitle-text {
   color: rgba(255, 255, 255, 0.75) !important;
   font-size: 0.8rem !important;
@@ -269,6 +303,7 @@ select:focus {
 [data-theme="dark"] .leaflet-tile {
   filter: invert(1) hue-rotate(180deg) brightness(0.85) contrast(0.9);
 }
+
 [data-theme="dark"] .leaflet-container {
   background: var(--surface-base);
 }
@@ -282,6 +317,10 @@ select:focus {
 
 /* ── Reduced Motion ── */
 @media (prefers-reduced-motion: reduce) {
-  .radar-ring { animation: none; }
-  * { transition-duration: 0.01ms !important; }
+  .radar-ring {
+    animation: none;
+  }
+  * {
+    transition-duration: 0.01ms !important;
+  }
 }

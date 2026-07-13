@@ -1,23 +1,23 @@
-import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
-import { CompteWeb, createCompteWeb } from 'src/app/data/data';
-import { environment } from '../../../environments/environment';
+import {ChangeDetectorRef, Component, inject, OnInit} from '@angular/core';
+import {CommonModule, DatePipe} from '@angular/common';
+import {Router, RouterLink} from '@angular/router';
+import {ToastrService} from 'ngx-toastr';
+import {CompteWeb, createCompteWeb} from 'src/app/data/data';
+import {environment} from '../../../environments/environment';
 
-import { WebAccountService } from 'src/app/service/web-account.service';
-import { AuthService } from 'src/app/service/auth.service';
-import { createPaginationState, pageChanged } from '../../shared/components/pagination-base';
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { STORAGE_KEYS } from 'src/app/shared/constants';
-import { withToast } from '../../utils/toast.helpers';
+import {WebAccountService} from 'src/app/service/web-account.service';
+import {AuthService} from 'src/app/service/auth.service';
+import {createPaginationState, pageChanged} from '../../shared/components/pagination-base';
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
+import {STORAGE_KEYS} from 'src/app/shared/constants';
+import {withToast} from '../../utils/toast.helpers';
 
 
-import { TableModule } from 'primeng/table';
-import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
-import { SearchInputComponent } from '../../shared/components/search-input/search-input.component';
-import { EmptyTableComponent } from '../../shared/components/empty-table/empty-table.component';
+import {TableModule} from 'primeng/table';
+import {PageHeaderComponent} from '../../shared/components/page-header/page-header.component';
+import {SearchInputComponent} from '../../shared/components/search-input/search-input.component';
+import {EmptyTableComponent} from '../../shared/components/empty-table/empty-table.component';
 
 @Component({
   selector: 'app-comptes-web-component',
@@ -30,14 +30,21 @@ export class ComptesWebComponentComponent implements OnInit {
   pagination = createPaginationState();
   comptesWeb: CompteWeb[] = [];
   loading: boolean = false;
-  private loadingInProgress: boolean = false;
   selectedWebAccount: CompteWeb = createCompteWeb();
   dt: any;
   code_pays = [];
-
   searchForm!: FormGroup;
-  private currentKeyWord: string = '';
   availablePools: number[] = [];
+  owner: string = environment.owner;
+  private loadingInProgress: boolean = false;
+  private currentKeyWord: string = '';
+  private readonly webAccountService = inject(WebAccountService);
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
+  private readonly toastr = inject(ToastrService);
+  private readonly fb = inject(FormBuilder);
+  private readonly translate = inject(TranslateService);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   get regionControl() {
     return this.searchForm.get('region') as any;
@@ -46,16 +53,6 @@ export class ComptesWebComponentComponent implements OnInit {
   get poolControl() {
     return this.searchForm.get('pool') as any;
   }
-
-  owner: string = environment.owner;
-
-  private readonly webAccountService = inject(WebAccountService);
-  private readonly authService = inject(AuthService);
-  private readonly router = inject(Router);
-  private readonly toastr = inject(ToastrService);
-  private readonly fb = inject(FormBuilder);
-  private readonly translate = inject(TranslateService);
-  private readonly cdr = inject(ChangeDetectorRef);
 
   canDelete(): boolean {
     return this.authService.hasRole('GLOBALADMINDESC');
@@ -155,7 +152,7 @@ export class ComptesWebComponentComponent implements OnInit {
       dateDecop.setHours(dateDecop.getHours() + 1);
     }
     this.dt = {
-      date: { year: dateDecop.getFullYear(), month: dateDecop.getUTCMonth() + 1, day: dateDecop.getUTCDate() },
+      date: {year: dateDecop.getFullYear(), month: dateDecop.getUTCMonth() + 1, day: dateDecop.getUTCDate()},
       jsdate: dateDecop
     };
     this.router.navigate(['/adminWeb/configurations', compteWeb.idCompteClientWeb]);
@@ -182,7 +179,8 @@ export class ComptesWebComponentComponent implements OnInit {
             this.loadingInProgress = false;
             this.loadWebAccounts();
           },
-          error: () => {}
+          error: () => {
+          }
         });
     }
   }

@@ -1,17 +1,9 @@
-import { TestBed } from '@angular/core/testing';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideHttpClient } from '@angular/common/http';
-import { vi } from 'vitest';
-import { BoitierService } from './boitier.service';
-import { environment } from '../../environments/environment';
-import {
-  Boitier,
-  RecalculatePayload,
-  DeviceOpt,
-  PathConfigPayload,
-  DeviceSetting,
-  VehiculeSetting,
-} from '../data/data';
+import {TestBed} from '@angular/core/testing';
+import {HttpTestingController, provideHttpClientTesting} from '@angular/common/http/testing';
+import {provideHttpClient} from '@angular/common/http';
+import {BoitierService} from './boitier.service';
+import {environment} from '../../environments/environment';
+import {Boitier, DeviceOpt, DeviceSetting, PathConfigPayload, RecalculatePayload, VehiculeSetting,} from '../data/data';
 
 describe('BoitierService', () => {
   let service: BoitierService;
@@ -82,13 +74,13 @@ describe('BoitierService', () => {
         `${environment.apiBaseUrl}compteServer/${id}/Boitiers?keyWord=${keyword}&page=${page}&size=${size}`
       );
       expect(req.request.method).toBe('GET');
-      req.flush({ content: [], totalElements: 0 });
+      req.flush({content: [], totalElements: 0});
     });
   });
 
   describe('updateBoitier', () => {
     it('should make PUT request with query params and body', () => {
-      const boitier = { id: 1, imei: '123456' } as unknown as Boitier;
+      const boitier = {id: 1, imei: '123456'} as unknown as Boitier;
       const idServer = 5;
       const updateType = 'full';
 
@@ -126,7 +118,7 @@ describe('BoitierService', () => {
         `${baseUrl}/${numBoitier}/Raw/${limit}`
       );
       expect(req.request.method).toBe('GET');
-      req.flush({ data: [] });
+      req.flush({data: []});
     });
   });
 
@@ -148,7 +140,7 @@ describe('BoitierService', () => {
   describe('recalculeHistorique', () => {
     it('should make POST request with payload', () => {
       const idCompteWeb = 1;
-      const payload = { startDate: '2024-01-01', endDate: '2024-01-31' } as unknown as RecalculatePayload;
+      const payload = {startDate: '2024-01-01', endDate: '2024-01-31'} as unknown as RecalculatePayload;
 
       service.recalculeHistorique(idCompteWeb, payload).subscribe();
 
@@ -164,7 +156,7 @@ describe('BoitierService', () => {
   describe('recalculeAlert', () => {
     it('should make POST request with payload', () => {
       const idCompteWeb = 1;
-      const payload = { startDate: '2024-01-01' } as unknown as RecalculatePayload;
+      const payload = {startDate: '2024-01-01'} as unknown as RecalculatePayload;
 
       service.recalculeAlert(idCompteWeb, payload).subscribe();
 
@@ -289,7 +281,7 @@ describe('BoitierService', () => {
   describe('editDeviceOptionConfig', () => {
     it('should make PUT request with device options', () => {
       const idCompteWeb = 1;
-      const deviceOpt = { id: 1, option: 'speed' } as unknown as DeviceOpt;
+      const deviceOpt = {id: 1, option: 'speed'} as unknown as DeviceOpt;
 
       service.editDeviceOptionConfig(idCompteWeb, deviceOpt).subscribe();
 
@@ -305,7 +297,7 @@ describe('BoitierService', () => {
   describe('editDeviceSetting', () => {
     it('should make PUT request with device setting', () => {
       const idCompteWeb = 1;
-      const deviceSetting = { id: 1, key: 'apn' } as unknown as DeviceSetting;
+      const deviceSetting = {id: 1, key: 'apn'} as unknown as DeviceSetting;
 
       service.editDeviceSetting(idCompteWeb, deviceSetting).subscribe();
 
@@ -321,7 +313,7 @@ describe('BoitierService', () => {
   describe('editPathConfig', () => {
     it('should make POST request with path config payload', () => {
       const idServer = 1;
-      const pathConfigPayload = { path: '/data' } as unknown as PathConfigPayload;
+      const pathConfigPayload = {path: '/data'} as unknown as PathConfigPayload;
 
       service.editPathConfig(idServer, pathConfigPayload).subscribe();
 
@@ -337,7 +329,7 @@ describe('BoitierService', () => {
   describe('resetOdometre', () => {
     it('should make PUT request with vehicule setting', () => {
       const idCompteWeb = 1;
-      const vehiculeSetting = { odo: 0 } as unknown as VehiculeSetting;
+      const vehiculeSetting = {odo: 0} as unknown as VehiculeSetting;
 
       service.resetOdometre(idCompteWeb, vehiculeSetting).subscribe();
 
@@ -361,14 +353,14 @@ describe('BoitierService', () => {
         `${baseUrl}/${idCompteWeb}/lastId/${idBoitier}`
       );
       expect(req.request.method).toBe('GET');
-      req.flush({ lastId: 123 });
+      req.flush({lastId: 123});
     });
   });
 
   describe('resetLastId', () => {
     it('should make PUT request to reset last id', () => {
       const idCompteWeb = 1;
-      const vehiculeSetting: VehiculeSetting = { lastId: 0 } as VehiculeSetting;
+      const vehiculeSetting: VehiculeSetting = {lastId: 0} as VehiculeSetting;
 
       service.resetLastId(idCompteWeb, vehiculeSetting).subscribe();
 
@@ -392,7 +384,7 @@ describe('BoitierService', () => {
         `${baseUrl}/device-by-imei?idIpAdresse=${idIpAdresse}&imei=${imei}`
       );
       expect(req.request.method).toBe('GET');
-      req.flush({ id: 1 });
+      req.flush({id: 1});
     });
   });
 

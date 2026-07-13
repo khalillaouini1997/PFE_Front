@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PageHeaderComponent } from './page-header.component';
-import { TranslateModule } from '@ngx-translate/core';
-import { Component } from '@angular/core';
-import { By } from '@angular/platform-browser';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {PageHeaderComponent} from './page-header.component';
+import {TranslateModule} from '@ngx-translate/core';
+import {Component} from '@angular/core';
+import {By} from '@angular/platform-browser';
 
 @Component({
   template: `
@@ -12,7 +12,8 @@ import { By } from '@angular/platform-browser';
   `,
   imports: [PageHeaderComponent]
 })
-class TestHostComponent {}
+class TestHostComponent {
+}
 
 describe('PageHeaderComponent', () => {
   let component: PageHeaderComponent;

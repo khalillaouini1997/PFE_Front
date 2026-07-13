@@ -1,9 +1,9 @@
-import { TestBed } from '@angular/core/testing';
-import { AccessLogComponent } from './access-log.component';
-import { AccessLogService } from '../../service/access-log.service';
-import { of, throwError } from 'rxjs';
-import { TranslateModule } from '@ngx-translate/core';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import {TestBed} from '@angular/core/testing';
+import {AccessLogComponent} from './access-log.component';
+import {AccessLogService} from '../../service/access-log.service';
+import {of, throwError} from 'rxjs';
+import {TranslateModule} from '@ngx-translate/core';
+import {NO_ERRORS_SCHEMA} from '@angular/core';
 
 describe('AccessLogComponent', () => {
   let component: AccessLogComponent;
@@ -12,7 +12,10 @@ describe('AccessLogComponent', () => {
   beforeEach(async () => {
     accessLogService = {
       getAllAccessLog: vi.fn().mockReturnValue(of({
-        data: { content: [{ id: 1, username: 'admin', action: 'LOGIN', timestamp: new Date(), ipAddress: '127.0.0.1' }], totalElements: 1 }
+        data: {
+          content: [{id: 1, username: 'admin', action: 'LOGIN', timestamp: new Date(), ipAddress: '127.0.0.1'}],
+          totalElements: 1
+        }
       })),
     };
 
@@ -20,7 +23,7 @@ describe('AccessLogComponent', () => {
       imports: [AccessLogComponent, TranslateModule.forRoot()],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [
-        { provide: AccessLogService, useValue: accessLogService }
+        {provide: AccessLogService, useValue: accessLogService}
       ]
     }).compileComponents();
 
@@ -57,7 +60,7 @@ describe('AccessLogComponent', () => {
 
   it('should handle direct array response', () => {
     accessLogService.getAllAccessLog.mockReturnValue(of([
-      { id: 1, username: 'admin', action: 'LOGIN' }
+      {id: 1, username: 'admin', action: 'LOGIN'}
     ]));
     component.getAllAccessLogs('', 0, 10);
     expect(component.accessLogs.length).toBe(1);
@@ -65,7 +68,7 @@ describe('AccessLogComponent', () => {
 
   it('should handle nested response structure', () => {
     accessLogService.getAllAccessLog.mockReturnValue(of({
-      data: { content: [{ id: 1 }], totalElements: 1 }
+      data: {content: [{id: 1}], totalElements: 1}
     }));
     component.getAllAccessLogs('', 0, 10);
     expect(component.accessLogs.length).toBe(1);

@@ -1,13 +1,13 @@
-<div class="kpi-card" [class.trend-up]="trend() === 'up'" [class.trend-down]="trend() === 'down'">
+<div [class.trend-down]="trend() === 'down'" [class.trend-up]="trend() === 'up'" class="kpi-card">
   <div class="kpi-header">
     <span class="kpi-icon">{{ icon() }}</span>
-    <span class="kpi-trend" *ngIf="trend()">
+    <span *ngIf="trend()" class="kpi-trend">
       {{ trend() === 'up' ? '↑' : '↓' }} {{ trendValue() }}%
     </span>
   </div>
   <div class="kpi-value">{{ displayValue() }}</div>
   <div class="kpi-label">{{ label() }}</div>
-  <div class="sparkline-container" *ngIf="showSparkline()">
+  <div *ngIf="showSparkline()" class="sparkline-container">
     <canvas #sparkline class="sparkline"></canvas>
   </div>
 </div>

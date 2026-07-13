@@ -1,25 +1,25 @@
-import { Router } from '@angular/router';
-import { Component, inject, signal, OnInit } from '@angular/core';
-import { CompteWeb, IpAddress } from 'src/app/data/data';
-import { WebAccountService } from "../../service/web-account.service";
+import {Router} from '@angular/router';
+import {Component, inject, OnInit, signal} from '@angular/core';
+import {CompteWeb, IpAddress} from 'src/app/data/data';
+import {WebAccountService} from "../../service/web-account.service";
 
-import { CompteServerService } from "../../service/compte-server.service";
-import { IpAddressService } from "../../service/ip-address.service";
-import { ToastrService } from "ngx-toastr";
-import { NOTIFICATION_SUBQUERIES } from '../../shared/constants';
-import { withToast } from '../../utils/toast.helpers';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DatePickerModule } from 'primeng/datepicker';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
+import {CompteServerService} from "../../service/compte-server.service";
+import {IpAddressService} from "../../service/ip-address.service";
+import {ToastrService} from "ngx-toastr";
+import {NOTIFICATION_SUBQUERIES} from '../../shared/constants';
+import {withToast} from '../../utils/toast.helpers';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {DatePickerModule} from 'primeng/datepicker';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
+import {PageHeaderComponent} from '../../shared/components/page-header/page-header.component';
 
 
 @Component({
-    selector: 'app-add-compte-web-component',
-    standalone: true,
-    templateUrl: './add-compte-web-component.component.html',
-    styleUrls: ['./add-compte-web-component.component.css'],
-    imports: [ReactiveFormsModule, DatePickerModule, TranslateModule, PageHeaderComponent]
+  selector: 'app-add-compte-web-component',
+  standalone: true,
+  templateUrl: './add-compte-web-component.component.html',
+  styleUrls: ['./add-compte-web-component.component.css'],
+  imports: [ReactiveFormsModule, DatePickerModule, TranslateModule, PageHeaderComponent]
 })
 export class AddCompteWebComponentComponent implements OnInit {
 
@@ -90,7 +90,7 @@ export class AddCompteWebComponentComponent implements OnInit {
   addCompteWeb() {
     if (this.webForm.invalid) {
       this.toastr.warning(
-        this.translate.instant('WEB_ACCOUNTS.FILL_REQUIRED'), 
+        this.translate.instant('WEB_ACCOUNTS.FILL_REQUIRED'),
         this.translate.instant('COMMON.WARNING')
       );
       return;
@@ -115,7 +115,8 @@ export class AddCompteWebComponentComponent implements OnInit {
           this.webAccountService.associateCompteWebToCompteServer(_compteWeb.idCompteClientWeb, idCompteServer).subscribe();
           this.router.navigate(['/adminWeb/listWebs']);
         },
-        error: () => {}
+        error: () => {
+        }
       });
   }
 }

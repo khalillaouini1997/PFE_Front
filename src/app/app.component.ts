@@ -1,18 +1,17 @@
-import { Component, inject, AfterViewInit, OnDestroy, ViewChild } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
-import { ErrorBannerComponent, ErrorBannerData } from './shared/components/error-banner/error-banner.component';
+import {AfterViewInit, Component, inject, OnDestroy, ViewChild} from '@angular/core';
+import {RouterOutlet} from '@angular/router';
+import {TranslateService} from '@ngx-translate/core';
+import {ErrorBannerComponent, ErrorBannerData} from './shared/components/error-banner/error-banner.component';
 
 @Component({
-    selector: 'app-root',
-    imports: [RouterOutlet, ErrorBannerComponent],
-    templateUrl: './app.component.html'
+  selector: 'app-root',
+  imports: [RouterOutlet, ErrorBannerComponent],
+  templateUrl: './app.component.html'
 })
 export class AppComponent implements AfterViewInit, OnDestroy {
   title = 'web_admin';
-  private readonly translate = inject(TranslateService);
-  
   @ViewChild(ErrorBannerComponent) errorBanner?: ErrorBannerComponent;
+  private readonly translate = inject(TranslateService);
 
   constructor() {
 

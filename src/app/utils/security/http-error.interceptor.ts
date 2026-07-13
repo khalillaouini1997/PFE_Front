@@ -1,8 +1,8 @@
-import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
-import { inject } from '@angular/core';
-import { Router } from '@angular/router';
-import { catchError, throwError, retry, timer } from 'rxjs';
-import { isProblemDetail } from '../../shared/models/problem-detail.model';
+import {HttpErrorResponse, HttpInterceptorFn} from '@angular/common/http';
+import {inject} from '@angular/core';
+import {Router} from '@angular/router';
+import {catchError, retry, throwError, timer} from 'rxjs';
+import {isProblemDetail} from '../../shared/models/problem-detail.model';
 
 // Error tracking for retry logic
 const MAX_RETRIES = 2;
@@ -17,11 +17,11 @@ export const httpErrorInterceptor: HttpInterceptorFn = (req, next) => {
       delay: (error: HttpErrorResponse, retryCount: number) => {
         // Only retry on network errors or 5xx server errors
         const shouldRetry = isRetryableError(error);
-        
+
         if (shouldRetry && retryCount <= MAX_RETRIES) {
           return timer(RETRY_DELAY_MS * retryCount);
         }
-        
+
         return throwError(() => error);
       }
     }),
@@ -35,7 +35,7 @@ export const httpErrorInterceptor: HttpInterceptorFn = (req, next) => {
 
       if (error.status === 403) {
         // Forbidden - user doesn't have access
-        router.navigate(['/error'], { queryParams: { code: 403, message: errorMessage } });
+        router.navigate(['/error'], {queryParams: {code: 403, message: errorMessage}});
         return throwError(() => error);
       }
 
@@ -74,17 +74,17 @@ function isRetryableError(error: HttpErrorResponse): boolean {
   if (!error.status && error.error instanceof ProgressEvent) {
     return true;
   }
-  
+
   // Retry on 5xx server errors (except 501 Not Implemented)
   if (error.status >= 500 && error.status !== 501) {
     return true;
   }
-  
+
   // Retry on 429 Too Many Requests
   if (error.status === 429) {
     return true;
   }
-  
+
   return false;
 }
 
@@ -109,7 +109,7 @@ function triggerErrorBanner(type: 'network' | 'server' | 'map-tile' | 'data-fetc
  */
 function extractErrorMessage(error: HttpErrorResponse): string {
   const errorBody = error.error;
-  
+
   if (!errorBody) {
     return error.message || 'An error occurred';
   }

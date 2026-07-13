@@ -1,5 +1,5 @@
 export const MAP_CONSTANTS = {
-  DEFAULT_CENTER: { lat: 33.8869, lng: 9.5375 },
+  DEFAULT_CENTER: {lat: 33.8869, lng: 9.5375},
   DEFAULT_ZOOM: 6,
   DETAIL_ZOOM: 15,
   TILE_LAYER_URL: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',

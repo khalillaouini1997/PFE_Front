@@ -5,7 +5,7 @@
       <p>Loading map...</p>
     </div>
   }
-  
+
   @if (hasMapError()) {
     <div class="map-error">
       <div class="map-error-icon">
@@ -13,17 +13,17 @@
       </div>
       <h3>Map Unavailable</h3>
       <p>{{ mapError() }}</p>
-      <button class="map-retry-btn" (click)="retryMapLoad()" type="button">
+      <button (click)="retryMapLoad()" class="map-retry-btn" type="button">
         <i class="material-icons">refresh</i>
         <span>Retry</span>
       </button>
     </div>
   }
-  
-  <div #mapContainer class="map-container" [class.map-hidden]="isMapLoading() || hasMapError()"></div>
-  
-  <div class="map-controls" *ngIf="map && !hasMapError()">
-    <button class="map-btn" (click)="zoomIn()" aria-label="Zoom in">+</button>
-    <button class="map-btn" (click)="zoomOut()" aria-label="Zoom out">−</button>
+
+  <div #mapContainer [class.map-hidden]="isMapLoading() || hasMapError()" class="map-container"></div>
+
+  <div *ngIf="map && !hasMapError()" class="map-controls">
+    <button (click)="zoomIn()" aria-label="Zoom in" class="map-btn">+</button>
+    <button (click)="zoomOut()" aria-label="Zoom out" class="map-btn">−</button>
   </div>
 </div>

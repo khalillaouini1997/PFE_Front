@@ -1,6 +1,6 @@
-import { Routes } from '@angular/router';
-import { AdminWebComponentComponent } from './admin-web-component.component';
-import { roleGuard } from '../guards/role.guard';
+import {Routes} from '@angular/router';
+import {AdminWebComponentComponent} from './admin-web-component.component';
+import {roleGuard} from '../guards/role.guard';
 
 export const ADMIN_WEB_ROUTES: Routes = [{
   path: '',

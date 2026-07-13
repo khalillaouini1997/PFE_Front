@@ -1,5 +1,5 @@
-import { HttpEvent, HttpInterceptorFn, HttpResponse } from '@angular/common/http';
-import { map } from 'rxjs/operators';
+import {HttpEvent, HttpInterceptorFn, HttpResponse} from '@angular/common/http';
+import {map} from 'rxjs/operators';
 
 export interface ApiResponse<T> {
   success: boolean;
@@ -24,14 +24,14 @@ export const apiResponseInterceptor: HttpInterceptorFn = (req, next) => {
         if (body && typeof body === 'object' && 'success' in body && 'data' in body) {
           // Unwrap the ApiResponse and return only the data
           const apiResponse = body as ApiResponse<any>;
-          
+
           // If success is false, throw an error
           if (!apiResponse.success) {
             throw new Error(apiResponse.message || apiResponse.error || 'Request failed');
           }
-          
+
           // Return a new HttpResponse with unwrapped data
-          return event.clone({ body: apiResponse.data });
+          return event.clone({body: apiResponse.data});
         }
       }
       return event;

@@ -1,20 +1,24 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideHttpClient } from '@angular/common/http';
-import { provideRouter } from '@angular/router';
-import { importProvidersFrom } from '@angular/core';
-import { ToastrModule } from 'ngx-toastr';
-import { TranslateModule } from '@ngx-translate/core';
-import { vi } from 'vitest';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {provideHttpClient} from '@angular/common/http';
+import {provideRouter} from '@angular/router';
+import {importProvidersFrom} from '@angular/core';
+import {ToastrModule} from 'ngx-toastr';
+import {TranslateModule} from '@ngx-translate/core';
+import {vi} from 'vitest';
 
-import { AdminWebComponentComponent } from './admin-web-component.component';
+import {AdminWebComponentComponent} from './admin-web-component.component';
 
 if (!window.matchMedia) {
   Object.defineProperty(window, 'matchMedia', {
     writable: true,
     value: vi.fn().mockImplementation((query: string) => ({
       matches: false, media: query, onchange: null,
-      addListener: () => {}, removeListener: () => {},
-      addEventListener: () => {}, removeEventListener: () => {},
+      addListener: () => {
+      }, removeListener: () => {
+      },
+      addEventListener: () => {
+      }, removeEventListener: () => {
+      },
       dispatchEvent: () => false,
     })),
   });

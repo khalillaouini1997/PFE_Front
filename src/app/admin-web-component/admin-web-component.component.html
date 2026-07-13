@@ -1,16 +1,16 @@
 <div class="wrapper">
-    <input type="checkbox" id="btnControl" />
-    <label class="nav-toggle-btn" for="btnControl">
-        <span class="sr-only">Toggle navigation</span>
-        <span></span>
-    </label>
+  <input id="btnControl" type="checkbox"/>
+  <label class="nav-toggle-btn" for="btnControl">
+    <span class="sr-only">Toggle navigation</span>
+    <span></span>
+  </label>
 
-    <app-sidebar (sidebarToggle)="onSidebarToggle($event)"></app-sidebar>
+  <app-sidebar (sidebarToggle)="onSidebarToggle($event)"></app-sidebar>
 
-    <div class="content-area" [class.collapsed]="isSidebarCollapsed">
-        <app-navbar></app-navbar>
-        <main class="content">
-            <router-outlet></router-outlet>
-        </main>
-    </div>
+  <div [class.collapsed]="isSidebarCollapsed" class="content-area">
+    <app-navbar></app-navbar>
+    <main class="content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
 </div>

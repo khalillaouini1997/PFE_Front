@@ -1,7 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { EmptyTableComponent } from './empty-table.component';
-import { TranslateModule } from '@ngx-translate/core';
-import { By } from '@angular/platform-browser';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {EmptyTableComponent} from './empty-table.component';
+import {TranslateModule} from '@ngx-translate/core';
 
 describe('EmptyTableComponent', () => {
   let component: EmptyTableComponent;

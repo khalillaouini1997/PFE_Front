@@ -1,6 +1,6 @@
-import { Observable, tap } from 'rxjs';
-import { ToastrService } from 'ngx-toastr';
-import { TranslateService } from '@ngx-translate/core';
+import {Observable, tap} from 'rxjs';
+import {ToastrService} from 'ngx-toastr';
+import {TranslateService} from '@ngx-translate/core';
 
 export function withToast<T>(
   obs$: Observable<T>,

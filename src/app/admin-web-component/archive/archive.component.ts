@@ -1,15 +1,15 @@
-import { CommonModule, DatePipe, DecimalPipe, Location, NgClass } from '@angular/common';
-import { Component, OnInit, signal } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Archive, Raws, Raw, BoitierAnalysis, createRaws } from "../../data/data";
+import {CommonModule, DatePipe, DecimalPipe, Location, NgClass} from '@angular/common';
+import {Component, OnInit, signal} from '@angular/core';
+import {ActivatedRoute, Params, Router} from '@angular/router';
+import {Archive, BoitierAnalysis, createRaws, Raw, Raws} from "../../data/data";
 
-import { BoitierService } from "../../service/boitier.service";
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
-import { TableModule } from 'primeng/table';
-import { TabsModule } from 'primeng/tabs';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
-import { ToastrService } from 'ngx-toastr';
+import {BoitierService} from "../../service/boitier.service";
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {TableModule} from 'primeng/table';
+import {TabsModule} from 'primeng/tabs';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
+import {PageHeaderComponent} from '../../shared/components/page-header/page-header.component';
+import {ToastrService} from 'ngx-toastr';
 
 @Component({
   selector: 'app-archive',
@@ -38,7 +38,8 @@ export class ArchiveComponent implements OnInit {
     private readonly fb: FormBuilder,
     private readonly toastr: ToastrService,
     private readonly translate: TranslateService
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
     this.initForms();
@@ -81,7 +82,7 @@ export class ArchiveComponent implements OnInit {
       if (!Array.isArray(archivesData)) {
         archivesData = [];
       }
-      
+
       const archs = archivesData.map(a => {
         // Parse date from DD-MM-YYYY HH:mm:ss format to Date object
         let parsedDate = a.date;
@@ -151,7 +152,7 @@ export class ArchiveComponent implements OnInit {
     const data = this.analysisData();
     if (!data?.topAnomalyTypes) return [];
     return Object.entries(data.topAnomalyTypes)
-      .map(([name, count]) => ({ name, count }))
+      .map(([name, count]) => ({name, count}))
       .sort((a, b) => b.count - a.count)
       .slice(0, 5);
   }

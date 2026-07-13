@@ -1,46 +1,48 @@
 <div class="auth-page">
-    <div class="container">
-    <div id="login" class="signin-card">
-        <div class="logo-image">
-            <img Src="../../assets/images/administrator.png" alt="Logo" title="Logo" width="138" height="138">
+  <div class="container">
+    <div class="signin-card" id="login">
+      <div class="logo-image">
+        <img Src="../../assets/images/administrator.png" alt="Logo" height="138" title="Logo" width="138">
+      </div>
+      <h1 class="display1">Administration Web</h1>
+      <p class="subhead">Administration Web</p>
+      <form #authentificationFrom="ngForm" (ngSubmit)="onSubmit()" [attr.aria-busy]="loading" novalidate>
+        <div class="form-group" id="form-login-username">
+          <label class="visually-hidden" for="username">Username</label>
+          <input #usernameInput="ngModel" (ngModelChange)="errorVisible = false" [(ngModel)]="login" [attr.aria-invalid]="usernameInput.invalid && (usernameInput.dirty || usernameInput.touched)" autocomplete="username"
+                 class="form-control" id="username" name="username" placeholder="Login"
+                 required
+                 type="text"/>
+          <span class="form-highlight"></span>
+          <span class="form-bar"></span>
         </div>
-        <h1 class="display1">Administration Web</h1>
-        <p class="subhead">Administration Web</p>
-        <form #authentificationFrom="ngForm" (ngSubmit)="onSubmit()" novalidate [attr.aria-busy]="loading">
-            <div id="form-login-username" class="form-group">
-                <label for="username" class="visually-hidden">Username</label>
-                <input id="username" class="form-control" name="username" placeholder="Login" [(ngModel)]="login"
-                    type="text" autocomplete="username" required #usernameInput="ngModel"
-                    [attr.aria-invalid]="usernameInput.invalid && (usernameInput.dirty || usernameInput.touched)"
-                    (ngModelChange)="errorVisible = false" />
-                <span class="form-highlight"></span>
-                <span class="form-bar"></span>
-            </div>
-            <div id="form-login-password" class="form-group">
-                <label for="passwd" class="visually-hidden">Password</label>
-                <input id="passwd" class="form-control" name="password" placeholder="Mot de passe"
-                    [(ngModel)]="password" type="password" autocomplete="current-password" required
-                    #passwordInput="ngModel" [attr.aria-invalid]="passwordInput.invalid && (passwordInput.dirty || passwordInput.touched)"
-                    (ngModelChange)="errorVisible = false">
-                <span class="form-highlight"></span>
-                <span class="form-bar"></span>
-            </div>
-            @if (errorVisible) {
-            <div class="alert alert-danger alert-dismissible" role="alert" aria-live="assertive">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="errorVisible = false"><span
-                        aria-hidden="true">&times;</span></button>
-                <strong>Login failed.</strong> {{errorMessage}}
-            </div>
-            }
-            <div>
-                <button type="submit" [disabled]="!authentificationFrom.form.valid || loading"
-                    class="btn btn-block btn-info ripple-effect">
-                    {{ loading ? 'Signing in…' : 'Login' }}
-                </button>
-            </div>
+        <div class="form-group" id="form-login-password">
+          <label class="visually-hidden" for="passwd">Password</label>
+          <input #passwordInput="ngModel" (ngModelChange)="errorVisible = false" [(ngModel)]="password" [attr.aria-invalid]="passwordInput.invalid && (passwordInput.dirty || passwordInput.touched)"
+                 autocomplete="current-password" class="form-control" id="passwd" name="password"
+                 placeholder="Mot de passe"
+                 required
+                 type="password">
+          <span class="form-highlight"></span>
+          <span class="form-bar"></span>
+        </div>
+        @if (errorVisible) {
+          <div aria-live="assertive" class="alert alert-danger alert-dismissible" role="alert">
+            <button (click)="errorVisible = false" aria-label="Close" class="close" data-dismiss="alert"
+                    type="button"><span
+              aria-hidden="true">&times;</span></button>
+            <strong>Login failed.</strong> {{ errorMessage }}
+          </div>
+        }
+        <div>
+          <button [disabled]="!authentificationFrom.form.valid || loading" class="btn btn-block btn-info ripple-effect"
+                  type="submit">
+            {{ loading ? 'Signing in…' : 'Login' }}
+          </button>
+        </div>
 
 
-        </form>
+      </form>
     </div>
-</div>
+  </div>
 </div>

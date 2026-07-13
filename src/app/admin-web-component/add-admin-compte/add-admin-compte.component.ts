@@ -1,24 +1,24 @@
-import { Component, inject } from '@angular/core';
+import {Component, inject} from '@angular/core';
 
-import { AdministratorCompte } from 'src/app/data/data';
-import { AdminAccountService } from 'src/app/service/admin-account.service';
+import {AdministratorCompte} from 'src/app/data/data';
+import {AdminAccountService} from 'src/app/service/admin-account.service';
 
-import { catchError } from "rxjs/operators";
-import { of } from "rxjs";
-import { ToastrService } from "ngx-toastr";
-import { withToast } from '../../utils/toast.helpers';
-import { NOTIFICATION_SUBQUERIES } from '../../shared/constants';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
+import {catchError} from "rxjs/operators";
+import {of} from "rxjs";
+import {ToastrService} from "ngx-toastr";
+import {withToast} from '../../utils/toast.helpers';
+import {NOTIFICATION_SUBQUERIES} from '../../shared/constants';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
+import {PageHeaderComponent} from '../../shared/components/page-header/page-header.component';
 
 
 @Component({
-    selector: 'app-add-admin-compte',
-    standalone: true,
-    templateUrl: './add-admin-compte.component.html',
-    styleUrls: ['./add-admin-compte.component.css'],
-    imports: [ReactiveFormsModule, TranslateModule, PageHeaderComponent]
+  selector: 'app-add-admin-compte',
+  standalone: true,
+  templateUrl: './add-admin-compte.component.html',
+  styleUrls: ['./add-admin-compte.component.css'],
+  imports: [ReactiveFormsModule, TranslateModule, PageHeaderComponent]
 })
 export class AddAdminCompteComponent {
 
@@ -55,11 +55,10 @@ export class AddAdminCompteComponent {
   }
 
 
-
   addAdminCompte() {
     if (this.adminForm.invalid) {
       this.toastr.warning(
-        this.translate.instant('WEB_ACCOUNTS.FILL_REQUIRED'), 
+        this.translate.instant('WEB_ACCOUNTS.FILL_REQUIRED'),
         this.translate.instant('COMMON.WARNING')
       );
       return;
@@ -74,7 +73,7 @@ export class AddAdminCompteComponent {
       )
       .subscribe({
         next: () => {
-          this.adminForm.reset({ role: 'WEBADMIN', idTraccar: 0, useFcm: false });
+          this.adminForm.reset({role: 'WEBADMIN', idTraccar: 0, useFcm: false});
         }
       });
   }

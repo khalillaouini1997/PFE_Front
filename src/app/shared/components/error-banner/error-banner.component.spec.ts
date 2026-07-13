@@ -1,7 +1,7 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { vi, describe, it, expect, beforeEach } from 'vitest';
-import { ErrorBannerComponent, ErrorBannerData } from './error-banner.component';
-import { Router } from '@angular/router';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {ErrorBannerComponent, ErrorBannerData} from './error-banner.component';
+import {Router} from '@angular/router';
 
 describe('ErrorBannerComponent', () => {
   let component: ErrorBannerComponent;
@@ -9,12 +9,12 @@ describe('ErrorBannerComponent', () => {
   let routerMock: { navigate: ReturnType<typeof vi.fn> };
 
   beforeEach(async () => {
-    routerMock = { navigate: vi.fn() };
+    routerMock = {navigate: vi.fn()};
 
     await TestBed.configureTestingModule({
       imports: [ErrorBannerComponent],
       providers: [
-        { provide: Router, useValue: routerMock }
+        {provide: Router, useValue: routerMock}
       ]
     }).compileComponents();
 
@@ -49,7 +49,7 @@ describe('ErrorBannerComponent', () => {
   });
 
   it('should hide banner after calling dismiss', () => {
-    component.showError({ type: 'server', message: 'Server error' });
+    component.showError({type: 'server', message: 'Server error'});
     fixture.detectChanges();
 
     expect(fixture.nativeElement.querySelector('.error-banner')).toBeTruthy();
@@ -61,7 +61,7 @@ describe('ErrorBannerComponent', () => {
   });
 
   it('should emit dismiss event via dismiss()', () => {
-    component.showError({ type: 'data-fetch', message: 'Fetch failed' });
+    component.showError({type: 'data-fetch', message: 'Fetch failed'});
     fixture.detectChanges();
 
     component.dismiss();
@@ -86,42 +86,42 @@ describe('ErrorBannerComponent', () => {
   });
 
   it('should apply error severity class for server errors', () => {
-    component.showError({ type: 'server', message: 'Internal error' });
+    component.showError({type: 'server', message: 'Internal error'});
     fixture.detectChanges();
 
     expect(component.getSeverity()).toBe('error');
   });
 
   it('should apply warning severity class for network errors', () => {
-    component.showError({ type: 'network', message: 'No connection' });
+    component.showError({type: 'network', message: 'No connection'});
     fixture.detectChanges();
 
     expect(component.getSeverity()).toBe('warning');
   });
 
   it('should return correct icon for each error type', () => {
-    component.showError({ type: 'network', message: 'fail' });
+    component.showError({type: 'network', message: 'fail'});
     expect(component.getIcon()).toBe('wifi_off');
 
-    component.showError({ type: 'server', message: 'fail' });
+    component.showError({type: 'server', message: 'fail'});
     expect(component.getIcon()).toBe('error');
 
-    component.showError({ type: 'map-tile', message: 'fail' });
+    component.showError({type: 'map-tile', message: 'fail'});
     expect(component.getIcon()).toBe('map');
 
-    component.showError({ type: 'data-fetch', message: 'fail' });
+    component.showError({type: 'data-fetch', message: 'fail'});
     expect(component.getIcon()).toBe('cloud_off');
 
-    component.showError({ type: 'timeout', message: 'fail' });
+    component.showError({type: 'timeout', message: 'fail'});
     expect(component.getIcon()).toBe('schedule');
   });
 
   it('should dismiss on Escape keydown', () => {
-    component.showError({ type: 'network', message: 'fail' });
+    component.showError({type: 'network', message: 'fail'});
     fixture.detectChanges();
 
     const banner = fixture.nativeElement.querySelector('.error-banner');
-    const event = new KeyboardEvent('keydown', { key: 'Escape' });
+    const event = new KeyboardEvent('keydown', {key: 'Escape'});
     banner.dispatchEvent(event);
 
     expect(component.error()).toBeNull();
@@ -129,11 +129,11 @@ describe('ErrorBannerComponent', () => {
 
   it('should retry on Enter keydown', () => {
     const retryFn = vi.fn();
-    component.showError({ type: 'network', message: 'fail', retryAction: retryFn });
+    component.showError({type: 'network', message: 'fail', retryAction: retryFn});
     fixture.detectChanges();
 
     const banner = fixture.nativeElement.querySelector('.error-banner');
-    const event = new KeyboardEvent('keydown', { key: 'Enter' });
+    const event = new KeyboardEvent('keydown', {key: 'Enter'});
     banner.dispatchEvent(event);
 
     expect(retryFn).toHaveBeenCalled();
@@ -141,7 +141,7 @@ describe('ErrorBannerComponent', () => {
 
   it('should clean up timer on destroy', () => {
     const clearTimeoutSpy = vi.spyOn(window, 'clearTimeout');
-    component.showError({ type: 'network', message: 'fail' });
+    component.showError({type: 'network', message: 'fail'});
 
     fixture.destroy();
 

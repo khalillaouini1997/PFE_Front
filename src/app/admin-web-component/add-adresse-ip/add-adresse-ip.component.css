@@ -12,10 +12,11 @@
   color: var(--text-primary);
   background: var(--surface-card);
 }
+
 .btn-cancel-premium {
-    border-radius: 12px;
+  border-radius: 12px;
 }
 
 .btn-save-premium {
-    border-radius: 12px;
+  border-radius: 12px;
 }

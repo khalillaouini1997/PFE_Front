@@ -1,10 +1,10 @@
-import { TestBed } from '@angular/core/testing';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideHttpClient } from '@angular/common/http';
-import { vi } from 'vitest';
-import { TraccarService } from './traccar.service';
-import { AuthService } from './auth.service';
-import { environment } from '../../environments/environment';
+import {TestBed} from '@angular/core/testing';
+import {HttpTestingController, provideHttpClientTesting} from '@angular/common/http/testing';
+import {provideHttpClient} from '@angular/common/http';
+import {vi} from 'vitest';
+import {TraccarService} from './traccar.service';
+import {AuthService} from './auth.service';
+import {environment} from '../../environments/environment';
 
 describe('TraccarService', () => {
   let service: TraccarService;
@@ -21,7 +21,7 @@ describe('TraccarService', () => {
         provideHttpClient(),
         provideHttpClientTesting(),
         TraccarService,
-        { provide: AuthService, useValue: authServiceMock },
+        {provide: AuthService, useValue: authServiceMock},
       ],
     });
 
@@ -37,7 +37,7 @@ describe('TraccarService', () => {
     it('should make GET request to traccar endpoint with idTraccar', () => {
       const idTraccar = 42;
       authServiceMock.getCurrentUser.mockReturnValue({
-        user: { idTraccar },
+        user: {idTraccar},
       });
 
       service.getLisTraccar().subscribe();
@@ -50,7 +50,7 @@ describe('TraccarService', () => {
     });
 
     it('should use 0 when idTraccar is not present', () => {
-      authServiceMock.getCurrentUser.mockReturnValue({ user: {} });
+      authServiceMock.getCurrentUser.mockReturnValue({user: {}});
 
       service.getLisTraccar().subscribe();
 
@@ -77,7 +77,7 @@ describe('TraccarService', () => {
       const idTraccar = 5;
       const keyword = 'test-keyword';
       authServiceMock.getCurrentUser.mockReturnValue({
-        user: { idTraccar },
+        user: {idTraccar},
       });
 
       service.getLisTraccar(keyword).subscribe();
@@ -92,7 +92,7 @@ describe('TraccarService', () => {
     it('should not append keyword query param when empty', () => {
       const idTraccar = 5;
       authServiceMock.getCurrentUser.mockReturnValue({
-        user: { idTraccar },
+        user: {idTraccar},
       });
 
       service.getLisTraccar('').subscribe();
@@ -108,7 +108,7 @@ describe('TraccarService', () => {
       const idTraccar = 10;
       const keyword = 'hello world & more';
       authServiceMock.getCurrentUser.mockReturnValue({
-        user: { idTraccar },
+        user: {idTraccar},
       });
 
       service.getLisTraccar(keyword).subscribe();

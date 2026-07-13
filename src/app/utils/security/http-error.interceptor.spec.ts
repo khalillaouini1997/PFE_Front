@@ -1,9 +1,8 @@
-import { TestBed } from '@angular/core/testing';
-import { HttpClient, provideHttpClient } from '@angular/common/http';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideRouter } from '@angular/router';
-import { withInterceptors } from '@angular/common/http';
-import { httpErrorInterceptor } from './http-error.interceptor';
+import {TestBed} from '@angular/core/testing';
+import {HttpClient, provideHttpClient, withInterceptors} from '@angular/common/http';
+import {HttpTestingController, provideHttpClientTesting} from '@angular/common/http/testing';
+import {provideRouter} from '@angular/router';
+import {httpErrorInterceptor} from './http-error.interceptor';
 
 describe('httpErrorInterceptor', () => {
   let httpClient: HttpClient;
@@ -28,12 +27,12 @@ describe('httpErrorInterceptor', () => {
   it('should pass through successful responses', () => {
     httpClient.get('/api/test').subscribe({
       next: (response) => {
-        expect(response).toEqual({ data: 'ok' });
+        expect(response).toEqual({data: 'ok'});
       },
     });
 
     const req = httpMock.expectOne('/api/test');
-    req.flush({ data: 'ok' });
+    req.flush({data: 'ok'});
   });
 
   it('should pass through 401 errors', () => {
@@ -44,7 +43,7 @@ describe('httpErrorInterceptor', () => {
     });
 
     const req = httpMock.expectOne('/api/test');
-    req.flush('Unauthorized', { status: 401, statusText: 'Unauthorized' });
+    req.flush('Unauthorized', {status: 401, statusText: 'Unauthorized'});
   });
 
   it('should pass through 404 errors', () => {
@@ -55,7 +54,7 @@ describe('httpErrorInterceptor', () => {
     });
 
     const req = httpMock.expectOne('/api/test');
-    req.flush('Not Found', { status: 404, statusText: 'Not Found' });
+    req.flush('Not Found', {status: 404, statusText: 'Not Found'});
   });
 
   it('should pass through 403 errors', () => {
@@ -66,7 +65,7 @@ describe('httpErrorInterceptor', () => {
     });
 
     const req = httpMock.expectOne('/api/test');
-    req.flush('Forbidden', { status: 403, statusText: 'Forbidden' });
+    req.flush('Forbidden', {status: 403, statusText: 'Forbidden'});
   });
 
   it('should retry on 500 errors and then fail', () => {
@@ -78,7 +77,7 @@ describe('httpErrorInterceptor', () => {
 
     const reqs = httpMock.match(() => true);
     expect(reqs.length).toBeGreaterThanOrEqual(1);
-    reqs[reqs.length - 1].flush('Server Error', { status: 500, statusText: 'Server Error' });
+    reqs[reqs.length - 1].flush('Server Error', {status: 500, statusText: 'Server Error'});
   });
 
   it('should extract error message from ProblemDetail format', () => {
@@ -90,8 +89,8 @@ describe('httpErrorInterceptor', () => {
 
     const req = httpMock.expectOne('/api/test');
     req.flush(
-      { status: 500, detail: 'Something went wrong', title: 'Server Error' },
-      { status: 500, statusText: 'Server Error' }
+      {status: 500, detail: 'Something went wrong', title: 'Server Error'},
+      {status: 500, statusText: 'Server Error'}
     );
   });
 
@@ -104,8 +103,8 @@ describe('httpErrorInterceptor', () => {
 
     const req = httpMock.expectOne('/api/test');
     req.flush(
-      { message: 'Validation failed' },
-      { status: 400, statusText: 'Bad Request' }
+      {message: 'Validation failed'},
+      {status: 400, statusText: 'Bad Request'}
     );
   });
 
@@ -117,7 +116,7 @@ describe('httpErrorInterceptor', () => {
     });
 
     const req = httpMock.expectOne('/api/test');
-    req.error(new ProgressEvent('error'), { status: 0, statusText: 'Unknown Error' });
+    req.error(new ProgressEvent('error'), {status: 0, statusText: 'Unknown Error'});
   });
 
   it('should handle error with error.error string', () => {
@@ -129,8 +128,8 @@ describe('httpErrorInterceptor', () => {
 
     const req = httpMock.expectOne('/api/test');
     req.flush(
-      { error: 'Something bad' },
-      { status: 400, statusText: 'Bad Request' }
+      {error: 'Something bad'},
+      {status: 400, statusText: 'Bad Request'}
     );
   });
 
@@ -142,7 +141,7 @@ describe('httpErrorInterceptor', () => {
     });
 
     const req = httpMock.expectOne('/api/test');
-    req.flush(null, { status: 500, statusText: 'Server Error' });
+    req.flush(null, {status: 500, statusText: 'Server Error'});
   });
 
   it('should retry on 429 Too Many Requests', () => {
@@ -154,7 +153,7 @@ describe('httpErrorInterceptor', () => {
 
     const reqs = httpMock.match(() => true);
     expect(reqs.length).toBeGreaterThanOrEqual(1);
-    reqs[reqs.length - 1].flush('Too Many Requests', { status: 429, statusText: 'Too Many Requests' });
+    reqs[reqs.length - 1].flush('Too Many Requests', {status: 429, statusText: 'Too Many Requests'});
   });
 
   it('should not retry on 501 Not Implemented', () => {
@@ -166,6 +165,6 @@ describe('httpErrorInterceptor', () => {
 
     const reqs = httpMock.match(() => true);
     expect(reqs.length).toBe(1);
-    reqs[0].flush('Not Implemented', { status: 501, statusText: 'Not Implemented' });
+    reqs[0].flush('Not Implemented', {status: 501, statusText: 'Not Implemented'});
   });
 });

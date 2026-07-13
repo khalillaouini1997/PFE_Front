@@ -1,98 +1,116 @@
-<aside class="sidebar" [class.collapsed]="isCollapsed()">
-    <div class="sidebar-wrapper">
-        <div class="logo-section d-flex align-items-center justify-content-between px-2">
-            <div class="logo" [class.d-none]="isCollapsed()">
-                @if (owner==='TRACI') {
-                    <img alt="Traci" src="http://traci.tn/images/logo_traci.png" class="mx-auto d-block w-50 h-auto opacity-75" loading="lazy">
-                } @else if (owner==='TDS' || owner==='SLAMA') {
-                    <img alt="TDS" src="http://fleet.tn/images/logotds.png" class="mx-auto d-block w-50 h-auto" loading="lazy">
-                } @else if (owner==='FINEK') {
-                    <img alt="FINEK" src="https://finek.com.tn/images/loginfinek.png" class="mx-auto d-block w-75 h-auto" loading="lazy">
-                }
-            </div>
-            <button class="toggle-sidebar-btn desktop-only" (click)="toggleSidebar()" type="button">
-                <i class="material-icons">{{ isCollapsed() ? 'menu' : 'menu_open' }}</i>
-            </button>
-        </div>
-
-        <ul class="nav">
-            <li class="nav-section-title">{{ 'SIDEBAR.GENERAL' | translate }}</li>
-            <li *ngIf="isWebAdminOrGlobal()" [class.active]="isActiveDashBoard">
-                <a routerLink="/adminWeb/dashboard" (click)="setMenu('dashboard')" [title]="isCollapsed() ? ('SIDEBAR.DASHBOARD' | translate) : ''">
-                    <i class="material-icons">dashboard</i>
-                    <p>{{ 'SIDEBAR.DASHBOARD' | translate }} @if (notificationCount > 0) {<span class="badge rounded-pill bg-danger ms-2">{{notificationCount}}</span>}</p>
-                </a>
-            </li>
-            <li *ngIf="isGlobalAdminDesc()" [class.active]="isActiveGlobalDashBoard">
-                <a routerLink="/adminWeb/global-dashboard" (click)="setMenu('globalDashboard')" [title]="isCollapsed() ? ('SIDEBAR.GLOBAL_DASHBOARD' | translate) : ''">
-                    <i class="material-icons">public</i>
-                    <p>{{ 'SIDEBAR.GLOBAL_DASHBOARD' | translate }}</p>
-                </a>
-            </li>
-            <li *ngIf="isWebAdminOrGlobal()" [class.active]="isActiveTraccar">
-                <a routerLink="/adminWeb/traccar" (click)="setMenu('traccar')" [title]="isCollapsed() ? ('SIDEBAR.TRACCAR' | translate) : ''">
-                    <i class="material-icons">room</i>
-                    <p>{{ 'SIDEBAR.TRACCAR' | translate }}</p>
-                </a>
-            </li>
-            
-            <li class="nav-section-title">{{ 'SIDEBAR.MANAGEMENT' | translate }}</li>
-            <li *ngIf="isGlobalAdminDesc()" [class.active]="isActiveAddAdminCompte">
-                <a routerLink="/adminWeb/addAdminCompte" (click)="setMenu('addAdmin')" [title]="isCollapsed() ? ('SIDEBAR.ADD_ADMIN' | translate) : ''">
-                    <i class="material-icons">person_add_alt</i>
-                    <p>{{ 'SIDEBAR.ADD_ADMIN' | translate }}</p>
-                </a>
-            </li>
-            <li *ngIf="isGlobalAdminDesc()" [class.active]="isActiveAdminCompte">
-                <a routerLink="/adminWeb/adminCompte" (click)="setMenu('listAdmin')" [title]="isCollapsed() ? ('SIDEBAR.LIST_ADMIN' | translate) : ''">
-                    <i class="material-icons">group</i>
-                    <p>{{ 'SIDEBAR.LIST_ADMIN' | translate }}</p>
-                </a>
-            </li>
-            <li *ngIf="isWebAdminOrGlobal()" [class.active]="isActiveServerForm">
-                <a routerLink="/adminWeb/addCompteServer" (click)="setMenu('addServer')" [title]="isCollapsed() ? ('SIDEBAR.ADD_SERVER' | translate) : ''">
-                    <i class="material-icons">dns</i>
-                    <p>{{ 'SIDEBAR.ADD_SERVER' | translate }}</p>
-                </a>
-            </li>
-            <li *ngIf="isWebAdminOrGlobal()" [class.active]="isActiveListServer">
-                <a routerLink="/adminWeb/listServers" (click)="setMenu('listServer')" [title]="isCollapsed() ? ('SIDEBAR.LIST_SERVER' | translate) : ''">
-                    <i class="material-icons">storage</i>
-                    <p>{{ 'SIDEBAR.LIST_SERVER' | translate }}</p>
-                </a>
-            </li>
-            <li *ngIf="isWebAdminOrGlobal()" [class.active]="isActiveForm">
-                <a routerLink="/adminWeb/addCompteWeb" (click)="setMenu('addWeb')" [title]="isCollapsed() ? ('SIDEBAR.ADD_WEB' | translate) : ''">
-                    <i class="material-icons">web</i>
-                    <p>{{ 'SIDEBAR.ADD_WEB' | translate }}</p>
-                </a>
-            </li>
-            <li [class.active]="isActiveListWeb">
-                <a routerLink="/adminWeb/listWebs" (click)="setMenu('listWeb')" [title]="isCollapsed() ? ('SIDEBAR.LIST_WEB' | translate) : ''">
-                    <i class="material-icons">language</i>
-                    <p>{{ 'SIDEBAR.LIST_WEB' | translate }}</p>
-                </a>
-            </li>
-
-            <li class="nav-section-title">{{ 'SIDEBAR.SYSTEM' | translate }}</li>
-            <li *ngIf="isGlobalAdminDesc()" [class.active]="isActiveBilling">
-                <a routerLink="/adminWeb/billing" (click)="setMenu('billing')" [title]="isCollapsed() ? ('SIDEBAR.BILLING' | translate) : ''">
-                    <i class="material-icons">receipt_long</i>
-                    <p>{{ 'SIDEBAR.BILLING' | translate }}</p>
-                </a>
-            </li>
-            <li [class.active]="isActiveAccessLog">
-                <a routerLink="/adminWeb/accessLog" (click)="setMenu('logs')" [title]="isCollapsed() ? ('SIDEBAR.ACCESS_LOG' | translate) : ''">
-                    <i class="material-icons">history</i>
-                    <p>{{ 'SIDEBAR.ACCESS_LOG' | translate }}</p>
-                </a>
-            </li>
-            <li class="logout-item mt-2">
-                <button type="button" class="btn btn-link text-danger opacity-75 w-100 text-start d-flex align-items-center gap-2 px-3 py-2" (click)="logout()" [attr.aria-label]="'SIDEBAR.LOGOUT' | translate" [title]="isCollapsed() ? ('SIDEBAR.LOGOUT' | translate) : ''">
-                    <i class="material-icons">power_settings_new</i>
-                    <span>{{ 'SIDEBAR.LOGOUT' | translate }}</span>
-                </button>
-            </li>
-        </ul>
+<aside [class.collapsed]="isCollapsed()" class="sidebar">
+  <div class="sidebar-wrapper">
+    <div class="logo-section d-flex align-items-center justify-content-between px-2">
+      <div [class.d-none]="isCollapsed()" class="logo">
+        @if (owner === 'TRACI') {
+          <img alt="Traci" class="mx-auto d-block w-50 h-auto opacity-75" loading="lazy"
+               src="http://traci.tn/images/logo_traci.png">
+        } @else if (owner === 'TDS' || owner === 'SLAMA') {
+          <img alt="TDS" class="mx-auto d-block w-50 h-auto" loading="lazy" src="http://fleet.tn/images/logotds.png">
+        } @else if (owner === 'FINEK') {
+          <img alt="FINEK" class="mx-auto d-block w-75 h-auto" loading="lazy"
+               src="https://finek.com.tn/images/loginfinek.png">
+        }
+      </div>
+      <button (click)="toggleSidebar()" class="toggle-sidebar-btn desktop-only" type="button">
+        <i class="material-icons">{{ isCollapsed() ? 'menu' : 'menu_open' }}</i>
+      </button>
     </div>
+
+    <ul class="nav">
+      <li class="nav-section-title">{{ 'SIDEBAR.GENERAL' | translate }}</li>
+      <li *ngIf="isWebAdminOrGlobal()" [class.active]="isActiveDashBoard">
+        <a (click)="setMenu('dashboard')" [title]="isCollapsed() ? ('SIDEBAR.DASHBOARD' | translate) : ''"
+           routerLink="/adminWeb/dashboard">
+          <i class="material-icons">dashboard</i>
+          <p>{{ 'SIDEBAR.DASHBOARD' | translate }} @if (notificationCount > 0) {
+            <span class="badge rounded-pill bg-danger ms-2">{{ notificationCount }}</span>
+          }</p>
+        </a>
+      </li>
+      <li *ngIf="isGlobalAdminDesc()" [class.active]="isActiveGlobalDashBoard">
+        <a (click)="setMenu('globalDashboard')" [title]="isCollapsed() ? ('SIDEBAR.GLOBAL_DASHBOARD' | translate) : ''"
+           routerLink="/adminWeb/global-dashboard">
+          <i class="material-icons">public</i>
+          <p>{{ 'SIDEBAR.GLOBAL_DASHBOARD' | translate }}</p>
+        </a>
+      </li>
+      <li *ngIf="isWebAdminOrGlobal()" [class.active]="isActiveTraccar">
+        <a (click)="setMenu('traccar')" [title]="isCollapsed() ? ('SIDEBAR.TRACCAR' | translate) : ''"
+           routerLink="/adminWeb/traccar">
+          <i class="material-icons">room</i>
+          <p>{{ 'SIDEBAR.TRACCAR' | translate }}</p>
+        </a>
+      </li>
+
+      <li class="nav-section-title">{{ 'SIDEBAR.MANAGEMENT' | translate }}</li>
+      <li *ngIf="isGlobalAdminDesc()" [class.active]="isActiveAddAdminCompte">
+        <a (click)="setMenu('addAdmin')" [title]="isCollapsed() ? ('SIDEBAR.ADD_ADMIN' | translate) : ''"
+           routerLink="/adminWeb/addAdminCompte">
+          <i class="material-icons">person_add_alt</i>
+          <p>{{ 'SIDEBAR.ADD_ADMIN' | translate }}</p>
+        </a>
+      </li>
+      <li *ngIf="isGlobalAdminDesc()" [class.active]="isActiveAdminCompte">
+        <a (click)="setMenu('listAdmin')" [title]="isCollapsed() ? ('SIDEBAR.LIST_ADMIN' | translate) : ''"
+           routerLink="/adminWeb/adminCompte">
+          <i class="material-icons">group</i>
+          <p>{{ 'SIDEBAR.LIST_ADMIN' | translate }}</p>
+        </a>
+      </li>
+      <li *ngIf="isWebAdminOrGlobal()" [class.active]="isActiveServerForm">
+        <a (click)="setMenu('addServer')" [title]="isCollapsed() ? ('SIDEBAR.ADD_SERVER' | translate) : ''"
+           routerLink="/adminWeb/addCompteServer">
+          <i class="material-icons">dns</i>
+          <p>{{ 'SIDEBAR.ADD_SERVER' | translate }}</p>
+        </a>
+      </li>
+      <li *ngIf="isWebAdminOrGlobal()" [class.active]="isActiveListServer">
+        <a (click)="setMenu('listServer')" [title]="isCollapsed() ? ('SIDEBAR.LIST_SERVER' | translate) : ''"
+           routerLink="/adminWeb/listServers">
+          <i class="material-icons">storage</i>
+          <p>{{ 'SIDEBAR.LIST_SERVER' | translate }}</p>
+        </a>
+      </li>
+      <li *ngIf="isWebAdminOrGlobal()" [class.active]="isActiveForm">
+        <a (click)="setMenu('addWeb')" [title]="isCollapsed() ? ('SIDEBAR.ADD_WEB' | translate) : ''"
+           routerLink="/adminWeb/addCompteWeb">
+          <i class="material-icons">web</i>
+          <p>{{ 'SIDEBAR.ADD_WEB' | translate }}</p>
+        </a>
+      </li>
+      <li [class.active]="isActiveListWeb">
+        <a (click)="setMenu('listWeb')" [title]="isCollapsed() ? ('SIDEBAR.LIST_WEB' | translate) : ''"
+           routerLink="/adminWeb/listWebs">
+          <i class="material-icons">language</i>
+          <p>{{ 'SIDEBAR.LIST_WEB' | translate }}</p>
+        </a>
+      </li>
+
+      <li class="nav-section-title">{{ 'SIDEBAR.SYSTEM' | translate }}</li>
+      <li *ngIf="isGlobalAdminDesc()" [class.active]="isActiveBilling">
+        <a (click)="setMenu('billing')" [title]="isCollapsed() ? ('SIDEBAR.BILLING' | translate) : ''"
+           routerLink="/adminWeb/billing">
+          <i class="material-icons">receipt_long</i>
+          <p>{{ 'SIDEBAR.BILLING' | translate }}</p>
+        </a>
+      </li>
+      <li [class.active]="isActiveAccessLog">
+        <a (click)="setMenu('logs')" [title]="isCollapsed() ? ('SIDEBAR.ACCESS_LOG' | translate) : ''"
+           routerLink="/adminWeb/accessLog">
+          <i class="material-icons">history</i>
+          <p>{{ 'SIDEBAR.ACCESS_LOG' | translate }}</p>
+        </a>
+      </li>
+      <li class="logout-item mt-2">
+        <button (click)="logout()"
+                [attr.aria-label]="'SIDEBAR.LOGOUT' | translate"
+                [title]="isCollapsed() ? ('SIDEBAR.LOGOUT' | translate) : ''" class="btn btn-link text-danger opacity-75 w-100 text-start d-flex align-items-center gap-2 px-3 py-2"
+                type="button">
+          <i class="material-icons">power_settings_new</i>
+          <span>{{ 'SIDEBAR.LOGOUT' | translate }}</span>
+        </button>
+      </li>
+    </ul>
+  </div>
 </aside>

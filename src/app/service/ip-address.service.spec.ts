@@ -1,10 +1,9 @@
-import { TestBed } from '@angular/core/testing';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideHttpClient } from '@angular/common/http';
-import { vi } from 'vitest';
-import { IpAddressService } from './ip-address.service';
-import { environment } from '../../environments/environment';
-import { IpAddress } from '../data/data';
+import {TestBed} from '@angular/core/testing';
+import {HttpTestingController, provideHttpClientTesting} from '@angular/common/http/testing';
+import {provideHttpClient} from '@angular/common/http';
+import {IpAddressService} from './ip-address.service';
+import {environment} from '../../environments/environment';
+import {IpAddress} from '../data/data';
 
 describe('IpAddressService', () => {
   let service: IpAddressService;
@@ -35,8 +34,8 @@ describe('IpAddressService', () => {
 
   it('should have typeConnection list', () => {
     expect(service.typeConnection).toEqual([
-      { type: 'jdbc' },
-      { type: 'http' },
+      {type: 'jdbc'},
+      {type: 'http'},
     ]);
   });
 
@@ -52,7 +51,7 @@ describe('IpAddressService', () => {
         `${baseUrl}/all?keyWord=${keyword}&page=${page}&size=${size}`
       );
       expect(req.request.method).toBe('GET');
-      req.flush({ content: [], totalElements: 0 });
+      req.flush({content: [], totalElements: 0});
     });
   });
 
@@ -69,7 +68,7 @@ describe('IpAddressService', () => {
       const req = httpMock.expectOne(baseUrl);
       expect(req.request.method).toBe('POST');
       expect(req.request.body).toEqual(ipAddress);
-      req.flush({ id: 1, ...ipAddress });
+      req.flush({id: 1, ...ipAddress});
     });
   });
 
@@ -99,7 +98,7 @@ describe('IpAddressService', () => {
       const req = httpMock.expectOne(`${baseUrl}/${id}`);
       expect(req.request.method).toBe('PUT');
       expect(req.request.body).toEqual(ipAddress);
-      req.flush({ id, ...ipAddress });
+      req.flush({id, ...ipAddress});
     });
   });
 });

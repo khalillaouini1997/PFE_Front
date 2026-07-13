@@ -1,7 +1,7 @@
-import { Component, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { ThemeService, Theme } from '../../services/theme.service';
+import {Component, inject, signal} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
+import {Theme, ThemeService} from '../../services/theme.service';
 
 @Component({
   selector: 'app-navbar',
@@ -12,9 +12,8 @@ import { ThemeService, Theme } from '../../services/theme.service';
 })
 export class NavbarComponent {
   private readonly themeService = inject(ThemeService);
-  private readonly translate = inject(TranslateService);
-
   currentTheme = signal<Theme>(this.themeService.getTheme());
+  private readonly translate = inject(TranslateService);
 
   toggleTheme(): void {
     this.themeService.toggle();

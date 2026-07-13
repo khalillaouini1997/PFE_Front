@@ -1,11 +1,11 @@
-import { TestBed } from '@angular/core/testing';
-import { provideHttpClient } from '@angular/common/http';
-import { provideRouter } from '@angular/router';
-import { importProvidersFrom } from '@angular/core';
-import { ToastrModule } from 'ngx-toastr';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { vi } from 'vitest';
-import { AppComponent } from './app.component';
+import {TestBed} from '@angular/core/testing';
+import {provideHttpClient} from '@angular/common/http';
+import {provideRouter} from '@angular/router';
+import {importProvidersFrom} from '@angular/core';
+import {ToastrModule} from 'ngx-toastr';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
+import {vi} from 'vitest';
+import {AppComponent} from './app.component';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
@@ -79,12 +79,12 @@ describe('AppComponent', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const component = fixture.componentInstance;
     const showError = vi.fn();
-    (component as any).errorBanner = { showError };
+    (component as any).errorBanner = {showError};
     const event = new CustomEvent('show-error-banner', {
-      detail: { type: 'server', message: 'test error' }
+      detail: {type: 'server', message: 'test error'}
     });
     (component as any).handleShowErrorBanner(event);
-    expect(showError).toHaveBeenCalledWith({ type: 'server', message: 'test error' });
+    expect(showError).toHaveBeenCalledWith({type: 'server', message: 'test error'});
   });
 
   it('should ignore error banner event when errorBanner is null', () => {
@@ -92,7 +92,7 @@ describe('AppComponent', () => {
     const component = fixture.componentInstance;
     (component as any).errorBanner = null;
     const event = new CustomEvent('show-error-banner', {
-      detail: { type: 'server', message: 'test error' }
+      detail: {type: 'server', message: 'test error'}
     });
     expect(() => (component as any).handleShowErrorBanner(event)).not.toThrow();
   });

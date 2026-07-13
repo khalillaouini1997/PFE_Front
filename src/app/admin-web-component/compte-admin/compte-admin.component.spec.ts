@@ -1,10 +1,10 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
-import { of, throwError } from 'rxjs';
-import { vi } from 'vitest';
-import { CompteAdminComponent } from './compte-admin.component';
-import { AdminAccountService } from 'src/app/service/admin-account.service';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {NO_ERRORS_SCHEMA} from '@angular/core';
+import {TranslateModule} from '@ngx-translate/core';
+import {of, throwError} from 'rxjs';
+import {vi} from 'vitest';
+import {CompteAdminComponent} from './compte-admin.component';
+import {AdminAccountService} from 'src/app/service/admin-account.service';
 
 describe('CompteAdminComponent', () => {
   let component: CompteAdminComponent;
@@ -12,13 +12,20 @@ describe('CompteAdminComponent', () => {
   let adminAccountService: { getAllAdminComptesByKeyWord: ReturnType<typeof vi.fn> };
 
   beforeEach(async () => {
-    adminAccountService = { getAllAdminComptesByKeyWord: vi.fn().mockReturnValue(of({ data: { content: [], totalElements: 0 } })) };
+    adminAccountService = {
+      getAllAdminComptesByKeyWord: vi.fn().mockReturnValue(of({
+        data: {
+          content: [],
+          totalElements: 0
+        }
+      }))
+    };
 
     await TestBed.configureTestingModule({
       imports: [CompteAdminComponent, TranslateModule.forRoot()],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [
-        { provide: AdminAccountService, useValue: adminAccountService },
+        {provide: AdminAccountService, useValue: adminAccountService},
       ],
     }).compileComponents();
 
@@ -41,8 +48,8 @@ describe('CompteAdminComponent', () => {
   });
 
   it('should load admin comptes', () => {
-    const mockData = [{ idAdministratorCompte: 1, username: 'admin1', role: 'GLOBALADMINDESC' }];
-    adminAccountService.getAllAdminComptesByKeyWord.mockReturnValue(of({ data: { content: mockData, totalElements: 1 } }));
+    const mockData = [{idAdministratorCompte: 1, username: 'admin1', role: 'GLOBALADMINDESC'}];
+    adminAccountService.getAllAdminComptesByKeyWord.mockReturnValue(of({data: {content: mockData, totalElements: 1}}));
     component.getAllAdminComptes('test', 0, 10);
     expect(component.adminComptes).toEqual(mockData);
     expect(component.pagination.bigTotalItems).toBe(1);
@@ -50,7 +57,7 @@ describe('CompteAdminComponent', () => {
   });
 
   it('should handle empty data', () => {
-    adminAccountService.getAllAdminComptesByKeyWord.mockReturnValue(of({ data: { content: [], totalElements: 0 } }));
+    adminAccountService.getAllAdminComptesByKeyWord.mockReturnValue(of({data: {content: [], totalElements: 0}}));
     component.getAllAdminComptes('', 0, 10);
     expect(component.adminComptes).toEqual([]);
     expect(component.pagination.bigTotalItems).toBe(0);
@@ -63,7 +70,7 @@ describe('CompteAdminComponent', () => {
   });
 
   it('should handle direct array response', () => {
-    const mockData = [{ idAdministratorCompte: 1, username: 'admin1', role: 'AGENT' }];
+    const mockData = [{idAdministratorCompte: 1, username: 'admin1', role: 'AGENT'}];
     adminAccountService.getAllAdminComptesByKeyWord.mockReturnValue(of(mockData));
     component.getAllAdminComptes('', 0, 10);
     expect(component.adminComptes).toEqual(mockData);
@@ -78,7 +85,7 @@ describe('CompteAdminComponent', () => {
 
   it('should handle page change', () => {
     const spy = vi.spyOn(component, 'getAllAdminComptes');
-    component.onPageChanged({ page: 2 });
+    component.onPageChanged({page: 2});
     expect(spy).toHaveBeenCalled();
   });
 });

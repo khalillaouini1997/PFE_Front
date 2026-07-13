@@ -1,124 +1,136 @@
 <div class="main-panel p-4">
-    <app-page-header titleKey="SERVER_ACCOUNTS.TITLE" subtitleKey="SERVER_ACCOUNTS.SUBTITLE">
-        <app-search-input placeholder="SERVER_ACCOUNTS.SEARCH_PLACEHOLDER" (searchQuery)="searchAccount($event)" />
-        <button class="btn btn-glass btn-sm rounded-circle" routerLink="/adminWeb/addCompteServer" title="{{ 'SERVER_ACCOUNTS.ADD' | translate }}">
-            <i class="fa fa-plus"></i>
-        </button>
-    </app-page-header>
+  <app-page-header subtitleKey="SERVER_ACCOUNTS.SUBTITLE" titleKey="SERVER_ACCOUNTS.TITLE">
+    <app-search-input (searchQuery)="searchAccount($event)" placeholder="SERVER_ACCOUNTS.SEARCH_PLACEHOLDER"/>
+    <button class="btn btn-glass btn-sm rounded-circle" routerLink="/adminWeb/addCompteServer"
+            title="{{ 'SERVER_ACCOUNTS.ADD' | translate }}">
+      <i class="fa fa-plus"></i>
+    </button>
+  </app-page-header>
 
-    @if (mode) {
-        <div class="alert alert-danger border-0 shadow-sm mb-4 fade-in" role="alert">
-            <i class="fa fa-exclamation-circle me-2"></i> {{messageError}}
-        </div>
-    }
-
-    <!-- Table Section -->
-    <div class="premium-card p-0 overflow-hidden shadow-sm">
-        <p-table [value]="comptesServer" [lazy]="true" (onLazyLoad)="loadComptesServer($event)"
-            [paginator]="true" [rows]="pagination.itemsPerPage" [totalRecords]="pagination.bigTotalItems"
-            [rowsPerPageOptions]="[10,15,30,50,60]"
-            [loading]="loading"
-            [reorderableColumns]="true" [resizableColumns]="true" columnResizeMode="expand"
-            styleClass="p-datatable-sm p-datatable-gridlines premium-table-custom"
-            responsiveLayout="scroll"
-            paginatorPosition="bottom"
-            (onPage)="onPageChanged($event)">
-            
-            <ng-template pTemplate="header">
-                <tr>
-                    <th scope="col" style="width: 80px" pReorderableColumn pResizableColumn>{{ 'COMMON.ID' | translate }}</th>
-                    <th scope="col" pReorderableColumn pResizableColumn>{{ 'SERVER_ACCOUNTS.PSEUDO' | translate }}</th>
-                    <th scope="col" pReorderableColumn pResizableColumn>{{ 'SERVER_ACCOUNTS.IP_ENDPOINT' | translate }}</th>
-                    <th scope="col" class="text-end" style="width: 120px">{{ 'COMMON.ACTIONS' | translate }}</th>
-                </tr>
-            </ng-template>
-
-            <ng-template pTemplate="body" let-compteServer>
-                <tr class="align-middle">
-                    <td><span class="badge fw-bold border" style="background: var(--surface-elevated); color: var(--text-primary); border-color: var(--surface-border) !important;">{{compteServer.idCompteClientServer}}</span></td>
-                    <td class="fw-bold text-primary">{{compteServer.pseudo}}</td>
-                    <td><code>{{compteServer.ipAdresse || ('COMMON.NOT_CONFIGURED' | translate)}}</code></td>
-                    <td class="text-end">
-                        <div class="btn-group gap-2">
-                            <button *ngIf="canDelete()" class="btn btn-sm btn-outline-warning border-0 p-2" (click)="onSelect(compteServer)" 
-                                title="{{ 'COMMON.EDIT' | translate }}">
-                                <i class="fa fa-edit fs-5"></i>
-                            </button>
-                            <button class="btn btn-sm btn-outline-info border-0 p-2" 
-                                [routerLink]="['/adminWeb/compteDetails', compteServer.idCompteClientServer]" title="{{ 'COMMON.DETAILS' | translate }}">
-                                <i class="fa fa-list-ul fs-5"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            </ng-template>
-
-            <app-empty-table [colspan]="4" icon="fa-server" messageKey="SERVER_ACCOUNTS.NO_DATA" />
-        </p-table>
+  @if (mode) {
+    <div class="alert alert-danger border-0 shadow-sm mb-4 fade-in" role="alert">
+      <i class="fa fa-exclamation-circle me-2"></i> {{ messageError }}
     </div>
+  }
+
+  <!-- Table Section -->
+  <div class="premium-card p-0 overflow-hidden shadow-sm">
+    <p-table (onLazyLoad)="loadComptesServer($event)" (onPage)="onPageChanged($event)" [lazy]="true"
+             [loading]="loading" [paginator]="true" [reorderableColumns]="true"
+             [resizableColumns]="true"
+             [rowsPerPageOptions]="[10,15,30,50,60]"
+             [rows]="pagination.itemsPerPage" [totalRecords]="pagination.bigTotalItems" [value]="comptesServer"
+             columnResizeMode="expand"
+             paginatorPosition="bottom"
+             responsiveLayout="scroll"
+             styleClass="p-datatable-sm p-datatable-gridlines premium-table-custom">
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th pReorderableColumn pResizableColumn scope="col" style="width: 80px">{{ 'COMMON.ID' | translate }}</th>
+          <th pReorderableColumn pResizableColumn scope="col">{{ 'SERVER_ACCOUNTS.PSEUDO' | translate }}</th>
+          <th pReorderableColumn pResizableColumn scope="col">{{ 'SERVER_ACCOUNTS.IP_ENDPOINT' | translate }}</th>
+          <th class="text-end" scope="col" style="width: 120px">{{ 'COMMON.ACTIONS' | translate }}</th>
+        </tr>
+      </ng-template>
+
+      <ng-template let-compteServer pTemplate="body">
+        <tr class="align-middle">
+          <td><span class="badge fw-bold border"
+                    style="background: var(--surface-elevated); color: var(--text-primary); border-color: var(--surface-border) !important;">{{ compteServer.idCompteClientServer }}</span>
+          </td>
+          <td class="fw-bold text-primary">{{ compteServer.pseudo }}</td>
+          <td><code>{{ compteServer.ipAdresse || ('COMMON.NOT_CONFIGURED' | translate) }}</code></td>
+          <td class="text-end">
+            <div class="btn-group gap-2">
+              <button (click)="onSelect(compteServer)" *ngIf="canDelete()"
+                      class="btn btn-sm btn-outline-warning border-0 p-2"
+                      title="{{ 'COMMON.EDIT' | translate }}">
+                <i class="fa fa-edit fs-5"></i>
+              </button>
+              <button [routerLink]="['/adminWeb/compteDetails', compteServer.idCompteClientServer]"
+                      class="btn btn-sm btn-outline-info border-0 p-2"
+                      title="{{ 'COMMON.DETAILS' | translate }}">
+                <i class="fa fa-list-ul fs-5"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <app-empty-table [colspan]="4" icon="fa-server" messageKey="SERVER_ACCOUNTS.NO_DATA"/>
+    </p-table>
+  </div>
 </div>
 
 <!-- Modernized Update Modal (Native Dialog) -->
-<dialog #updateModal id="Modalupdate" class="border-0 rounded-4 shadow-lg p-0 overflow-hidden">
-    <div class="modal-dialog modal-dialog-centered modal-lg progress-dialog-content">
-        <div class="modal-content modal-content-premium border-0 shadow-lg w-100">
-            <div class="modal-header header-gradient text-white border-0 p-4">
-                <div>
-                    <h4 class="modal-title fw-bold m-0">{{ 'SERVER_ACCOUNTS.UPDATE_TITLE' | translate }}</h4>
-                    <p class="m-0 small text-white-50 opacity-75">{{updateServerForm.get('pseudo')?.value}}</p>
-                </div>
-                <button type="button" class="btn-close btn-close-white" (click)="closeUpdateModal()" aria-label="Close"></button>
-            </div>
-            
-            <form [formGroup]="updateServerForm" (ngSubmit)="updateCompteServer()">
-                <div class="modal-body p-4">
-                    <div class="row g-4">
-                        <div class="col-md-6">
-                            <div class="form-floating shadow-sm rounded">
-                                <input type="text" id="updatePseudo" class="form-control border-0" formControlName="pseudo" placeholder="{{ 'SERVER_ACCOUNTS.PSEUDO' | translate }}">
-                                <label for="updatePseudo">{{ 'SERVER_ACCOUNTS.PSEUDO' | translate }}</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-floating shadow-sm rounded">
-                                <input type="text" id="updateLogin" class="form-control border-0" formControlName="login" placeholder="{{ 'AUTH.USERNAME' | translate }}">
-                                <label for="updateLogin">{{ 'AUTH.USERNAME' | translate }}</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-floating shadow-sm rounded">
-                                <input type="text" id="updatePassword" class="form-control border-0" formControlName="password" placeholder="{{ 'AUTH.PASSWORD' | translate }}">
-                                <label for="updatePassword">{{ 'AUTH.PASSWORD' | translate }}</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-floating shadow-sm rounded">
-                                <select id="updateIp" formControlName="idIpAdresse" class="form-select border-0" title="{{ 'SERVER_ACCOUNTS.IP_ENDPOINT' | translate }}">
-                                    @for (ip of ips; track ip.idIpAdresse) {
-                                        <option [value]="ip.idIpAdresse">{{ ip.label }}</option>
-                                    }
-                                </select>
-                                <label for="updateIp">{{ 'SERVER_ACCOUNTS.IP_ENDPOINT' | translate }}</label>
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="form-floating shadow-sm rounded">
-                                <p-datepicker [(ngModel)]="dt" [showIcon]="true" dateFormat="dd/mm/yy"
-                                    placeholder="{{ 'SERVER_ACCOUNTS.EXPIRATION_DATE' | translate }}" id="dtExp"
-                                    [ngModelOptions]="{standalone: true}" class="w-100"></p-datepicker>
-                                <label for="dtExp">{{ 'SERVER_ACCOUNTS.EXPIRATION_DATE' | translate }}</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="modal-footer p-3 border-0 border-top">
-                    <button type="button" class="btn btn-light px-4 fw-bold" (click)="closeUpdateModal()">{{ 'COMMON.CANCEL' | translate }}</button>
-                    <button type="submit" class="btn btn-warning px-5 fw-bold shadow-sm" [disabled]="updateServerForm.invalid">
-                        {{ 'COMMON.SAVE_CHANGES' | translate }}
-                    </button>
-                </div>
-            </form>
+<dialog #updateModal class="border-0 rounded-4 shadow-lg p-0 overflow-hidden" id="Modalupdate">
+  <div class="modal-dialog modal-dialog-centered modal-lg progress-dialog-content">
+    <div class="modal-content modal-content-premium border-0 shadow-lg w-100">
+      <div class="modal-header header-gradient text-white border-0 p-4">
+        <div>
+          <h4 class="modal-title fw-bold m-0">{{ 'SERVER_ACCOUNTS.UPDATE_TITLE' | translate }}</h4>
+          <p class="m-0 small text-white-50 opacity-75">{{ updateServerForm.get('pseudo')?.value }}</p>
         </div>
+        <button (click)="closeUpdateModal()" aria-label="Close" class="btn-close btn-close-white"
+                type="button"></button>
+      </div>
+
+      <form (ngSubmit)="updateCompteServer()" [formGroup]="updateServerForm">
+        <div class="modal-body p-4">
+          <div class="row g-4">
+            <div class="col-md-6">
+              <div class="form-floating shadow-sm rounded">
+                <input class="form-control border-0" formControlName="pseudo" id="updatePseudo" placeholder="{{ 'SERVER_ACCOUNTS.PSEUDO' | translate }}"
+                       type="text">
+                <label for="updatePseudo">{{ 'SERVER_ACCOUNTS.PSEUDO' | translate }}</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-floating shadow-sm rounded">
+                <input class="form-control border-0" formControlName="login" id="updateLogin" placeholder="{{ 'AUTH.USERNAME' | translate }}"
+                       type="text">
+                <label for="updateLogin">{{ 'AUTH.USERNAME' | translate }}</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-floating shadow-sm rounded">
+                <input class="form-control border-0" formControlName="password" id="updatePassword" placeholder="{{ 'AUTH.PASSWORD' | translate }}"
+                       type="text">
+                <label for="updatePassword">{{ 'AUTH.PASSWORD' | translate }}</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-floating shadow-sm rounded">
+                <select class="form-select border-0" formControlName="idIpAdresse" id="updateIp"
+                        title="{{ 'SERVER_ACCOUNTS.IP_ENDPOINT' | translate }}">
+                  @for (ip of ips; track ip.idIpAdresse) {
+                    <option [value]="ip.idIpAdresse">{{ ip.label }}</option>
+                  }
+                </select>
+                <label for="updateIp">{{ 'SERVER_ACCOUNTS.IP_ENDPOINT' | translate }}</label>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-floating shadow-sm rounded">
+                <p-datepicker [(ngModel)]="dt" [ngModelOptions]="{standalone: true}" [showIcon]="true"
+                              class="w-100" dateFormat="dd/mm/yy"
+                              id="dtExp" placeholder="{{ 'SERVER_ACCOUNTS.EXPIRATION_DATE' | translate }}"></p-datepicker>
+                <label for="dtExp">{{ 'SERVER_ACCOUNTS.EXPIRATION_DATE' | translate }}</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer p-3 border-0 border-top">
+          <button (click)="closeUpdateModal()" class="btn btn-light px-4 fw-bold"
+                  type="button">{{ 'COMMON.CANCEL' | translate }}
+          </button>
+          <button [disabled]="updateServerForm.invalid" class="btn btn-warning px-5 fw-bold shadow-sm" type="submit">
+            {{ 'COMMON.SAVE_CHANGES' | translate }}
+          </button>
+        </div>
+      </form>
     </div>
+  </div>
 </dialog>

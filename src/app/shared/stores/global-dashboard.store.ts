@@ -1,9 +1,9 @@
-import { Injectable, inject, signal, computed, OnDestroy } from '@angular/core';
-import { CompteClientWebInfoDTO, RealTime, RealTimeSummary } from '../../data/data';
-import { WebAccountService } from '../../service/web-account.service';
-import { WebSocketService } from '../../service/web-socket.service';
-import { Subscription } from 'rxjs';
-import { STATUS_TYPES } from '../constants/app.constants';
+import {computed, inject, Injectable, OnDestroy, signal} from '@angular/core';
+import {CompteClientWebInfoDTO, RealTime, RealTimeSummary} from '../../data/data';
+import {WebAccountService} from '../../service/web-account.service';
+import {WebSocketService} from '../../service/web-socket.service';
+import {Subscription} from 'rxjs';
+import {STATUS_TYPES} from '../constants/app.constants';
 
 export interface GlobalDashboardStats {
   totalVehicles: number;
@@ -17,7 +17,8 @@ export interface GlobalDashboardStats {
   inactive: number;
 }
 
-export interface GlobalRealTime extends RealTime {}
+export interface GlobalRealTime extends RealTime {
+}
 
 export interface ActivityEvent {
   time: Date;
@@ -38,26 +39,38 @@ export interface GlobalDashboardState {
   accountPage: number;
 }
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class GlobalDashboardStore implements OnDestroy {
+  static readonly ACCOUNTS_PER_PAGE = 8;
+  readonly totalAccountPages = computed(() => {
+    return Math.ceil(this.accountsBreakdown().length / GlobalDashboardStore.ACCOUNTS_PER_PAGE);
+  });
   private readonly webAccountService = inject(WebAccountService);
   private readonly webSocketService = inject(WebSocketService);
   private vehiclePositionSubscription?: Subscription;
   private connectionStatusSubscription?: Subscription;
   private readonly previousPositions = new Map<number, { speed: number; status: string }>();
-
   private readonly state = signal<GlobalDashboardState>({
     comptesWeb: [],
     summaries: [],
     mapRealtimes: [],
-    stats: { totalVehicles: 0, valid: 0, technicalIssue: 0, nonValid: 0, moving: 0, stopped: 0, ignitionOn: 0, accountsCount: 0, inactive: 0 },
+    stats: {
+      totalVehicles: 0,
+      valid: 0,
+      technicalIssue: 0,
+      nonValid: 0,
+      moving: 0,
+      stopped: 0,
+      ignitionOn: 0,
+      accountsCount: 0,
+      inactive: 0
+    },
     deviceCount: 0,
     loading: false,
     error: null,
     activityFeed: [],
     accountPage: 0
   });
-
   readonly comptesWeb = computed(() => this.state().comptesWeb);
   /** Summaries for KPIs/charts (covers ALL devices) */
   readonly summaries = computed(() => this.state().summaries);
@@ -68,9 +81,6 @@ export class GlobalDashboardStore implements OnDestroy {
   readonly error = computed(() => this.state().error);
   readonly activityFeed = computed(() => this.state().activityFeed);
   readonly accountPage = computed(() => this.state().accountPage);
-
-  static readonly ACCOUNTS_PER_PAGE = 8;
-
   readonly accountsBreakdown = computed(() => {
     const data = this.state().mapRealtimes;
     const accountsMap = new Map<string, {
@@ -87,21 +97,28 @@ export class GlobalDashboardStore implements OnDestroy {
       const login = rt.login || 'Unknown';
       let entry = accountsMap.get(login);
       if (!entry) {
-        entry = { login, total: 0, moving: 0, stopped: 0, valid: 0, technicalIssue: 0, nonValid: 0 };
+        entry = {login, total: 0, moving: 0, stopped: 0, valid: 0, technicalIssue: 0, nonValid: 0};
         accountsMap.set(login, entry);
       }
       entry.total++;
-      if (rt.speed > 0) { entry.moving++; } else { entry.stopped++; }
-      if (rt.status === STATUS_TYPES.VALID) { entry.valid++; }
-      else if (rt.status === STATUS_TYPES.TECHNICAL_ISSUE) { entry.technicalIssue++; }
-      else { entry.nonValid++; }
+      if (rt.speed > 0) {
+        entry.moving++;
+      } else {
+        entry.stopped++;
+      }
+      if (rt.status === STATUS_TYPES.VALID) {
+        entry.valid++;
+      } else if (rt.status === STATUS_TYPES.TECHNICAL_ISSUE) {
+        entry.technicalIssue++;
+      } else {
+        entry.nonValid++;
+      }
     }
 
     return Array.from(accountsMap.values())
       .filter(a => a.total > 0)
       .sort((a, b) => b.total - a.total);
   });
-
   readonly pagedAccounts = computed(() => {
     const all = this.accountsBreakdown();
     const page = this.state().accountPage;
@@ -109,16 +126,12 @@ export class GlobalDashboardStore implements OnDestroy {
     return all.slice(page * size, (page + 1) * size);
   });
 
-  readonly totalAccountPages = computed(() => {
-    return Math.ceil(this.accountsBreakdown().length / GlobalDashboardStore.ACCOUNTS_PER_PAGE);
-  });
-
   setAccountPage(page: number) {
-    this.updateState({ accountPage: Math.max(0, Math.min(page, this.totalAccountPages() - 1)) });
+    this.updateState({accountPage: Math.max(0, Math.min(page, this.totalAccountPages() - 1))});
   }
 
   init() {
-    this.updateState({ loading: true, error: null });
+    this.updateState({loading: true, error: null});
     this.loadAccountCount();
     this.loadDeviceCount();
     this.loadSummaries();
@@ -126,16 +139,29 @@ export class GlobalDashboardStore implements OnDestroy {
     this.connectWebSocket();
   }
 
+  refresh() {
+    this.updateState({loading: true, error: null});
+    this.loadAccountCount();
+    this.loadDeviceCount();
+    this.loadSummaries();
+    this.loadMapRealtimes();
+  }
+
+  ngOnDestroy() {
+    this.vehiclePositionSubscription?.unsubscribe();
+    this.connectionStatusSubscription?.unsubscribe();
+  }
+
   private loadAccountCount() {
     this.webAccountService.getAllWebAccountNames().subscribe({
       next: (res: any) => {
         const comptes = res?.data || res;
         const accounts = Array.isArray(comptes) ? comptes : [];
-        this.updateState({ comptesWeb: accounts });
+        this.updateState({comptesWeb: accounts});
         this.recalculateStats();
       },
       error: () => {
-        this.updateState({ error: 'Failed to load account list' });
+        this.updateState({error: 'Failed to load account list'});
       }
     });
   }
@@ -144,11 +170,11 @@ export class GlobalDashboardStore implements OnDestroy {
     this.webAccountService.getTotalDeviceCount().subscribe({
       next: (res: any) => {
         const count = typeof res === 'number' ? res : (res?.data ?? 0);
-        this.updateState({ deviceCount: count });
+        this.updateState({deviceCount: count});
         this.recalculateStats();
       },
       error: () => {
-        this.updateState({ deviceCount: 0 });
+        this.updateState({deviceCount: 0});
       }
     });
   }
@@ -159,14 +185,14 @@ export class GlobalDashboardStore implements OnDestroy {
       next: (res: any) => {
         const data = res?.data || res;
         const list = Array.isArray(data) ? data : [];
-        this.updateState({ summaries: list as RealTimeSummary[], loading: false });
+        this.updateState({summaries: list as RealTimeSummary[], loading: false});
         this.recalculateStats();
 
         this.seedPreviousPositions(list);
         this.populateInitialActivityFeed(list);
       },
       error: () => {
-        this.updateState({ loading: false, error: 'Failed to load fleet data' });
+        this.updateState({loading: false, error: 'Failed to load fleet data'});
       }
     });
   }
@@ -191,7 +217,7 @@ export class GlobalDashboardStore implements OnDestroy {
     this.collectStoppedEvents(list, now, initialEvents, eventCount);
 
     initialEvents.sort((a, b) => b.time.getTime() - a.time.getTime());
-    this.updateState({ activityFeed: initialEvents });
+    this.updateState({activityFeed: initialEvents});
   }
 
   private collectMovingAndSignalEvents(
@@ -202,10 +228,10 @@ export class GlobalDashboardStore implements OnDestroy {
       const time = this.parseRecordTime(item.record_time, count, now);
 
       if (item.speed > 0) {
-        events.push({ time, icon: '🟢', message: `Device #${item.deviceid} is moving`, type: 'move' });
+        events.push({time, icon: '🟢', message: `Device #${item.deviceid} is moving`, type: 'move'});
         count++;
       } else if (item.status === STATUS_TYPES.TECHNICAL_ISSUE) {
-        events.push({ time, icon: '⚠️', message: `Device #${item.deviceid} signal lost`, type: 'signal' });
+        events.push({time, icon: '⚠️', message: `Device #${item.deviceid} signal lost`, type: 'signal'});
         count++;
       }
     }
@@ -219,7 +245,7 @@ export class GlobalDashboardStore implements OnDestroy {
       if (count >= 5) break;
       if (item.speed === 0 && item.status !== STATUS_TYPES.TECHNICAL_ISSUE) {
         const time = this.parseRecordTime(item.record_time, count, now);
-        events.push({ time, icon: '🔴', message: `Device #${item.deviceid} is stopped`, type: 'stop' });
+        events.push({time, icon: '🔴', message: `Device #${item.deviceid} is stopped`, type: 'stop'});
         count++;
       }
     }
@@ -236,9 +262,10 @@ export class GlobalDashboardStore implements OnDestroy {
       next: (res: any) => {
         const data = res?.data || res;
         const list = Array.isArray(data) ? data : [];
-        this.updateState({ mapRealtimes: list as GlobalRealTime[] });
+        this.updateState({mapRealtimes: list as GlobalRealTime[]});
       },
-      error: () => { /* Map data is supplementary, don't block on failure */ }
+      error: () => { /* Map data is supplementary, don't block on failure */
+      }
     });
   }
 
@@ -252,7 +279,7 @@ export class GlobalDashboardStore implements OnDestroy {
         next: (positions) => {
           if (!positions?.length) return;
           this.generateActivityEvents(positions);
-          this.updateState({ mapRealtimes: positions as unknown as GlobalRealTime[], loading: false });
+          this.updateState({mapRealtimes: positions as unknown as GlobalRealTime[], loading: false});
         }
       });
 
@@ -271,12 +298,12 @@ export class GlobalDashboardStore implements OnDestroy {
         this.checkSpeedTransition(prev, pos, now, newEvents);
         this.checkStatusTransition(prev, pos, now, newEvents);
       }
-      this.previousPositions.set(pos.deviceid, { speed: pos.speed, status: pos.status });
+      this.previousPositions.set(pos.deviceid, {speed: pos.speed, status: pos.status});
     }
 
     if (newEvents.length > 0) {
       const currentFeed = this.state().activityFeed;
-      this.updateState({ activityFeed: [...newEvents, ...currentFeed].slice(0, 50) });
+      this.updateState({activityFeed: [...newEvents, ...currentFeed].slice(0, 50)});
     }
   }
 
@@ -285,9 +312,9 @@ export class GlobalDashboardStore implements OnDestroy {
   ) {
     const suffix = pos.login ? ` (${pos.login})` : '';
     if (prev.speed === 0 && pos.speed > 0) {
-      events.push({ time: now, icon: '🟢', message: `Device #${pos.deviceid} started moving${suffix}`, type: 'move' });
+      events.push({time: now, icon: '🟢', message: `Device #${pos.deviceid} started moving${suffix}`, type: 'move'});
     } else if (prev.speed > 0 && pos.speed === 0) {
-      events.push({ time: now, icon: '🔴', message: `Device #${pos.deviceid} stopped${suffix}`, type: 'stop' });
+      events.push({time: now, icon: '🔴', message: `Device #${pos.deviceid} stopped${suffix}`, type: 'stop'});
     }
   }
 
@@ -296,9 +323,9 @@ export class GlobalDashboardStore implements OnDestroy {
   ) {
     const suffix = pos.login ? ` (${pos.login})` : '';
     if (prev.status === STATUS_TYPES.VALID && pos.status === STATUS_TYPES.TECHNICAL_ISSUE) {
-      events.push({ time: now, icon: '⚠️', message: `Device #${pos.deviceid} signal lost${suffix}`, type: 'signal' });
+      events.push({time: now, icon: '⚠️', message: `Device #${pos.deviceid} signal lost${suffix}`, type: 'signal'});
     } else if (prev.status === STATUS_TYPES.TECHNICAL_ISSUE && pos.status === STATUS_TYPES.VALID) {
-      events.push({ time: now, icon: '✅', message: `Device #${pos.deviceid} reconnected${suffix}`, type: 'reconnect' });
+      events.push({time: now, icon: '✅', message: `Device #${pos.deviceid} reconnected${suffix}`, type: 'reconnect'});
     }
   }
 
@@ -325,20 +352,7 @@ export class GlobalDashboardStore implements OnDestroy {
     });
   }
 
-  refresh() {
-    this.updateState({ loading: true, error: null });
-    this.loadAccountCount();
-    this.loadDeviceCount();
-    this.loadSummaries();
-    this.loadMapRealtimes();
-  }
-
   private updateState(partial: Partial<GlobalDashboardState>) {
-    this.state.update(current => ({ ...current, ...partial }));
-  }
-
-  ngOnDestroy() {
-    this.vehiclePositionSubscription?.unsubscribe();
-    this.connectionStatusSubscription?.unsubscribe();
+    this.state.update(current => ({...current, ...partial}));
   }
 }

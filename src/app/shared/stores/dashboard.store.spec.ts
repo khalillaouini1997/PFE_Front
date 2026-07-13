@@ -1,13 +1,22 @@
-import { TestBed } from '@angular/core/testing';
-import { DashboardStore } from './dashboard.store';
-import { WebAccountService } from '../../service/web-account.service';
-import { WebSocketService } from '../../service/web-socket.service';
-import { of, Subject, throwError } from 'rxjs';
+import {TestBed} from '@angular/core/testing';
+import {DashboardStore} from './dashboard.store';
+import {WebAccountService} from '../../service/web-account.service';
+import {WebSocketService} from '../../service/web-socket.service';
+import {of, Subject, throwError} from 'rxjs';
 
 describe('DashboardStore', () => {
   let store: DashboardStore;
-  let webAccountService: { getAllWebAccountNames: ReturnType<typeof vi.fn>; getAllLastTram: ReturnType<typeof vi.fn>; getDeviceInstallationEvolution: ReturnType<typeof vi.fn> };
-  let webSocketService: { isConnected: ReturnType<typeof vi.fn>; connect: ReturnType<typeof vi.fn>; getVehiclePositions: ReturnType<typeof vi.fn>; getConnectionStatus: ReturnType<typeof vi.fn> };
+  let webAccountService: {
+    getAllWebAccountNames: ReturnType<typeof vi.fn>;
+    getAllLastTram: ReturnType<typeof vi.fn>;
+    getDeviceInstallationEvolution: ReturnType<typeof vi.fn>
+  };
+  let webSocketService: {
+    isConnected: ReturnType<typeof vi.fn>;
+    connect: ReturnType<typeof vi.fn>;
+    getVehiclePositions: ReturnType<typeof vi.fn>;
+    getConnectionStatus: ReturnType<typeof vi.fn>
+  };
   let vehiclePositions$: Subject<any>;
   let connectionStatus$: Subject<boolean>;
 
@@ -16,9 +25,9 @@ describe('DashboardStore', () => {
     connectionStatus$ = new Subject();
 
     webAccountService = {
-      getAllWebAccountNames: vi.fn().mockReturnValue(of({ data: [] })),
-      getAllLastTram: vi.fn().mockReturnValue(of({ data: [] })),
-      getDeviceInstallationEvolution: vi.fn().mockReturnValue(of({ data: [] })),
+      getAllWebAccountNames: vi.fn().mockReturnValue(of({data: []})),
+      getAllLastTram: vi.fn().mockReturnValue(of({data: []})),
+      getDeviceInstallationEvolution: vi.fn().mockReturnValue(of({data: []})),
     };
     webSocketService = {
       isConnected: vi.fn().mockReturnValue(false),
@@ -30,8 +39,8 @@ describe('DashboardStore', () => {
     TestBed.configureTestingModule({
       providers: [
         DashboardStore,
-        { provide: WebAccountService, useValue: webAccountService },
-        { provide: WebSocketService, useValue: webSocketService }
+        {provide: WebAccountService, useValue: webAccountService},
+        {provide: WebSocketService, useValue: webSocketService}
       ]
     });
 
@@ -58,8 +67,8 @@ describe('DashboardStore', () => {
   });
 
   it('should load comptes web', () => {
-    const accounts = [{ idCompteClientWeb: 1, login: 'test' }];
-    webAccountService.getAllWebAccountNames.mockReturnValue(of({ data: accounts }));
+    const accounts = [{idCompteClientWeb: 1, login: 'test'}];
+    webAccountService.getAllWebAccountNames.mockReturnValue(of({data: accounts}));
     store.loadComptesWeb();
     expect(store.comptesWeb().length).toBe(1);
     expect(store.loading()).toBe(false);
@@ -72,15 +81,15 @@ describe('DashboardStore', () => {
   });
 
   it('should handle comptes web as direct array', () => {
-    webAccountService.getAllWebAccountNames.mockReturnValue(of([{ idCompteClientWeb: 1 }]));
+    webAccountService.getAllWebAccountNames.mockReturnValue(of([{idCompteClientWeb: 1}]));
     store.loadComptesWeb();
     expect(store.comptesWeb().length).toBe(1);
   });
 
   it('should select compte web and load realtimes', () => {
-    const compte = { idCompteClientWeb: 1, login: 'test' };
-    webAccountService.getAllLastTram.mockReturnValue(of({ data: [{ deviceid: 1, speed: 10, status: 'VALID' }] }));
-    webAccountService.getDeviceInstallationEvolution.mockReturnValue(of({ data: [] }));
+    const compte = {idCompteClientWeb: 1, login: 'test'};
+    webAccountService.getAllLastTram.mockReturnValue(of({data: [{deviceid: 1, speed: 10, status: 'VALID'}]}));
+    webAccountService.getDeviceInstallationEvolution.mockReturnValue(of({data: []}));
 
     store.selectCompteWeb(compte as any);
     expect(store.selectedCompteWeb()).toEqual(compte);
@@ -94,12 +103,12 @@ describe('DashboardStore', () => {
 
   it('should load realtimes via HTTP when websocket not connected', () => {
     webSocketService.isConnected.mockReturnValue(false);
-    const compte = { idCompteClientWeb: 1 };
+    const compte = {idCompteClientWeb: 1};
     const realtimes = [
-      { deviceid: 1, speed: 50, status: 'VALID' },
-      { deviceid: 2, speed: 0, status: 'TECHNICAL_ISSUE' }
+      {deviceid: 1, speed: 50, status: 'VALID'},
+      {deviceid: 2, speed: 0, status: 'TECHNICAL_ISSUE'}
     ];
-    webAccountService.getAllLastTram.mockReturnValue(of({ data: realtimes }));
+    webAccountService.getAllLastTram.mockReturnValue(of({data: realtimes}));
 
     store.selectCompteWeb(compte as any);
     expect(store.realtimes().length).toBe(2);
@@ -108,13 +117,13 @@ describe('DashboardStore', () => {
 
   it('should calculate stats from realtimes', () => {
     webSocketService.isConnected.mockReturnValue(false);
-    const compte = { idCompteClientWeb: 1 };
+    const compte = {idCompteClientWeb: 1};
     const realtimes = [
-      { deviceid: 1, speed: 50, status: 'VALID' },
-      { deviceid: 2, speed: 0, status: 'TECHNICAL_ISSUE' },
-      { deviceid: 3, speed: 30, status: 'VALID' }
+      {deviceid: 1, speed: 50, status: 'VALID'},
+      {deviceid: 2, speed: 0, status: 'TECHNICAL_ISSUE'},
+      {deviceid: 3, speed: 30, status: 'VALID'}
     ];
-    webAccountService.getAllLastTram.mockReturnValue(of({ data: realtimes }));
+    webAccountService.getAllLastTram.mockReturnValue(of({data: realtimes}));
 
     store.selectCompteWeb(compte as any);
     const stats = store.stats();
@@ -127,23 +136,23 @@ describe('DashboardStore', () => {
   it('should handle realtimes error', () => {
     webSocketService.isConnected.mockReturnValue(false);
     webAccountService.getAllLastTram.mockReturnValue(throwError(() => new Error('fail')));
-    store.selectCompteWeb({ idCompteClientWeb: 1 } as any);
+    store.selectCompteWeb({idCompteClientWeb: 1} as any);
     expect(store.error()).toBe('Failed to load real-time data');
   });
 
   it('should load installation evolution', () => {
-    const compte = { idCompteClientWeb: 1 };
-    webAccountService.getDeviceInstallationEvolution.mockReturnValue(of({ data: [{ month: '2024-01', count: 5 }] }));
-    webAccountService.getAllLastTram.mockReturnValue(of({ data: [] }));
+    const compte = {idCompteClientWeb: 1};
+    webAccountService.getDeviceInstallationEvolution.mockReturnValue(of({data: [{month: '2024-01', count: 5}]}));
+    webAccountService.getAllLastTram.mockReturnValue(of({data: []}));
 
     store.selectCompteWeb(compte as any);
     expect(store.installationEvolution().length).toBe(1);
   });
 
   it('should set granularity and reload evolution', () => {
-    const compte = { idCompteClientWeb: 1 };
-    webAccountService.getAllLastTram.mockReturnValue(of({ data: [] }));
-    webAccountService.getDeviceInstallationEvolution.mockReturnValue(of({ data: [] }));
+    const compte = {idCompteClientWeb: 1};
+    webAccountService.getAllLastTram.mockReturnValue(of({data: []}));
+    webAccountService.getDeviceInstallationEvolution.mockReturnValue(of({data: []}));
     store.selectCompteWeb(compte as any);
 
     store.setGranularity('year');
@@ -157,15 +166,15 @@ describe('DashboardStore', () => {
   });
 
   it('should clear error', () => {
-    (store as any).updateState({ error: 'test error' });
+    (store as any).updateState({error: 'test error'});
     store.clearError();
     expect(store.error()).toBeNull();
   });
 
   it('should handle realtime data as direct array', () => {
     webSocketService.isConnected.mockReturnValue(false);
-    webAccountService.getAllLastTram.mockReturnValue(of([{ deviceid: 1, speed: 10, status: 'VALID' }]));
-    store.selectCompteWeb({ idCompteClientWeb: 1 } as any);
+    webAccountService.getAllLastTram.mockReturnValue(of([{deviceid: 1, speed: 10, status: 'VALID'}]));
+    store.selectCompteWeb({idCompteClientWeb: 1} as any);
     expect(store.realtimes().length).toBe(1);
   });
 
@@ -176,57 +185,57 @@ describe('DashboardStore', () => {
 
   it('should handle websocket position updates', () => {
     webSocketService.isConnected.mockReturnValue(true);
-    webAccountService.getAllLastTram.mockReturnValue(of({ data: [] }));
-    store.selectCompteWeb({ idCompteClientWeb: 1 } as any);
+    webAccountService.getAllLastTram.mockReturnValue(of({data: []}));
+    store.selectCompteWeb({idCompteClientWeb: 1} as any);
 
-    vehiclePositions$.next([{ deviceid: 1, speed: 20, status: 'VALID' }]);
+    vehiclePositions$.next([{deviceid: 1, speed: 20, status: 'VALID'}]);
     expect(store.realtimes().length).toBe(0);
     expect(store.loading()).toBe(false);
   });
 
   it('should fall back to HTTP on websocket error', () => {
     webSocketService.isConnected.mockReturnValue(false);
-    webAccountService.getAllLastTram.mockReturnValue(of({ data: [] }));
-    store.selectCompteWeb({ idCompteClientWeb: 1 } as any);
+    webAccountService.getAllLastTram.mockReturnValue(of({data: []}));
+    store.selectCompteWeb({idCompteClientWeb: 1} as any);
     expect(store.realtimes().length).toBe(0);
   });
 
   it('should handle connection status change', () => {
     webSocketService.isConnected.mockReturnValue(true);
-    webAccountService.getAllLastTram.mockReturnValue(of({ data: [] }));
-    store.selectCompteWeb({ idCompteClientWeb: 1 } as any);
+    webAccountService.getAllLastTram.mockReturnValue(of({data: []}));
+    store.selectCompteWeb({idCompteClientWeb: 1} as any);
 
     connectionStatus$.next(false);
   });
 
   it('should load realtimes via websocket when connected', () => {
     webSocketService.isConnected.mockReturnValue(true);
-    webAccountService.getAllLastTram.mockReturnValue(of({ data: [] }));
-    store.selectCompteWeb({ idCompteClientWeb: 1 } as any);
+    webAccountService.getAllLastTram.mockReturnValue(of({data: []}));
+    store.selectCompteWeb({idCompteClientWeb: 1} as any);
     expect(webSocketService.connect).not.toHaveBeenCalled();
     expect(webAccountService.getAllLastTram).toHaveBeenCalledWith(1);
   });
 
   it('should handle websocket position error and fall back', () => {
     webSocketService.isConnected.mockReturnValue(true);
-    webAccountService.getAllLastTram.mockReturnValue(of({ data: [] }));
-    store.selectCompteWeb({ idCompteClientWeb: 1 } as any);
+    webAccountService.getAllLastTram.mockReturnValue(of({data: []}));
+    store.selectCompteWeb({idCompteClientWeb: 1} as any);
 
     vehiclePositions$.error(new Error('ws error'));
   });
 
   it('should return empty array for non-array comptesWeb', () => {
-    (store as any).updateState({ comptesWeb: null });
+    (store as any).updateState({comptesWeb: null});
     expect(store.comptesWeb()).toEqual([]);
   });
 
   it('should return empty array for non-array realtimes', () => {
-    (store as any).updateState({ realtimes: null });
+    (store as any).updateState({realtimes: null});
     expect(store.realtimes()).toEqual([]);
   });
 
   it('should return empty array for non-array installationEvolution', () => {
-    (store as any).updateState({ installationEvolution: null });
+    (store as any).updateState({installationEvolution: null});
     expect(store.installationEvolution()).toEqual([]);
   });
 
@@ -234,13 +243,13 @@ describe('DashboardStore', () => {
     webSocketService.isConnected.mockReturnValue(false);
     webAccountService.getAllLastTram.mockReturnValue(of({
       data: [
-        { deviceid: 1, speed: 50, status: 'VALID' },
-        { deviceid: 2, speed: 0, status: 'VALID' },
-        { deviceid: 3, speed: 30, status: 'TECHNICAL_ISSUE' },
-        { deviceid: 4, speed: 0, status: 'NON_VALID' }
+        {deviceid: 1, speed: 50, status: 'VALID'},
+        {deviceid: 2, speed: 0, status: 'VALID'},
+        {deviceid: 3, speed: 30, status: 'TECHNICAL_ISSUE'},
+        {deviceid: 4, speed: 0, status: 'NON_VALID'}
       ]
     }));
-    store.selectCompteWeb({ idCompteClientWeb: 1 } as any);
+    store.selectCompteWeb({idCompteClientWeb: 1} as any);
     const stats = store.stats();
     expect(stats.total).toBe(4);
     expect(stats.valid).toBe(2);
@@ -250,22 +259,22 @@ describe('DashboardStore', () => {
 
   it('should load installation evolution error silently', () => {
     webAccountService.getDeviceInstallationEvolution.mockReturnValue(throwError(() => new Error('fail')));
-    webAccountService.getAllLastTram.mockReturnValue(of({ data: [] }));
-    store.selectCompteWeb({ idCompteClientWeb: 1 } as any);
+    webAccountService.getAllLastTram.mockReturnValue(of({data: []}));
+    store.selectCompteWeb({idCompteClientWeb: 1} as any);
     expect(store.installationEvolution()).toEqual([]);
   });
 
   it('should handle non-array evolution data', () => {
-    webAccountService.getDeviceInstallationEvolution.mockReturnValue(of({ data: null }));
-    webAccountService.getAllLastTram.mockReturnValue(of({ data: [] }));
-    store.selectCompteWeb({ idCompteClientWeb: 1 } as any);
+    webAccountService.getDeviceInstallationEvolution.mockReturnValue(of({data: null}));
+    webAccountService.getAllLastTram.mockReturnValue(of({data: []}));
+    store.selectCompteWeb({idCompteClientWeb: 1} as any);
     expect(store.installationEvolution()).toEqual([]);
   });
 
   it('should maintain selected compte after stats calculation', () => {
     webSocketService.isConnected.mockReturnValue(false);
-    webAccountService.getAllLastTram.mockReturnValue(of({ data: [{ deviceid: 1, speed: 10, status: 'VALID' }] }));
-    const compte = { idCompteClientWeb: 1, login: 'test' };
+    webAccountService.getAllLastTram.mockReturnValue(of({data: [{deviceid: 1, speed: 10, status: 'VALID'}]}));
+    const compte = {idCompteClientWeb: 1, login: 'test'};
     store.selectCompteWeb(compte as any);
     expect(store.selectedCompteWeb()?.login).toBe('test');
   });

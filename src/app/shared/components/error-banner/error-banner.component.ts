@@ -1,6 +1,6 @@
-import { Component, signal, computed, inject, AfterViewInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import {AfterViewInit, Component, computed, inject, OnDestroy, signal} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {Router} from '@angular/router';
 
 export type ErrorType = 'network' | 'server' | 'map-tile' | 'data-fetch' | 'timeout';
 
@@ -20,11 +20,9 @@ export interface ErrorBannerData {
   styleUrls: ['./error-banner.component.css']
 })
 export class ErrorBannerComponent implements AfterViewInit, OnDestroy {
-  private readonly router = inject(Router);
-  
   error = signal<ErrorBannerData | null>(null);
   isVisible = computed(() => this.error() !== null);
-  
+  private readonly router = inject(Router);
   private dismissTimer?: number;
   private ngAfterViewInitCalled = false;
 
@@ -40,7 +38,7 @@ export class ErrorBannerComponent implements AfterViewInit, OnDestroy {
 
   showError(data: ErrorBannerData) {
     this.error.set(data);
-    
+
     // Auto-dismiss after 10 seconds if enabled
     if (data.autoDismiss !== false) {
       if (this.dismissTimer) {

@@ -1,16 +1,16 @@
-import { Component, inject, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {ChangeDetectorRef, Component, inject} from '@angular/core';
+import {CommonModule} from '@angular/common';
 
-import { AdministratorCompte } from 'src/app/data/data';
-import { AdminAccountService } from 'src/app/service/admin-account.service';
-import { createPaginationState, pageChanged } from '../../shared/components/pagination-base';
+import {AdministratorCompte} from 'src/app/data/data';
+import {AdminAccountService} from 'src/app/service/admin-account.service';
+import {createPaginationState, pageChanged} from '../../shared/components/pagination-base';
 
-import { TranslateModule } from '@ngx-translate/core';
+import {TranslateModule} from '@ngx-translate/core';
 
-import { TableModule } from 'primeng/table';
-import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
-import { SearchInputComponent } from '../../shared/components/search-input/search-input.component';
-import { EmptyTableComponent } from '../../shared/components/empty-table/empty-table.component';
+import {TableModule} from 'primeng/table';
+import {PageHeaderComponent} from '../../shared/components/page-header/page-header.component';
+import {SearchInputComponent} from '../../shared/components/search-input/search-input.component';
+import {EmptyTableComponent} from '../../shared/components/empty-table/empty-table.component';
 
 @Component({
   selector: 'app-compte-admin',

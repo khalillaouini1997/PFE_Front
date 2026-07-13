@@ -1,21 +1,25 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA, Provider } from '@angular/core';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { of, Subject } from 'rxjs';
-import { vi } from 'vitest';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {NO_ERRORS_SCHEMA, Provider} from '@angular/core';
+import {TranslateModule} from '@ngx-translate/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {of, Subject} from 'rxjs';
+import {vi} from 'vitest';
 
-import { SidebarComponent } from './sidebar.component';
-import { AuthService } from 'src/app/service/auth.service';
-import { WebSocketService } from 'src/app/service/web-socket.service';
+import {SidebarComponent} from './sidebar.component';
+import {AuthService} from 'src/app/service/auth.service';
+import {WebSocketService} from 'src/app/service/web-socket.service';
 
 if (!window.matchMedia) {
   Object.defineProperty(window, 'matchMedia', {
     writable: true,
     value: vi.fn().mockImplementation((query: string) => ({
       matches: false, media: query, onchange: null,
-      addListener: () => {}, removeListener: () => {},
-      addEventListener: () => {}, removeEventListener: () => {},
+      addListener: () => {
+      }, removeListener: () => {
+      },
+      addEventListener: () => {
+      }, removeEventListener: () => {
+      },
       dispatchEvent: () => false,
     })),
   });
@@ -24,7 +28,11 @@ if (!window.matchMedia) {
 describe('SidebarComponent', () => {
   let component: SidebarComponent;
   let fixture: ComponentFixture<SidebarComponent>;
-  let authService: { getCurrentUser: ReturnType<typeof vi.fn>; logout: ReturnType<typeof vi.fn>; hasRole: ReturnType<typeof vi.fn> };
+  let authService: {
+    getCurrentUser: ReturnType<typeof vi.fn>;
+    logout: ReturnType<typeof vi.fn>;
+    hasRole: ReturnType<typeof vi.fn>
+  };
   let webSocketService: { getNotifications: ReturnType<typeof vi.fn> };
   let router: { navigate: ReturnType<typeof vi.fn> };
   let notificationSubject: Subject<any>;
@@ -32,22 +40,22 @@ describe('SidebarComponent', () => {
   beforeEach(async () => {
     notificationSubject = new Subject();
     authService = {
-      getCurrentUser: vi.fn().mockReturnValue({ username: 'admin', role: 'GLOBALADMINDESC' }),
+      getCurrentUser: vi.fn().mockReturnValue({username: 'admin', role: 'GLOBALADMINDESC'}),
       logout: vi.fn(),
       hasRole: vi.fn().mockReturnValue(false),
     };
     webSocketService = {
       getNotifications: vi.fn().mockReturnValue(notificationSubject),
     };
-    router = { navigate: vi.fn() };
+    router = {navigate: vi.fn()};
 
     TestBed.resetTestingModule();
     await TestBed.configureTestingModule({
       providers: [
-        { provide: AuthService, useValue: authService } as Provider,
-        { provide: WebSocketService, useValue: webSocketService } as Provider,
-        { provide: Router, useValue: router } as Provider,
-        { provide: ActivatedRoute, useValue: { queryParams: of({}) } } as Provider,
+        {provide: AuthService, useValue: authService} as Provider,
+        {provide: WebSocketService, useValue: webSocketService} as Provider,
+        {provide: Router, useValue: router} as Provider,
+        {provide: ActivatedRoute, useValue: {queryParams: of({})}} as Provider,
       ],
       imports: [SidebarComponent, TranslateModule.forRoot()],
       schemas: [NO_ERRORS_SCHEMA],
@@ -80,9 +88,9 @@ describe('SidebarComponent', () => {
   it('should increment notification count on notification', () => {
     component.ngOnInit();
     expect(component.notificationCount).toBe(0);
-    notificationSubject.next({ alert: 'test' });
+    notificationSubject.next({alert: 'test'});
     expect(component.notificationCount).toBe(1);
-    notificationSubject.next({ alert: 'test2' });
+    notificationSubject.next({alert: 'test2'});
     expect(component.notificationCount).toBe(2);
   });
 

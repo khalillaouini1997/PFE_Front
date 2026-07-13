@@ -1,15 +1,14 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideHttpClient } from '@angular/common/http';
-import { provideRouter } from '@angular/router';
-import { importProvidersFrom } from '@angular/core';
-import { ToastrModule } from 'ngx-toastr';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { of, throwError } from 'rxjs';
-import { vi } from 'vitest';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {provideHttpClient} from '@angular/common/http';
+import {provideRouter} from '@angular/router';
+import {importProvidersFrom} from '@angular/core';
+import {ToastrModule, ToastrService} from 'ngx-toastr';
+import {TranslateModule} from '@ngx-translate/core';
+import {of, throwError} from 'rxjs';
+import {vi} from 'vitest';
 
-import { AddAdminCompteComponent } from './add-admin-compte.component';
-import { AdminAccountService } from '../../service/admin-account.service';
-import { ToastrService } from 'ngx-toastr';
+import {AddAdminCompteComponent} from './add-admin-compte.component';
+import {AdminAccountService} from '../../service/admin-account.service';
 
 describe('AddAdminCompteComponent', () => {
   let component: AddAdminCompteComponent;
@@ -18,8 +17,8 @@ describe('AddAdminCompteComponent', () => {
   let toastr: { success: ReturnType<typeof vi.fn>; error: ReturnType<typeof vi.fn>; warning: ReturnType<typeof vi.fn> };
 
   beforeEach(async () => {
-    adminAccountService = { addAdminCompte: vi.fn().mockReturnValue(of({})) };
-    toastr = { success: vi.fn(), error: vi.fn(), warning: vi.fn() };
+    adminAccountService = {addAdminCompte: vi.fn().mockReturnValue(of({}))};
+    toastr = {success: vi.fn(), error: vi.fn(), warning: vi.fn()};
 
     TestBed.resetTestingModule();
     await TestBed.configureTestingModule({
@@ -27,8 +26,8 @@ describe('AddAdminCompteComponent', () => {
         provideHttpClient(),
         provideRouter([]),
         importProvidersFrom(ToastrModule.forRoot()),
-        { provide: AdminAccountService, useValue: adminAccountService },
-        { provide: ToastrService, useValue: toastr },
+        {provide: AdminAccountService, useValue: adminAccountService},
+        {provide: ToastrService, useValue: toastr},
       ],
       imports: [TranslateModule.forRoot(), AddAdminCompteComponent]
     }).compileComponents();
@@ -67,19 +66,19 @@ describe('AddAdminCompteComponent', () => {
   });
 
   it('should call addAdminCompte with valid form', () => {
-    component.adminForm.patchValue({ username: 'admin', password: 'pass123', role: 'WEBADMIN' });
+    component.adminForm.patchValue({username: 'admin', password: 'pass123', role: 'WEBADMIN'});
     component.addAdminCompte();
     expect(adminAccountService.addAdminCompte).toHaveBeenCalled();
   });
 
   it('should handle addAdminCompte error', () => {
     adminAccountService.addAdminCompte.mockReturnValue(throwError(() => new Error('fail')));
-    component.adminForm.patchValue({ username: 'admin', password: 'pass123' });
+    component.adminForm.patchValue({username: 'admin', password: 'pass123'});
     component.addAdminCompte();
   });
 
   it('should reset form after success', () => {
-    component.adminForm.patchValue({ username: 'admin', password: 'pass123' });
+    component.adminForm.patchValue({username: 'admin', password: 'pass123'});
     component.addAdminCompte();
     expect(component.adminForm.get('username')?.value).toBeNull();
   });

@@ -1,10 +1,10 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideHttpClient } from '@angular/common/http';
-import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { of, throwError } from 'rxjs';
-import { TranslateModule } from '@ngx-translate/core';
-import { BillingAnalyticsComponent } from './billing-analytics.component';
-import { BillingAnalyticsService } from 'src/app/service/billing-analytics.service';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {provideHttpClient} from '@angular/common/http';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
+import {of, throwError} from 'rxjs';
+import {TranslateModule} from '@ngx-translate/core';
+import {BillingAnalyticsComponent} from './billing-analytics.component';
+import {BillingAnalyticsService} from 'src/app/service/billing-analytics.service';
 
 describe('BillingAnalyticsComponent', () => {
   let component: BillingAnalyticsComponent;
@@ -28,7 +28,7 @@ describe('BillingAnalyticsComponent', () => {
       imports: [BillingAnalyticsComponent, TranslateModule.forRoot()],
       providers: [
         provideHttpClient(),
-        { provide: BillingAnalyticsService, useValue: mockAnalyticsService }
+        {provide: BillingAnalyticsService, useValue: mockAnalyticsService}
       ]
     }).compileComponents();
 
@@ -69,7 +69,7 @@ describe('BillingAnalyticsComponent', () => {
     mockAnalyticsService.getBillingAnalytics.mockReturnValue(of({
       data: {
         topDevices: [
-          { numBoitier: 'B001', deviceLabel: 'Device 1', totalWorkingDays: 20, totalSubtotal: 100 }
+          {numBoitier: 'B001', deviceLabel: 'Device 1', totalWorkingDays: 20, totalSubtotal: 100}
         ],
         revenueByMonth: [],
         revenueByAccount: [],
@@ -97,7 +97,7 @@ describe('BillingAnalyticsComponent', () => {
     mockAnalyticsService.getBillingAnalytics.mockReturnValue(of({
       body: {
         data: {
-          topDevices: [{ numBoitier: 'B002', deviceLabel: 'Device 2', totalWorkingDays: 15, totalSubtotal: 75 }],
+          topDevices: [{numBoitier: 'B002', deviceLabel: 'Device 2', totalWorkingDays: 15, totalSubtotal: 75}],
           revenueByMonth: [],
           revenueByAccount: [],
           statusBreakdown: []

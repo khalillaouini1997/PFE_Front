@@ -1,20 +1,24 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideHttpClient } from '@angular/common/http';
-import { provideRouter, Router } from '@angular/router';
-import { importProvidersFrom } from '@angular/core';
-import { ToastrModule, ToastrService } from 'ngx-toastr';
-import { TranslateModule } from '@ngx-translate/core';
-import { of, throwError } from 'rxjs';
-import { vi } from 'vitest';
-import { AddCompteWebComponentComponent } from './add-compte-web-component.component';
-import { WebAccountService } from '../../service/web-account.service';
-import { CompteServerService } from '../../service/compte-server.service';
-import { IpAddressService } from '../../service/ip-address.service';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {provideHttpClient} from '@angular/common/http';
+import {provideRouter, Router} from '@angular/router';
+import {importProvidersFrom} from '@angular/core';
+import {ToastrModule, ToastrService} from 'ngx-toastr';
+import {TranslateModule} from '@ngx-translate/core';
+import {of, throwError} from 'rxjs';
+import {vi} from 'vitest';
+import {AddCompteWebComponentComponent} from './add-compte-web-component.component';
+import {WebAccountService} from '../../service/web-account.service';
+import {CompteServerService} from '../../service/compte-server.service';
+import {IpAddressService} from '../../service/ip-address.service';
 
 describe('AddCompteWebComponentComponent', () => {
   let component: AddCompteWebComponentComponent;
   let fixture: ComponentFixture<AddCompteWebComponentComponent>;
-  let webAccountService: { addCompteWeb: ReturnType<typeof vi.fn>; associateCompteWebToCompteServer: ReturnType<typeof vi.fn>; codesPays: any[] };
+  let webAccountService: {
+    addCompteWeb: ReturnType<typeof vi.fn>;
+    associateCompteWebToCompteServer: ReturnType<typeof vi.fn>;
+    codesPays: any[]
+  };
   let compteServerService: { getAllServerAccountForForm: ReturnType<typeof vi.fn> };
   let ipAddressService: { getAllIpAddresses: ReturnType<typeof vi.fn> };
   let toastr: { warning: ReturnType<typeof vi.fn>; success: ReturnType<typeof vi.fn> };
@@ -24,12 +28,12 @@ describe('AddCompteWebComponentComponent', () => {
     webAccountService = {
       addCompteWeb: vi.fn(),
       associateCompteWebToCompteServer: vi.fn().mockReturnValue(of({})),
-      codesPays: [{ key: 'Tunisie', value: '216' }],
+      codesPays: [{key: 'Tunisie', value: '216'}],
     };
-    compteServerService = { getAllServerAccountForForm: vi.fn().mockReturnValue(of({ data: [] })) };
-    ipAddressService = { getAllIpAddresses: vi.fn().mockReturnValue(of({ content: [] })) };
-    toastr = { warning: vi.fn(), success: vi.fn() };
-    router = { navigate: vi.fn() };
+    compteServerService = {getAllServerAccountForForm: vi.fn().mockReturnValue(of({data: []}))};
+    ipAddressService = {getAllIpAddresses: vi.fn().mockReturnValue(of({content: []}))};
+    toastr = {warning: vi.fn(), success: vi.fn()};
+    router = {navigate: vi.fn()};
 
     await TestBed.configureTestingModule({
       imports: [AddCompteWebComponentComponent, TranslateModule.forRoot()],
@@ -37,11 +41,11 @@ describe('AddCompteWebComponentComponent', () => {
         provideHttpClient(),
         provideRouter([]),
         importProvidersFrom(ToastrModule.forRoot()),
-        { provide: WebAccountService, useValue: webAccountService },
-        { provide: CompteServerService, useValue: compteServerService },
-        { provide: IpAddressService, useValue: ipAddressService },
-        { provide: ToastrService, useValue: toastr },
-        { provide: Router, useValue: router },
+        {provide: WebAccountService, useValue: webAccountService},
+        {provide: CompteServerService, useValue: compteServerService},
+        {provide: IpAddressService, useValue: ipAddressService},
+        {provide: ToastrService, useValue: toastr},
+        {provide: Router, useValue: router},
       ],
     }).compileComponents();
 
@@ -89,7 +93,7 @@ describe('AddCompteWebComponentComponent', () => {
   });
 
   it('should submit valid form', () => {
-    webAccountService.addCompteWeb.mockReturnValue(of({ idCompteClientWeb: 1 }));
+    webAccountService.addCompteWeb.mockReturnValue(of({idCompteClientWeb: 1}));
     component.ngOnInit();
     component.webForm.patchValue({
       login: 'test',
@@ -104,8 +108,13 @@ describe('AddCompteWebComponentComponent', () => {
   });
 
   it('should set server account on form submit', () => {
-    webAccountService.addCompteWeb.mockReturnValue(of({ idCompteClientWeb: 1 }));
-    compteServerService.getAllServerAccountForForm.mockReturnValue(of({ data: [{ idCompteClientServer: 1, name: 'server1' }] }));
+    webAccountService.addCompteWeb.mockReturnValue(of({idCompteClientWeb: 1}));
+    compteServerService.getAllServerAccountForForm.mockReturnValue(of({
+      data: [{
+        idCompteClientServer: 1,
+        name: 'server1'
+      }]
+    }));
     component.ngOnInit();
     component.webForm.patchValue({
       login: 'test',
@@ -119,8 +128,8 @@ describe('AddCompteWebComponentComponent', () => {
   });
 
   it('should set ip addresses from response', () => {
-    ipAddressService.getAllIpAddresses.mockReturnValue(of({ content: [{ id: 1, ip: '192.168.1.1' }] }));
+    ipAddressService.getAllIpAddresses.mockReturnValue(of({content: [{id: 1, ip: '192.168.1.1'}]}));
     component.ngOnInit();
-    expect(component.ipAddresses()).toEqual([{ id: 1, ip: '192.168.1.1' }]);
+    expect(component.ipAddresses()).toEqual([{id: 1, ip: '192.168.1.1'}]);
   });
 });

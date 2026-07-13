@@ -1,8 +1,7 @@
-import { TestBed } from '@angular/core/testing';
-import { HttpClient, provideHttpClient } from '@angular/common/http';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { withInterceptors } from '@angular/common/http';
-import { apiResponseInterceptor } from './api-response.interceptor';
+import {TestBed} from '@angular/core/testing';
+import {HttpClient, provideHttpClient, withInterceptors} from '@angular/common/http';
+import {HttpTestingController, provideHttpClientTesting} from '@angular/common/http/testing';
+import {apiResponseInterceptor} from './api-response.interceptor';
 
 describe('apiResponseInterceptor', () => {
   let httpClient: HttpClient;
@@ -26,14 +25,14 @@ describe('apiResponseInterceptor', () => {
   it('should unwrap ApiResponse and return only the data', () => {
     httpClient.get('/api/data').subscribe({
       next: (response) => {
-        expect(response).toEqual({ name: 'test' });
+        expect(response).toEqual({name: 'test'});
       },
     });
 
     const req = httpMock.expectOne('/api/data');
     req.flush({
       success: true,
-      data: { name: 'test' },
+      data: {name: 'test'},
       message: 'OK',
       timestamp: '2024-01-01',
     });
@@ -42,12 +41,12 @@ describe('apiResponseInterceptor', () => {
   it('should pass through responses without ApiResponse wrapper', () => {
     httpClient.get('/api/raw').subscribe({
       next: (response) => {
-        expect(response).toEqual({ raw: 'data' });
+        expect(response).toEqual({raw: 'data'});
       },
     });
 
     const req = httpMock.expectOne('/api/raw');
-    req.flush({ raw: 'data' });
+    req.flush({raw: 'data'});
   });
 
   it('should throw error when ApiResponse success is false', () => {
@@ -87,7 +86,7 @@ describe('apiResponseInterceptor', () => {
       next: (response) => {
         expect(response).toEqual({
           success: true,
-          data: { token: 'abc' },
+          data: {token: 'abc'},
           message: 'OK',
           timestamp: '2024-01-01',
         });
@@ -97,7 +96,7 @@ describe('apiResponseInterceptor', () => {
     const req = httpMock.expectOne('/authenticate');
     req.flush({
       success: true,
-      data: { token: 'abc' },
+      data: {token: 'abc'},
       message: 'OK',
       timestamp: '2024-01-01',
     });
@@ -108,7 +107,7 @@ describe('apiResponseInterceptor', () => {
       next: (response) => {
         expect(response).toEqual({
           success: true,
-          data: { token: 'new' },
+          data: {token: 'new'},
           message: 'OK',
           timestamp: '2024-01-01',
         });
@@ -118,7 +117,7 @@ describe('apiResponseInterceptor', () => {
     const req = httpMock.expectOne('/refresh');
     req.flush({
       success: true,
-      data: { token: 'new' },
+      data: {token: 'new'},
       message: 'OK',
       timestamp: '2024-01-01',
     });

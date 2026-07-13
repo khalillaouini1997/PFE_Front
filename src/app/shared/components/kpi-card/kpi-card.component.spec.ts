@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { KpiCardComponent } from './kpi-card.component';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
+import {KpiCardComponent} from './kpi-card.component';
 
 describe('KpiCardComponent', () => {
   let component: KpiCardComponent;
@@ -11,23 +11,28 @@ describe('KpiCardComponent', () => {
     let now = 0;
     Object.defineProperty(globalThis, 'requestAnimationFrame', {
       writable: true,
-      value: (cb: FrameRequestCallback) => { now += 1000; cb(now); return ++rafId; },
+      value: (cb: FrameRequestCallback) => {
+        now += 1000;
+        cb(now);
+        return ++rafId;
+      },
     });
     Object.defineProperty(globalThis, 'cancelAnimationFrame', {
       writable: true,
-      value: () => {},
+      value: () => {
+      },
     });
     Object.defineProperty(globalThis, 'performance', {
       writable: true,
-      value: { now: () => now },
+      value: {now: () => now},
     });
     HTMLCanvasElement.prototype.getContext = vi.fn(() => ({
       fillRect: vi.fn(), clearRect: vi.fn(), strokeRect: vi.fn(),
-      fillText: vi.fn(), strokeText: vi.fn(), measureText: vi.fn(() => ({ width: 0 })),
+      fillText: vi.fn(), strokeText: vi.fn(), measureText: vi.fn(() => ({width: 0})),
       beginPath: vi.fn(), closePath: vi.fn(), moveTo: vi.fn(), lineTo: vi.fn(),
       stroke: vi.fn(), fill: vi.fn(), arc: vi.fn(), rect: vi.fn(),
-      createLinearGradient: vi.fn(() => ({ addColorStop: vi.fn() })),
-      canvas: { width: 300, height: 150, parentElement: document.createElement('div') },
+      createLinearGradient: vi.fn(() => ({addColorStop: vi.fn()})),
+      canvas: {width: 300, height: 150, parentElement: document.createElement('div')},
     })) as any;
     await TestBed.configureTestingModule({
       imports: [KpiCardComponent]

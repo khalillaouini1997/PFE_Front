@@ -1,7 +1,7 @@
-import { TestBed } from '@angular/core/testing';
-import { PLATFORM_ID, DOCUMENT } from '@angular/core';
-import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { ThemeService } from './theme.service';
+import {TestBed} from '@angular/core/testing';
+import {DOCUMENT, PLATFORM_ID} from '@angular/core';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
+import {ThemeService} from './theme.service';
 
 describe('ThemeService', () => {
   let localStorageStore: Record<string, string> = {};
@@ -22,10 +22,14 @@ describe('ThemeService', () => {
     Object.defineProperty(window, 'localStorage', {
       value: {
         getItem: vi.fn((key: string) => localStorageStore[key] ?? null),
-        setItem: vi.fn((key: string, value: string) => { localStorageStore[key] = value; }),
+        setItem: vi.fn((key: string, value: string) => {
+          localStorageStore[key] = value;
+        }),
         removeItem: vi.fn(),
         clear: vi.fn(),
-        get length() { return Object.keys(localStorageStore).length; },
+        get length() {
+          return Object.keys(localStorageStore).length;
+        },
         key: vi.fn(),
       },
       writable: true,
@@ -35,7 +39,7 @@ describe('ThemeService', () => {
   });
 
   afterEach(() => {
-    Object.defineProperty(window, 'localStorage', { value: origLocalStorage, writable: true });
+    Object.defineProperty(window, 'localStorage', {value: origLocalStorage, writable: true});
     vi.restoreAllMocks();
   });
 
@@ -44,8 +48,8 @@ describe('ThemeService', () => {
     TestBed.configureTestingModule({
       providers: [
         ThemeService,
-        { provide: PLATFORM_ID, useValue: platformId },
-        { provide: DOCUMENT, useValue: document },
+        {provide: PLATFORM_ID, useValue: platformId},
+        {provide: DOCUMENT, useValue: document},
       ],
     });
     return TestBed.inject(ThemeService);
@@ -139,7 +143,7 @@ describe('ThemeService', () => {
     it('constructor mediaQuery change event should apply new OS theme when no localStorage', () => {
       const service = createService('browser');
       expect(mediaQueryListeners.length).toBeGreaterThan(0);
-      mediaQueryListeners[0]({ matches: true });
+      mediaQueryListeners[0]({matches: true});
       expect(document.documentElement.dataset['theme']).toBe('dark');
     });
 
@@ -147,7 +151,7 @@ describe('ThemeService', () => {
       localStorageStore['theme'] = 'light';
       const service = createService('browser');
       document.documentElement.dataset['theme'] = 'light';
-      mediaQueryListeners[0]({ matches: true });
+      mediaQueryListeners[0]({matches: true});
       expect(document.documentElement.dataset['theme']).toBe('light');
     });
   });

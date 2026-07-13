@@ -1,27 +1,27 @@
-import { Component, inject, ChangeDetectorRef } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
-import { AccessLog } from 'src/app/data/data';
-import { AccessLogService } from 'src/app/service/access-log.service';
-import { createPaginationState, pageChanged } from '../../shared/components/pagination-base';
+import {ChangeDetectorRef, Component, inject} from '@angular/core';
+import {CommonModule, DatePipe} from '@angular/common';
+import {AccessLog} from 'src/app/data/data';
+import {AccessLogService} from 'src/app/service/access-log.service';
+import {createPaginationState, pageChanged} from '../../shared/components/pagination-base';
 
-import { TableModule } from 'primeng/table';
-import { TranslateModule } from '@ngx-translate/core';
-import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
-import { SearchInputComponent } from '../../shared/components/search-input/search-input.component';
-import { EmptyTableComponent } from '../../shared/components/empty-table/empty-table.component';
+import {TableModule} from 'primeng/table';
+import {TranslateModule} from '@ngx-translate/core';
+import {PageHeaderComponent} from '../../shared/components/page-header/page-header.component';
+import {SearchInputComponent} from '../../shared/components/search-input/search-input.component';
+import {EmptyTableComponent} from '../../shared/components/empty-table/empty-table.component';
 
 @Component({
-    selector: 'app-access-log',
-    standalone: true,
-    templateUrl: './access-log.component.html',
-    styleUrls: ['./access-log.component.css'],
-    imports: [CommonModule, TableModule, DatePipe, TranslateModule, PageHeaderComponent, SearchInputComponent, EmptyTableComponent]
+  selector: 'app-access-log',
+  standalone: true,
+  templateUrl: './access-log.component.html',
+  styleUrls: ['./access-log.component.css'],
+  imports: [CommonModule, TableModule, DatePipe, TranslateModule, PageHeaderComponent, SearchInputComponent, EmptyTableComponent]
 })
 export class AccessLogComponent {
 
   loading: boolean = false;
   accessLogs: AccessLog[] = [];
-  pagination = createPaginationState({ itemsPerPage: 10 });
+  pagination = createPaginationState({itemsPerPage: 10});
   private currentKeyWord: string = '';
 
   private readonly accessLogService = inject(AccessLogService);

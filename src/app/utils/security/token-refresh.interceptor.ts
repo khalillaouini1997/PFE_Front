@@ -1,9 +1,9 @@
-import { HttpInterceptorFn, HttpRequest, HttpHandlerFn, HttpEvent, HttpErrorResponse } from '@angular/common/http';
-import { inject } from '@angular/core';
-import { Router } from '@angular/router';
-import { Observable, throwError, Subject } from 'rxjs';
-import { catchError, switchMap, take } from 'rxjs/operators';
-import { AuthService } from '../../service/auth.service';
+import {HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpInterceptorFn, HttpRequest} from '@angular/common/http';
+import {inject} from '@angular/core';
+import {Router} from '@angular/router';
+import {Observable, Subject, throwError} from 'rxjs';
+import {catchError, switchMap, take} from 'rxjs/operators';
+import {AuthService} from '../../service/auth.service';
 
 let isRefreshing = false;
 let refreshTokensSubject = new Subject<void>();

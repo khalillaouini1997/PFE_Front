@@ -1,11 +1,11 @@
-import { TestBed } from '@angular/core/testing';
-import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
-import { AdminAccountService } from './admin-account.service';
-import { AuthService } from './auth.service';
-import { environment } from '../../environments/environment';
-import { AdministratorCompte, PageResponse } from '../data/data';
-import { vi } from 'vitest';
+import {TestBed} from '@angular/core/testing';
+import {provideHttpClient} from '@angular/common/http';
+import {HttpTestingController, provideHttpClientTesting} from '@angular/common/http/testing';
+import {AdminAccountService} from './admin-account.service';
+import {AuthService} from './auth.service';
+import {environment} from '../../environments/environment';
+import {AdministratorCompte, PageResponse} from '../data/data';
+import {vi} from 'vitest';
 
 describe('AdminAccountService', () => {
   let service: AdminAccountService;
@@ -13,14 +13,14 @@ describe('AdminAccountService', () => {
   let authServiceMock: { isAgentAdmin: ReturnType<typeof vi.fn> };
 
   beforeEach(() => {
-    authServiceMock = { isAgentAdmin: vi.fn() };
+    authServiceMock = {isAgentAdmin: vi.fn()};
 
     TestBed.configureTestingModule({
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
         AdminAccountService,
-        { provide: AuthService, useValue: authServiceMock },
+        {provide: AuthService, useValue: authServiceMock},
       ],
     });
     service = TestBed.inject(AdminAccountService);

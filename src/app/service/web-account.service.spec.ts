@@ -1,7 +1,7 @@
-import { TestBed } from '@angular/core/testing';
-import { provideHttpClient } from '@angular/common/http';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { WebAccountService } from './web-account.service';
+import {TestBed} from '@angular/core/testing';
+import {provideHttpClient} from '@angular/common/http';
+import {HttpTestingController, provideHttpClientTesting} from '@angular/common/http/testing';
+import {WebAccountService} from './web-account.service';
 
 describe('WebAccountService', () => {
   let service: WebAccountService;
@@ -25,44 +25,44 @@ describe('WebAccountService', () => {
   });
 
   it('addCompteWeb should POST', () => {
-    const body = { login: 'test' };
+    const body = {login: 'test'};
     service.addCompteWeb(body).subscribe();
     const req = httpMock.expectOne(r => r.url.includes('compteWeb'));
     expect(req.request.method).toBe('POST');
-    req.flush({ id: 1 });
+    req.flush({id: 1});
   });
 
   it('getAllWebAccountByKeyWord should GET with params', () => {
     service.getAllWebAccountByKeyWord('test', 0, 10).subscribe();
     const req = httpMock.expectOne(r => r.url.includes('compteWeb') && r.url.includes('keyWord='));
     expect(req.request.method).toBe('GET');
-    req.flush({ content: [], totalElements: 0 });
+    req.flush({content: [], totalElements: 0});
   });
 
   it('getAllWebAccountByKeyWord should include region', () => {
     service.getAllWebAccountByKeyWord('test', 0, 10, 'Tunis').subscribe();
     const req = httpMock.expectOne(r => r.url.includes('compteWeb') && r.url.includes('region=Tunis'));
-    req.flush({ content: [] });
+    req.flush({content: []});
   });
 
   it('getAllWebAccountByKeyWord should include pool', () => {
     service.getAllWebAccountByKeyWord('test', 0, 10, undefined, 5).subscribe();
     const req = httpMock.expectOne(r => r.url.includes('compteWeb') && r.url.includes('pool=5'));
-    req.flush({ content: [] });
+    req.flush({content: []});
   });
 
   it('getWebAccountById should GET by id', () => {
     service.getWebAccountById(42).subscribe();
     const req = httpMock.expectOne(r => r.url.includes('compteWeb/42'));
     expect(req.request.method).toBe('GET');
-    req.flush({ id: 42 });
+    req.flush({id: 42});
   });
 
   it('updateWebAccount should PUT', () => {
-    service.updateWebAccount(10, { login: 'updated' }).subscribe();
+    service.updateWebAccount(10, {login: 'updated'}).subscribe();
     const req = httpMock.expectOne(r => r.url.includes('compteWeb/10'));
     expect(req.request.method).toBe('PUT');
-    req.flush({ id: 10 });
+    req.flush({id: 10});
   });
 
   it('deleteWebAccount should DELETE', () => {
@@ -80,7 +80,7 @@ describe('WebAccountService', () => {
   });
 
   it('exportLastTram should POST with blob response', () => {
-    service.exportLastTram([{ id: 1 }] as any).subscribe();
+    service.exportLastTram([{id: 1}] as any).subscribe();
     const req = httpMock.expectOne(r => r.url.includes('lastTrame/export'));
     expect(req.request.method).toBe('POST');
     expect(req.request.responseType).toBe('blob');

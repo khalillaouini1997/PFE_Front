@@ -1,85 +1,102 @@
 <div class="main-panel p-4">
-    <app-page-header titleKey="ADMIN_ACCOUNTS.TITLE" subtitleKey="ADMIN_ACCOUNTS.SUBTITLE">
-        <app-search-input placeholder="ADMIN_ACCOUNTS.SEARCH_PLACEHOLDER" (searchQuery)="searchWebAccount($event)" />
-        <button class="btn btn-glass btn-sm rounded-circle" routerLink="/adminWeb/addAdminCompte" title="{{ 'ADMIN_ACCOUNTS.ADD' | translate }}">
-            <i class="fa fa-plus"></i>
-        </button>
-    </app-page-header>
+  <app-page-header subtitleKey="ADMIN_ACCOUNTS.SUBTITLE" titleKey="ADMIN_ACCOUNTS.TITLE">
+    <app-search-input (searchQuery)="searchWebAccount($event)" placeholder="ADMIN_ACCOUNTS.SEARCH_PLACEHOLDER"/>
+    <button class="btn btn-glass btn-sm rounded-circle" routerLink="/adminWeb/addAdminCompte"
+            title="{{ 'ADMIN_ACCOUNTS.ADD' | translate }}">
+      <i class="fa fa-plus"></i>
+    </button>
+  </app-page-header>
 
-    <!-- Table Section -->
-    <div class="premium-card p-0 overflow-hidden shadow-sm">
-        <p-table [value]="adminComptes" [lazy]="true" (onLazyLoad)="onPageChanged($event)" 
-            [paginator]="true" [rows]="pagination.itemsPerPage" [totalRecords]="pagination.bigTotalItems" 
-            [rowsPerPageOptions]="[10,15,30,50]"
-            [loading]="loading"
-            stateStorage="session" stateKey="admin-comptes-state"
-            [reorderableColumns]="true" [resizableColumns]="true" columnResizeMode="expand"
-            styleClass="p-datatable-sm p-datatable-gridlines premium-table-custom"
-            responsiveLayout="scroll">
-            
-            <ng-template pTemplate="header">
-                <tr>
-                    <th scope="col" style="width: 80px" pReorderableColumn pResizableColumn>{{ 'COMMON.ID' | translate }}</th>
-                    <th scope="col" pReorderableColumn pResizableColumn>{{ 'COMMON.USER' | translate }}</th>
-                    <th scope="col" pReorderableColumn pResizableColumn>{{ 'AUTH.PASSWORD' | translate }}</th>
-                    <th scope="col" pReorderableColumn pResizableColumn>{{ 'ADMIN_ACCOUNTS.LAST_TERMINAL' | translate }}</th>
-                    <th scope="col" pReorderableColumn pResizableColumn>{{ 'ADMIN_ACCOUNTS.ROLE' | translate }}</th>
-                    <th scope="col" pReorderableColumn pResizableColumn>{{ 'ADMIN_ACCOUNTS.TRACCAR_ID' | translate }}</th>
-                    <th scope="col" pReorderableColumn pResizableColumn>{{ 'ADMIN_ACCOUNTS.FCM_NOTIFICATIONS' | translate }}</th>
-                    <th scope="col" pReorderableColumn pResizableColumn>{{ 'ADMIN_ACCOUNTS.SUPPORT_MAIL' | translate }}</th>
-                    <th scope="col" class="text-end" style="width: 150px" pReorderableColumn pResizableColumn>{{ 'ADMIN_ACCOUNTS.COSTS_FEES' | translate }}</th>
-                    <th scope="col" class="text-end" style="width: 100px">{{ 'COMMON.ACTIONS' | translate }}</th>
-                </tr>
-            </ng-template>
+  <!-- Table Section -->
+  <div class="premium-card p-0 overflow-hidden shadow-sm">
+    <p-table (onLazyLoad)="onPageChanged($event)" [lazy]="true" [loading]="loading"
+             [paginator]="true" [reorderableColumns]="true" [resizableColumns]="true"
+             [rowsPerPageOptions]="[10,15,30,50]"
+             [rows]="pagination.itemsPerPage"
+             [totalRecords]="pagination.bigTotalItems" [value]="adminComptes"
+             columnResizeMode="expand" responsiveLayout="scroll" stateKey="admin-comptes-state"
+             stateStorage="session"
+             styleClass="p-datatable-sm p-datatable-gridlines premium-table-custom">
 
-            <ng-template pTemplate="body" let-adminCompte>
-                <tr class="align-middle">
-                    <td><span class="badge fw-bold border" style="background: var(--surface-elevated); color: var(--text-primary); border-color: var(--surface-border) !important;">{{adminCompte.idAdministratorCompte}}</span></td>
-                    <td class="fw-bold text-primary">{{adminCompte.username}}</td>
-                    <td><code class="small">{{adminCompte.password}}</code></td>
-                    <td><span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-10">{{adminCompte.numLastBoitierAvailable}}</span></td>
-                    <td>
-                        <span class="badge rounded-pill px-3" [ngClass]="{
+      <ng-template pTemplate="header">
+        <tr>
+          <th pReorderableColumn pResizableColumn scope="col" style="width: 80px">{{ 'COMMON.ID' | translate }}</th>
+          <th pReorderableColumn pResizableColumn scope="col">{{ 'COMMON.USER' | translate }}</th>
+          <th pReorderableColumn pResizableColumn scope="col">{{ 'AUTH.PASSWORD' | translate }}</th>
+          <th pReorderableColumn pResizableColumn scope="col">{{ 'ADMIN_ACCOUNTS.LAST_TERMINAL' | translate }}</th>
+          <th pReorderableColumn pResizableColumn scope="col">{{ 'ADMIN_ACCOUNTS.ROLE' | translate }}</th>
+          <th pReorderableColumn pResizableColumn scope="col">{{ 'ADMIN_ACCOUNTS.TRACCAR_ID' | translate }}</th>
+          <th pReorderableColumn pResizableColumn scope="col">{{ 'ADMIN_ACCOUNTS.FCM_NOTIFICATIONS' | translate }}</th>
+          <th pReorderableColumn pResizableColumn scope="col">{{ 'ADMIN_ACCOUNTS.SUPPORT_MAIL' | translate }}</th>
+          <th class="text-end" pReorderableColumn pResizableColumn scope="col"
+              style="width: 150px">{{ 'ADMIN_ACCOUNTS.COSTS_FEES' | translate }}
+          </th>
+          <th class="text-end" scope="col" style="width: 100px">{{ 'COMMON.ACTIONS' | translate }}</th>
+        </tr>
+      </ng-template>
+
+      <ng-template let-adminCompte pTemplate="body">
+        <tr class="align-middle">
+          <td><span class="badge fw-bold border"
+                    style="background: var(--surface-elevated); color: var(--text-primary); border-color: var(--surface-border) !important;">{{ adminCompte.idAdministratorCompte }}</span>
+          </td>
+          <td class="fw-bold text-primary">{{ adminCompte.username }}</td>
+          <td><code class="small">{{ adminCompte.password }}</code></td>
+          <td><span
+            class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-10">{{ adminCompte.numLastBoitierAvailable }}</span>
+          </td>
+          <td>
+                        <span [ngClass]="{
                             'bg-primary bg-opacity-10 border border-primary border-opacity-10': adminCompte.role === 'GLOBALADMINDESC',
                             'bg-info bg-opacity-10 border border-info border-opacity-10': adminCompte.role === 'AGENT',
                             'bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-10': !adminCompte.role.includes('ADMIN')
-                        }">
+                        }" class="badge rounded-pill px-3">
                             @if (adminCompte.role === 'GLOBALADMINDESC') {
-                                Admin Accounts
+                              Admin Accounts
                             } @else {
-                                {{adminCompte.role}}
+                              {{ adminCompte.role }}
                             }
                         </span>
-                    </td>
-                    <td>{{adminCompte.idTraccar || '—'}}</td>
-                    <td class="small">
-                        @if (adminCompte.useFcm) {
-                            <div class="text-success fw-bold"><i class="fa fa-check-circle me-1"></i> {{ 'ADMIN_ACCOUNTS.FCM_ACTIVE' | translate }}</div>
-                            <div class="opacity-50">Prf: {{adminCompte.fcmPrefix}}</div>
-                        } @else {
-                            <div class="text-secondary opacity-50"><i class="fa fa-minus-circle me-1"></i> {{ 'COMMON.OFF' | translate }}</div>
-                        }
-                    </td>
-                    <td class="small">{{adminCompte.mailSupport || '—'}}</td>
-                    <td class="text-end small">
-                        <div>{{ 'ADMIN_ACCOUNTS.COST' | translate }}: <strong style="color: var(--text-primary);">{{adminCompte.deviceCostByDay}}</strong>/j</div>
-                        <div>{{ 'ADMIN_ACCOUNTS.FREE' | translate }}: <strong style="color: var(--text-primary);">{{adminCompte.accountFreePerMonth}}</strong>/m</div>
-                        <div>{{ 'ADMIN_ACCOUNTS.FEE' | translate }}: <strong style="color: var(--text-primary);">{{adminCompte.transctionFee}}</strong>%</div>
-                    </td>
-                    <td class="text-end">
-                        <div class="btn-group gap-2">
-                            <button class="btn btn-sm btn-outline-warning border-0 p-2" title="{{ 'COMMON.EDIT' | translate }}">
-                                <i class="fa fa-edit fs-5"></i>
-                            </button>
-                            <button class="btn btn-sm btn-outline-danger border-0 p-2" title="{{ 'COMMON.DELETE' | translate }}">
-                                <i class="fa fa-trash fs-5"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            </ng-template>
+          </td>
+          <td>{{ adminCompte.idTraccar || '—' }}</td>
+          <td class="small">
+            @if (adminCompte.useFcm) {
+              <div class="text-success fw-bold"><i
+                class="fa fa-check-circle me-1"></i> {{ 'ADMIN_ACCOUNTS.FCM_ACTIVE' | translate }}
+              </div>
+              <div class="opacity-50">Prf: {{ adminCompte.fcmPrefix }}</div>
+            } @else {
+              <div class="text-secondary opacity-50"><i
+                class="fa fa-minus-circle me-1"></i> {{ 'COMMON.OFF' | translate }}
+              </div>
+            }
+          </td>
+          <td class="small">{{ adminCompte.mailSupport || '—' }}</td>
+          <td class="text-end small">
+            <div>{{ 'ADMIN_ACCOUNTS.COST' | translate }}: <strong
+              style="color: var(--text-primary);">{{ adminCompte.deviceCostByDay }}</strong>/j
+            </div>
+            <div>{{ 'ADMIN_ACCOUNTS.FREE' | translate }}: <strong
+              style="color: var(--text-primary);">{{ adminCompte.accountFreePerMonth }}</strong>/m
+            </div>
+            <div>{{ 'ADMIN_ACCOUNTS.FEE' | translate }}: <strong
+              style="color: var(--text-primary);">{{ adminCompte.transctionFee }}</strong>%
+            </div>
+          </td>
+          <td class="text-end">
+            <div class="btn-group gap-2">
+              <button class="btn btn-sm btn-outline-warning border-0 p-2" title="{{ 'COMMON.EDIT' | translate }}">
+                <i class="fa fa-edit fs-5"></i>
+              </button>
+              <button class="btn btn-sm btn-outline-danger border-0 p-2" title="{{ 'COMMON.DELETE' | translate }}">
+                <i class="fa fa-trash fs-5"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
 
-            <app-empty-table [colspan]="10" icon="fa-users" messageKey="ADMIN_ACCOUNTS.NO_DATA" />
-        </p-table>
-    </div>
+      <app-empty-table [colspan]="10" icon="fa-users" messageKey="ADMIN_ACCOUNTS.NO_DATA"/>
+    </p-table>
+  </div>
 </div>

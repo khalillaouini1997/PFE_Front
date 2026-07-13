@@ -1,27 +1,28 @@
 <div class="error-container">
   <div class="error-card">
     <div class="error-icon">
-      <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <svg fill="none" height="64" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+           stroke-width="2" viewBox="0 0 24 24" width="64" xmlns="http://www.w3.org/2000/svg">
         <circle cx="12" cy="12" r="10"></circle>
-        <line x1="12" y1="8" x2="12" y2="12"></line>
-        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        <line x1="12" x2="12" y1="8" y2="12"></line>
+        <line x1="12" x2="12.01" y1="16" y2="16"></line>
       </svg>
     </div>
-    
+
     <h1 *ngIf="errorCode">Error {{ errorCode }}</h1>
     <h1 *ngIf="!errorCode">Error</h1>
-    
+
     <p class="error-message">{{ errorMessage }}</p>
-    
+
     <div *ngIf="component" class="error-component">
       <small>Component: {{ component }}</small>
     </div>
-    
+
     <div class="error-actions">
-      <button class="btn btn-primary" (click)="goHome()">
+      <button (click)="goHome()" class="btn btn-primary">
         Go to Dashboard
       </button>
-      <button class="btn btn-secondary" (click)="goBack()">
+      <button (click)="goBack()" class="btn btn-secondary">
         Back to Login
       </button>
     </div>
