@@ -15,7 +15,6 @@ import {FormsModule} from '@angular/forms';
 import {provideAnimations} from '@angular/platform-browser/animations';
 import {providePrimeNG} from 'primeng/config';
 import Aura from '@primeng/themes/aura';
-import {ThemeService} from './app/shared/services/theme.service';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {ToastrModule} from 'ngx-toastr';
 import {NgMultiSelectDropDownModule} from 'ng-multiselect-dropdown';
@@ -63,18 +62,11 @@ bootstrapApplication(AppComponent, {
       theme: {
         preset: Aura,
         options: {
-          cssLayer: false,
-          darkModeSelector: '[data-theme="dark"]'
+          cssLayer: false
         }
       },
       ripple: true
-    }),
-    {
-      provide: 'APP_INITIALIZER',
-      useFactory: (themeService: ThemeService) => () => themeService.init(),
-      deps: [ThemeService],
-      multi: true
-    }
+    })
   ]
 })
   .catch(err => {

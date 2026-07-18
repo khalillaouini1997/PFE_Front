@@ -20,10 +20,5 @@
         EN
       </button>
     </div>
-
-    <button (click)="toggleTheme()" [attr.aria-label]="currentTheme() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
-            class="theme-toggle">
-      <i [class.pi-moon]="currentTheme() === 'light'" [class.pi-sun]="currentTheme() === 'dark'" class="pi"></i>
-    </button>
   </div>
 </nav>

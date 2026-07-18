@@ -303,20 +303,7 @@ select:focus {
 }
 
 /* ── Leaflet Dark Mode ── */
-[data-theme="dark"] .leaflet-tile {
-  filter: invert(1) hue-rotate(180deg) brightness(0.85) contrast(0.9);
-}
-
-[data-theme="dark"] .leaflet-container {
-  background: var(--surface-base);
-}
-
 /* ── ngx-toastr Dark Mode ── */
-[data-theme="dark"] .toast-container .ngx-toastr {
-  background: var(--surface-elevated);
-  color: var(--text-primary);
-  border: 1px solid var(--surface-border);
-}
 
 /* ── Reduced Motion ── */
 @media (prefers-reduced-motion: reduce) {
