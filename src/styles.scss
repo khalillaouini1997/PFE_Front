@@ -261,22 +261,6 @@ select:focus {
   }
 }
 
-/* ── Utility Animations ── */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.fade-in {
-  animation: fadeIn 0.3s ease-out;
-}
-
 /* ── Page Header ── */
 .page-header h1, .page-header h2, .page-header h3 {
   font-size: 1.1rem !important;
@@ -301,9 +285,6 @@ select:focus {
   font-size: 0.8rem !important;
   margin-top: 2px;
 }
-
-/* ── Leaflet Dark Mode ── */
-/* ── ngx-toastr Dark Mode ── */
 
 /* ── Reduced Motion ── */
 @media (prefers-reduced-motion: reduce) {

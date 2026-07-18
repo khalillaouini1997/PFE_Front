@@ -47,12 +47,6 @@
   margin: 0;
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 /* ── Error State ── */
 .map-error {
   position: absolute;

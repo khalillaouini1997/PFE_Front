@@ -11,11 +11,6 @@
   background-color: rgba(var(--bs-primary-rgb), 0.05) !important;
 }
 
-.form-group {
-  padding-bottom: 0px;
-  margin: 0px 0 0 0;
-}
-
 .title {
   margin-top: 0px;
   margin-bottom: 0px;

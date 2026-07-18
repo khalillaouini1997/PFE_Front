@@ -15,7 +15,9 @@
   justify-content: space-between;
   padding: 0 var(--spacing-xl);
   z-index: var(--z-sticky);
-  transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              background 0.3s ease,
+              border-color 0.3s ease;
 }
 
 :host-context(.content-area.collapsed) .navbar {
@@ -32,6 +34,7 @@
   font-weight: var(--font-weight-bold);
   font-size: var(--text-lg);
   color: var(--text-primary);
+  transition: color 0.3s ease;
 }
 
 .navbar-actions {
@@ -48,6 +51,7 @@
   padding: 3px;
   border-radius: var(--radius-lg);
   border: 1px solid var(--surface-border);
+  transition: background 0.3s ease, border-color 0.3s ease;
 }
 
 .lang-btn {

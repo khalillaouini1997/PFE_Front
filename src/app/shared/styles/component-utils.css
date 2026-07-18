@@ -49,6 +49,12 @@ dialog::backdrop,
   }
 }
 
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 /* -- Sidebar Width Variables -- */
 :root {
   --sidebar-width-expanded: 280px;

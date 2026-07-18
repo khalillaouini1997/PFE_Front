@@ -44,7 +44,7 @@
 .chart-card {
   background: var(--surface-card);
   border: 1px solid var(--surface-border);
-  border-top: 4px solid var(--primary-color);
+  border-top: 4px solid var(--primary);
   border-radius: var(--radius-lg);
   padding: var(--spacing-lg);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
