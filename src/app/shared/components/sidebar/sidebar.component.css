@@ -27,6 +27,21 @@
   padding: 1.5rem 0.75rem;
   overflow-y: auto;
   overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--sidebar-border) transparent;
+}
+
+.sidebar-wrapper::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar-wrapper::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-wrapper::-webkit-scrollbar-thumb {
+  background: var(--sidebar-border);
+  border-radius: 3px;
 }
 
 .sidebar.collapsed .sidebar-wrapper {

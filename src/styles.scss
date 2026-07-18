@@ -57,12 +57,15 @@
 /* ── Body ── */
 html {
   font-size: 14px !important;
+  background-color: var(--surface-base);
 }
 
 body {
   font-family: var(--font-family-base);
   font-size: var(--text-base);
   -webkit-font-smoothing: antialiased;
+  background-color: var(--surface-base);
+  margin: 0;
 }
 
 /* ── Tables ── */

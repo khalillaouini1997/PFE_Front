@@ -35,11 +35,11 @@
           <p>{{ 'SIDEBAR.GLOBAL_DASHBOARD' | translate }}</p>
         </a>
       </li>
-      <li *ngIf="isWebAdminOrGlobal()" [class.active]="isActiveTraccar">
-        <a (click)="setMenu('traccar')" [title]="isCollapsed() ? ('SIDEBAR.TRACCAR' | translate) : ''"
-           routerLink="/adminWeb/traccar">
-          <i class="material-icons">room</i>
-          <p>{{ 'SIDEBAR.TRACCAR' | translate }}</p>
+      <li *ngIf="isGlobalAdminDesc()" [class.active]="isActiveBilling">
+        <a (click)="setMenu('billing')" [title]="isCollapsed() ? ('SIDEBAR.BILLING' | translate) : ''"
+           routerLink="/adminWeb/billing">
+          <i class="material-icons">receipt_long</i>
+          <p>{{ 'SIDEBAR.BILLING' | translate }}</p>
         </a>
       </li>
 
@@ -86,15 +86,15 @@
           <p>{{ 'SIDEBAR.LIST_WEB' | translate }}</p>
         </a>
       </li>
-
-      <li class="nav-section-title">{{ 'SIDEBAR.SYSTEM' | translate }}</li>
-      <li *ngIf="isGlobalAdminDesc()" [class.active]="isActiveBilling">
-        <a (click)="setMenu('billing')" [title]="isCollapsed() ? ('SIDEBAR.BILLING' | translate) : ''"
-           routerLink="/adminWeb/billing">
-          <i class="material-icons">receipt_long</i>
-          <p>{{ 'SIDEBAR.BILLING' | translate }}</p>
+      <li *ngIf="isWebAdminOrGlobal()" [class.active]="isActiveTraccar">
+        <a (click)="setMenu('traccar')" [title]="isCollapsed() ? ('SIDEBAR.TRACCAR' | translate) : ''"
+           routerLink="/adminWeb/traccar">
+          <i class="material-icons">room</i>
+          <p>{{ 'SIDEBAR.TRACCAR' | translate }}</p>
         </a>
       </li>
+
+      <li class="nav-section-title">{{ 'SIDEBAR.SYSTEM' | translate }}</li>
       <li [class.active]="isActiveAccessLog">
         <a (click)="setMenu('logs')" [title]="isCollapsed() ? ('SIDEBAR.ACCESS_LOG' | translate) : ''"
            routerLink="/adminWeb/accessLog">
