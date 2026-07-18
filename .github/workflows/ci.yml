@@ -17,6 +17,7 @@ on:
       - '.editorconfig'
       - '.vscode/**'
       - '.idea/**'
+  workflow_dispatch:
 
 concurrency:
   group: frontend-ci-${{ github.ref }}
