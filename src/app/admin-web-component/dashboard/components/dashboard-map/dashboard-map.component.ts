@@ -157,7 +157,7 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
     const fleetChanged = newFleetHash !== this.currentFleetHash;
 
     this.realtimes().forEach(tram => {
-      if (tram.latitude && tram.longitude) {
+      if (tram.latitude != null && tram.longitude != null && tram.latitude !== 0 && tram.longitude !== 0) {
         const deviceId = tram.deviceid;
         const prevPos = this.previousPositions.get(deviceId);
 
