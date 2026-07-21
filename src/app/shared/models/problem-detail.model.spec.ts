@@ -17,11 +17,11 @@ describe('problem-detail.model', () => {
     });
 
     it('should return false for null', () => {
-      expect(isProblemDetail(null)).toBe(false);
+      expect(isProblemDetail(null)).toBeFalsy();
     });
 
     it('should return false for undefined', () => {
-      expect(isProblemDetail(undefined)).toBe(false);
+      expect(isProblemDetail(undefined)).toBeFalsy();
     });
 
     it('should return false for string', () => {
