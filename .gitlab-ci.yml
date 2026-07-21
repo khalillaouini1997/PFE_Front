@@ -1,0 +1,67 @@
+stages:
+  - quality
+  - docker
+
+interruptible: true
+
+variables:
+  IMAGE_NAME: registry.gitlab.com/$CI_PROJECT_PATH
+
+# ── Lint + Test + SonarCloud ─────────────────────────────────────────
+lint-test:
+  stage: quality
+  image: node:24-alpine
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}-npm
+    paths:
+      - node_modules/
+  script:
+    - npm ci --legacy-peer-deps
+    - npm run lint
+    - npx ng test --coverage --watch=false
+  artifacts:
+    paths:
+      - coverage/
+    expire_in: 1 day
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+sonarcloud:
+  stage: quality
+  image: node:24-alpine
+  dependencies:
+    - lint-test
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}-npm
+    paths:
+      - node_modules/
+  script:
+    - npm ci --legacy-peer-deps
+    - npx sonar-scanner
+      -Dsonar.projectKey=khalillaouini1997_pfe-frontend
+      -Dsonar.organization=khalillaouini1997
+      -Dsonar.host.url=https://sonarcloud.io
+      -Dsonar.sources=src
+      -Dsonar.exclusions=**/node_modules/**,**/test/**,**/*.spec.ts
+      -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+
+# ── Docker Build + Push ──────────────────────────────────────────────
+docker:
+  stage: docker
+  image: docker:27
+  services:
+    - docker:27-dind
+  variables:
+    DOCKER_TLS_CERTDIR: "/certs"
+    DOCKER_BUILDKIT: "1"
+  before_script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
+  script:
+    - docker build --cache-from $IMAGE_NAME:latest -t $IMAGE_NAME:latest -t $IMAGE_NAME:$CI_COMMIT_SHA .
+    - docker push $IMAGE_NAME:latest
+    - docker push $IMAGE_NAME:$CI_COMMIT_SHA
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
