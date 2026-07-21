@@ -2,12 +2,9 @@ stages:
   - quality
   - docker
 
-interruptible: true
-
 variables:
   IMAGE_NAME: registry.gitlab.com/$CI_PROJECT_PATH
 
-# ── Lint + Test + SonarCloud ─────────────────────────────────────────
 lint-test:
   stage: quality
   image: node:24-alpine
@@ -25,7 +22,9 @@ lint-test:
     expire_in: 1 day
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
+      when: on_success
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: on_success
 
 sonarcloud:
   stage: quality
@@ -47,8 +46,8 @@ sonarcloud:
       -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
+      when: on_success
 
-# ── Docker Build + Push ──────────────────────────────────────────────
 docker:
   stage: docker
   image: docker:27
@@ -65,3 +64,4 @@ docker:
     - docker push $IMAGE_NAME:$CI_COMMIT_SHA
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
+      when: on_success
