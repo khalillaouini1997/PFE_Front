@@ -22,7 +22,7 @@ if (!window.matchMedia) {
   });
 }
 
-// Mock ResizeObserver for PrimeNG (empty methods are intentional for jsdom)
+// Mock ResizeObserver for jsdom
 if (!window.ResizeObserver) {
   (window as any).ResizeObserver = class {
     observe() {
@@ -34,7 +34,7 @@ if (!window.ResizeObserver) {
   };
 }
 
-// Mock HTMLDialogElement methods on HTMLElement.prototype for jsdom compatibility
+// Mock dialog methods for jsdom
 if (typeof window !== 'undefined') {
   const mockMethods = (proto: any) => {
     if (proto) {
@@ -56,7 +56,7 @@ if (typeof window !== 'undefined') {
 }
 
 
-// Mock window.getComputedStyle to handle null/undefined elements (Chart.js needs this)
+// Mock getComputedStyle for Chart.js
 const mockComputedStyle = {
   getPropertyValue: () => '',
   fontSize: '14px',
@@ -75,11 +75,10 @@ const mockComputedStyle = {
 };
 (window as any).getComputedStyle = (_el: any, _pseudo?: string | null) => mockComputedStyle;
 
-// Mock HTMLCanvasElement to provide parentElement chain for Chart.js
+// Mock canvas for Chart.js
 {
   const origGetContext = HTMLCanvasElement.prototype.getContext;
 
-  // Provide parentElement on the prototype so it's available before getContext is called
   const mockParent = {
     ownerDocument: {defaultView: window},
     style: {},

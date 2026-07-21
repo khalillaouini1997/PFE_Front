@@ -57,7 +57,6 @@ export class ConfigurationWebComponentComponent implements OnInit {
   selected = signal<any[]>([]);
   codesPays = signal<{ key: string; value: string; }[]>([]);
   options = signal<Option[]>([]);
-  // Data Signals
   boitiers = signal<Boitier[]>([]);
   boitiersClicked = signal<boolean>(false);
   selectedBoitierId = signal<number>(0);
@@ -67,7 +66,6 @@ export class ConfigurationWebComponentComponent implements OnInit {
   selectedBoitiersIds = signal<number[]>([]);
   recalculeP = signal<RecalculatePayload>(createRecalculatePayload());
   vehiculeSetting = signal<VehiculeSetting>(createVehiculeSetting());
-  // UI & Modal State
   showConfigModal = signal<boolean>(false);
   activeTab = signal<string>('recalculate');
   loadingRecalculate = signal<boolean>(false);
@@ -411,7 +409,6 @@ export class ConfigurationWebComponentComponent implements OnInit {
     this.recalculeP.update(p => ({...p, idBoitier: boitier.numBoitier}));
     this.activeTab.set('recalculate');
 
-    // Set form values
     this.recalculateForm.patchValue({
       datestart: new Date(),
       typeRecalcule: 'recalcule trajet'
@@ -646,7 +643,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
   }
 
 
-  // --- Odometer & Last ID Reset ---
+  // Odometer & Last ID Reset
 
   loadLastId(numBoitier: number) {
     this.boitierService.getLastId(this.ID_COMPTE(), numBoitier)

@@ -102,7 +102,6 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
     this.loadingInProgress = true;
     this.cdr.detectChanges();
 
-    // Extract pagination parameters from the PrimeNG table event
     let page = 0;
     let size = this.itemsPerPage;
 
@@ -110,14 +109,13 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
       page = event.first ? Math.floor(event.first / event.rows) : 0;
       size = event.rows || this.itemsPerPage;
     } else {
-      // When called without event (e.g., from ngOnInit), use current page from form
+      // No event: use current page
       page = this.bigCurrentPage - 1; // Convert to 0-based
     }
 
     const keyword = (this.searchForm.get('searchBoitier')?.value || "").trim();
     this.boitierService.getBoitierOfAccount(this.ID_COMPTE, keyword, page, size).subscribe({
       next: (res: any) => {
-        // Handle different response structures
         let content = res.content;
         let pageData = res.page;
 
@@ -126,11 +124,9 @@ export class CompteServerDetailsComponent implements OnInit, OnDestroy {
           content = res.data.content || res.data;
           pageData = res.data.page || res.data;
         }
-        // Handle direct array response
         if (!content && Array.isArray(res)) {
           content = res;
         }
-        // Default to empty array
         if (!content) {
           content = [];
         }

@@ -17,7 +17,6 @@ import {
 export class WebAccountService {
   readonly codesPays = [
     {key: "Maroc", value: "212"},
-    // ... (truncated codesPays for brevity in replace call, but I will keep them all)
     {key: "Tunisie", value: "216"},
     {key: "Zimbabwe", value: "263"}
   ];

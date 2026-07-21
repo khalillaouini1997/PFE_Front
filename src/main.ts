@@ -62,7 +62,8 @@ bootstrapApplication(AppComponent, {
       theme: {
         preset: Aura,
         options: {
-          cssLayer: false
+          cssLayer: false,
+          darkModeSelector: 'none'
         }
       },
       ripple: true

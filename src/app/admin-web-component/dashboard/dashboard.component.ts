@@ -35,25 +35,25 @@ import {DashboardStore} from 'src/app/shared/stores';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardComponent implements OnInit, OnDestroy {
-  // ── Store ────────────────────────────────────────────────────────────────
+  // Store
   readonly store = inject(DashboardStore);
-  // ── Form & UI state ───────────────────────────────────────────────────────
+  // Form & UI
   dashboardForm!: FormGroup;
   fullscreenMap = signal<boolean>(false);
-  // ── Computed signals from store ─────────────────────────────────────────────
+  // Computed
   readonly comptesWeb = this.store.comptesWeb;
   readonly realtimes = this.store.realtimes;
   readonly stats = this.store.stats;
   readonly loading = this.store.loading;
   protected readonly Math = Math;
-  // ── DI ───────────────────────────────────────────────────────────────────
+  // DI
   private readonly authService = inject(AuthService);
   private readonly webAccountService = inject(WebAccountService);
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
 
-  // ── Lifecycle ─────────────────────────────────────────────────────────────
+  // Lifecycle
   ngOnInit() {
     this.initForms();
 
@@ -78,17 +78,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.store.ngOnDestroy();
   }
 
-  // ── Forms ─────────────────────────────────────────────────────────────────
+  // Forms
   initForms() {
     this.dashboardForm = this.fb.group({compteWeb: [null]});
   }
 
-  // ── Utilities ─────────────────────────────────────────────────────────────
+  // Utilities
   diffHours(date: Date): number {
     return (Date.now() - new Date(date).getTime()) / (60 * 60 * 1000);
   }
 
-  // ── Data loading ──────────────────────────────────────────────────────────
+  // Data loading
   getAllLastTramByCompteWeb() {
     const selectedCompte = this.dashboardForm.get('compteWeb')?.value;
     if (!selectedCompte?.idCompteClientWeb) return;

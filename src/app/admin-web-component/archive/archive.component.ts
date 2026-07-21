@@ -62,7 +62,6 @@ export class ArchiveComponent implements OnInit {
   getAllRaws() {
     const limit = this.archiveForm.get('limit')?.value || 200;
     this.boitierService.getRaws(this.numBoitier(), limit).subscribe((_raws: any) => {
-      // Handle nested response structure
       const rawData = _raws.data || _raws;
       const updatedRaws = createRaws();
       updatedRaws.raws = rawData.raws || [];
@@ -74,7 +73,6 @@ export class ArchiveComponent implements OnInit {
   getArchives() {
     const limit = this.archiveForm.get('limit')?.value || 200;
     this.boitierService.getArchiveOfBoitier(this.numBoitier(), limit).subscribe(_archives => {
-      // Handle different response structures
       let archivesData: any = _archives;
       if (_archives && typeof _archives === 'object' && !Array.isArray(_archives)) {
         archivesData = (_archives as any).data || (_archives as any).content || [];

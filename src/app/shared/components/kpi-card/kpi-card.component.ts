@@ -30,7 +30,6 @@ export class KpiCardComponent implements AfterViewInit, OnDestroy {
     effect(() => {
       const value = this.value();
 
-      // Animate value if it's a number
       if (typeof value === 'number') {
         const start = typeof this.displayValue() === 'number' ? (this.displayValue() as number) : 0;
         this.animateValue(start, value, 800);
@@ -38,7 +37,7 @@ export class KpiCardComponent implements AfterViewInit, OnDestroy {
         this.displayValue.set(value);
       }
 
-      // Only update sparkline if chart exists and value actually changed
+      // Update sparkline on value change
       if (this.showSparkline() && this.sparklineChart && value !== this.lastValue) {
         this.lastValue = value;
         this.updateSparklineData();
@@ -70,7 +69,7 @@ export class KpiCardComponent implements AfterViewInit, OnDestroy {
     const update = (now: number) => {
       const elapsed = now - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      // Ease out quad animation curve
+      // ease-out quad
       const easeProgress = progress * (2 - progress);
       const current = Math.round(start + (end - start) * easeProgress);
       this.displayValue.set(current);

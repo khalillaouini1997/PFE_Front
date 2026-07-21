@@ -29,7 +29,6 @@ export class AuthentificationComponent implements AfterViewInit {
   private readonly toastr = inject(ToastrService);
 
   ngAfterViewInit() {
-    // Lazy load background image
     const img = new Image();
     img.src = '/assets/images/road_authenification.jpg';
     img.onload = () => {

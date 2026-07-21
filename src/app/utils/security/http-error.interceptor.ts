@@ -4,7 +4,6 @@ import {Router} from '@angular/router';
 import {catchError, retry, throwError, timer} from 'rxjs';
 import {isProblemDetail} from '../../shared/models/problem-detail.model';
 
-// Error tracking for retry logic
 const MAX_RETRIES = 2;
 const RETRY_DELAY_MS = 1000;
 
@@ -26,7 +25,6 @@ export const httpErrorInterceptor: HttpInterceptorFn = (req, next) => {
       }
     }),
     catchError((error: HttpErrorResponse) => {
-      // Extract error message from ProblemDetail or ApiResponse format
       const errorMessage = extractErrorMessage(error);
 
       if (error.status === 401) {
@@ -34,29 +32,25 @@ export const httpErrorInterceptor: HttpInterceptorFn = (req, next) => {
       }
 
       if (error.status === 403) {
-        // Forbidden - user doesn't have access
         router.navigate(['/error'], {queryParams: {code: 403, message: errorMessage}});
         return throwError(() => error);
       }
 
       if (error.status === 404) {
-        // Resource not found
         return throwError(() => error);
       }
 
       if (error.status >= 500) {
-        // Server error - trigger error banner
+        // 5xx: show error banner
         triggerErrorBanner('server', errorMessage || 'Server error occurred');
         return throwError(() => error);
       }
 
-      // Network error
       if (!error.status && error.error instanceof ProgressEvent) {
         triggerErrorBanner('network', 'Network error. Please check your connection.');
         return throwError(() => new Error('Network error. Please check your connection.'));
       }
 
-      // Other errors with message
       if (errorMessage) {
         triggerErrorBanner('unknown', errorMessage);
       }
@@ -70,17 +64,14 @@ export const httpErrorInterceptor: HttpInterceptorFn = (req, next) => {
  * Determine if an error is retryable
  */
 function isRetryableError(error: HttpErrorResponse): boolean {
-  // Retry on network errors
   if (!error.status && error.error instanceof ProgressEvent) {
     return true;
   }
 
-  // Retry on 5xx server errors (except 501 Not Implemented)
   if (error.status >= 500 && error.status !== 501) {
     return true;
   }
 
-  // Retry on 429 Too Many Requests
   if (error.status === 429) {
     return true;
   }
@@ -90,7 +81,6 @@ function isRetryableError(error: HttpErrorResponse): boolean {
 
 /**
  * Trigger error banner via custom event
- * This will be caught by the app component to show the error banner
  */
 function triggerErrorBanner(type: 'network' | 'server' | 'map-tile' | 'data-fetch' | 'timeout' | 'unknown', message: string) {
   const event = new CustomEvent('show-error-banner', {
@@ -105,7 +95,7 @@ function triggerErrorBanner(type: 'network' | 'server' | 'map-tile' | 'data-fetc
 }
 
 /**
- * Extract error message from either ProblemDetail (RFC 7807) or ApiResponse format
+ * Extract error message from ProblemDetail (RFC 7807) or ApiResponse
  */
 function extractErrorMessage(error: HttpErrorResponse): string {
   const errorBody = error.error;
@@ -119,7 +109,7 @@ function extractErrorMessage(error: HttpErrorResponse): string {
     return errorBody.detail || errorBody.title || error.message;
   }
 
-  // Check for ApiResponse format (legacy)
+  // Legacy ApiResponse
   if (errorBody.message) {
     return errorBody.message;
   }

@@ -39,7 +39,6 @@ export class ErrorBannerComponent implements AfterViewInit, OnDestroy {
   showError(data: ErrorBannerData) {
     this.error.set(data);
 
-    // Auto-dismiss after 10 seconds if enabled
     if (data.autoDismiss !== false) {
       if (this.dismissTimer) {
         clearTimeout(this.dismissTimer);

@@ -37,7 +37,6 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
   locateDevice = output<RealTime>();
 
   map?: any;
-  // Map error state
   mapError = signal<string | null>(null);
   isMapLoading = signal<boolean>(true);
   hasMapError = computed(() => this.mapError() !== null);
@@ -118,13 +117,11 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
         retryTimeout: 2000
       });
 
-      // Handle tile loading errors
       tileLayer.on('tileerror', (_event: any) => {
         this.mapError.set('Map tiles failed to load. Check your internet connection.');
         this.isMapLoading.set(false);
       });
 
-      // Handle successful tile loading
       tileLayer.on('load', () => {
         this.isMapLoading.set(false);
         this.mapError.set(null);
@@ -165,10 +162,8 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
         const prevPos = this.previousPositions.get(deviceId);
 
         if (prevPos) {
-          // Animate existing marker to new position
           this.animateMarkerPosition(deviceId, tram.latitude, tram.longitude);
         } else {
-          // Create new marker
           this.createMarker(tram);
         }
 
@@ -177,7 +172,6 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
       }
     });
 
-    // Remove markers for vehicles no longer in the list
     const currentDeviceIds = new Set(this.realtimes().map(t => t.deviceid));
     for (const [deviceId, marker] of this.markerMap) {
       if (!currentDeviceIds.has(deviceId)) {
@@ -239,7 +233,7 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
 
-      // Ease-in-out function for smooth animation
+      // ease-in-out curve
       const easeProgress = progress < 0.5
         ? 2 * progress * progress
         : 1 - Math.pow(-2 * progress + 2, 2) / 2;

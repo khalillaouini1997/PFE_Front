@@ -12,8 +12,6 @@ import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {PageHeaderComponent} from '../../shared/components/page-header/page-header.component';
 
 
-// PrimeNG DatePicker replaces bsDatepicker
-
 @Component({
   selector: 'app-add-compte-server',
   standalone: true,
@@ -32,7 +30,6 @@ export class AddCompteServerComponent {
   public date: Date = new Date();
   notifications: number = 0;
   private readonly compteServerService = inject(CompteServerService);
-  // Removed BsLocaleService as PrimeNG handles its own localization
   private readonly toastr = inject(ToastrService);
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);

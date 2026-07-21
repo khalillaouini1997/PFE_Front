@@ -29,6 +29,17 @@
         referrerpolicy="no-referrer" rel="stylesheet">
 
 
+  <!-- Theme: prevent flash of wrong theme -->
+  <script>
+    (function() {
+      var t = localStorage.getItem('theme');
+      if (t !== 'light' && t !== 'dark') t = 'light';
+      document.documentElement.setAttribute('data-theme', t);
+      document.documentElement.setAttribute('data-bs-theme', t);
+      document.documentElement.classList.add(t + '-theme');
+    })();
+  </script>
+
 </head>
 
 <body>
