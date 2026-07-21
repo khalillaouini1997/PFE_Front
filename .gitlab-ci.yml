@@ -4,6 +4,7 @@ stages:
 
 variables:
   IMAGE_NAME: registry.gitlab.com/$CI_PROJECT_PATH
+  npm_config_cache: "$CI_PROJECT_DIR/.npm"
 
 lint-test:
   stage: quality
@@ -11,14 +12,15 @@ lint-test:
   cache:
     key: ${CI_COMMIT_REF_SLUG}-npm
     paths:
-      - node_modules/
+      - .npm/
   script:
-    - npm ci --legacy-peer-deps
+    - npm ci --legacy-peer-deps --prefer-offline
     - npm run lint
     - npx ng test --coverage --watch=false
   artifacts:
     paths:
       - coverage/
+      - node_modules/
     expire_in: 1 day
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
@@ -29,22 +31,18 @@ lint-test:
 sonarcloud:
   stage: quality
   image: node:24-alpine
-  dependencies:
-    - lint-test
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}-npm
-    paths:
-      - node_modules/
+  needs:
+    - job: lint-test
+      artifacts: true
   script:
-    - npm ci --legacy-peer-deps
-    - npx sonar-scanner
+    - npx sonarqube-scanner
+      -Dsonar.token=$SONAR_TOKEN
       -Dsonar.projectKey=khalillaouini1997_pfe-frontend
       -Dsonar.organization=khalillaouini1997
       -Dsonar.host.url=https://sonarcloud.io
       -Dsonar.sources=src
       -Dsonar.exclusions=**/node_modules/**,**/test/**,**/*.spec.ts
-      -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
-  allow_failure: true
+      -Dsonar.javascript.lcov.reportPaths=coverage/web_admin/lcov.info
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
       when: on_success
@@ -57,9 +55,13 @@ docker:
   variables:
     DOCKER_TLS_CERTDIR: "/certs"
     DOCKER_BUILDKIT: "1"
+  needs:
+    - job: lint-test
+      artifacts: false
   before_script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
   script:
+    - docker pull $IMAGE_NAME:latest || true
     - docker build --cache-from $IMAGE_NAME:latest -t $IMAGE_NAME:latest -t $IMAGE_NAME:$CI_COMMIT_SHA .
     - docker push $IMAGE_NAME:latest
     - docker push $IMAGE_NAME:$CI_COMMIT_SHA
