@@ -47,4 +47,12 @@ describe('AdminWebComponentComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should toggle sidebar', () => {
+    expect(component.isSidebarCollapsed).toBe(false);
+    component.onSidebarToggle(true);
+    expect(component.isSidebarCollapsed).toBe(true);
+    component.onSidebarToggle(false);
+    expect(component.isSidebarCollapsed).toBe(false);
+  });
 });

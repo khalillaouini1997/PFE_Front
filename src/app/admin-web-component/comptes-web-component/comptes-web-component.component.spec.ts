@@ -10,6 +10,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 
 describe('ComptesWebComponentComponent', () => {
   let component: ComptesWebComponentComponent;
+  let fixture: any;
   let webAccountService: {
     getAllWebAccountByKeyWord: ReturnType<typeof vi.fn>;
     deleteWebAccount: ReturnType<typeof vi.fn>;
@@ -46,7 +47,8 @@ describe('ComptesWebComponentComponent', () => {
       ]
     }).compileComponents();
 
-    component = TestBed.createComponent(ComptesWebComponentComponent).componentInstance;
+    fixture = TestBed.createComponent(ComptesWebComponentComponent);
+    component = fixture.componentInstance;
   });
 
   afterEach(() => {
@@ -57,8 +59,9 @@ describe('ComptesWebComponentComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should load web accounts on init', () => {
-    component.ngOnInit();
+  it('should load web accounts on init', async () => {
+    fixture.detectChanges();
+    await fixture.whenStable();
     expect(webAccountService.getAllWebAccountByKeyWord).toHaveBeenCalled();
     expect(component.comptesWeb.length).toBe(1);
   });
@@ -82,8 +85,7 @@ describe('ComptesWebComponentComponent', () => {
   it('should handle pool loading error', () => {
     webAccountService.getDistinctPools.mockReturnValue(throwError(() => new Error('fail')));
     component.ngOnInit();
-    // Since availablePools starts empty, if getDistinctPools errors it should remain empty
-    // (Note: in component.ts, loadAvailablePools doesn't catchError to clear it if it fails on init, but we can verify it doesn't crash)
+    // getDistinctPools error leaves availablePools empty
     expect(component.availablePools).toEqual([]);
   });
 

@@ -142,4 +142,30 @@ describe('WebAccountService', () => {
     expect(req.request.method).toBe('GET');
     req.flush(42);
   });
+
+  it('getDateLog should GET', () => {
+    service.getDateLog('user1').subscribe();
+    const req = httpMock.expectOne(r => r.url.includes('datelog=user1'));
+    expect(req.request.method).toBe('GET');
+    req.flush('2024-01-01');
+  });
+
+  it('addOptionsToWebAccount should POST', () => {
+    service.addOptionsToWebAccount(1, [{idOption: 1} as any]).subscribe();
+    const req = httpMock.expectOne(r => r.url.includes('/Options'));
+    expect(req.request.method).toBe('POST');
+    req.flush(null);
+  });
+
+  it('getAllOptions should GET', () => {
+    service.getAllOptions().subscribe();
+    const req = httpMock.expectOne(r => r.url.includes('options'));
+    expect(req.request.method).toBe('GET');
+    req.flush([]);
+  });
+
+  it('should have codesPays', () => {
+    expect(service.codesPays.length).toBe(3);
+    expect(service.codesPays[0].key).toBe('Maroc');
+  });
 });

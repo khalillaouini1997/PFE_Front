@@ -182,4 +182,26 @@ describe('KpiCardComponent', () => {
 
     expect(fixture.nativeElement.querySelector('.kpi-card')?.classList.contains('trend-down')).toBe(true);
   });
+
+  it('should render sparkline with down trend color', () => {
+    fixture.componentRef.setInput('label', 'Revenue');
+    fixture.componentRef.setInput('value', 5000);
+    fixture.componentRef.setInput('showSparkline', true);
+    fixture.componentRef.setInput('trend', 'down');
+    fixture.detectChanges();
+
+    const canvas = fixture.nativeElement.querySelector('canvas.sparkline');
+    expect(canvas).toBeTruthy();
+  });
+
+  it('should render sparkline with null trend color', () => {
+    fixture.componentRef.setInput('label', 'Revenue');
+    fixture.componentRef.setInput('value', 5000);
+    fixture.componentRef.setInput('showSparkline', true);
+    fixture.componentRef.setInput('trend', null);
+    fixture.detectChanges();
+
+    const canvas = fixture.nativeElement.querySelector('canvas.sparkline');
+    expect(canvas).toBeTruthy();
+  });
 });

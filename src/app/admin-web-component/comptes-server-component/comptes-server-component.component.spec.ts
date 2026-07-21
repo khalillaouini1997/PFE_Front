@@ -67,8 +67,9 @@ describe('ComptesServerComponentComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should load comptes server on init', () => {
-    component.ngOnInit();
+  it('should load comptes server on init', async () => {
+    fixture.detectChanges();
+    await fixture.whenStable();
     expect(compteServerService.getAllServerAccount).toHaveBeenCalled();
     expect(component.comptesServer.length).toBe(1);
   });

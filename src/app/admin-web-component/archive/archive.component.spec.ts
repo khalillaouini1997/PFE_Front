@@ -12,7 +12,8 @@ describe('ArchiveComponent', () => {
   let boitierService: {
     getArchiveOfBoitier: ReturnType<typeof vi.fn>;
     getRaws: ReturnType<typeof vi.fn>;
-    getBoitierAnalysis: ReturnType<typeof vi.fn>
+    getBoitierAnalysis: ReturnType<typeof vi.fn>;
+    deleteRaw: ReturnType<typeof vi.fn>;
   };
   let location: { back: ReturnType<typeof vi.fn> };
 
@@ -46,6 +47,7 @@ describe('ArchiveComponent', () => {
         structuralAnomalies: 1, logicalAnomalies: 1, mlAnomalies: 0,
         prediction: 'Healthy', topAnomalyTypes: {SPEED_ANOMALY: 2, GPS_LOST: 1}
       })),
+      deleteRaw: vi.fn().mockReturnValue(of({})),
     };
     location = {back: vi.fn()};
 
@@ -159,5 +161,19 @@ describe('ArchiveComponent', () => {
     boitierService.getRaws.mockReturnValue(of({data: {raws: [], count: 0}}));
     component.getAllRaws();
     expect(component.rawData().count).toBe(0);
+  });
+
+  it('should delete raw after confirm', () => {
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+    boitierService.deleteRaw = vi.fn().mockReturnValue(of({}));
+    component.deleteRaw({idTram: 1} as any);
+    expect(boitierService.deleteRaw).toHaveBeenCalled();
+  });
+
+  it('should not delete raw if not confirmed', () => {
+    vi.spyOn(window, 'confirm').mockReturnValue(false);
+    boitierService.deleteRaw = vi.fn();
+    component.deleteRaw({idTram: 1} as any);
+    expect(boitierService.deleteRaw).not.toHaveBeenCalled();
   });
 });

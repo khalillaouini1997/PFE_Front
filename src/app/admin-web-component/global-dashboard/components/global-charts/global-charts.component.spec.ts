@@ -98,4 +98,34 @@ describe('GlobalChartsComponent', () => {
   it('updateCharts should return early when no chart refs', () => {
     expect(() => component.updateCharts()).not.toThrow();
   });
+
+  it('should compute healthScore with zero total and zero sum', () => {
+    fixture.componentRef.setInput('stats', {
+      totalVehicles: 0,
+      valid: 0,
+      technicalIssue: 0,
+      nonValid: 0,
+      moving: 0,
+      stopped: 0,
+      ignitionOn: 0,
+      accountsCount: 0,
+      inactive: 0
+    });
+    expect(component.healthScore()).toBe(0);
+  });
+
+  it('should compute healthScore as 100 when all valid', () => {
+    fixture.componentRef.setInput('stats', {
+      totalVehicles: 50,
+      valid: 50,
+      technicalIssue: 0,
+      nonValid: 0,
+      moving: 30,
+      stopped: 20,
+      ignitionOn: 40,
+      accountsCount: 5,
+      inactive: 0
+    });
+    expect(component.healthScore()).toBe(100);
+  });
 });

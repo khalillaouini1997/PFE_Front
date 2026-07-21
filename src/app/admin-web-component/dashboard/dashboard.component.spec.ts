@@ -10,6 +10,8 @@ import {vi} from 'vitest';
 import {DashboardComponent} from './dashboard.component';
 
 import {AuthService} from 'src/app/service/auth.service';
+import {WebAccountService} from 'src/app/service/web-account.service';
+import {WebSocketService} from 'src/app/service/web-socket.service';
 
 vi.mock('chart.js', () => {
   return {
@@ -49,7 +51,9 @@ describe('DashboardComponent', () => {
         provideRouter([]),
         importProvidersFrom(ToastrModule.forRoot()),
         {provide: ActivatedRoute, useValue: {queryParams: of({})}},
-        {provide: AuthService, useValue: {isAuthenticated: () => true}}
+        {provide: AuthService, useValue: {isAuthenticated: () => true}},
+        {provide: WebAccountService, useValue: {getAllWebAccountNames: vi.fn().mockReturnValue(of([])), getAllLastTram: vi.fn().mockReturnValue(of([])), getDeviceInstallationEvolution: vi.fn().mockReturnValue(of([]))}},
+        {provide: WebSocketService, useValue: {isConnected: vi.fn().mockReturnValue(false), connect: vi.fn(), getVehiclePositions: vi.fn().mockReturnValue(of([])), getConnectionStatus: vi.fn().mockReturnValue(of(false))}}
       ],
       imports: [DashboardComponent, TranslateModule.forRoot()]
     }).compileComponents();

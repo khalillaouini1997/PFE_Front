@@ -120,4 +120,35 @@ describe('TraccarService', () => {
       req.flush([]);
     });
   });
+
+  describe('createDevice', () => {
+    it('should make POST request to create device', () => {
+      const dto = {name: 'Tracker', imei: 'IMEI123'} as any;
+      service.createDevice(dto).subscribe();
+      const req = httpMock.expectOne(`${environment.apiBaseUrl}traccar`);
+      expect(req.request.method).toBe('POST');
+      expect(req.request.body).toEqual(dto);
+      req.flush({id: 1});
+    });
+  });
+
+  describe('updateDevice', () => {
+    it('should make PUT request to update device', () => {
+      const dto = {name: 'Updated'} as any;
+      service.updateDevice(5, dto).subscribe();
+      const req = httpMock.expectOne(`${environment.apiBaseUrl}traccar/5`);
+      expect(req.request.method).toBe('PUT');
+      expect(req.request.body).toEqual(dto);
+      req.flush({id: 5});
+    });
+  });
+
+  describe('deleteDevice', () => {
+    it('should make DELETE request to remove device', () => {
+      service.deleteDevice(3).subscribe();
+      const req = httpMock.expectOne(`${environment.apiBaseUrl}traccar/3`);
+      expect(req.request.method).toBe('DELETE');
+      req.flush({});
+    });
+  });
 });

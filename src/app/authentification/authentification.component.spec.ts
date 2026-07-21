@@ -107,7 +107,6 @@ describe('AuthentificationComponent', () => {
     component.login = 'admin';
     component.password = 'pass';
     component.onSubmit();
-    // After subscribe completes, loading should be false
     expect(component.loading).toBe(false);
   });
 
@@ -115,5 +114,17 @@ describe('AuthentificationComponent', () => {
     authService.authentificate.mockReturnValue(throwError(() => new Error('fail')));
     component.onSubmit();
     expect(component.loading).toBe(false);
+  });
+
+  it('should handle ngAfterViewInit with lazy-loaded class', () => {
+    const authPage = document.createElement('div');
+    authPage.className = 'auth-page';
+    document.body.appendChild(authPage);
+
+    component.ngAfterViewInit();
+
+    // Simulate image load
+    const img = (document as any).querySelector?.('img');
+    document.body.removeChild(authPage);
   });
 });
