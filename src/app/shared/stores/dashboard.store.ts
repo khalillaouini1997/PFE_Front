@@ -33,7 +33,6 @@ export class DashboardStore implements OnDestroy {
   private vehiclePositionSubscription?: Subscription;
   private connectionStatusSubscription?: Subscription;
 
-  // State signals
   private readonly state = signal<DashboardState>({
     comptesWeb: [],
     realtimes: [],
@@ -46,7 +45,6 @@ export class DashboardStore implements OnDestroy {
     useWebSocket: false
   });
 
-  // Computed selectors
   readonly comptesWeb = computed(() => Array.isArray(this.state().comptesWeb) ? this.state().comptesWeb : []);
   readonly realtimes = computed(() => Array.isArray(this.state().realtimes) ? this.state().realtimes : []);
   readonly selectedCompteWeb = computed(() => this.state().selectedCompteWeb);
@@ -56,7 +54,6 @@ export class DashboardStore implements OnDestroy {
   readonly loading = computed(() => this.state().loading);
   readonly error = computed(() => this.state().error);
 
-  // Actions
   loadComptesWeb() {
     this.updateState({loading: true, error: null});
     this.webAccountService.getAllWebAccountNames().subscribe({
@@ -101,7 +98,6 @@ export class DashboardStore implements OnDestroy {
     // Try WebSocket first if connected
     if (this.webSocketService.isConnected()) {
       this.setupWebSocketUpdates();
-      // Load initial data via HTTP as fallback
       this.webAccountService.getAllLastTram(idCompteWeb).subscribe({
         next: (res: any) => {
           const realtimes = res?.data || res;
@@ -113,23 +109,25 @@ export class DashboardStore implements OnDestroy {
         }
       });
     } else {
-      // Use HTTP polling
-      this.webSocketService.connect();
-      this.webAccountService.getAllLastTram(idCompteWeb).subscribe({
-        next: (res: any) => {
-          const realtimes = res?.data || res;
-          this.updateState({realtimes: Array.isArray(realtimes) ? realtimes : [], loading: false, useWebSocket: false});
-          this.calculateStats();
-        },
-        error: (_err) => {
-          this.updateState({loading: false, error: 'Failed to load real-time data'});
-        }
-      });
+      this.loadRealtimesHttp(idCompteWeb);
     }
   }
 
+  private loadRealtimesHttp(idCompteWeb: number) {
+    this.updateState({loading: true, error: null});
+    this.webAccountService.getAllLastTram(idCompteWeb).subscribe({
+      next: (res: any) => {
+        const realtimes = res?.data || res;
+        this.updateState({realtimes: Array.isArray(realtimes) ? realtimes : [], loading: false, useWebSocket: false});
+        this.calculateStats();
+      },
+      error: (_err) => {
+        this.updateState({loading: false, error: 'Failed to load real-time data'});
+      }
+    });
+  }
+
   private setupWebSocketUpdates() {
-    // Subscribe to vehicle position updates with debouncing
     this.vehiclePositionSubscription = this.webSocketService.getVehiclePositions()
       .pipe(
         debounceTime(REALTIME_CONSTANTS.UPDATE_DEBOUNCE_MS),
@@ -143,16 +141,15 @@ export class DashboardStore implements OnDestroy {
           this.calculateStats();
         },
         error: (_err) => {
-          // Fall back to HTTP polling on error
+          // Fallback to HTTP on error
           this.updateState({useWebSocket: false});
           const compte = this.state().selectedCompteWeb;
           if (compte) {
-            this.loadRealtimes(compte.idCompteClientWeb);
+            this.loadRealtimesHttp(compte.idCompteClientWeb);
           }
         }
       });
 
-    // Monitor connection status
     this.connectionStatusSubscription = this.webSocketService.getConnectionStatus()
       .subscribe(isConnected => {
         if (!isConnected && this.state().useWebSocket) {
