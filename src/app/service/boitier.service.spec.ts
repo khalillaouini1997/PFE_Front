@@ -415,4 +415,14 @@ describe('BoitierService', () => {
       req.flush({});
     });
   });
+
+  describe('deleteRaw', () => {
+    it('should make DELETE request to remove raw', () => {
+      service.deleteRaw(10, 42).subscribe();
+
+      const req = httpMock.expectOne(`${baseUrl}/10/Raw/42`);
+      expect(req.request.method).toBe('DELETE');
+      req.flush(null);
+    });
+  });
 });

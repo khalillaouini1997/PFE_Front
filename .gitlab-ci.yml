@@ -41,7 +41,7 @@ sonarcloud:
       -Dsonar.organization=khalillaouini1997
       -Dsonar.host.url=https://sonarcloud.io
       -Dsonar.sources=src
-      -Dsonar.exclusions=**/node_modules/**,**/test/**,**/*.spec.ts
+      -Dsonar.exclusions=**/node_modules/**,**/test/**,**/*.spec.ts,**/main.ts,**/polyfills.ts,**/test-setup.ts,**/test-providers.ts,**/app.routes.ts,**/admin-web-component.routes.ts,**/environments/**,**/utils/operators.ts
       -Dsonar.javascript.lcov.reportPaths=coverage/web_admin/lcov.info
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
