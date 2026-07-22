@@ -263,6 +263,11 @@ export class GlobalDashboardStore implements OnDestroy {
         const data = res?.data || res;
         const list = Array.isArray(data) ? data : [];
         this.updateState({mapRealtimes: list as GlobalRealTime[]});
+        this.recalculateStats();
+        if (this.state().summaries.length === 0 && list.length > 0) {
+          this.seedPreviousPositions(list as unknown as RealTimeSummary[]);
+          this.populateInitialActivityFeed(list as unknown as RealTimeSummary[]);
+        }
       },
       error: () => { /* Map data is supplementary, don't block on failure */
       }
@@ -285,6 +290,7 @@ export class GlobalDashboardStore implements OnDestroy {
             updated.set(pos.deviceid, pos as unknown as GlobalRealTime);
           }
           this.updateState({mapRealtimes: Array.from(updated.values()), loading: false});
+          this.recalculateStats();
         }
       });
 
@@ -334,9 +340,11 @@ export class GlobalDashboardStore implements OnDestroy {
     }
   }
 
-  /** Compute KPI stats from summaries (covers ALL devices) */
+  /** Compute KPI stats from summaries, fallback to mapRealtimes if summaries is empty */
   private recalculateStats() {
-    const data = this.state().summaries;
+    const summaryData = this.state().summaries;
+    const mapData = this.state().mapRealtimes;
+    const data = summaryData.length > 0 ? summaryData : mapData;
     const deviceCount = this.state().deviceCount;
     const totalVehicles = deviceCount > 0 ? deviceCount : data.length;
     const moving = data.filter(t => t.speed > 0).length;
