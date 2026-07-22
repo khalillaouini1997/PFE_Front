@@ -179,6 +179,23 @@ export class ArchiveComponent implements OnInit {
       .slice(0, 5);
   }
 
+  deleteInvalidTrames() {
+    const data = this.analysisData();
+    if (!data?.anomalies?.length) return;
+    if (!confirm(this.translate.instant('ARCHIVE.CONFIRM_DELETE_INVALID', {count: data.anomalies.length}))) return;
+    const ids = data.anomalies.map(a => a.idTram);
+    this.boitierService.deleteRaws(this.numBoitier(), ids).subscribe({
+      next: () => {
+        this.analysisData.set(null);
+        this.getAllRaws();
+        this.toastr.success(this.translate.instant('ARCHIVE.INVALID_DELETED', {count: ids.length}), this.translate.instant('COMMON.SUCCESS'));
+      },
+      error: () => {
+        this.toastr.error(this.translate.instant('COMMON.ERROR_OCCURRED'), this.translate.instant('COMMON.ERROR'));
+      }
+    });
+  }
+
   getTopAnomaly(): { name: string; count: number } | null {
     const types = this.getAnomalyTypes();
     return types.length > 0 ? types[0] : null;

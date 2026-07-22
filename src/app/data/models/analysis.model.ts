@@ -32,4 +32,17 @@ export interface BoitierAnalysis {
   structuralAnomalies: number;
   logicalAnomalies: number;
   mlAnomalies: number;
+  anomalies: AnomalyItem[];
+}
+
+export interface AnomalyItem {
+  idTram: number;
+  timestamp: string;
+  anomalyType: string;
+  category: string;
+  severity: string;
+  description: string;
+  field: string;
+  actualValue: string;
+  expectedRange: string;
 }

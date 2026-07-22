@@ -191,7 +191,9 @@
     "CONFIRM_DELETE_RAW": "Are you sure you want to delete this raw frame?",
     "RAW_DELETED": "Raw frame deleted successfully",
     "CONFIRM_DELETE_SELECTED": "Are you sure you want to delete {{count}} selected raw frames?",
-    "RAWS_DELETED": "{{count}} raw frames deleted successfully"
+    "RAWS_DELETED": "{{count}} raw frames deleted successfully",
+    "CONFIRM_DELETE_INVALID": "Are you sure you want to delete {{count}} invalid trames identified by anomaly detection?",
+    "INVALID_DELETED": "{{count}} invalid trames deleted successfully"
   },
   "ADMIN_ACCOUNTS": {
     "TITLE": "Admin Accounts",

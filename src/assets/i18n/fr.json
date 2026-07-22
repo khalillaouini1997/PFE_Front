@@ -191,7 +191,9 @@
     "CONFIRM_DELETE_RAW": "Êtes-vous sûr de vouloir supprimer cette ligne brute ?",
     "RAW_DELETED": "Ligne brute supprimée avec succès",
     "CONFIRM_DELETE_SELECTED": "Êtes-vous sûr de vouloir supprimer {{count}} lignes brutes sélectionnées ?",
-    "RAWS_DELETED": "{{count}} lignes brutes supprimées avec succès"
+    "RAWS_DELETED": "{{count}} lignes brutes supprimées avec succès",
+    "CONFIRM_DELETE_INVALID": "Êtes-vous sûr de vouloir supprimer {{count}} trames invalides identifiées par la détection d'anomalies ?",
+    "INVALID_DELETED": "{{count}} trames invalides supprimées avec succès"
   },
   "ADMIN_ACCOUNTS": {
     "TITLE": "Comptes Administrateurs",
