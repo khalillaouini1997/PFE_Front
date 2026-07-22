@@ -234,7 +234,8 @@ table > thead > tr > th,
 }
 
 .header-gradient {
-  background: var(--primary-600);
+  background: var(--primary-600) !important;
+  color: #ffffff !important;
 }
 
 .scale-110 {
@@ -371,8 +372,8 @@ dialog::backdrop {
   display: block !important;
   position: relative !important;
   font-size: 0.85rem !important;
-  font-weight: 800 !important;
-  color: var(--accent-primary) !important;
+  font-weight: 600 !important;
+  color: var(--text-secondary) !important;
   text-transform: uppercase !important;
   letter-spacing: 0.05em;
   margin-bottom: 8px !important;
