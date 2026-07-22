@@ -29,6 +29,7 @@ export class ArchiveComponent implements OnInit {
   isAnalyzing = signal<boolean>(false);
   analysisDays = signal<number>(500);
   selectedLimit = 500;
+  showAnomaliesPopup = signal<boolean>(false);
 
 
   constructor(
@@ -184,16 +185,26 @@ export class ArchiveComponent implements OnInit {
     if (!data?.anomalies?.length) return;
     if (!confirm(this.translate.instant('ARCHIVE.CONFIRM_DELETE_INVALID', {count: data.anomalies.length}))) return;
     const ids = data.anomalies.map(a => a.idTram);
-    this.boitierService.deleteRaws(this.numBoitier(), ids).subscribe({
+    this.boitierService.deleteRawsAndArchives(this.numBoitier(), ids).subscribe({
       next: () => {
         this.analysisData.set(null);
+        this.showAnomaliesPopup.set(false);
         this.getAllRaws();
+        this.getArchives();
         this.toastr.success(this.translate.instant('ARCHIVE.INVALID_DELETED', {count: ids.length}), this.translate.instant('COMMON.SUCCESS'));
       },
       error: () => {
         this.toastr.error(this.translate.instant('COMMON.ERROR_OCCURRED'), this.translate.instant('COMMON.ERROR'));
       }
     });
+  }
+
+  openAnomaliesPopup() {
+    this.showAnomaliesPopup.set(true);
+  }
+
+  closeAnomaliesPopup() {
+    this.showAnomaliesPopup.set(false);
   }
 
   getTopAnomaly(): { name: string; count: number } | null {

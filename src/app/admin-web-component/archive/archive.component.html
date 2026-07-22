@@ -257,8 +257,8 @@
                      style="border-left-width: 6px;">
                   <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="fw-bold m-0"><i class="fa fa-search me-2 text-primary"></i>Detection Analysis</h5>
-                    <button *ngIf="data.anomalies?.length" (click)="deleteInvalidTrames()" class="btn btn-sm btn-danger fw-bold">
-                      <i class="fa fa-trash me-1"></i> Delete {{ data.anomalies.length }} invalid trames
+                    <button *ngIf="data.anomalies?.length" (click)="openAnomaliesPopup()" class="btn btn-sm btn-danger fw-bold">
+                      <i class="fa fa-exclamation-triangle me-1"></i> {{ data.anomalies.length }} invalid trames
                     </button>
                   </div>
                   <p class="fs-5 lh-base p-3 rounded border opacity-90">{{ data.prediction }}</p>
@@ -331,5 +331,55 @@
       </p-tabpanels>
 
     </p-tabs>
+  </div>
+
+  <!-- Anomalies Popup -->
+  <div *ngIf="showAnomaliesPopup()" class="anomalies-overlay" (click)="closeAnomaliesPopup()">
+    <div class="anomalies-popup" (click)="$event.stopPropagation()">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="fw-bold m-0"><i class="fa fa-exclamation-triangle text-danger me-2"></i>Invalid Trames ({{ analysisData()?.anomalies?.length }})</h5>
+        <button (click)="closeAnomaliesPopup()" class="btn btn-sm btn-outline-secondary">
+          <i class="fa fa-times"></i>
+        </button>
+      </div>
+      <div class="anomalies-table-wrapper">
+        <table class="table table-sm table-hover mb-0">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Type</th>
+              <th>Category</th>
+              <th>Severity</th>
+              <th>Field</th>
+              <th>Value</th>
+              <th>Expected</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let a of analysisData()?.anomalies">
+              <td class="fw-bold">{{ a.idTram }}</td>
+              <td><span class="badge" style="background: var(--surface-elevated); color: var(--text-primary);">{{ a.anomalyType }}</span></td>
+              <td>{{ a.category }}</td>
+              <td>
+                <span [ngClass]="{
+                  'badge bg-danger-subtle text-danger': a.severity === 'HIGH',
+                  'badge bg-warning-subtle text-warning': a.severity === 'MEDIUM',
+                  'badge bg-secondary-subtle text-secondary': a.severity === 'LOW'
+                }">{{ a.severity }}</span>
+              </td>
+              <td class="text-muted">{{ a.field }}</td>
+              <td><code class="small">{{ a.actualValue }}</code></td>
+              <td><code class="small text-muted">{{ a.expectedRange }}</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="d-flex justify-content-end gap-2 mt-3 pt-3 border-top">
+        <button (click)="closeAnomaliesPopup()" class="btn btn-sm btn-outline-secondary px-3">Cancel</button>
+        <button (click)="deleteInvalidTrames()" class="btn btn-sm btn-danger fw-bold px-3">
+          <i class="fa fa-trash me-1"></i> Delete all
+        </button>
+      </div>
+    </div>
   </div>
 </div>

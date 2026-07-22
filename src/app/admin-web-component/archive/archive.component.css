@@ -139,3 +139,58 @@ th {
   background: var(--slate-500);
 }
 
+/* Anomalies Popup */
+.anomalies-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xl);
+}
+
+.anomalies-popup {
+  background: var(--surface-card);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-xl);
+  width: 100%;
+  max-width: 900px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-xl);
+}
+
+.anomalies-table-wrapper {
+  overflow: auto;
+  flex: 1;
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-md);
+}
+
+.anomalies-table-wrapper table {
+  margin: 0;
+}
+
+.anomalies-table-wrapper th {
+  position: sticky;
+  top: 0;
+  background: var(--surface-elevated);
+  z-index: 1;
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.anomalies-table-wrapper td {
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  vertical-align: middle;
+}
+
