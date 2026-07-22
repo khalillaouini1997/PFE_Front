@@ -279,7 +279,12 @@ export class GlobalDashboardStore implements OnDestroy {
         next: (positions) => {
           if (!positions?.length) return;
           this.generateActivityEvents(positions);
-          this.updateState({mapRealtimes: positions as unknown as GlobalRealTime[], loading: false});
+          const current = this.state().mapRealtimes;
+          const updated = new Map(current.map(p => [p.deviceid, p]));
+          for (const pos of positions) {
+            updated.set(pos.deviceid, pos as unknown as GlobalRealTime);
+          }
+          this.updateState({mapRealtimes: Array.from(updated.values()), loading: false});
         }
       });
 
@@ -332,10 +337,11 @@ export class GlobalDashboardStore implements OnDestroy {
   /** Compute KPI stats from summaries (covers ALL devices) */
   private recalculateStats() {
     const data = this.state().summaries;
-    const totalVehicles = this.state().deviceCount || data.length;
+    const deviceCount = this.state().deviceCount;
+    const totalVehicles = deviceCount > 0 ? deviceCount : data.length;
     const moving = data.filter(t => t.speed > 0).length;
     const stopped = data.filter(t => t.speed === 0).length;
-    const inactive = Math.max(0, totalVehicles - moving - stopped);
+    const inactive = Math.max(0, totalVehicles - data.length);
 
     this.updateState({
       stats: {
