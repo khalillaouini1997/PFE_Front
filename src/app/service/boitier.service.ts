@@ -68,27 +68,27 @@ export class BoitierService {
 
   // Recalculation
   recalculeHistorique(idCompteWeb: number, payload: RecalculatePayload): Observable<void> {
-    return this.http.post<void>(`${environment.apiBaseUrl}boities/${idCompteWeb}/recalculate/historique`, payload);
+    return this.http.put<void>(`${environment.apiBaseUrl}boities/${idCompteWeb}/recalculate/historique`, payload);
   }
 
   recalculeAlert(idCompteWeb: number, payload: RecalculatePayload): Observable<void> {
-    return this.http.post<void>(`${environment.apiBaseUrl}boities/${idCompteWeb}/recalculate/alert`, payload);
+    return this.http.put<void>(`${environment.apiBaseUrl}boities/${idCompteWeb}/recalculate/alert`, payload);
   }
 
   recalculeFuel(idCompteWeb: number, payload: RecalculatePayload): Observable<void> {
-    return this.http.post<void>(`${environment.apiBaseUrl}boities/${idCompteWeb}/recalculate/fuel`, payload);
+    return this.http.put<void>(`${environment.apiBaseUrl}boities/${idCompteWeb}/recalculate/fuel`, payload);
   }
 
   recalculePaths(idCompteWeb: number, payload: RecalculatePayload): Observable<void> {
-    return this.http.post<void>(`${environment.apiBaseUrl}boities/${idCompteWeb}/recalculate/paths`, payload);
+    return this.http.put<void>(`${environment.apiBaseUrl}boities/${idCompteWeb}/recalculate/paths`, payload);
   }
 
   recalculeBoitier(idCompteWeb: number, payload: RecalculatePayload): Observable<void> {
-    return this.http.post<void>(`${environment.apiBaseUrl}boities/${idCompteWeb}/recalculate/resetboitier`, payload);
+    return this.http.put<void>(`${environment.apiBaseUrl}boities/${idCompteWeb}/recalculate/resetboitier`, payload);
   }
 
   resetRT(idCompteWeb: number, payload: RecalculatePayload): Observable<void> {
-    return this.http.post<void>(`${environment.apiBaseUrl}boities/${idCompteWeb}/recalculate/resetRT`, payload);
+    return this.http.put<void>(`${environment.apiBaseUrl}boities/${idCompteWeb}/recalculate/resetRT`, payload);
   }
 
   // Configuration & Settings

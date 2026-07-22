@@ -752,6 +752,7 @@ export class ConfigurationWebComponentComponent implements OnInit {
       serviceCall(this.ID_COMPTE(), recalculePayload).subscribe({
         next: () => this.loadingRecalculate.set(false),
         error: (error) => {
+          console.error('[RECALC DEBUG] Request failed. Payload sent:', JSON.stringify(recalculePayload), 'Response:', error);
           this.loadingRecalculate.set(false);
           this.notifications.update(n => [...n, {value: error, status: false}]);
         }
