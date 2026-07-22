@@ -88,7 +88,6 @@ export class ConfigurationWebComponentComponent implements OnInit {
   ];
   readonly recalculateTypes = [
     {value: 'recalcule trajet', label: 'RECALC.PATH'},
-    {value: 'recalcule boitier', label: 'RECALC.BOX'},
     {value: 'recalcule carburant', label: 'RECALC.FUEL'},
     {value: 'recalcule alert', label: 'RECALC.ALERT'},
     {value: 'recalcule Temps reel', label: 'RECALC.REAL_TIME'}

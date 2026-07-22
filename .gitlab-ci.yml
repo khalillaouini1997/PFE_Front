@@ -4,6 +4,7 @@ stages:
 
 variables:
   IMAGE_NAME: registry.gitlab.com/$CI_PROJECT_PATH
+  GIT_DEPTH: 0
   npm_config_cache: "$CI_PROJECT_DIR/.npm"
 
 lint-test:
