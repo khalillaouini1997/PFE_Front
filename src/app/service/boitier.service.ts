@@ -54,6 +54,10 @@ export class BoitierService {
     return this.http.delete<void>(`${environment.apiBaseUrl}boities/${numBoitier}/Raw/${idTram}`);
   }
 
+  deleteRaws(numBoitier: number, idTrams: number[]): Observable<void> {
+    return this.http.delete<void>(`${environment.apiBaseUrl}boities/${numBoitier}/Raw`, {body: idTrams});
+  }
+
   getArchiveOfBoitier(numboitier: number, limit: number): Observable<Archive[]> {
     return this.http.get<Archive[]>(`${environment.apiBaseUrl}boities/${numboitier}/Archives/${limit}`);
   }

@@ -107,14 +107,23 @@
             <button (click)="getAllRaws()" class="btn btn-sm btn-outline-primary border-0"><i
               class="fa fa-refresh me-1"></i> {{ 'ARCHIVE.RELOAD_RAW' | translate }}
             </button>
+            @if (selectedRaws().length > 0) {
+              <button (click)="deleteSelectedRaws()" class="btn btn-sm btn-danger shadow-sm fw-bold">
+                <i class="fa fa-trash me-1"></i> Delete {{ selectedRaws().length }} selected
+              </button>
+            }
           </div>
           <p-table [reorderableColumns]="true"
                    [resizableColumns]="true" [value]="rawData().raws"
+                   [rowHover]="true" [(selection)]="selectedRaws"
                    columnResizeMode="expand" responsiveLayout="scroll" stateKey="raw-archive-table-state"
                    stateStorage="session"
                    styleClass="p-datatable-sm p-datatable-gridlines premium-table-custom">
             <ng-template pTemplate="header">
               <tr>
+                <th style="width: 40px">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
                 <th pReorderableColumn pResizableColumn scope="col" style="width: 100px">{{ 'COMMON.ID' | translate }}
                 </th>
                 <th pReorderableColumn pResizableColumn scope="col">{{ 'ARCHIVE.RAW_DATA' | translate }}</th>
@@ -123,6 +132,9 @@
             </ng-template>
             <ng-template let-raw pTemplate="body">
               <tr>
+                <td>
+                  <p-tableCheckbox [value]="raw"></p-tableCheckbox>
+                </td>
                 <td class="fw-bold">{{ raw.idTram }}</td>
                 <td><code class="text-primary p-1 rounded opacity-75">{{ raw.gprmc }}</code></td>
                 <td class="text-end">

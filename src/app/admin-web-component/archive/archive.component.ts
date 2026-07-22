@@ -23,6 +23,7 @@ export class ArchiveComponent implements OnInit {
   rawData = signal<Raws>(createRaws());
   numBoitier = signal<number>(0);
   archiveForm!: FormGroup;
+  selectedRaws = signal<Raw[]>([]);
 
   analysisData = signal<BoitierAnalysis | null>(null);
   isAnalyzing = signal<boolean>(false);
@@ -138,7 +139,30 @@ export class ArchiveComponent implements OnInit {
           raws: current.raws.filter(r => r.idTram !== raw.idTram),
           count: current.count - 1
         });
+        this.selectedRaws.update(s => s.filter(r => r.idTram !== raw.idTram));
         this.toastr.success(this.translate.instant('ARCHIVE.RAW_DELETED'), this.translate.instant('COMMON.SUCCESS'));
+      },
+      error: () => {
+        this.toastr.error(this.translate.instant('COMMON.ERROR_OCCURRED'), this.translate.instant('COMMON.ERROR'));
+      }
+    });
+  }
+
+  deleteSelectedRaws() {
+    const selected = this.selectedRaws();
+    if (!selected.length) return;
+    if (!confirm(this.translate.instant('ARCHIVE.CONFIRM_DELETE_SELECTED', {count: selected.length}))) return;
+    const ids = selected.map(r => r.idTram);
+    this.boitierService.deleteRaws(this.numBoitier(), ids).subscribe({
+      next: () => {
+        const current = this.rawData();
+        const deletedIds = new Set(ids);
+        this.rawData.set({
+          raws: current.raws.filter(r => !deletedIds.has(r.idTram)),
+          count: current.count - ids.length
+        });
+        this.selectedRaws.set([]);
+        this.toastr.success(this.translate.instant('ARCHIVE.RAWS_DELETED', {count: ids.length}), this.translate.instant('COMMON.SUCCESS'));
       },
       error: () => {
         this.toastr.error(this.translate.instant('COMMON.ERROR_OCCURRED'), this.translate.instant('COMMON.ERROR'));
