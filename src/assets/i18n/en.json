@@ -15,8 +15,7 @@
     "BILLING": "Billing",
     "BILLING_ANALYTICS": "Billing Analytics",
     "ACCESS_LOG": "Access Log",
-    "LOGOUT": "Logout",
-    "GLOBAL_DASHBOARD": "Global Dashboard"
+    "LOGOUT": "Logout"
   },
   "COMMON": {
     "ALL": "All",
@@ -176,11 +175,7 @@
     "VEHICLE_STATUS": "Vehicle Status",
     "SPEED_DISTRIBUTION": "Speed Distribution",
     "SIM_PROVIDERS": "SIM Card Providers",
-    "SIGNAL_QUALITY": "Signal Quality",
-    "FLEET_ACTIVITY": "Fleet Activity",
-    "IGNITION_ON": "Ignition On",
-    "FLEET_HEALTH": "Fleet Health Score",
-    "HEALTH_STATUS": "Operational Health"
+    "SIGNAL_QUALITY": "Signal Quality"
   },
   "ARCHIVE": {
     "TITLE": "Archives & Raw",

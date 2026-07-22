@@ -18,7 +18,6 @@ import {WebSocketService} from 'src/app/service/web-socket.service';
 export class SidebarComponent implements OnInit {
   isCollapsed = signal(false);
   isActiveDashBoard: boolean = true;
-  isActiveGlobalDashBoard: boolean = false;
   isActiveServerForm: boolean = false;
   isActiveForm: boolean = false;
   isActiveListServer: boolean = false;
@@ -81,7 +80,6 @@ export class SidebarComponent implements OnInit {
 
   setMenu(menu: string) {
     this.isActiveDashBoard = menu === 'dashboard';
-    this.isActiveGlobalDashBoard = menu === 'globalDashboard';
     this.isActiveAddAdminCompte = menu === 'addAdmin';
     this.isActiveAdminCompte = menu === 'listAdmin';
     this.isActiveServerForm = menu === 'addServer';

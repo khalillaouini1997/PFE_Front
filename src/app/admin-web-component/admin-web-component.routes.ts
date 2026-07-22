@@ -17,11 +17,6 @@ export const ADMIN_WEB_ROUTES: Routes = [{
       canMatch: [roleGuard(['WEBADMIN', 'GLOBALADMINDESC'])]
     },
     {
-      path: 'global-dashboard',
-      loadComponent: () => import('./global-dashboard/global-dashboard.component').then(m => m.GlobalDashboardComponent),
-      canMatch: [roleGuard(['GLOBALADMINDESC'])]
-    },
-    {
       path: 'adminCompte',
       loadComponent: () => import('./compte-admin/compte-admin.component').then(m => m.CompteAdminComponent),
       canMatch: [roleGuard(['GLOBALADMINDESC'])]

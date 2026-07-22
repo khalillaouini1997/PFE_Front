@@ -15,8 +15,7 @@
     "BILLING": "Facturation",
     "BILLING_ANALYTICS": "Analyses Facturation",
     "ACCESS_LOG": "Journal d'accès",
-    "LOGOUT": "Déconnecter",
-    "GLOBAL_DASHBOARD": "Tableau de bord global"
+    "LOGOUT": "Déconnecter"
   },
   "COMMON": {
     "ALL": "Tous",
@@ -176,11 +175,7 @@
     "VEHICLE_STATUS": "Statut des Véhicules",
     "SPEED_DISTRIBUTION": "Distribution de la Vitesse",
     "SIM_PROVIDERS": "Fournisseurs SIM",
-    "SIGNAL_QUALITY": "Qualité du Signal",
-    "FLEET_ACTIVITY": "Activité de la Flotte",
-    "IGNITION_ON": "Allumé",
-    "FLEET_HEALTH": "Score de Santé de la Flotte",
-    "HEALTH_STATUS": "Santé Opérationnelle"
+    "SIGNAL_QUALITY": "Qualité du Signal"
   },
   "ARCHIVE": {
     "TITLE": "Archives & Brutes",

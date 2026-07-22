@@ -28,13 +28,6 @@
           }</p>
         </a>
       </li>
-      <li *ngIf="isGlobalAdminDesc()" [class.active]="isActiveGlobalDashBoard">
-        <a (click)="setMenu('globalDashboard')" [title]="isCollapsed() ? ('SIDEBAR.GLOBAL_DASHBOARD' | translate) : ''"
-           routerLink="/adminWeb/global-dashboard">
-          <i class="material-icons">public</i>
-          <p>{{ 'SIDEBAR.GLOBAL_DASHBOARD' | translate }}</p>
-        </a>
-      </li>
       <li *ngIf="isGlobalAdminDesc()" [class.active]="isActiveBilling">
         <a (click)="setMenu('billing')" [title]="isCollapsed() ? ('SIDEBAR.BILLING' | translate) : ''"
            routerLink="/adminWeb/billing">
