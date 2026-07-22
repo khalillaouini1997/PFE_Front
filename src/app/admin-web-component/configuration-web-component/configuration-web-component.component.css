@@ -151,7 +151,7 @@ table > thead > tr > th,
 .modal-dialog-small-margin {
   margin-top: 5px;
   margin-right: 5px;
-  color: white;
+  color: var(--text-primary);
   font-size: 20px;
 }
 
