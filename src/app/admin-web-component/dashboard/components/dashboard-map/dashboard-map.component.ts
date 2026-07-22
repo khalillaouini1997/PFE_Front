@@ -134,6 +134,10 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
 
       this.updateMarkers();
 
+      setTimeout(() => {
+        this.map?.invalidateSize();
+      }, TIMEOUTS.MAP_INITIALIZE);
+
       // Set loading to false after a timeout even if tiles don't load
       setTimeout(() => {
         if (this.isMapLoading()) {

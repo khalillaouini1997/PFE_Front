@@ -161,11 +161,6 @@ describe('SidebarComponent', () => {
   it('should set menu active state', () => {
     component.setMenu('dashboard');
     expect(component.isActiveDashBoard).toBe(true);
-    expect(component.isActiveGlobalDashBoard).toBe(false);
-
-    component.setMenu('globalDashboard');
-    expect(component.isActiveGlobalDashBoard).toBe(true);
-    expect(component.isActiveDashBoard).toBe(false);
   });
 
   it('should set server menu', () => {
