@@ -94,7 +94,7 @@ export class AddCompteServerComponent {
         next: () => {
           this.mode = false;
           this.loading = false;
-          this.router.navigate(['/adminWeb/listWebs']);
+          this.router.navigate(['/adminWeb/listServers']);
         },
         error: () => {
         }
