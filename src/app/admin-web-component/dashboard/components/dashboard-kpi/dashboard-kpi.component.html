@@ -1,34 +1,34 @@
 <div class="kpi-grid">
   <app-kpi-card
-    [label]="'Total Vehicles'"
+    [label]="'DASHBOARD.TOTAL_TERMINALS' | translate"
     [showSparkline]="true"
     [trendValue]="5"
     [trend]="'up'"
     [value]="stats().total"
-    icon="🚗"
+    icon="fa-car"
   ></app-kpi-card>
   <app-kpi-card
-    [label]="'Valid Status'"
+    [label]="'DASHBOARD.VALID_TERMINALS' | translate"
     [showSparkline]="true"
     [trendValue]="12"
     [trend]="'up'"
     [value]="stats().valid"
-    icon="✅"
+    icon="fa-check-circle"
   ></app-kpi-card>
   <app-kpi-card
-    [label]="'Technical Issues'"
+    [label]="'DASHBOARD.TECHNICAL_ISSUES' | translate"
     [showSparkline]="true"
     [trendValue]="8"
     [trend]="'down'"
     [value]="stats().technicalIssue"
-    icon="⚠️"
+    icon="fa-exclamation-triangle"
   ></app-kpi-card>
   <app-kpi-card
-    [label]="'Moving'"
+    [label]="'DASHBOARD.MOVING' | translate"
     [showSparkline]="true"
     [trendValue]="15"
     [trend]="'up'"
     [value]="stats().moving"
-    icon="📍"
+    icon="fa-map-marker"
   ></app-kpi-card>
 </div>

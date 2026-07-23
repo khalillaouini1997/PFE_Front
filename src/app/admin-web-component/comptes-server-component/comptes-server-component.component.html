@@ -53,6 +53,11 @@
                       title="{{ 'COMMON.DETAILS' | translate }}">
                 <i class="fa fa-list-ul fs-5"></i>
               </button>
+              <button (click)="deleteCompteServer(compteServer)" *ngIf="canDelete()"
+                      class="btn btn-sm btn-outline-danger border-0 p-2"
+                      title="{{ 'COMMON.DELETE' | translate }}">
+                <i class="fa fa-trash fs-5"></i>
+              </button>
             </div>
           </td>
         </tr>

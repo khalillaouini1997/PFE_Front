@@ -158,7 +158,7 @@
                 <small class="text-muted">Structural, logical & ML-based anomaly analysis using Isolation Forest</small>
               </div>
               <div class="d-flex align-items-center gap-2">
-                <label class="text-muted small me-1" for="selectedLimit">Trames to analyze:</label>
+                <label class="text-muted small me-1" for="selectedLimit">{{ 'ARCHIVE.TRAMES_TO_ANALYZE' | translate }}</label>
                 <select (ngModelChange)="changeDays($event)" [(ngModel)]="selectedLimit" class="form-select form-select-sm shadow-sm"
                         id="selectedLimit" style="width: auto;">
                   <option [value]="100">100</option>
@@ -181,7 +181,7 @@
               <div aria-live="polite" class="spinner-border text-danger mb-3">
                 <span class="visually-hidden">Loading...</span>
               </div>
-              <h5 class="text-muted">Running anomaly detection across trame data...</h5>
+              <h5 class="text-muted">{{ 'ARCHIVE.ANOMALY_RUNNING' | translate }}</h5>
             </div>
 
             <!-- Analysis Content -->
@@ -260,7 +260,7 @@
                      style="border-left-width: 6px;">
                   <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="fw-bold m-0"><i class="fa fa-search me-2 text-primary"></i>Detection Analysis</h5>
-                    <button *ngIf="data.anomalies?.length" (click)="openAnomaliesPopup()" class="btn btn-sm btn-danger fw-bold">
+                    <button *ngIf="data.anomalies.length" (click)="openAnomaliesPopup()" class="btn btn-sm btn-danger fw-bold">
                       <i class="fa fa-exclamation-triangle me-1"></i> {{ data.anomalies.length }} invalid trames
                     </button>
                   </div>
@@ -327,7 +327,7 @@
             <!-- No Data State -->
             <div *ngIf="!isAnalyzing() && !analysisData()" class="text-center py-5">
               <i class="fa fa-shield-alt text-muted display-4 mb-3"></i>
-              <h5 class="text-muted">No anomaly data available. Select trame count and click Run Detection.</h5>
+              <h5 class="text-muted">{{ 'ARCHIVE.ANOMALY_NO_DATA' | translate }}</h5>
             </div>
           </div>
         </p-tabpanel>

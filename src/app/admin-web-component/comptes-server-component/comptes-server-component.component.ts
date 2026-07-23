@@ -136,13 +136,12 @@ export class ComptesServerComponentComponent implements OnInit {
       });
   }
 
-  deleteCompteServer() {
-    const selectedId = this.updateServerForm.get('idCompteClientServer')?.value;
-    if (selectedId && confirm(this.translate.instant('WEB_ACCOUNTS.DELETE_CONFIRM'))) {
-      withToast(this.compteServerService.deleteCompteServer(selectedId), this.toastr, this.translate, 'SERVER_ACCOUNTS.DELETE_SUCCESS')
+  deleteCompteServer(compteServer: CompteServer) {
+    if (confirm(this.translate.instant('WEB_ACCOUNTS.DELETE_CONFIRM'))) {
+      withToast(this.compteServerService.deleteCompteServer(compteServer.idCompteClientServer), this.toastr, this.translate, 'SERVER_ACCOUNTS.DELETE_SUCCESS')
         .subscribe({
           next: () => {
-            this.comptesServer = this.comptesServer.filter(x => x.idCompteClientServer !== selectedId);
+            this.comptesServer = this.comptesServer.filter(x => x.idCompteClientServer !== compteServer.idCompteClientServer);
           },
           error: () => {
           }

@@ -21,13 +21,14 @@ import {
   TIMEOUTS,
   VALID_ANGLES
 } from '../../../../shared/constants/app.constants';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
 
 declare const L: any;
 
 @Component({
   selector: 'app-dashboard-map',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   templateUrl: './dashboard-map.component.html',
   styleUrls: ['./dashboard-map.component.css']
 })
@@ -45,6 +46,7 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
   private readonly markerMap = new Map<number, any>();
   private readonly previousPositions = new Map<number, { lat: number; lng: number }>();
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly translate = inject(TranslateService);
   private animationFrameId?: number;
   private currentFleetHash = '';
 
@@ -118,7 +120,7 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
       });
 
       tileLayer.on('tileerror', (_event: any) => {
-        this.mapError.set('Map tiles failed to load. Check your internet connection.');
+        this.mapError.set(this.translate.instant('DASHBOARD.MAP_TILES_ERROR'));
         this.isMapLoading.set(false);
       });
 
@@ -147,7 +149,7 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
 
     } catch (error) {
       console.warn('Map init error:', error);
-      this.mapError.set('Failed to initialize map. Please refresh the page.');
+      this.mapError.set(this.translate.instant('DASHBOARD.MAP_INIT_ERROR'));
       this.isMapLoading.set(false);
     }
   }

@@ -2,7 +2,7 @@
   @if (isMapLoading()) {
     <div class="map-loading">
       <div class="map-loading-spinner"></div>
-      <p>Loading map...</p>
+      <p>{{ 'DASHBOARD.MAP_LOADING' | translate }}</p>
     </div>
   }
 
@@ -11,11 +11,11 @@
       <div class="map-error-icon">
         <i class="material-icons">map</i>
       </div>
-      <h3>Map Unavailable</h3>
+      <h3>{{ 'DASHBOARD.MAP_UNAVAILABLE' | translate }}</h3>
       <p>{{ mapError() }}</p>
       <button (click)="retryMapLoad()" class="map-retry-btn" type="button">
         <i class="material-icons">refresh</i>
-        <span>Retry</span>
+        <span>{{ 'DASHBOARD.MAP_RETRY' | translate }}</span>
       </button>
     </div>
   }

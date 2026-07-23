@@ -1,11 +1,12 @@
 import {Component, input} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {KpiCardComponent} from '../../../../shared/components/kpi-card/kpi-card.component';
+import {TranslateModule} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-dashboard-kpi',
   standalone: true,
-  imports: [CommonModule, KpiCardComponent],
+  imports: [CommonModule, KpiCardComponent, TranslateModule],
   templateUrl: './dashboard-kpi.component.html',
   styleUrls: ['./dashboard-kpi.component.css']
 })

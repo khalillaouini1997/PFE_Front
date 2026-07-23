@@ -7,7 +7,7 @@ import {
   SPEED_BANDS,
   STATUS_TYPES
 } from '../../../../shared/constants/app.constants';
-import {TranslateService} from '@ngx-translate/core';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {Chart, registerables} from 'chart.js';
 import {updateOrCreateChart} from '../../../../shared/utils/chart.utils';
 import {DashboardStore} from '../../../../shared/stores';
@@ -17,7 +17,7 @@ Chart.register(...registerables);
 @Component({
   selector: 'app-dashboard-charts',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   templateUrl: './dashboard-charts.component.html',
   styleUrls: ['./dashboard-charts.component.css']
 })
@@ -162,7 +162,7 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
       'Orange Tunisie': r.filter(t => t.numPuce?.startsWith(SIM_CARD_PREFIXES.ORANGE_TUNISIE)).length,
       'Tunisie Telecom': r.filter(t => t.numPuce?.startsWith(SIM_CARD_PREFIXES.TUNISIE_TELECOM)).length,
       'Ooredoo Tunisie': r.filter(t => t.numPuce?.startsWith(SIM_CARD_PREFIXES.OOREDOO_TUNISIE)).length,
-      'Unknown': r.filter(t => {
+      [this.translate.instant('COMMON.UNKNOWN')]: r.filter(t => {
         const p = t.numPuce || '';
         return !p.startsWith('892160');
       }).length
@@ -195,16 +195,16 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
   private updateSignalChart() {
     const r = this.realtimes() as any[];
     const signalDistribution = {
-      'Excellent': r.filter(t => t.signal >= 20).length,
-      'Good': r.filter(t => t.signal >= 15 && t.signal < 20).length,
-      'Fair': r.filter(t => t.signal >= 10 && t.signal < 15).length,
-      'Poor': r.filter(t => t.signal < 10).length
+      [this.translate.instant('DASHBOARD.SIGNAL_EXCELLENT')]: r.filter(t => t.signal >= 20).length,
+      [this.translate.instant('DASHBOARD.SIGNAL_GOOD')]: r.filter(t => t.signal >= 15 && t.signal < 20).length,
+      [this.translate.instant('DASHBOARD.SIGNAL_FAIR')]: r.filter(t => t.signal >= 10 && t.signal < 15).length,
+      [this.translate.instant('DASHBOARD.SIGNAL_POOR')]: r.filter(t => t.signal < 10).length
     };
 
     const data = {
       labels: Object.keys(signalDistribution),
       datasets: [{
-        label: 'Vehicles',
+        label: this.translate.instant('DASHBOARD.VEHICLES'),
         data: Object.values(signalDistribution),
         backgroundColor: [
           CHART_CONSTANTS.COLORS.VALID,
@@ -237,7 +237,7 @@ export class DashboardChartsComponent implements AfterViewInit, OnDestroy {
     const data = {
       labels,
       datasets: [{
-        label: 'Cumulative Devices',
+        label: this.translate.instant('DASHBOARD.CUMULATIVE_DEVICES'),
         data: cumulativeData,
         borderColor: CHART_CONSTANTS.COLORS.PRIMARY,
         backgroundColor: 'rgba(20, 184, 166, 0.1)',

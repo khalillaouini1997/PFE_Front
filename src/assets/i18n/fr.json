@@ -62,7 +62,8 @@
     "APPLY": "Appliquer",
     "YES": "Oui",
     "NO": "Non",
-    "REQUIRED": "Ce champ est obligatoire"
+    "REQUIRED": "Ce champ est obligatoire",
+    "TOGGLE_NAV": "Basculer la navigation"
   },
   "SERVER_DETAILS": {
     "TITLE": "Détails du Serveur",
@@ -119,7 +120,8 @@
     "ERROR_MESSAGE": "Erreur d'authentification",
     "MIN_LENGTH_6": "Minimum 6 caractères requis",
     "CONFIRM_PASSWORD": "Confirmer le mot de passe",
-    "PASSWORDS_MISMATCH": "Les mots de passe ne correspondent pas"
+    "PASSWORDS_MISMATCH": "Les mots de passe ne correspondent pas",
+    "LOGIN_FAILED": "Échec de la connexion."
   },
   "DASHBOARD": {
     "TITLE": "Tableau de bord",
@@ -151,31 +153,21 @@
     "VEHICLE_STATUS": "Statut du Véhicule",
     "SPEED_DISTRIBUTION": "Distribution de la Vitesse",
     "SIM_CARD_PROVIDERS": "Fournisseurs de Cartes SIM",
-    "SIGNAL_QUALITY": "Qualité du Signal"
-  },
-  "GLOBAL_DASHBOARD": {
-    "TITLE": "Tableau de bord global de la flotte",
-    "SUBTITLE": "Suivi global de la flotte à travers tous les comptes",
-    "TOTAL_FLEET": "Flotte Totale",
-    "ACTIVE_FLEET": "Flotte Active",
-    "STOPPED_FLEET": "Flotte Arrêtée",
-    "INACTIVE_FLEET": "Inactif / Aucun Signal",
-    "VALID_STATUS": "Statut Valide",
-    "TECHNICAL_ISSUES": "Problèmes Techniques",
-    "TOTAL_ACCOUNTS": "Total Comptes",
-    "ACCOUNT_BREAKDOWN": "Répartition par Compte",
-    "ACCOUNT": "Compte",
-    "AREA": "Région",
-    "TOTAL_VEHICLES": "Total Véhicules",
-    "MOVING": "En Mouvement",
-    "STOPPED": "Arrêté",
-    "VALID": "Valide",
-    "ISSUES": "Problèmes",
-    "AVG_SPEED": "Vit. Moy.",
-    "VEHICLE_STATUS": "Statut des Véhicules",
-    "SPEED_DISTRIBUTION": "Distribution de la Vitesse",
-    "SIM_PROVIDERS": "Fournisseurs SIM",
-    "SIGNAL_QUALITY": "Qualité du Signal"
+    "SIGNAL_QUALITY": "Qualité du Signal",
+    "GRANULARITY_MONTH": "Mois",
+    "GRANULARITY_TRIMESTER": "Trimestre",
+    "GRANULARITY_YEAR": "Année",
+    "MAP_UNAVAILABLE": "Carte indisponible",
+    "MAP_TILES_ERROR": "Échec du chargement des tuiles de la carte. Vérifiez votre connexion Internet.",
+    "MAP_INIT_ERROR": "Échec de l'initialisation de la carte. Veuillez actualiser la page.",
+    "MAP_LOADING": "Chargement de la carte...",
+    "MAP_RETRY": "Réessayer",
+    "SIGNAL_EXCELLENT": "Excellent",
+    "SIGNAL_GOOD": "Bon",
+    "SIGNAL_FAIR": "Passable",
+    "SIGNAL_POOR": "Mauvais",
+    "CUMULATIVE_DEVICES": "Appareils cumulés",
+    "LOADING_FLEET": "Chargement de vos données de flotte…"
   },
   "ARCHIVE": {
     "TITLE": "Archives & Brutes",
@@ -193,7 +185,10 @@
     "CONFIRM_DELETE_SELECTED": "Êtes-vous sûr de vouloir supprimer {{count}} lignes brutes sélectionnées ?",
     "RAWS_DELETED": "{{count}} lignes brutes supprimées avec succès",
     "CONFIRM_DELETE_INVALID": "Êtes-vous sûr de vouloir supprimer {{count}} trames invalides identifiées par la détection d'anomalies ?",
-    "INVALID_DELETED": "{{count}} trames invalides supprimées avec succès"
+    "INVALID_DELETED": "{{count}} trames invalides supprimées avec succès",
+    "TRAMES_TO_ANALYZE": "Trames à analyser :",
+    "ANOMALY_RUNNING": "Détection d'anomalies en cours sur les données de trames...",
+    "ANOMALY_NO_DATA": "Aucune donnée d'anomalie disponible. Sélectionnez le nombre de trames et cliquez sur Détecter."
   },
   "ADMIN_ACCOUNTS": {
     "TITLE": "Comptes Administrateurs",
@@ -369,7 +364,8 @@
     "ASSOCIATED_SERVER": "Serveur Associé",
     "TERMINALS": "Terminaux",
     "COUNTRY_CODE": "Code Pays",
-    "INVALID_SERVER_ID": "ID serveur invalide"
+    "INVALID_SERVER_ID": "ID serveur invalide",
+    "CONSOLE_IDLE": "La console est inactive. Les événements de log actifs apparaîtront ici."
   },
   "RECALC": {
     "PATH": "recalcule trajet",
@@ -456,10 +452,23 @@
     "REFRESH_SUCCESS": "Facturation actualisée avec succès",
     "REFRESH_ERROR": "Erreur lors de l'actualisation de la facturation",
     "PDF_DOWNLOAD_SUCCESS": "PDF téléchargé avec succès",
-    "PDF_DOWNLOAD_ERROR": "Erreur lors du téléchargement du PDF"
+    "PDF_DOWNLOAD_ERROR": "Erreur lors du téléchargement du PDF",
+    "NO_INVOICE_FOR_PERIOD": "Aucune facture n'existe pour ce compte et cette période. Cliquez sur Calculer pour en générer une.",
+    "NO_INVOICES_YET": "Aucune facture n'a encore été générée pour ce compte.",
+    "LOADING_ANALYTICS": "Chargement des analyses...",
+    "REVENUE_BY_MONTH": "Revenus par Mois",
+    "REVENUE_BY_ACCOUNT": "Revenus par Compte",
+    "NO_DATA_THIS_YEAR": "Aucune donnée de facturation disponible pour cette année.",
+    "INVOICE_STATUS": "Statut des Factures",
+    "TOP_DEVICES": "Top Appareils par Facturation",
+    "DEVICE": "Appareil",
+    "LABEL": "Label",
+    "WORKING_DAYS": "Jours Travaillés",
+    "TOTAL_HT": "Total (HT)",
+    "DAYS": "jours",
+    "REVENUE_FORECAST": "Prévision des Revenus (Prédiction sur 6 mois)"
   },
   "BILLING_DASHBOARD": {
-    "TITLE": "Analyses Facturation",
-    "SUBTITLE": "Rapports de facturation interactifs propulsés par Metabase"
+    "TITLE": "Analyses Facturation"
   }
 }

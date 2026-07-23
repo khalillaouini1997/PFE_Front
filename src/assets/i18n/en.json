@@ -62,7 +62,8 @@
     "APPLY": "Apply",
     "YES": "Yes",
     "NO": "No",
-    "REQUIRED": "This field is required"
+    "REQUIRED": "This field is required",
+    "TOGGLE_NAV": "Toggle navigation"
   },
   "SERVER_DETAILS": {
     "TITLE": "Server Details",
@@ -119,7 +120,8 @@
     "ERROR_MESSAGE": "Authentication error",
     "MIN_LENGTH_6": "Minimum 6 characters required",
     "CONFIRM_PASSWORD": "Confirm password",
-    "PASSWORDS_MISMATCH": "Passwords do not match"
+    "PASSWORDS_MISMATCH": "Passwords do not match",
+    "LOGIN_FAILED": "Login failed."
   },
   "DASHBOARD": {
     "TITLE": "Dashboard",
@@ -151,31 +153,21 @@
     "VEHICLE_STATUS": "Vehicle Status",
     "SPEED_DISTRIBUTION": "Speed Distribution",
     "SIM_CARD_PROVIDERS": "Sim Card Providers",
-    "SIGNAL_QUALITY": "Signal Quality"
-  },
-  "GLOBAL_DASHBOARD": {
-    "TITLE": "Global Fleet Dashboard",
-    "SUBTITLE": "Fleet-wide monitoring across all accounts",
-    "TOTAL_FLEET": "Total Fleet",
-    "ACTIVE_FLEET": "Active Fleet",
-    "STOPPED_FLEET": "Stopped Fleet",
-    "INACTIVE_FLEET": "Inactive / No Signal",
-    "VALID_STATUS": "Valid Status",
-    "TECHNICAL_ISSUES": "Technical Issues",
-    "TOTAL_ACCOUNTS": "Total Accounts",
-    "ACCOUNT_BREAKDOWN": "Account Breakdown",
-    "ACCOUNT": "Account",
-    "AREA": "Area",
-    "TOTAL_VEHICLES": "Total Vehicles",
-    "MOVING": "Moving",
-    "STOPPED": "Stopped",
-    "VALID": "Valid",
-    "ISSUES": "Issues",
-    "AVG_SPEED": "Avg Speed",
-    "VEHICLE_STATUS": "Vehicle Status",
-    "SPEED_DISTRIBUTION": "Speed Distribution",
-    "SIM_PROVIDERS": "SIM Card Providers",
-    "SIGNAL_QUALITY": "Signal Quality"
+    "SIGNAL_QUALITY": "Signal Quality",
+    "GRANULARITY_MONTH": "Month",
+    "GRANULARITY_TRIMESTER": "Trimester",
+    "GRANULARITY_YEAR": "Year",
+    "MAP_UNAVAILABLE": "Map Unavailable",
+    "MAP_TILES_ERROR": "Map tiles failed to load. Check your internet connection.",
+    "MAP_INIT_ERROR": "Failed to initialize map. Please refresh the page.",
+    "MAP_LOADING": "Loading map...",
+    "MAP_RETRY": "Retry",
+    "SIGNAL_EXCELLENT": "Excellent",
+    "SIGNAL_GOOD": "Good",
+    "SIGNAL_FAIR": "Fair",
+    "SIGNAL_POOR": "Poor",
+    "CUMULATIVE_DEVICES": "Cumulative Devices",
+    "LOADING_FLEET": "Loading your fleet insights…"
   },
   "ARCHIVE": {
     "TITLE": "Archives & Raw",
@@ -193,7 +185,10 @@
     "CONFIRM_DELETE_SELECTED": "Are you sure you want to delete {{count}} selected raw frames?",
     "RAWS_DELETED": "{{count}} raw frames deleted successfully",
     "CONFIRM_DELETE_INVALID": "Are you sure you want to delete {{count}} invalid trames identified by anomaly detection?",
-    "INVALID_DELETED": "{{count}} invalid trames deleted successfully"
+    "INVALID_DELETED": "{{count}} invalid trames deleted successfully",
+    "TRAMES_TO_ANALYZE": "Trames to analyze:",
+    "ANOMALY_RUNNING": "Running anomaly detection across trame data...",
+    "ANOMALY_NO_DATA": "No anomaly data available. Select trame count and click Run Detection."
   },
   "ADMIN_ACCOUNTS": {
     "TITLE": "Admin Accounts",
@@ -369,7 +364,8 @@
     "ASSOCIATED_SERVER": "Associated Server",
     "TERMINALS": "Terminals",
     "COUNTRY_CODE": "Country Code",
-    "INVALID_SERVER_ID": "Invalid server ID"
+    "INVALID_SERVER_ID": "Invalid server ID",
+    "CONSOLE_IDLE": "Console is idle. Active log events will appear here."
   },
   "RECALC": {
     "PATH": "recalculate path",
@@ -456,10 +452,23 @@
     "REFRESH_SUCCESS": "Billing refreshed successfully",
     "REFRESH_ERROR": "Error refreshing billing",
     "PDF_DOWNLOAD_SUCCESS": "PDF downloaded successfully",
-    "PDF_DOWNLOAD_ERROR": "Error downloading PDF"
+    "PDF_DOWNLOAD_ERROR": "Error downloading PDF",
+    "NO_INVOICE_FOR_PERIOD": "No billing invoice exists for this account and period. Click Calculate to generate one.",
+    "NO_INVOICES_YET": "No invoices have been generated for this account yet.",
+    "LOADING_ANALYTICS": "Loading analytics...",
+    "REVENUE_BY_MONTH": "Revenue by Month",
+    "REVENUE_BY_ACCOUNT": "Revenue by Account",
+    "NO_DATA_THIS_YEAR": "No billing data available for this year.",
+    "INVOICE_STATUS": "Invoice Status",
+    "TOP_DEVICES": "Top Devices by Billing",
+    "DEVICE": "Device",
+    "LABEL": "Label",
+    "WORKING_DAYS": "Working Days",
+    "TOTAL_HT": "Total (HT)",
+    "DAYS": "days",
+    "REVENUE_FORECAST": "Revenue Forecast (6-Month Rolling Prediction)"
   },
   "BILLING_DASHBOARD": {
-    "TITLE": "Billing Analytics",
-    "SUBTITLE": "Interactive billing reports powered by Metabase"
+    "TITLE": "Billing Analytics"
   }
 }

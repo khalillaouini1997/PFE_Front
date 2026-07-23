@@ -2,10 +2,9 @@
   <div class="analytics-header">
     <div class="title-section">
       <h2>{{ 'BILLING_DASHBOARD.TITLE' | translate }}</h2>
-      <p class="subtitle">{{ 'BILLING_DASHBOARD.SUBTITLE' | translate }}</p>
     </div>
     <div class="year-selector">
-      <label for="billingYear">Year:</label>
+      <label for="billingYear">{{ 'BILLING.YEAR' | translate }}:</label>
       <select (change)="loadAnalytics()" [(ngModel)]="selectedYear" class="form-control" id="billingYear">
         <option *ngFor="let y of [selectedYear-2, selectedYear-1, selectedYear, selectedYear+1]" [value]="y">{{ y }}
         </option>
@@ -16,20 +15,20 @@
   @if (loading) {
     <div class="loading-state">
       <div class="spinner"></div>
-      <p>Loading analytics...</p>
+      <p>{{ 'BILLING.LOADING_ANALYTICS' | translate }}</p>
     </div>
   }
 
   <!-- Charts Row 1 -->
   <div class="charts-row">
     <div class="chart-card">
-      <h3>Revenue by Month</h3>
+      <h3>{{ 'BILLING.REVENUE_BY_MONTH' | translate }}</h3>
       <div class="chart-wrapper">
         <canvas #revenueByMonthChart></canvas>
       </div>
     </div>
     <div class="chart-card">
-      <h3>Revenue by Account</h3>
+      <h3>{{ 'BILLING.REVENUE_BY_ACCOUNT' | translate }}</h3>
       <div class="chart-wrapper">
         <canvas #revenueByAccountChart></canvas>
       </div>
@@ -39,33 +38,33 @@
   <!-- Charts Row 2 -->
   <div class="charts-row">
     <div class="chart-card chart-small">
-      <h3>Invoice Status</h3>
+      <h3>{{ 'BILLING.INVOICE_STATUS' | translate }}</h3>
       <div class="chart-wrapper">
         <canvas #statusChart></canvas>
       </div>
     </div>
     <div class="chart-card">
-      <h3>Top Devices by Billing</h3>
+      <h3>{{ 'BILLING.TOP_DEVICES' | translate }}</h3>
       <div class="table-wrapper">
         <table *ngIf="topDevices.length > 0" class="analytics-table">
           <thead>
           <tr>
-            <th>Device</th>
-            <th>Label</th>
-            <th>Working Days</th>
-            <th>Total (HT)</th>
+            <th>{{ 'BILLING.DEVICE' | translate }}</th>
+            <th>{{ 'BILLING.LABEL' | translate }}</th>
+            <th>{{ 'BILLING.WORKING_DAYS' | translate }}</th>
+            <th>{{ 'BILLING.TOTAL_HT' | translate }}</th>
           </tr>
           </thead>
           <tbody>
           <tr *ngFor="let device of topDevices">
             <td><span class="device-badge">#{{ device.numBoitier }}</span></td>
             <td>{{ device.deviceLabel }}</td>
-            <td>{{ device.totalWorkingDays }} days</td>
+            <td>{{ device.totalWorkingDays }} {{ 'BILLING.DAYS' | translate }}</td>
             <td class="fw-bold">{{ formatCurrency(device.totalSubtotal) }}</td>
           </tr>
           </tbody>
         </table>
-        <p *ngIf="topDevices.length === 0" class="no-data">No billing data available for this year.</p>
+        <p *ngIf="topDevices.length === 0" class="no-data">{{ 'BILLING.NO_DATA_THIS_YEAR' | translate }}</p>
       </div>
     </div>
   </div>

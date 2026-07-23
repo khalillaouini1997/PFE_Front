@@ -127,8 +127,7 @@
     @if (noExistingInvoice && !loading && !showAllInvoicesView) {
       <div class="no-invoice-state">
         <div class="no-invoice-icon">📋</div>
-        <h3>No Invoice Found</h3>
-        <p>No billing invoice exists for this account and period. Click <strong>Calculate</strong> to generate one.</p>
+        <p>{{ 'BILLING.NO_INVOICE_FOR_PERIOD' | translate }}</p>
       </div>
     }
 
@@ -152,8 +151,7 @@
         } @else if (allInvoices.length === 0) {
           <div class="no-invoice-state">
             <div class="no-invoice-icon">📋</div>
-            <h3>No Invoices Found</h3>
-            <p>No invoices have been generated for this account yet.</p>
+            <p>{{ 'BILLING.NO_INVOICES_YET' | translate }}</p>
           </div>
         } @else {
           <p-table [paginator]="true" [rowsPerPageOptions]="[10, 25, 50]" [rows]="10"
@@ -356,20 +354,20 @@
       @if (analyticsLoading) {
         <div class="loading-state">
           <div class="spinner"></div>
-          <p>Loading analytics...</p>
+          <p>{{ 'BILLING.LOADING_ANALYTICS' | translate }}</p>
         </div>
       }
 
       <!-- Charts Row 1 -->
       <div class="charts-row">
         <div class="chart-card">
-          <h3>Revenue by Month</h3>
+          <h3>{{ 'BILLING.REVENUE_BY_MONTH' | translate }}</h3>
           <div class="chart-wrapper">
             <canvas #revenueByMonthChart></canvas>
           </div>
         </div>
         <div class="chart-card">
-          <h3>Revenue by Account</h3>
+          <h3>{{ 'BILLING.REVENUE_BY_ACCOUNT' | translate }}</h3>
           <div class="chart-wrapper">
             <canvas #revenueByAccountChart></canvas>
           </div>
@@ -379,13 +377,13 @@
       <!-- Charts Row 2 -->
       <div class="charts-row">
         <div class="chart-card chart-small">
-          <h3>Invoice Status</h3>
+          <h3>{{ 'BILLING.INVOICE_STATUS' | translate }}</h3>
           <div class="chart-wrapper">
             <canvas #statusChart></canvas>
           </div>
         </div>
         <div class="chart-card">
-          <h3>Top Devices by Billing</h3>
+          <h3>{{ 'BILLING.TOP_DEVICES' | translate }}</h3>
           <div class="table-wrapper">
             @if (topDevices.length > 0) {
               <p-table [paginator]="true" [rows]="5" [value]="topDevices"
@@ -393,23 +391,23 @@
                        styleClass="p-datatable-sm p-datatable-gridlines premium-table-custom">
                 <ng-template pTemplate="header">
                   <tr>
-                    <th scope="col">Device</th>
-                    <th scope="col">Label</th>
-                    <th scope="col">Working Days</th>
-                    <th scope="col">Total (HT)</th>
+                    <th scope="col">{{ 'BILLING.DEVICE' | translate }}</th>
+                    <th scope="col">{{ 'BILLING.LABEL' | translate }}</th>
+                    <th scope="col">{{ 'BILLING.WORKING_DAYS' | translate }}</th>
+                    <th scope="col">{{ 'BILLING.TOTAL_HT' | translate }}</th>
                   </tr>
                 </ng-template>
                 <ng-template let-device pTemplate="body">
                   <tr>
                     <td><span class="device-badge">#{{ device.numBoitier }}</span></td>
                     <td>{{ device.deviceLabel }}</td>
-                    <td>{{ device.totalWorkingDays }} days</td>
+                    <td>{{ device.totalWorkingDays }} {{ 'BILLING.DAYS' | translate }}</td>
                     <td class="fw-bold">{{ formatCurrency(device.totalSubtotal) }}</td>
                   </tr>
                 </ng-template>
               </p-table>
             } @else {
-              <p *ngIf="!analyticsLoading" class="no-data">No billing data available for this year.</p>
+              <p *ngIf="!analyticsLoading" class="no-data">{{ 'BILLING.NO_DATA_THIS_YEAR' | translate }}</p>
             }
           </div>
         </div>
@@ -418,7 +416,7 @@
       <!-- Revenue Forecast Chart -->
       <div class="charts-row">
         <div class="chart-card full-width">
-          <h3>Revenue Forecast (6-Month Rolling Prediction)</h3>
+          <h3>{{ 'BILLING.REVENUE_FORECAST' | translate }}</h3>
           <div class="chart-wrapper">
             <canvas #revenueForecastChart></canvas>
           </div>

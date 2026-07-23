@@ -31,7 +31,7 @@
             <button (click)="errorVisible = false" aria-label="Close" class="close" data-dismiss="alert"
                     type="button"><span
               aria-hidden="true">&times;</span></button>
-            <strong>Login failed.</strong> {{ errorMessage }}
+            <strong>{{ 'AUTH.LOGIN_FAILED' | translate }}</strong> {{ errorMessage }}
           </div>
         }
         <div>
