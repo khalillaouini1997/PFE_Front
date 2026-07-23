@@ -84,7 +84,7 @@
                       title="{{ 'COMMON.CONFIGURE' | translate }}">
                 <i class="fa fa-cog"></i>
               </button>
-              <button (click)="onSelect(compteWeb);deleteWebAccount(); $event.stopPropagation();" *ngIf="canDelete()"
+              <button (click)="deleteWebAccount(compteWeb); $event.stopPropagation();" *ngIf="canDelete()"
                       class="btn btn-sm btn-outline-danger border-0 p-1"
                       title="{{ 'COMMON.DELETE' | translate }}">
                 <i class="fa fa-trash"></i>

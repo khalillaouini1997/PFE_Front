@@ -170,14 +170,17 @@ export class ComptesWebComponentComponent implements OnInit {
     });
   }
 
-  deleteWebAccount() {
+  deleteWebAccount(compteWeb?: CompteWeb) {
+    const target = compteWeb || this.selectedWebAccount;
     const res = confirm(this.translate.instant('WEB_ACCOUNTS.DELETE_CONFIRM'));
     if (res) {
-      withToast(this.webAccountService.deleteWebAccount(this.selectedWebAccount.idCompteClientWeb), this.toastr, this.translate, 'WEB_ACCOUNTS.DELETE_SUCCESS')
+      withToast(this.webAccountService.deleteWebAccount(target.idCompteClientWeb), this.toastr, this.translate, 'WEB_ACCOUNTS.DELETE_SUCCESS')
         .subscribe({
           next: () => {
+            this.comptesWeb = this.comptesWeb.filter(x => x.idCompteClientWeb !== target.idCompteClientWeb);
+            this.pagination.bigTotalItems--;
             this.loadingInProgress = false;
-            this.loadWebAccounts();
+            this.cdr.detectChanges();
           },
           error: () => {
           }

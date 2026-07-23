@@ -142,6 +142,8 @@ export class ComptesServerComponentComponent implements OnInit {
         .subscribe({
           next: () => {
             this.comptesServer = this.comptesServer.filter(x => x.idCompteClientServer !== compteServer.idCompteClientServer);
+            this.pagination.bigTotalItems--;
+            this.cdr.detectChanges();
           },
           error: () => {
           }
