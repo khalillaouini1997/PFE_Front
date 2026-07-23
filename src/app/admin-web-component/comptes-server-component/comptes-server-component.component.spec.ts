@@ -87,18 +87,18 @@ describe('ComptesServerComponentComponent', () => {
 
   it('should delete compte server', () => {
     component.ngOnInit();
-    component.updateServerForm.patchValue({idCompteClientServer: 1});
+    const mockServer = {idCompteClientServer: 1} as any;
     vi.spyOn(window, 'confirm').mockReturnValue(true);
     compteServerService.deleteCompteServer.mockReturnValue(of({}));
-    component.deleteCompteServer();
+    component.deleteCompteServer(mockServer);
     expect(compteServerService.deleteCompteServer).toHaveBeenCalledWith(1);
   });
 
   it('should not delete if not confirmed', () => {
     component.ngOnInit();
-    component.updateServerForm.patchValue({idCompteClientServer: 1});
+    const mockServer = {idCompteClientServer: 1} as any;
     vi.spyOn(window, 'confirm').mockReturnValue(false);
-    component.deleteCompteServer();
+    component.deleteCompteServer(mockServer);
     expect(compteServerService.deleteCompteServer).not.toHaveBeenCalled();
   });
 
