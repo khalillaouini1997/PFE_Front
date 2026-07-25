@@ -47,7 +47,7 @@
           </td>
           <td>
                         <span [ngClass]="{
-                            'bg-primary bg-opacity-10 text-primary border border-primary border-opacity-10': adminCompte.role === 'GLOBALADMINDESC',
+                            'bg-primary text-white': adminCompte.role === 'GLOBALADMINDESC',
                             'bg-dark text-white': adminCompte.role === 'WEBADMIN',
                             'bg-info bg-opacity-10 border border-info border-opacity-10': adminCompte.role === 'AGENT',
                             'bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-10': !adminCompte.role.includes('ADMIN')
@@ -89,7 +89,7 @@
               <button class="btn btn-sm btn-outline-warning border-0 p-2" title="{{ 'COMMON.EDIT' | translate }}">
                 <i class="fa fa-edit fs-5"></i>
               </button>
-              <button class="btn btn-sm btn-outline-danger border-0 p-2" title="{{ 'COMMON.DELETE' | translate }}">
+              <button *ngIf="canDelete()" (click)="deleteAdminCompte(adminCompte); $event.stopPropagation();" class="btn btn-sm btn-outline-danger border-0 p-2" title="{{ 'COMMON.DELETE' | translate }}">
                 <i class="fa fa-trash fs-5"></i>
               </button>
             </div>

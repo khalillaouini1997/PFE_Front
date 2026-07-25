@@ -47,6 +47,7 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
   private readonly previousPositions = new Map<number, { lat: number; lng: number }>();
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly translate = inject(TranslateService);
+  private resizeObserver?: ResizeObserver;
   private animationFrameId?: number;
   private currentFleetHash = '';
 
@@ -65,6 +66,7 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
     if (this.animationFrameId) {
       cancelAnimationFrame(this.animationFrameId);
     }
+    this.resizeObserver?.disconnect();
     this.map?.remove();
     this.markerClusterGroup?.clearLayers();
     this.markerMap.clear();
@@ -127,6 +129,11 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
       tileLayer.on('load', () => {
         this.isMapLoading.set(false);
         this.mapError.set(null);
+        setTimeout(() => {
+          if (this.map) {
+            this.map.invalidateSize();
+          }
+        }, 50);
       });
 
       tileLayer.addTo(this.map);
@@ -140,10 +147,24 @@ export class DashboardMapComponent implements AfterViewInit, OnDestroy {
         this.map?.invalidateSize();
       }, TIMEOUTS.MAP_INITIALIZE);
 
+      setTimeout(() => {
+        this.map?.invalidateSize();
+      }, 800);
+
+      if (typeof ResizeObserver !== 'undefined' && container) {
+        this.resizeObserver = new ResizeObserver(() => {
+          if (this.map) {
+            this.map.invalidateSize();
+          }
+        });
+        this.resizeObserver.observe(container);
+      }
+
       // Set loading to false after a timeout even if tiles don't load
       setTimeout(() => {
         if (this.isMapLoading()) {
           this.isMapLoading.set(false);
+          this.map?.invalidateSize();
         }
       }, 10000);
 

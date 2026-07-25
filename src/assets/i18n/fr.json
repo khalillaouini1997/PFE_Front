@@ -221,7 +221,9 @@
     "TRANSACTION_FEE": "Frais de Transaction (%)",
     "SAVE_ADMIN": "Enregistrer l'Administrateur",
     "ADD_SUCCESS": "Administrateur ajouté avec succès",
-    "ADD_ERROR": "Erreur lors de l'ajout de l'administrateur"
+    "ADD_ERROR": "Erreur lors de l'ajout de l'administrateur",
+    "DELETE_CONFIRM": "Êtes-vous sûr de vouloir supprimer ce compte administrateur ?",
+    "DELETE_SUCCESS": "Administrateur supprimé avec succès"
   },
   "WEB_ACCOUNTS": {
     "TITLE": "Portails Clients (Web)",

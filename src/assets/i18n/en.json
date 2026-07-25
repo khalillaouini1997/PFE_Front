@@ -221,7 +221,9 @@
     "TRANSACTION_FEE": "Transaction Fee (%)",
     "SAVE_ADMIN": "Save Administrator",
     "ADD_SUCCESS": "Administrator added successfully",
-    "ADD_ERROR": "Error while adding the administrator"
+    "ADD_ERROR": "Error while adding the administrator",
+    "DELETE_CONFIRM": "Are you sure you want to delete this administrator account?",
+    "DELETE_SUCCESS": "Administrator deleted successfully"
   },
   "WEB_ACCOUNTS": {
     "TITLE": "Client Portals (Web)",

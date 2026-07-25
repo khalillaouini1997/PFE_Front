@@ -49,3 +49,11 @@
 
 (window as any).global = window;
 import 'zone.js';
+
+// Leaflet UMD exports to `globalThis.leaflet`; alias to `globalThis.L`
+if (typeof window !== 'undefined') {
+  const w = window as any;
+  if (w.leaflet && !w.L) {
+    w.L = w.leaflet;
+  }
+}

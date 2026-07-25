@@ -3,9 +3,12 @@ import {CommonModule} from '@angular/common';
 
 import {AdministratorCompte} from 'src/app/data/data';
 import {AdminAccountService} from 'src/app/service/admin-account.service';
+import {AuthService} from 'src/app/service/auth.service';
 import {createPaginationState, pageChanged} from '../../shared/components/pagination-base';
 
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
+import {ToastrService} from 'ngx-toastr';
+import {withToast} from '../../utils/toast.helpers';
 
 import {TableModule} from 'primeng/table';
 import {PageHeaderComponent} from '../../shared/components/page-header/page-header.component';
@@ -26,7 +29,14 @@ export class CompteAdminComponent {
   private loadingInProgress: boolean = false;
 
   private readonly adminAccountService = inject(AdminAccountService);
+  private readonly authService = inject(AuthService);
+  private readonly toastr = inject(ToastrService);
+  private readonly translate = inject(TranslateService);
   private readonly cdr = inject(ChangeDetectorRef);
+
+  canDelete(): boolean {
+    return this.authService.hasRole('GLOBALADMINDESC');
+  }
 
   getAllAdminComptes(keyWord: string, page: number, size: number) {
     if (this.loadingInProgress) return;
@@ -63,5 +73,22 @@ export class CompteAdminComponent {
     pageChanged(event, this.pagination);
     this.loadingInProgress = false;
     this.getAllAdminComptes('', this.pagination.bigCurrentPage - 1, this.pagination.itemsPerPage);
+  }
+
+  deleteAdminCompte(adminCompte: AdministratorCompte) {
+    const res = confirm(this.translate.instant('ADMIN_ACCOUNTS.DELETE_CONFIRM'));
+    if (res) {
+      withToast(this.adminAccountService.deleteAdminCompte(adminCompte.idAdministratorCompte), this.toastr, this.translate, 'ADMIN_ACCOUNTS.DELETE_SUCCESS')
+        .subscribe({
+          next: () => {
+            this.adminComptes = this.adminComptes.filter(x => x.idAdministratorCompte !== adminCompte.idAdministratorCompte);
+            this.pagination.bigTotalItems--;
+            this.loadingInProgress = false;
+            this.cdr.detectChanges();
+          },
+          error: () => {
+          }
+        });
+    }
   }
 }

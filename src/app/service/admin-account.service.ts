@@ -27,4 +27,12 @@ export class AdminAccountService {
       return throwError(() => new Error("Not authorized to add administrator accounts."));
     }
   }
+
+  deleteAdminCompte(id: number): Observable<void> {
+    if (this.authService.isAgentAdmin()) {
+      return this.http.delete<void>(`${environment.apiBaseUrl}adminCompteWeb/${id}`);
+    } else {
+      return throwError(() => new Error("Not authorized to delete administrator accounts."));
+    }
+  }
 }
