@@ -1,6 +1,6 @@
 <div [class.trend-down]="trend() === 'down'" [class.trend-up]="trend() === 'up'" class="kpi-card">
   <div class="kpi-header">
-    <span class="kpi-icon">{{ icon() }}</span>
+    <span class="kpi-icon"><i class="fa {{ icon() }}"></i></span>
     <span *ngIf="trend()" class="kpi-trend">
       {{ trend() === 'up' ? '↑' : '↓' }} {{ trendValue() }}%
     </span>
