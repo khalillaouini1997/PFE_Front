@@ -6,7 +6,9 @@ variables:
   IMAGE_NAME: registry.gitlab.com/$CI_PROJECT_PATH
   GIT_DEPTH: 0
   npm_config_cache: "$CI_PROJECT_DIR/.npm"
-  TRIVY_VERSION: "0.36.0"
+
+include:
+  - template: Jobs/Container-Scanning.gitlab-ci.yml
 
 # ──────────────────────────────────────────────
 # Job 1: Lint + Test
@@ -77,51 +79,31 @@ docker-build:
   script:
     - docker pull $IMAGE_NAME:latest || true
     - docker build --cache-from $IMAGE_NAME:latest -t $IMAGE_NAME:latest -t $IMAGE_NAME:$CI_COMMIT_SHA .
-    - docker save $IMAGE_NAME:latest -o image.tar
-  artifacts:
-    paths:
-      - image.tar
-    expire_in: 1 hour
+    - docker push $IMAGE_NAME:$CI_COMMIT_SHA
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
       when: on_success
 
 # ──────────────────────────────────────────────
-# Job 4: Trivy Vulnerability Scan
+# Job 4: Container Scanning (official GitLab template)
 # ──────────────────────────────────────────────
-docker-scan:
+container_scanning:
   stage: docker
-  image:
-    name: aquasec/trivy:0.56.2
-    entrypoint: [""]
   needs:
     - job: docker-build
-      artifacts: true
+      artifacts: false
   variables:
-    TRIVY_CACHE_DIR: ".trivycache"
-  cache:
-    key: trivy-db
-    paths:
-      - .trivycache/
-  script:
-    # Human-readable table (non-blocking)
-    - trivy image --input image.tar --exit-code 0 --severity CRITICAL,HIGH --format table
-
-    # GitLab container-scanning report (non-blocking)
-    - trivy image --input image.tar --exit-code 0 --severity CRITICAL,HIGH --format template --template "@contrib/gitlab.tpl" -o gl-container-scanning-report.json
-  artifacts:
-    reports:
-      container_scanning: gl-container-scanning-report.json
-    paths:
-      - gl-container-scanning-report.json
-    when: always
-    expire_in: 3 days
+    CS_IMAGE: $IMAGE_NAME:$CI_COMMIT_SHA
+    CS_SEVERITY_THRESHOLD: HIGH
+    CS_DOCKER_INSECURE: "false"
+    DOCKER_USER: $CI_REGISTRY_USER
+    DOCKER_PASSWORD: $CI_REGISTRY_PASSWORD
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
       when: on_success
 
 # ──────────────────────────────────────────────
-# Job 5: Docker Push
+# Job 5: Docker Push (latest tag)
 # ──────────────────────────────────────────────
 docker-push:
   stage: docker
@@ -132,15 +114,15 @@ docker-push:
     DOCKER_TLS_CERTDIR: "/certs"
   needs:
     - job: docker-build
-      artifacts: true
-    - job: docker-scan
+      artifacts: false
+    - job: container_scanning
       artifacts: false
   before_script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
-    - docker load -i image.tar
   script:
+    - docker pull $IMAGE_NAME:$CI_COMMIT_SHA
+    - docker tag $IMAGE_NAME:$CI_COMMIT_SHA $IMAGE_NAME:latest
     - docker push $IMAGE_NAME:latest
-    - docker push $IMAGE_NAME:$CI_COMMIT_SHA
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
       when: on_success
