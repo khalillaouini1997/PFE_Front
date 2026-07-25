@@ -35,6 +35,7 @@ describe('ComptesWebComponentComponent', () => {
     authService = {hasRole: vi.fn().mockReturnValue(true)};
     toastr = {success: vi.fn(), error: vi.fn(), warning: vi.fn()};
 
+    TestBed.resetTestingModule();
     await TestBed.configureTestingModule({
       imports: [ComptesWebComponentComponent, TranslateModule.forRoot()],
       schemas: [NO_ERRORS_SCHEMA],

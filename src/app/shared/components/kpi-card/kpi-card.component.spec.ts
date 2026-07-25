@@ -69,7 +69,7 @@ describe('KpiCardComponent', () => {
     fixture.componentRef.setInput('icon', 'icon-test');
     fixture.detectChanges();
 
-    expect(fixture.nativeElement.querySelector('.kpi-icon')?.textContent).toContain('icon-test');
+    expect(fixture.nativeElement.querySelector('.kpi-icon i')?.classList.contains('icon-test')).toBe(true);
   });
 
   it('should display up trend indicator', () => {

@@ -19,6 +19,7 @@ describe('AccessLogComponent', () => {
       })),
     };
 
+    TestBed.resetTestingModule();
     await TestBed.configureTestingModule({
       imports: [AccessLogComponent, TranslateModule.forRoot()],
       schemas: [NO_ERRORS_SCHEMA],

@@ -96,7 +96,7 @@ describe('AddCompteServerComponent', () => {
     compteServerService.createServerComptewithBoitier.mockReturnValue(of({}));
     component.addCompteServer();
     expect(compteServerService.createServerComptewithBoitier).toHaveBeenCalled();
-    expect(router.navigate).toHaveBeenCalledWith(['/adminWeb/listWebs']);
+    expect(router.navigate).toHaveBeenCalledWith(['/adminWeb/listServers']);
   });
 
   it('should not add when form invalid', () => {

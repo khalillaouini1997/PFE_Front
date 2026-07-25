@@ -138,7 +138,7 @@ describe('BoitierService', () => {
   });
 
   describe('recalculeHistorique', () => {
-    it('should make POST request with payload', () => {
+    it('should make PUT request with payload', () => {
       const idCompteWeb = 1;
       const payload = {startDate: '2024-01-01', endDate: '2024-01-31'} as unknown as RecalculatePayload;
 
@@ -147,14 +147,14 @@ describe('BoitierService', () => {
       const req = httpMock.expectOne(
         `${baseUrl}/${idCompteWeb}/recalculate/historique`
       );
-      expect(req.request.method).toBe('POST');
+      expect(req.request.method).toBe('PUT');
       expect(req.request.body).toEqual(payload);
       req.flush(null);
     });
   });
 
   describe('recalculeAlert', () => {
-    it('should make POST request with payload', () => {
+    it('should make PUT request with payload', () => {
       const idCompteWeb = 1;
       const payload = {startDate: '2024-01-01'} as unknown as RecalculatePayload;
 
@@ -163,14 +163,14 @@ describe('BoitierService', () => {
       const req = httpMock.expectOne(
         `${baseUrl}/${idCompteWeb}/recalculate/alert`
       );
-      expect(req.request.method).toBe('POST');
+      expect(req.request.method).toBe('PUT');
       expect(req.request.body).toEqual(payload);
       req.flush(null);
     });
   });
 
   describe('recalculeFuel', () => {
-    it('should make POST request with payload', () => {
+    it('should make PUT request with payload', () => {
       const idCompteWeb = 2;
       const payload: RecalculatePayload = {} as RecalculatePayload;
 
@@ -179,14 +179,14 @@ describe('BoitierService', () => {
       const req = httpMock.expectOne(
         `${baseUrl}/${idCompteWeb}/recalculate/fuel`
       );
-      expect(req.request.method).toBe('POST');
+      expect(req.request.method).toBe('PUT');
       expect(req.request.body).toEqual(payload);
       req.flush(null);
     });
   });
 
   describe('recalculePaths', () => {
-    it('should make POST request with payload', () => {
+    it('should make PUT request with payload', () => {
       const idCompteWeb = 3;
       const payload: RecalculatePayload = {} as RecalculatePayload;
 
@@ -195,14 +195,14 @@ describe('BoitierService', () => {
       const req = httpMock.expectOne(
         `${baseUrl}/${idCompteWeb}/recalculate/paths`
       );
-      expect(req.request.method).toBe('POST');
+      expect(req.request.method).toBe('PUT');
       expect(req.request.body).toEqual(payload);
       req.flush(null);
     });
   });
 
   describe('recalculeBoitier', () => {
-    it('should make POST request with payload', () => {
+    it('should make PUT request with payload', () => {
       const idCompteWeb = 4;
       const payload: RecalculatePayload = {} as RecalculatePayload;
 
@@ -211,14 +211,14 @@ describe('BoitierService', () => {
       const req = httpMock.expectOne(
         `${baseUrl}/${idCompteWeb}/recalculate/resetboitier`
       );
-      expect(req.request.method).toBe('POST');
+      expect(req.request.method).toBe('PUT');
       expect(req.request.body).toEqual(payload);
       req.flush(null);
     });
   });
 
   describe('resetRT', () => {
-    it('should make POST request with payload', () => {
+    it('should make PUT request with payload', () => {
       const idCompteWeb = 5;
       const payload: RecalculatePayload = {} as RecalculatePayload;
 
@@ -227,7 +227,7 @@ describe('BoitierService', () => {
       const req = httpMock.expectOne(
         `${baseUrl}/${idCompteWeb}/recalculate/resetRT`
       );
-      expect(req.request.method).toBe('POST');
+      expect(req.request.method).toBe('PUT');
       expect(req.request.body).toEqual(payload);
       req.flush(null);
     });

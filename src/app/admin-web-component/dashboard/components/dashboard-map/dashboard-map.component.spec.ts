@@ -2,6 +2,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {afterEach, beforeAll, beforeEach, describe, expect, it, vi} from 'vitest';
 import {DashboardMapComponent} from './dashboard-map.component';
 import {RealTime} from '../../../../data/data';
+import {TranslateModule} from '@ngx-translate/core';
 
 const mockMap = {
   setView: vi.fn().mockReturnThis(),
@@ -54,7 +55,7 @@ describe('DashboardMapComponent', () => {
     vi.clearAllMocks();
     TestBed.resetTestingModule();
     await TestBed.configureTestingModule({
-      imports: [DashboardMapComponent]
+      imports: [DashboardMapComponent, TranslateModule.forRoot()]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DashboardMapComponent);

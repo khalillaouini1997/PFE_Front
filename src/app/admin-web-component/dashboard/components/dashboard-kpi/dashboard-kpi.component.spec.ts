@@ -1,6 +1,7 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {DashboardKpiComponent} from './dashboard-kpi.component';
+import {TranslateModule} from '@ngx-translate/core';
 
 describe('DashboardKpiComponent', () => {
   let component: DashboardKpiComponent;
@@ -17,7 +18,7 @@ describe('DashboardKpiComponent', () => {
     })) as any;
     TestBed.resetTestingModule();
     await TestBed.configureTestingModule({
-      imports: [DashboardKpiComponent]
+      imports: [DashboardKpiComponent, TranslateModule.forRoot()]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DashboardKpiComponent);

@@ -12,6 +12,7 @@ describe('IpAddressService', () => {
   const baseUrl = `${environment.apiBaseUrl}ips`;
 
   beforeEach(() => {
+    TestBed.resetTestingModule();
     TestBed.configureTestingModule({
       providers: [
         provideHttpClient(),
@@ -25,7 +26,7 @@ describe('IpAddressService', () => {
   });
 
   afterEach(() => {
-    httpMock.verify();
+    httpMock?.verify();
   });
 
   it('should be created', () => {
