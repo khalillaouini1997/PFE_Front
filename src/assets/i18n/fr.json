@@ -188,6 +188,7 @@
     "INVALID_DELETED": "{{count}} trames invalides supprimées avec succès",
     "TRAMES_TO_ANALYZE": "Trames à analyser :",
     "ANOMALY_RUNNING": "Détection d'anomalies en cours sur les données de trames...",
+    "ANALYSIS_ERROR": "Échec de l'analyse. Vérifiez que le service ML est en cours d'exécution et réessayez.",
     "ANOMALY_NO_DATA": "Aucune donnée d'anomalie disponible. Sélectionnez le nombre de trames et cliquez sur Détecter."
   },
   "ADMIN_ACCOUNTS": {

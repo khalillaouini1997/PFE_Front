@@ -188,6 +188,7 @@
     "INVALID_DELETED": "{{count}} invalid trames deleted successfully",
     "TRAMES_TO_ANALYZE": "Trames to analyze:",
     "ANOMALY_RUNNING": "Running anomaly detection across trame data...",
+    "ANALYSIS_ERROR": "Failed to run analysis. Please check that the ML service is running and try again.",
     "ANOMALY_NO_DATA": "No anomaly data available. Select trame count and click Run Detection."
   },
   "ADMIN_ACCOUNTS": {

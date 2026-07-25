@@ -121,8 +121,13 @@ export class ArchiveComponent implements OnInit {
         this.analysisData.set(data);
         this.isAnalyzing.set(false);
       },
-      error: (_err) => {
+      error: (err) => {
         this.isAnalyzing.set(false);
+        this.toastr.error(
+          this.translate.instant('ARCHIVE.ANALYSIS_ERROR'),
+          this.translate.instant('COMMON.ERROR')
+        );
+        console.error('Analysis error:', err);
       }
     });
   }
